@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.heading-1 {
+  @apply text-2xl;
+}
+
+.heading-2 {
+  @apply text-xl;
+}
+
+.heading-3 {
+  @apply text-lg;
+}
