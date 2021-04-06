@@ -1,0 +1,40 @@
+.bottom-controls-container {
+  transition: all 3s ease-in-out;
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.37) 0%,
+    rgba(0, 0, 0, 0) 93.75%
+  );
+}
+
+.bottom-controls {
+  max-height: 0;
+
+  transition-property: all;
+  transition-duration: 0.5s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.bottom-controls * {
+  visibility: hidden;
+
+  transition-property: all;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
+}
+
+.video-tile:hover .bottom-controls-container {
+  background: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.video-tile:hover .bottom-controls {
+  max-height: 500px;
+}
+
+.video-tile:hover .bottom-controls * {
+  visibility: visible;
+}

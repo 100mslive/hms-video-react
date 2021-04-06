@@ -7,6 +7,10 @@ body {
   line-height: 1.25rem;
 }
 
+svg {
+  display: inline;
+}
+
 .heading-1 {
   @apply text-2xl;
 }
