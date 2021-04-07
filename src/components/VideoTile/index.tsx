@@ -7,12 +7,8 @@ export interface VideoTileProps {
   stream: MediaStream | string;
   peer: Peer;
   isLocal?: boolean;
-  videoSource?:
-    | 'screen'
-    | 'camera'
-    | 'canvas'
-    | 'mp4-landscape'
-    | 'mp4-potrait';
+  videoSource: 'camera' | 'landscape-video' | 'potrait-video';
+  videoType?: 'screen' | 'camera' | 'canvas';
   audioLevel?: number;
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
@@ -72,11 +68,11 @@ export const VideoTile = ({
         video.srcObject = null;
       }
     }
-    if (videoSource == 'mp4-landscape') {
+    if (videoSource == 'landscape-video') {
       video.srcObject = null;
       video.src =
         'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4';
-    } else if (videoSource == 'mp4-potrait') {
+    } else if (videoSource == 'potrait-video') {
       video.srcObject = null;
       video.src =
         'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';

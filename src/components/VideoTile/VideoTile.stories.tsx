@@ -18,5 +18,5 @@ export const DefaultVideoTile = Template.bind({});
 DefaultVideoTile.args = {
   isLocal: true,
   peer: { id: '123', displayName: 'Eswar' },
-  videoSource: 'mp4-landscape',
+  videoSource: 'landscape-video',
 };
