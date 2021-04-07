@@ -19,4 +19,6 @@ DefaultVideoTile.args = {
   isLocal: true,
   peer: { id: '123', displayName: 'Eswar' },
   videoSource: 'landscape-video',
+  stream:
+    'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
 };
