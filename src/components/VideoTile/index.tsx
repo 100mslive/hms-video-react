@@ -79,18 +79,27 @@ export const VideoTile = ({
   }, [videoSource, stream]);
 
   return (
-    <div className="video-tile inline-block h-full relative m-2">
+    <div
+      className="video-tile inline-block h-full relative "
+      style={{
+        borderWidth: audioLevelDisplayType === 'border' ? audioLevel + 'px' : 0,
+      }}
+    >
       <video
         muted={isAudioMuted}
         autoPlay
-        className="shadow-lg rounded-lg"
         ref={ref => {
           if (ref) video = ref;
         }}
       >
         <p>Your browser cannot play the provided video fileddd.</p>
       </video>
-      <BottomControls peer={peer} isAudioMuted={isAudioMuted} />
+      <BottomControls
+        peer={peer}
+        isAudioMuted={isAudioMuted}
+        audioLevel={audioLevel}
+        audioLevelDisplayType={audioLevelDisplayType}
+      />
     </div>
   );
 };

@@ -21,4 +21,5 @@ DefaultVideoTile.args = {
   videoSource: 'landscape-video',
   stream:
     'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
+  audioLevel: 10,
 };

@@ -38,3 +38,7 @@
 .video-tile:hover .bottom-controls * {
   visibility: visible;
 }
+
+.video-tile {
+  border-color: #aebdf8;
+}
