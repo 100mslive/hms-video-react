@@ -4,15 +4,11 @@ import './index.css';
 import BottomControls from './BottomControls';
 
 export interface VideoTileProps {
-  stream: MediaStream | string;
+  stream?: MediaStream | string;
   peer: Peer;
   isLocal?: boolean;
-  videoSource?:
-    | 'screen'
-    | 'camera'
-    | 'canvas'
-    | 'mp4-landscape'
-    | 'mp4-potrait';
+  videoSource: 'camera' | 'landscape-video' | 'potrait-video' | 'stream';
+  videoType?: 'screen' | 'camera' | 'canvas';
   audioLevel?: number;
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
@@ -50,6 +46,7 @@ export const VideoTile = ({
   audioLevelDisplayType,
 }: VideoTileProps) => {
   let video: HTMLVideoElement;
+
   useEffect(() => {
     if (videoSource == 'camera')
       navigator.mediaDevices
@@ -59,35 +56,28 @@ export const VideoTile = ({
           video.srcObject = stream;
         });
     else {
-      var stream = video.srcObject;
-
+      let stream = video.srcObject;
       if (stream && stream instanceof MediaStream) {
         var tracks = stream.getTracks();
-
         for (var i = 0; i < tracks.length; i++) {
           var track = tracks[i];
           track.stop();
         }
-
         video.srcObject = null;
       }
     }
-    if (videoSource == 'mp4-landscape') {
+    if (videoSource == 'landscape-video') {
       video.srcObject = null;
-      video.src =
-        'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4';
-    } else if (videoSource == 'mp4-potrait') {
+      video.src = stream as string;
+    } else if (videoSource == 'potrait-video') {
       video.srcObject = null;
-      video.src =
-        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
-    }
-    try {
-      video.play();
-    } catch (e) {
-      console.log(e);
-    }
-    console.log(videoSource);
-  }, [videoSource]);
+      video.src = stream as string;
+    } else if (videoSource == 'stream')
+      if (stream instanceof MediaStream) video.srcObject = stream;
+    video.play();
+    console.log(videoSource), stream;
+  }, [videoSource, stream]);
+
   return (
     <div className="video-tile inline-block h-full relative m-2">
       <video
@@ -98,7 +88,6 @@ export const VideoTile = ({
           if (ref) video = ref;
         }}
       >
-        <source type="video/mp4" />
         <p>Your browser cannot play the provided video fileddd.</p>
       </video>
       <BottomControls peer={peer} isAudioMuted={isAudioMuted} />
