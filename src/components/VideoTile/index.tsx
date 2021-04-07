@@ -78,9 +78,14 @@ export const VideoTile = ({
         'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4';
     } else if (videoSource == 'mp4-potrait') {
       video.srcObject = null;
-      video.src = 'http://www.exit109.com/~dnn/clips/RW20seconds_1.mp4';
+      video.src =
+        'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4';
     }
-    video.play();
+    try {
+      video.play();
+    } catch (e) {
+      console.log(e);
+    }
     console.log(videoSource);
   }, [videoSource]);
   return (
