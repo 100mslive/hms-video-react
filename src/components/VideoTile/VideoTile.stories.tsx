@@ -18,6 +18,5 @@ export const DefaultVideoTile = Template.bind({});
 DefaultVideoTile.args = {
   isLocal: true,
   peer: { id: '123', displayName: 'Eswar' },
-  stream:
-    'https://storage.googleapis.com/web-dev-assets/video-and-source-tags/chrome.mp4',
+  videoSource: 'mp4-landscape',
 };
