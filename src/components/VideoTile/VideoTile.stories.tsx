@@ -18,34 +18,38 @@ const Template: Story<VideoTileProps> = args => {
   const [stream, setStream] = useState<MediaStream>();
 
   useEffect(() => {
+    closeMediaStream(stream);
+
     if (args.videoSource == 'camera') {
       window.navigator.mediaDevices
         .getUserMedia({ video: true })
         .then(function(stream) {
+          // @ts-ignore
           window.stream = stream;
           setStream(stream);
         });
     } else if (args.videoSource == 'screen') {
       window.navigator.mediaDevices
+        // @ts-ignore
         .getDisplayMedia({ video: true })
         .then(function(stream: MediaStream | undefined) {
+          // @ts-ignore
           window.stream = stream;
           setStream(stream);
         });
     }
 
     return () => {
-      closeMediaStream(window.stream);
+      closeMediaStream(stream);
     };
   }, [args.videoSource]);
 
-  console.log(stream);
   return (
     <div
       className="flex items-center justify-center"
       style={{ height: '80vh' }}
     >
-      <VideoTile {...args} stream={stream} />
+      {stream && <VideoTile {...args} stream={stream} />}
     </div>
   );
 };

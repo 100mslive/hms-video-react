@@ -1,4 +1,4 @@
-const closeMediaStream = function(stream: MediaStream) {
+const closeMediaStream = function(stream: MediaStream | undefined) {
   if (!stream) {
     return;
   }
