@@ -2,6 +2,7 @@ import { useEffect } from '@storybook/client-api';
 import { Meta, Story } from '@storybook/react';
 import React, { useState } from 'react';
 import { VideoTile, VideoTileProps } from '.';
+import { closeMediaStream } from '../../utils';
 
 const meta: Meta = {
   title: 'Video Tile',

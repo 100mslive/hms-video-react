@@ -31,3 +31,5 @@ const closeMediaStream = function(stream: MediaStream) {
     stream.stop();
   }
 };
+
+export { closeMediaStream };
