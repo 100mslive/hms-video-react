@@ -7,11 +7,18 @@ interface InlineCircleProps {
 
 export default function InlineCircle({ level }: InlineCircleProps) {
   return (
-    <div id="circle">
-      <span
-        className="dot"
-        style={{ height: level * 1.5 + 'px', width: level * 1.5 + 'px' }}
-      ></span>
+    <div className="inline-block" style={{ width: '22px', height: '32px' }}>
+      <div className="flex items-center justify-center h-full w-full">
+        <span
+          className="inline-block bg-blue-tint rounded-full "
+          style={{
+            width: 0.18 * level + 'px',
+            height: 0.18 * level + 'px',
+            boxShadow: `0px 0px ${0.02 * level}px #0F6CFF, 0px 0px ${0.05 *
+              level}px #0F6CFF`,
+          }}
+        ></span>
+      </div>
     </div>
   );
 }

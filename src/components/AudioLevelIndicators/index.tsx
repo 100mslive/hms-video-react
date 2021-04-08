@@ -1,17 +1,25 @@
 import React from 'react';
+import { AudioLevelDisplayType } from '../../types';
 import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 
-interface AudioLevelProps {
-  audioLevelDisplayType: 'inline-wave' | 'inline-circle';
+interface AudioLevelIndicatorProps {
+  type: AudioLevelDisplayType;
   level: number;
 }
 
-export default function AudioLevelIndicators({
-  audioLevelDisplayType,
+export default function AudioLevelIndicator({
+  type,
   level,
-}: AudioLevelProps) {
-  if (audioLevelDisplayType === 'inline-circle')
-    return <InlineCircle level={level} />;
-  else return <InlineWave level={level} />;
+}: AudioLevelIndicatorProps) {
+  switch (type) {
+    case 'inline-circle':
+      return <InlineCircle level={level} />;
+      break;
+    case 'inline-wave':
+      return <InlineWave level={level} />;
+      break;
+    default:
+      return null;
+  }
 }

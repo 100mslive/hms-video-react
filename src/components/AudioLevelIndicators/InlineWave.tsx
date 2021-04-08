@@ -7,16 +7,36 @@ interface InlineWaveProps {
 
 export default function InlineWave({ level }: InlineWaveProps) {
   return (
-    <div id="wave">
-      <span
-        className="dot"
-        style={{ height: level + 'px', marginBottom: level / 2 + 'px' }}
-      ></span>
-      <span className="dot" style={{ height: level * 2 + 'px' }}></span>
-      <span
-        className="dot"
-        style={{ height: level + 'px', marginBottom: level / 2 + 'px' }}
-      ></span>
+    <div className="inline-block" style={{ width: '22px', height: '32px' }}>
+      <div className="flex items-center justify-between h-full w-full">
+        <span
+          className="inline-block bg-blue-tint rounded-full "
+          style={{
+            width: '5px',
+            height: 0.12 * level + 'px',
+            boxShadow: `0px 0px ${0.02 * level}px #0F6CFF, 0px 0px ${0.05 *
+              level}px #0F6CFF`,
+          }}
+        ></span>
+        <span
+          className="inline-block bg-blue-tint rounded-full "
+          style={{
+            width: '5px',
+            height: 0.18 * level + 'px',
+            boxShadow: `0px 0px ${0.02 * level}px #0F6CFF, 0px 0px ${0.05 *
+              level}px #0F6CFF`,
+          }}
+        ></span>
+        <span
+          className="inline-block bg-blue-tint rounded-full "
+          style={{
+            width: '5px',
+            height: 0.11 * level + 'px',
+            boxShadow: `0px 0px ${0.02 * level}px #0F6CFF, 0px 0px ${0.05 *
+              level}px #0F6CFF`,
+          }}
+        ></span>
+      </div>
     </div>
   );
 }

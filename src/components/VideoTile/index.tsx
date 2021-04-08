@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Peer } from '../../types';
+import { AudioLevelDisplayType, Peer } from '../../types';
 import './index.css';
 import BottomControls from './BottomControls';
 
@@ -23,11 +23,7 @@ export interface VideoTileProps {
     height: number;
   };
   displayShape?: 'circle' | 'rectangle';
-  audioLevelDisplayType?:
-    | 'inline-wave'
-    | 'inline-circle'
-    | 'border'
-    | 'avatar-circle';
+  audioLevelDisplayType?: AudioLevelDisplayType;
   allowRemoteMute: boolean;
 }
 
@@ -119,6 +115,9 @@ export const VideoTile = ({
           showAudioMuteStatus={showAudioMuteStatus}
           showGradient={displayShape != 'circle'}
           allowRemoteMute={allowRemoteMute}
+          showAudioLevel={showAudioLevel}
+          audioLevelDisplayType={audioLevelDisplayType}
+          audioLevel={audioLevel}
         />
       </div>
     </div>

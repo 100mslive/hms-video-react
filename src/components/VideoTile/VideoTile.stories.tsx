@@ -64,7 +64,7 @@ DefaultVideoTile.args = {
   peer: { id: '123', displayName: 'Eswar' },
   aspectRatio: { width: 16, height: 9 },
   displayShape: 'rectangle',
-  showAudioLevel: false,
+  showAudioLevel: true,
   audioLevelDisplayType: 'border',
   audioLevel: 40,
 };
@@ -74,7 +74,7 @@ GoogleMeetVideoTile.args = {
   peer: { id: '123', displayName: 'Eswar' },
   aspectRatio: { width: 16, height: 9 },
   displayShape: 'rectangle',
-  showAudioLevel: false,
+  showAudioLevel: true,
   audioLevelDisplayType: 'inline-wave',
   audioLevel: 40,
   className: '',
