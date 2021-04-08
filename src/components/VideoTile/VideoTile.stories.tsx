@@ -30,7 +30,7 @@ const Template: Story<VideoTileProps> = args => {
   useEffect(() => {
     closeMediaStream(stream);
 
-    if (args.videoSource == 'camera') {
+    if (args.videoSource === 'camera') {
       window.navigator.mediaDevices
         .getUserMedia({ video: true })
         .then(function(stream) {
@@ -38,7 +38,7 @@ const Template: Story<VideoTileProps> = args => {
           window.stream = stream;
           setStream(stream);
         });
-    } else if (args.videoSource == 'screen') {
+    } else if (args.videoSource === 'screen') {
       window.navigator.mediaDevices
         // @ts-ignore
         .getDisplayMedia({ video: true })

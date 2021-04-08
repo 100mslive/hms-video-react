@@ -15,10 +15,8 @@ export const AudioLevelIndicator = ({
   switch (type) {
     case 'inline-circle':
       return <InlineCircle level={level} />;
-      break;
     case 'inline-wave':
       return <InlineWave level={level} />;
-      break;
     default:
       return null;
   }

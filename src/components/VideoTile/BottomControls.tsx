@@ -64,7 +64,7 @@ const BottomControls = ({
     let audioStatus;
     if (showAudioMuteStatus)
       audioStatus = <AudioMuteIndicator isAudioMuted={isAudioMuted} />;
-    if (showAudioLevel && audioLevelDisplayType != 'border')
+    if (showAudioLevel && audioLevelDisplayType !== 'border')
       if (isAudioMuted)
         audioStatus = <AudioMuteIndicator isAudioMuted={isAudioMuted} />;
       else

@@ -52,9 +52,9 @@ export const VideoTile = ({
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const isSquareOrCircle =
-    (displayShape == 'rectangle' && aspectRatio.width == aspectRatio.height) ||
-    displayShape == 'circle';
-  const objectFit = isSquareOrCircle ? 'cover' : displayFit;
+    (displayShape === 'rectangle' &&
+      aspectRatio.width === aspectRatio.height) ||
+    displayShape === 'circle';
 
   let label;
   let videoTileStyle: React.CSSProperties = {};
@@ -79,18 +79,18 @@ export const VideoTile = ({
     videoStyle['width'] =
       (aspectRatio.width / aspectRatio.height) * height + 'px';
 
-  if (isLocal && videoSource == 'camera')
+  if (isLocal && videoSource === 'camera')
     videoStyle['transform'] = 'scale(-1, 1)';
 
   if (isLocal) {
-    if (videoSource == 'screen') label = 'Your Screen';
+    if (videoSource === 'screen') label = 'Your Screen';
     else label = 'You';
   } else {
-    if (videoSource == 'screen') label = `${peer.displayName}'s Screen`;
+    if (videoSource === 'screen') label = `${peer.displayName}'s Screen`;
     else label = peer.displayName;
   }
 
-  if (showAudioLevel && audioLevel && audioLevelDisplayType == 'border')
+  if (showAudioLevel && audioLevel && audioLevelDisplayType === 'border')
     videoStyle['boxShadow'] = `0px 0px ${0.12 *
       audioLevel}px #0F6CFF, 0px 0px ${0.8 * audioLevel}px #0F6CFF`;
 
@@ -103,7 +103,7 @@ export const VideoTile = ({
         muted
         autoPlay
         className={`h-full ${className} ${
-          displayShape == 'circle' ? 'rounded-full' : ''
+          displayShape === 'circle' ? 'rounded-full' : ''
         }`}
         ref={videoRef}
         style={videoStyle}
@@ -117,14 +117,14 @@ export const VideoTile = ({
         <BottomControls
           label={label}
           isAudioMuted={isAudioMuted}
-          showControls={allowRemoteMute || displayShape == 'circle'}
+          showControls={allowRemoteMute || displayShape === 'circle'}
           showAudioMuteStatus={showAudioMuteStatus}
-          showGradient={displayShape != 'circle'}
+          showGradient={displayShape !== 'circle'}
           allowRemoteMute={allowRemoteMute}
           showAudioLevel={showAudioLevel}
           audioLevelDisplayType={audioLevelDisplayType}
           audioLevel={audioLevel}
-          showAvatar={showVideoMuteStatus == 'always' && !isVideoMuted}
+          showAvatar={showVideoMuteStatus === 'always' && !isVideoMuted}
           avatar={<Avatar label={peer.displayName} height="30px" />}
         />
       </div>
