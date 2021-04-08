@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AudioLevelDisplayType, Peer } from '../../types';
 import './index.css';
 import BottomControls from './BottomControls';
+import { Avatar } from '../Avatar';
 
 export interface VideoTileProps {
   stream: MediaStream;
@@ -14,8 +15,8 @@ export interface VideoTileProps {
   isVideoMuted?: boolean;
   isDominantSpeaker?: boolean;
   showDominantSpeakerStatus?: boolean;
-  showAudioMuteStatus?: boolean;
-  showVideoMuteStatus?: boolean;
+  showAudioMuteStatus: boolean;
+  showVideoMuteStatus: 'always' | 'onmute';
   showAudioLevel?: boolean;
   displayFit: 'contain' | 'cover';
   aspectRatio?: {
@@ -38,7 +39,7 @@ export const VideoTile = ({
   isVideoMuted,
   isDominantSpeaker,
   showAudioMuteStatus = true,
-  showVideoMuteStatus,
+  showVideoMuteStatus = 'onmute',
   showDominantSpeakerStatus,
   showAudioLevel,
   displayFit = 'contain',
@@ -75,7 +76,7 @@ export const VideoTile = ({
   if (isSquareOrCircle)
     videoTileStyle['width'] = videoStyle['width'] = height + 'px';
   else
-    videoTileStyle['width'] = videoStyle['width'] =
+    videoStyle['width'] =
       (aspectRatio.width / aspectRatio.height) * height + 'px';
 
   if (isLocal && videoSource == 'camera')
@@ -95,7 +96,7 @@ export const VideoTile = ({
 
   return (
     <div
-      className={`video-tile inline-block h-full relative m-2`}
+      className={`video-tile flex h-full relative items-center m-2`}
       style={videoTileStyle}
     >
       <video
@@ -107,6 +108,11 @@ export const VideoTile = ({
         ref={videoRef}
         style={videoStyle}
       ></video>
+      {isVideoMuted && (
+        <div className="absolute left-0 right-0 mx-auto text-center z-10">
+          <Avatar label={peer.displayName} />
+        </div>
+      )}
       <div className="absolute bottom-0 w-full">
         <BottomControls
           label={label}
@@ -118,6 +124,8 @@ export const VideoTile = ({
           showAudioLevel={showAudioLevel}
           audioLevelDisplayType={audioLevelDisplayType}
           audioLevel={audioLevel}
+          showAvatar={showVideoMuteStatus == 'always' && !isVideoMuted}
+          avatar={<Avatar label={peer.displayName} height="30px" />}
         />
       </div>
     </div>

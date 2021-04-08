@@ -18,6 +18,16 @@ const Template: Story<VideoTileProps> = args => {
   const [stream, setStream] = useState<MediaStream>();
 
   useEffect(() => {
+    const track = stream?.getVideoTracks()[0];
+    if (track) track.enabled = !args.isVideoMuted;
+  }, [args.isVideoMuted]);
+
+  useEffect(() => {
+    const track = stream?.getAudioTracks()[0];
+    if (track) track.enabled = !args.isAudioMuted;
+  }, [args.isAudioMuted]);
+
+  useEffect(() => {
     closeMediaStream(stream);
 
     if (args.videoSource == 'camera') {

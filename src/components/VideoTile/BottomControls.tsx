@@ -7,6 +7,8 @@ import './index.css';
 interface BottomControlsProps {
   label: string;
   isAudioMuted?: boolean;
+  showAvatar?: boolean;
+  avatar?: React.ReactNode;
   showGradient?: boolean;
   showAudioMuteStatus?: boolean;
   allowRemoteMute?: boolean;
@@ -18,22 +20,22 @@ interface BottomControlsProps {
 
 function AudioMuteButton({ isAudioMuted = false }) {
   return (
-    <span
-      className={`inline-block p-2 rounded-lg ${
+    <button
+      className={`inline-block py-2 rounded-lg outline-none ${
         isAudioMuted
           ? 'bg-red-main hover:bg-red-tint'
           : 'hover:bg-transparent-light'
       }`}
     >
       {isAudioMuted ? MicOff : MicOn}
-    </span>
+    </button>
   );
 }
 
 function AudioMuteIndicator({ isAudioMuted = false, className = '' }) {
   return (
     <span
-      className={`inline-block p-1 rounded-lg ${
+      className={`inline-block py-1 rounded-lg ${
         isAudioMuted ? 'bg-red-main' : ''
       } ${className}`}
     >
@@ -45,6 +47,8 @@ function AudioMuteIndicator({ isAudioMuted = false, className = '' }) {
 export default function BottomControls({
   label,
   isAudioMuted = false,
+  showAvatar = false,
+  avatar = null,
   showGradient = true,
   showAudioMuteStatus = true,
   allowRemoteMute = false,
@@ -72,10 +76,10 @@ export default function BottomControls({
         );
 
     labelLayer = (
-      <div className="flex items-center w-full mx-2">
-        <div className="flex-1 text-left">{audioStatus}</div>
+      <div className="flex items-center mx-2">
+        <div className="flex-1 text-left">{showAvatar && avatar}</div>
         <span>{label}</span>
-        <div className="flex-1"></div>
+        <div className="flex-1 text-right">{audioStatus}</div>
       </div>
     );
   }
