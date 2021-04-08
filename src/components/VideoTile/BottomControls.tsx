@@ -1,6 +1,7 @@
 import React from 'react';
 import { MicOff, MicOn } from '../../icons';
 import { Peer } from '../../types';
+import AudioLevelIndicators from '../AudioLevelIndicators/index';
 import './index.css';
 
 interface BottomControlsProps {
@@ -10,6 +11,13 @@ interface BottomControlsProps {
   showAudioMuteStatus?: boolean;
   allowRemoteMute?: boolean;
   showControls?: boolean;
+  audioLevelDisplayType?:
+    | 'inline-wave'
+    | 'inline-circle'
+    | 'border'
+    | 'avatar-circle';
+  audioLevel?: number;
+  showAudioLevel?: boolean;
 }
 
 function AudioMuteButton({ isAudioMuted = false }) {
@@ -45,6 +53,8 @@ export default function BottomControls({
   showAudioMuteStatus = true,
   allowRemoteMute = false,
   showControls = false,
+  audioLevelDisplayType,
+  audioLevel,
 }: BottomControlsProps) {
   let labelLayer = <span>{label}</span>;
   let controlLayer = null;
