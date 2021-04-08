@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 
@@ -11,7 +11,7 @@ export default function AudioLevelIndicators({
   audioLevelDisplayType,
   level,
 }: AudioLevelProps) {
-  if (audioLevelDisplayType == 'inline-circle')
+  if (audioLevelDisplayType === 'inline-circle')
     return <InlineCircle level={level} />;
   else return <InlineWave level={level} />;
 }

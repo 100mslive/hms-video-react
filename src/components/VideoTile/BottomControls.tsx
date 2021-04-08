@@ -41,8 +41,8 @@ export default function BottomControls({
         {audioLevel &&
           !isAudioMuted &&
           audioLevelDisplayType &&
-          (audioLevelDisplayType == 'inline-wave' ||
-            audioLevelDisplayType == 'inline-circle') && (
+          (audioLevelDisplayType === 'inline-wave' ||
+            audioLevelDisplayType === 'inline-circle') && (
             <AudioLevelIndicators
               audioLevelDisplayType={audioLevelDisplayType}
               level={audioLevel}
