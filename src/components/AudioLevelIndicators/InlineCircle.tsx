@@ -5,7 +5,7 @@ interface InlineCircleProps {
   level: number;
 }
 
-export default function InlineCircle({ level }: InlineCircleProps) {
+const InlineCircle = ({ level }: InlineCircleProps) => {
   return (
     <div className="inline-block" style={{ width: '22px', height: '32px' }}>
       <div className="flex items-center justify-center h-full w-full">
@@ -21,4 +21,6 @@ export default function InlineCircle({ level }: InlineCircleProps) {
       </div>
     </div>
   );
-}
+};
+
+export default InlineCircle;

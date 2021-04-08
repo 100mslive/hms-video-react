@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Avatar({ label = '', height = '' }) {
+export const Avatar = ({ label = '', height = '' }) => {
   return (
     <img
       className="inline rounded-full"
@@ -9,4 +9,4 @@ export function Avatar({ label = '', height = '' }) {
       style={{ height: height ? height : '' }}
     />
   );
-}
+};

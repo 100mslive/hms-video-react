@@ -8,10 +8,10 @@ interface AudioLevelIndicatorProps {
   level: number;
 }
 
-export default function AudioLevelIndicator({
+export const AudioLevelIndicator = ({
   type,
   level,
-}: AudioLevelIndicatorProps) {
+}: AudioLevelIndicatorProps) => {
   switch (type) {
     case 'inline-circle':
       return <InlineCircle level={level} />;
@@ -22,4 +22,4 @@ export default function AudioLevelIndicator({
     default:
       return null;
   }
-}
+};

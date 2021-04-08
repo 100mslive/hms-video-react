@@ -1,7 +1,7 @@
 import React from 'react';
 import { MicOff, MicOn } from '../../icons';
 import { AudioLevelDisplayType } from '../../types';
-import AudioLevelIndicator from '../AudioLevelIndicators/index';
+import { AudioLevelIndicator } from '../AudioLevelIndicators/index';
 import './index.css';
 
 interface BottomControlsProps {
@@ -18,10 +18,10 @@ interface BottomControlsProps {
   audioLevel?: number;
 }
 
-function AudioMuteButton({ isAudioMuted = false }) {
+const AudioMuteButton = ({ isAudioMuted = false }) => {
   return (
     <button
-      className={`inline-block py-2 rounded-lg outline-none ${
+      className={`inline-block p-2 rounded-lg outline-none ${
         isAudioMuted
           ? 'bg-red-main hover:bg-red-tint'
           : 'hover:bg-transparent-light'
@@ -30,21 +30,21 @@ function AudioMuteButton({ isAudioMuted = false }) {
       {isAudioMuted ? MicOff : MicOn}
     </button>
   );
-}
+};
 
-function AudioMuteIndicator({ isAudioMuted = false, className = '' }) {
+const AudioMuteIndicator = ({ isAudioMuted = false, className = '' }) => {
   return (
     <span
-      className={`inline-block py-1 rounded-lg ${
+      className={`inline-block p-1 rounded-lg ${
         isAudioMuted ? 'bg-red-main' : ''
       } ${className}`}
     >
       {isAudioMuted ? MicOff : MicOn}
     </span>
   );
-}
+};
 
-export default function BottomControls({
+const BottomControls = ({
   label,
   isAudioMuted = false,
   showAvatar = false,
@@ -56,7 +56,7 @@ export default function BottomControls({
   showAudioLevel = false,
   audioLevelDisplayType = 'inline-wave',
   audioLevel,
-}: BottomControlsProps) {
+}: BottomControlsProps) => {
   let labelLayer = <span>{label}</span>;
   let controlLayer = null;
 
@@ -105,4 +105,6 @@ export default function BottomControls({
       {controlLayer}
     </div>
   );
-}
+};
+
+export default BottomControls;

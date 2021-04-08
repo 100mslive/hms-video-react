@@ -5,7 +5,7 @@ interface InlineWaveProps {
   level: number;
 }
 
-export default function InlineWave({ level }: InlineWaveProps) {
+const InlineWave = ({ level }: InlineWaveProps) => {
   return (
     <div className="inline-block" style={{ width: '22px', height: '32px' }}>
       <div className="flex items-center justify-between h-full w-full">
@@ -39,4 +39,6 @@ export default function InlineWave({ level }: InlineWaveProps) {
       </div>
     </div>
   );
-}
+};
+
+export default InlineWave;
