@@ -58,6 +58,7 @@ const Template: Story<VideoTileProps> = args => {
 // https://storybook.js.org/docs/react/workflows/unit-testing
 export const DefaultVideoTile = Template.bind({});
 export const GoogleMeetVideoTile = Template.bind({});
+export const AroundVideoTile = Template.bind({});
 
 DefaultVideoTile.args = {
   isLocal: true,
@@ -78,4 +79,13 @@ GoogleMeetVideoTile.args = {
   audioLevelDisplayType: 'inline-wave',
   audioLevel: 40,
   className: '',
+};
+
+AroundVideoTile.args = {
+  isLocal: true,
+  peer: { id: '123', displayName: 'Eswar' },
+  displayShape: 'circle',
+  showAudioLevel: true,
+  audioLevelDisplayType: 'border',
+  audioLevel: 40,
 };

@@ -58,15 +58,18 @@ export default function BottomControls({
 
   if ((showAudioLevel || showAudioMuteStatus) && !showControls) {
     let audioStatus;
-    if (showAudioMuteStatus || isAudioMuted)
+    if (showAudioMuteStatus)
       audioStatus = <AudioMuteIndicator isAudioMuted={isAudioMuted} />;
-    if (showAudioLevel && !isAudioMuted)
-      audioStatus = (
-        <AudioLevelIndicator
-          type={audioLevelDisplayType}
-          level={audioLevel as number}
-        />
-      );
+    if (showAudioLevel && audioLevelDisplayType != 'border')
+      if (isAudioMuted)
+        audioStatus = <AudioMuteIndicator isAudioMuted={isAudioMuted} />;
+      else
+        audioStatus = (
+          <AudioLevelIndicator
+            type={audioLevelDisplayType}
+            level={audioLevel as number}
+          />
+        );
 
     labelLayer = (
       <div className="flex items-center w-full mx-2">
