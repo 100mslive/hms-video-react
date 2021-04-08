@@ -45,10 +45,7 @@ const Template: Story<VideoTileProps> = args => {
   }, [args.videoSource]);
 
   return (
-    <div
-      className="flex items-center justify-center"
-      style={{ height: '80vh' }}
-    >
+    <div className="flex items-center justify-center h-72 sm:h-80">
       {stream && <VideoTile {...args} stream={stream} />}
     </div>
   );
