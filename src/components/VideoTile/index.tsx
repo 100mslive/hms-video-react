@@ -4,7 +4,7 @@ import './index.css';
 import BottomControls from './BottomControls';
 
 export interface VideoTileProps {
-  stream: MediaStream | string;
+  stream: MediaStream;
   peer: Peer;
   className: string;
   isLocal?: boolean;
@@ -68,11 +68,22 @@ export const VideoTile = ({
     const parent = videoTile?.parentElement;
     const height = parent?.getBoundingClientRect().height as number;
     setHeight(height);
-  }, [aspectRatio, displayShape]);
+  }, [stream, aspectRatio, displayShape]);
 
-  if (isSquareOrCircle) videoTileStyle = { width: height + 'px' };
+  useEffect(() => {
+    if (videoRef && videoRef.current && stream) {
+      videoRef.current!.srcObject = stream;
+    }
+  }, [videoRef, stream]);
 
-  if (isLocal) videoStyle['transform'] = 'scale(-1, 1)';
+  if (isSquareOrCircle)
+    videoTileStyle['width'] = videoStyle['width'] = height + 'px';
+  else
+    videoTileStyle['width'] = videoStyle['width'] =
+      (aspectRatio.width / aspectRatio.height) * height + 'px';
+
+  if (isLocal && videoSource == 'camera')
+    videoStyle['transform'] = 'scale(-1, 1)';
 
   if (isLocal) {
     if (videoSource == 'screen') label = 'Your Screen';
@@ -99,9 +110,7 @@ export const VideoTile = ({
         }`}
         ref={videoRef}
         style={videoStyle}
-      >
-        <source src={stream as string} type="video/mp4" />
-      </video>
+      ></video>
       <div className="absolute bottom-0 w-full">
         <BottomControls
           label={label}
