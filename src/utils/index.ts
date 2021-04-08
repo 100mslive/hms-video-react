@@ -2,11 +2,7 @@ const closeMediaStream = function(stream: MediaStream) {
   if (!stream) {
     return;
   }
-  if (
-    MediaStreamTrack &&
-    MediaStreamTrack.prototype &&
-    MediaStreamTrack.prototype.stop
-  ) {
+  if (MediaStreamTrack) {
     var tracks, i, len;
 
     if (stream.getTracks) {
@@ -25,10 +21,6 @@ const closeMediaStream = function(stream: MediaStream) {
         tracks[i].stop();
       }
     }
-    // Deprecated by the spec, but still in use.
-  } else if (typeof stream.stop === 'function') {
-    console.log('closeMediaStream() | calling stop() on the MediaStream');
-    stream.stop();
   }
 };
 
