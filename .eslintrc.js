@@ -2,5 +2,6 @@
 module.exports = {
     "rules": {
         "complexity": ["error", 4],
+        curly: ["error", "all"]
     }
 }
