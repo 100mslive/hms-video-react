@@ -1,11 +1,16 @@
-import { useEffect } from '@storybook/client-api';
+import { useEffect } from 'react';
 import { Meta, Story } from '@storybook/react';
 import React, { useState } from 'react';
 import { VideoTile, VideoTileProps } from '.';
 import { closeMediaStream } from '../../utils';
-
+import VideoTileDocs from './VideoTile.mdx';
 const meta: Meta = {
   title: 'Video Tile',
+  parameters: {
+    docs: {
+      page: VideoTileDocs,
+    },
+  },
   component: VideoTile,
   argTypes: {
     audioLevel: { control: { type: 'range' } },
@@ -14,7 +19,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<VideoTileProps> = args => {
+export const Template: Story<VideoTileProps> = args => {
   const [stream, setStream] = useState<MediaStream>();
 
   useEffect(() => {
@@ -96,3 +101,5 @@ AroundVideoTile.args = {
   audioLevelDisplayType: 'border',
   audioLevel: 40,
 };
+
+console.log(DefaultVideoTile);

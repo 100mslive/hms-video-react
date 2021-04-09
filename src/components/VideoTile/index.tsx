@@ -5,26 +5,74 @@ import BottomControls from './BottomControls';
 import { Avatar } from '../Avatar';
 
 export interface VideoTileProps {
+  /**
+    MediaStream to be displayed.
+    */
   stream: MediaStream;
+  /**
+    HMS Peer object for which the tile is shown.
+    */
   peer: Peer;
+  /**
+    Additional classnames to be applied.
+    */
   className: string;
+  /**
+    Indiactes if the stream is local or not.
+    */
   isLocal?: boolean;
+  /**
+   Used to display label for video tile.
+    */
   videoSource: 'screen' | 'camera' | 'canvas';
+  /**
+    Used for displaying audioLevel of the videoTile, when showAudioLevel prop is true.
+    */
   audioLevel?: number;
+  /**
+   Indicates if Audio is Muted or not.
+   */
   isAudioMuted?: boolean;
+  /**
+   Indicates if Video is Muted or not.
+   */
   isVideoMuted?: boolean;
+  /**
+   Indicates if video tile speaker is dominant or not.
+   */
   isDominantSpeaker?: boolean;
+  /**
+   Indicates if dominant speaker will be shown or not.
+   */
   showDominantSpeakerStatus?: boolean;
+  /**
+   Indicates if Audio Status will be shown or not.
+   */
   showAudioMuteStatus: boolean;
   showVideoMuteStatus: 'always' | 'onmute';
+  /**
+   Indicates if Audio Lvele of tile will be shown or not.
+   */
   showAudioLevel?: boolean;
   displayFit: 'contain' | 'cover';
+  /**
+   Aspect ratio in which the video tile should be shown, will only be applied if display shape is rectangle.
+   */
   aspectRatio?: {
     width: number;
     height: number;
   };
+  /**
+   Shape of the video tile, you can control the aspect ratio using aspectRatio props.
+   */
   displayShape?: 'circle' | 'rectangle';
+  /**
+  Sets display type of Audio Level, inline-wave, inline-circle, border, avatar-circle are types available.
+   */
   audioLevelDisplayType?: AudioLevelDisplayType;
+  /**
+   *Specifies if remote mute and umute of tile is allowed or not.
+   */
   allowRemoteMute: boolean;
 }
 
