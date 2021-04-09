@@ -19,7 +19,7 @@ const meta: Meta = {
 
 export default meta;
 
-export const Template: Story<VideoTileProps> = args => {
+const Template: Story<VideoTileProps> = args => {
   const [stream, setStream] = useState<MediaStream>();
 
   useEffect(() => {
@@ -101,5 +101,3 @@ AroundVideoTile.args = {
   audioLevelDisplayType: 'border',
   audioLevel: 40,
 };
-
-console.log(DefaultVideoTile);

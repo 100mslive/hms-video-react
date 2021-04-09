@@ -1,7 +1,12 @@
 import VideoTile from './index.tsx';
-import { DefaultVideoTile, Template } from './VideoTile.stories.tsx';
+import {
+  DefaultVideoTile,
+  GoogleMeetVideoTile,
+  AroundVideoTile,
+} from './VideoTile.stories.tsx';
 import { Meta, Story, Canvas, Props } from '@storybook/addon-docs/blocks';
 import { Avatar } from '../Avatar/index.tsx';
+
 <Meta title="Design System|CreditCard" component={VideoTile} />;
 
 # VideoTile
@@ -20,15 +25,9 @@ import { VideoTile } from '100ms-sdk-component-library-react';
 
 <Canvas>
   <DefaultVideoTile
-    isLocal={true}
     videoSource="camera"
     peer={{ id: '123', displayName: 'Eswar' }}
-    aspectRatio={{ width: 1, height: 1 }}
-    displayShape="rectangle"
-    showAudioLevel={true}
-    audioLevelDisplayType="border"
-    audioLevel={40}
-    className="shadow-lg rounded-lg"
+    {...DefaultVideoTile.args}
   />
 </Canvas>
 
@@ -50,16 +49,10 @@ Note: You need to pass Object of Media Stream as props to VideoTile for it to wo
 ### Google Meet VideoTile
 
 <Canvas>
-  <DefaultVideoTile
-    isLocal={true}
+  <GoogleMeetVideoTile
     videoSource="camera"
     peer={{ id: '123', displayName: 'Eswar' }}
-    aspectRatio={{ width: 16, height: 9 }}
-    displayShape="rectangle"
-    showAudioLevel={true}
-    audioLevelDisplayType="border"
-    audioLevel={40}
-    className=""
+    {...GoogleMeetVideoTile.args}
   />
 </Canvas>
 
@@ -82,14 +75,10 @@ Note: You need to pass Object of Media Stream as props to VideoTile for it to wo
 ### Campfire VideoTile
 
 <Canvas>
-  <DefaultVideoTile
-    isLocal={true}
+  <AroundVideoTile
     videoSource="camera"
     peer={{ id: '123', displayName: 'Eswar' }}
-    displayShape="circle"
-    showAudioLevel={true}
-    audioLevelDisplayType="border"
-    audioLevel={40}
+    {...AroundVideoTile.args}
   />
 </Canvas>
 
