@@ -7,25 +7,49 @@ import { Avatar } from '../Avatar';
 export interface VideoTileProps {
   stream: MediaStream;
   peer: Peer;
-  className: string;
+  /**
+    Additional classnames to be applied.
+    */
+  className?: string;
+  /**
+    Indiactes if the stream is local or not.
+    */
   isLocal?: boolean;
-  videoSource: 'screen' | 'camera' | 'canvas';
+  /**
+   Used to display label for video tile.
+    */
+  videoSource?: 'screen' | 'camera' | 'canvas';
+  /**
+    Used for displaying audioLevel of the videoTile, when showAudioLevel prop is true.
+    */
   audioLevel?: number;
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   isDominantSpeaker?: boolean;
   showDominantSpeakerStatus?: boolean;
-  showAudioMuteStatus: boolean;
-  showVideoMuteStatus: 'always' | 'onmute';
+  /**
+   Indicates if Audio Status will be shown or not.
+   */
+  showAudioMuteStatus?: boolean;
+  showVideoMuteStatus?: 'always' | 'onmute';
+  /**
+   Indicates if Audio Lvele of tile will be shown or not.
+   */
   showAudioLevel?: boolean;
-  displayFit: 'contain' | 'cover';
+  displayFit?: 'contain' | 'cover';
+  /**
+   Aspect ratio in which the video tile should be shown, will only be applied if display shape is rectangle.
+   */
   aspectRatio?: {
     width: number;
     height: number;
   };
   displayShape?: 'circle' | 'rectangle';
+  /**
+  Sets display type of Audio Level, inline-wave, inline-circle, border, avatar-circle are types
+   */
   audioLevelDisplayType?: AudioLevelDisplayType;
-  allowRemoteMute: boolean;
+  allowRemoteMute?: boolean;
 }
 
 export const VideoTile = ({

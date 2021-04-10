@@ -5,7 +5,7 @@ import { VideoTile, VideoTileProps } from '.';
 import { closeMediaStream } from '../../utils';
 
 const meta: Meta = {
-  title: 'Video Tile',
+  title: 'videoTile',
   component: VideoTile,
   argTypes: {
     audioLevel: { control: { type: 'range' } },
@@ -14,7 +14,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<VideoTileProps> = args => {
+const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   const [stream, setStream] = useState<MediaStream>();
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const Template: Story<VideoTileProps> = args => {
   }, [args.videoSource]);
 
   return (
-    <div className="flex items-center justify-center h-72 sm:h-80">
+    <div className="flex items-center justify-center h-full sm:h-80">
       {stream && <VideoTile {...args} stream={stream} />}
     </div>
   );
