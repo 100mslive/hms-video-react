@@ -47,7 +47,12 @@ export interface VideoListProps {
 
 export const VideoList = ({
   streams,
+  maxTileHeight,
+  maxTileWidth,
+  overflow,
   maxTileCount,
+  tileArrangeDirection = 'row',
+  dominantSpeakers,
   className,
   displayFit = 'contain',
   aspectRatio = { width: 16, height: 9 },
@@ -61,33 +66,41 @@ export const VideoList = ({
     : streams.length;
 
   return (
-    <div>
+    <div
+      className={`h-full w-full flex flex-wrap justify-center content-evenly justify-items-center ${className} flex-${tileArrangeDirection} `}
+    >
       <ContainerDimensions>
         {({ width, height }) => {
           let w = '100%';
           let h = '100%';
-          if (videoCount > 0) {
-            let largestRectObj = largestRect(
-              width,
-              height,
-              videoCount,
-              160,
-              90
-            );
-            w = largestRectObj.width;
-            h = largestRectObj.height;
-          }
 
+          let largestRectObj = largestRect(
+            width,
+            height,
+            videoCount,
+            aspectRatio.width,
+            aspectRatio.height
+          );
+          w = largestRectObj.width;
+          h = largestRectObj.height;
+          console.log(largestRectObj);
+          console.log(width, height);
+          console.log(videoCount);
           return (
-            <>
-              {streams.map((item, index) => {
+            <React.Fragment>
+              {streams.slice(0, videoCount).map((item, index) => {
                 return (
-                  <div style={{ height: h, width: w }} key={index}>
-                    <VideoTile {...item} />
+                  <div style={{ maxHeight: h, maxWidth: w }} key={index}>
+                    <VideoTile
+                      {...item}
+                      displayFit={displayFit}
+                      displayShape={displayShape}
+                      audioLevelDisplayType={audioLevelDisplayType}
+                    />
                   </div>
                 );
               })}
-            </>
+            </React.Fragment>
           );
         }}
       </ContainerDimensions>

@@ -5,7 +5,7 @@ import { VideoTile, VideoTileProps } from '.';
 import { closeMediaStream } from '../../utils';
 
 const meta: Meta = {
-  title: 'videoTile',
+  title: 'Video Tile',
   component: VideoTile,
   argTypes: {
     audioLevel: { control: { type: 'range' } },
@@ -48,7 +48,6 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
           setStream(stream);
         });
     }
-
     return () => {
       closeMediaStream(stream);
     };
@@ -75,6 +74,7 @@ DefaultVideoTile.args = {
   showAudioLevel: true,
   audioLevelDisplayType: 'border',
   audioLevel: 40,
+  videoSource: 'camera',
 };
 
 GoogleMeetVideoTile.args = {
@@ -86,6 +86,7 @@ GoogleMeetVideoTile.args = {
   audioLevelDisplayType: 'inline-wave',
   audioLevel: 40,
   className: '',
+  videoSource: 'camera',
 };
 
 AroundVideoTile.args = {
@@ -95,4 +96,5 @@ AroundVideoTile.args = {
   showAudioLevel: true,
   audioLevelDisplayType: 'border',
   audioLevel: 40,
+  videoSource: 'camera',
 };

@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import React, { useState } from 'react';
 import { VideoList, VideoListProps } from '.';
 import { closeMediaStream } from '../../utils';
-import { Peer, VideoSource } from '../../types';
+import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
 
 const meta: Meta = {
   title: 'Video List',
@@ -55,6 +55,7 @@ const Template: Story<VideoListProps> = args => {
         .then(function(stream) {
           // @ts-ignore
           window.stream = stream;
+          console.log(stream);
           setCameraStream(stream);
         });
     }
@@ -65,6 +66,7 @@ const Template: Story<VideoListProps> = args => {
         .then(function(stream: MediaStream | undefined) {
           // @ts-ignore
           window.stream = stream;
+          console.log(stream);
           setScreenStream(stream);
         });
     }
@@ -76,11 +78,20 @@ const Template: Story<VideoListProps> = args => {
   }, [isCameraStreamRequired]);
 
   return (
-    <div className="flex items-center justify-center h-full sm:h-80">
+    <div className="h-screen">
       {cameraStream && (
         <VideoList
           {...rest}
-          streams={streams.map(item => ({ ...item, stream: cameraStream }))}
+          streams={streams
+            .filter(
+              item =>
+                item.videoSource == 'screen' || item.videoSource == 'camera'
+            )
+            .map((item): any => ({
+              ...item,
+              stream:
+                item.videoSource == 'screen' ? screenStream : cameraStream,
+            }))}
         />
       )}
     </div>
@@ -92,8 +103,24 @@ DefaultList.args = {
   streams: [
     {
       stream: new MediaStream(),
-      peer: { id: '123', displayName: 'Nikhil' },
+      peer: { id: '123', displayName: 'Nikhil1' },
       videoSource: 'camera',
     },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil2' },
+      videoSource: 'camera',
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil3' },
+      videoSource: 'camera',
+    },
+    // {
+    //   stream: new MediaStream(),
+    //   peer: { id: '123', displayName: 'Nikhil' },
+    //   videoSource: 'screen',
+    // },
   ],
+  maxTileCount: 4,
 };
