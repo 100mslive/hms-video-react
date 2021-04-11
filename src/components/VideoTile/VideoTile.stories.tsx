@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { VideoTile, VideoTileProps } from '.';
 import { closeMediaStream } from '../../utils';
 import VideoTileDocs from './VideoTile.mdx';
+
 const meta: Meta = {
   title: 'Video Tile',
   parameters: {
