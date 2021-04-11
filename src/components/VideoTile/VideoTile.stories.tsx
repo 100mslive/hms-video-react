@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from '@storybook/client-api';
 import { Meta, Story } from '@storybook/react';
 import React, { useState } from 'react';
 import { VideoTile, VideoTileProps } from '.';
@@ -7,12 +7,12 @@ import VideoTileDocs from './VideoTile.mdx';
 
 const meta: Meta = {
   title: 'Video Tile',
+  component: VideoTile,
   parameters: {
     docs: {
       page: VideoTileDocs,
     },
   },
-  component: VideoTile,
   argTypes: {
     audioLevel: { control: { type: 'range' } },
     stream: { control: { disable: true } },
