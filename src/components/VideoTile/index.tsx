@@ -158,7 +158,7 @@ export const VideoTile = ({
           label={label}
           isAudioMuted={isAudioMuted}
           showAudioMuteStatus={showAudioMuteStatus}
-          showGradient={isCircle}
+          showGradient={!isCircle}
           allowRemoteMute={allowRemoteMute}
           showAudioLevel={showAudioLevel && audioLevelDisplayType !== 'border'}
           audioLevelDisplayType={audioLevelDisplayType}
