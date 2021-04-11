@@ -1,24 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { AudioLevelDisplayType, Peer } from '../../types';
 import './index.css';
-import BottomControls from './BottomControls';
+import { BottomControls, BottomControlsProps } from './BottomControls';
 import { Avatar } from '../Avatar';
+import { getVideoTileLabel } from '../../utils';
 
 export interface VideoTileProps {
   stream: MediaStream;
   peer: Peer;
-  className: string;
   isLocal?: boolean;
   videoSource: 'screen' | 'camera' | 'canvas';
   audioLevel?: number;
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
-  isDominantSpeaker?: boolean;
-  showDominantSpeakerStatus?: boolean;
   showAudioMuteStatus: boolean;
-  showVideoMuteStatus: 'always' | 'onmute';
   showAudioLevel?: boolean;
-  displayFit: 'contain' | 'cover';
+  objectFit: 'contain' | 'cover';
   aspectRatio?: {
     width: number;
     height: number;
@@ -26,27 +23,32 @@ export interface VideoTileProps {
   displayShape?: 'circle' | 'rectangle';
   audioLevelDisplayType?: AudioLevelDisplayType;
   allowRemoteMute: boolean;
+  classes?: {
+    root?: string;
+    video?: string;
+    bottomControls?: BottomControlsProps['classes'];
+  };
 }
 
 export const VideoTile = ({
   stream,
   peer,
-  className = 'shadow-lg rounded-lg',
   isLocal = false,
   videoSource = 'camera',
   audioLevel,
   isAudioMuted = false,
-  isVideoMuted,
-  isDominantSpeaker,
+  isVideoMuted = false,
   showAudioMuteStatus = true,
-  showVideoMuteStatus = 'onmute',
-  showDominantSpeakerStatus,
-  showAudioLevel,
-  displayFit = 'contain',
+  showAudioLevel = true,
+  objectFit = 'cover',
   aspectRatio = { width: 16, height: 9 },
   displayShape = 'rectangle',
-  audioLevelDisplayType,
+  audioLevelDisplayType = 'border',
   allowRemoteMute = false,
+  classes = {
+    root: '',
+    video: 'rounded-lg shadow-lg',
+  },
 }: VideoTileProps) => {
   const [height, setHeight] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -56,9 +58,9 @@ export const VideoTile = ({
       aspectRatio.width === aspectRatio.height) ||
     displayShape === 'circle';
 
-  let label;
-  let videoTileStyle: React.CSSProperties = {};
-  let videoStyle: React.CSSProperties = { objectFit: 'cover' };
+  const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
+  const videoTileStyle: React.CSSProperties = {};
+  const videoStyle: React.CSSProperties = { objectFit };
 
   useEffect(() => {
     const videoTile = videoRef.current?.parentElement;
@@ -82,27 +84,24 @@ export const VideoTile = ({
   if (isLocal && videoSource === 'camera')
     videoStyle['transform'] = 'scale(-1, 1)';
 
-  if (isLocal) {
-    if (videoSource === 'screen') label = 'Your Screen';
-    else label = 'You';
-  } else {
-    if (videoSource === 'screen') label = `${peer.displayName}'s Screen`;
-    else label = peer.displayName;
-  }
-
-  if (showAudioLevel && audioLevel && audioLevelDisplayType === 'border')
+  if (
+    !isAudioMuted &&
+    showAudioLevel &&
+    audioLevel &&
+    audioLevelDisplayType === 'border'
+  )
     videoStyle['boxShadow'] = `0px 0px ${0.12 *
       audioLevel}px #0F6CFF, 0px 0px ${0.8 * audioLevel}px #0F6CFF`;
 
   return (
     <div
-      className={`video-tile flex h-full relative items-center m-2`}
+      className={`video-tile flex h-full relative items-center m-2 ${classes.root}`}
       style={videoTileStyle}
     >
       <video
         muted
         autoPlay
-        className={`h-full ${className} ${
+        className={`h-full ${classes.video} ${
           displayShape === 'circle' ? 'rounded-full' : ''
         }`}
         ref={videoRef}
@@ -117,15 +116,13 @@ export const VideoTile = ({
         <BottomControls
           label={label}
           isAudioMuted={isAudioMuted}
-          showControls={allowRemoteMute || displayShape === 'circle'}
           showAudioMuteStatus={showAudioMuteStatus}
           showGradient={displayShape !== 'circle'}
           allowRemoteMute={allowRemoteMute}
-          showAudioLevel={showAudioLevel}
+          showAudioLevel={showAudioLevel && audioLevelDisplayType != 'border'}
           audioLevelDisplayType={audioLevelDisplayType}
           audioLevel={audioLevel}
-          showAvatar={showVideoMuteStatus === 'always' && !isVideoMuted}
-          avatar={<Avatar label={peer.displayName} height="30px" />}
+          classes={classes.bottomControls}
         />
       </div>
     </div>

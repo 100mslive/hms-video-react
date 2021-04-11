@@ -1,4 +1,21 @@
-const closeMediaStream = function(stream: MediaStream | undefined) {
+const getVideoTileLabel = (
+  peerName: string,
+  isLocal: boolean,
+  videoSource: 'screen' | 'camera' | 'canvas'
+) => {
+  let label;
+  if (isLocal) {
+    if (videoSource === 'screen') label = 'Your Screen';
+    else label = 'You';
+  } else {
+    if (videoSource === 'screen') label = `${peerName}'s Screen`;
+    else label = peerName;
+  }
+
+  return label;
+};
+
+const closeMediaStream = (stream: MediaStream | undefined) => {
   if (!stream) {
     return;
   }
@@ -24,4 +41,4 @@ const closeMediaStream = function(stream: MediaStream | undefined) {
   }
 };
 
-export { closeMediaStream };
+export { closeMediaStream, getVideoTileLabel };
