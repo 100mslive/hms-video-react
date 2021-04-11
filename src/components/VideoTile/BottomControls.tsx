@@ -5,7 +5,7 @@ import { AudioMuteIndicator, AudioMuteButton } from '../MediaIcons';
 import './index.css';
 
 export interface BottomControlsProps {
-  label: string;
+  label?: string;
   isAudioMuted?: boolean;
   showGradient?: boolean;
   showAudioMuteStatus?: boolean;
@@ -22,7 +22,7 @@ export interface BottomControlsProps {
 }
 
 export const BottomControls = ({
-  label,
+  label = '',
   isAudioMuted = false,
   showGradient = true,
   showAudioMuteStatus = true,
@@ -60,14 +60,6 @@ export const BottomControls = ({
     ],
   ]);
 
-  const audioStatus = audioStatusMap.has(
-    [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString()
-  )
-    ? audioStatusMap.get(
-        [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString()
-      )
-    : null;
-
   return (
     <div
       className={`bottom-controls-container pb-2 text-white px-2 ${classes?.root}`}
@@ -79,7 +71,9 @@ export const BottomControls = ({
             allowRemoteMute ? 'hover-hide' : ''
           } ${classes?.controlStatus}`}
         >
-          {audioStatus}
+          {audioStatusMap.get(
+            [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString()
+          )}
         </div>
         <div className={`mt-1 ${classes?.label}`}>{label}</div>
       </div>

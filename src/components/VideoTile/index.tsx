@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { AudioLevelDisplayType, Peer } from '../../types';
 import './index.css';
 import { BottomControls, BottomControlsProps } from './BottomControls';
@@ -30,6 +30,65 @@ export interface VideoTileProps {
   };
 }
 
+interface VideoProps extends Partial<VideoTileProps> {
+  isSquareOrCircle?: boolean;
+  height?: number;
+  className?: string;
+}
+
+const Video = forwardRef(
+  (
+    {
+      objectFit,
+      isSquareOrCircle,
+      height = 1,
+      aspectRatio = { width: 16, height: 9 },
+      isLocal,
+      videoSource,
+      isAudioMuted,
+      showAudioLevel,
+      audioLevel,
+      audioLevelDisplayType,
+      displayShape,
+      className,
+    }: VideoProps,
+    ref: React.Ref<HTMLVideoElement>
+  ) => {
+    const getVideoStyles = () => {
+      const videoStyle: React.CSSProperties = { objectFit };
+
+      videoStyle['width'] = isSquareOrCircle
+        ? height + 'px'
+        : (aspectRatio.width / aspectRatio.height) * height + 'px';
+      videoStyle['transform'] =
+        isLocal && videoSource === 'camera' ? 'scale(-1, 1)' : undefined;
+
+      videoStyle['boxShadow'] =
+        !isAudioMuted &&
+        showAudioLevel &&
+        audioLevel &&
+        audioLevelDisplayType === 'border'
+          ? `0px 0px ${0.12 * audioLevel}px #0F6CFF, 0px 0px ${0.8 *
+              audioLevel}px #0F6CFF`
+          : undefined;
+
+      return videoStyle;
+    };
+
+    return (
+      <video
+        muted
+        autoPlay
+        className={`h-full ${className} ${
+          displayShape === 'circle' ? 'rounded-full' : ''
+        }`}
+        ref={ref}
+        style={getVideoStyles()}
+      ></video>
+    );
+  }
+);
+
 export const VideoTile = ({
   stream,
   peer,
@@ -52,15 +111,11 @@ export const VideoTile = ({
 }: VideoTileProps) => {
   const [height, setHeight] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
-
-  const isSquareOrCircle =
-    (displayShape === 'rectangle' &&
-      aspectRatio.width === aspectRatio.height) ||
-    displayShape === 'circle';
-
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
-  const videoTileStyle: React.CSSProperties = {};
-  const videoStyle: React.CSSProperties = { objectFit };
+  const isSquare =
+    displayShape === 'rectangle' && aspectRatio.width === aspectRatio.height;
+  const isCircle = displayShape === 'circle';
+  const isSquareOrCircle = isSquare || isCircle;
 
   useEffect(() => {
     const videoTile = videoRef.current?.parentElement;
@@ -70,43 +125,29 @@ export const VideoTile = ({
   }, [stream, aspectRatio, displayShape]);
 
   useEffect(() => {
-    if (videoRef && videoRef.current && stream) {
-      videoRef.current!.srcObject = stream;
-    }
+    videoRef.current!.srcObject = videoRef && videoRef.current && stream;
   }, [videoRef, stream]);
-
-  if (isSquareOrCircle)
-    videoTileStyle['width'] = videoStyle['width'] = height + 'px';
-  else
-    videoStyle['width'] =
-      (aspectRatio.width / aspectRatio.height) * height + 'px';
-
-  if (isLocal && videoSource === 'camera')
-    videoStyle['transform'] = 'scale(-1, 1)';
-
-  if (
-    !isAudioMuted &&
-    showAudioLevel &&
-    audioLevel &&
-    audioLevelDisplayType === 'border'
-  )
-    videoStyle['boxShadow'] = `0px 0px ${0.12 *
-      audioLevel}px #0F6CFF, 0px 0px ${0.8 * audioLevel}px #0F6CFF`;
 
   return (
     <div
       className={`video-tile flex h-full relative items-center m-2 ${classes.root}`}
-      style={videoTileStyle}
+      style={{ width: isSquareOrCircle ? height + 'px' : undefined }}
     >
-      <video
-        muted
-        autoPlay
-        className={`h-full ${classes.video} ${
-          displayShape === 'circle' ? 'rounded-full' : ''
-        }`}
+      <Video
         ref={videoRef}
-        style={videoStyle}
-      ></video>
+        objectFit={objectFit}
+        isSquareOrCircle={isSquareOrCircle}
+        height={height}
+        aspectRatio={aspectRatio}
+        isLocal={isLocal}
+        videoSource={videoSource}
+        isAudioMuted={isAudioMuted}
+        showAudioLevel={showAudioLevel}
+        audioLevel={audioLevel}
+        audioLevelDisplayType={audioLevelDisplayType}
+        displayShape={displayShape}
+        className={classes.video}
+      />
       {isVideoMuted && (
         <div className="absolute left-0 right-0 mx-auto text-center z-10">
           <Avatar label={peer.displayName} />
@@ -117,9 +158,9 @@ export const VideoTile = ({
           label={label}
           isAudioMuted={isAudioMuted}
           showAudioMuteStatus={showAudioMuteStatus}
-          showGradient={displayShape !== 'circle'}
+          showGradient={isCircle}
           allowRemoteMute={allowRemoteMute}
-          showAudioLevel={showAudioLevel && audioLevelDisplayType != 'border'}
+          showAudioLevel={showAudioLevel && audioLevelDisplayType !== 'border'}
           audioLevelDisplayType={audioLevelDisplayType}
           audioLevel={audioLevel}
           classes={classes.bottomControls}

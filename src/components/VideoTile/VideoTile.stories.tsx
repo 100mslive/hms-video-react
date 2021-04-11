@@ -20,12 +20,16 @@ const Template: Story<VideoTileProps> = args => {
 
   useEffect(() => {
     const track = stream?.getVideoTracks()[0];
-    if (track) track.enabled = !args.isVideoMuted;
+    if (track) {
+      track.enabled = !args.isVideoMuted;
+    }
   }, [args.isVideoMuted]);
 
   useEffect(() => {
     const track = stream?.getAudioTracks()[0];
-    if (track) track.enabled = !args.isAudioMuted;
+    if (track) {
+      track.enabled = !args.isAudioMuted;
+    }
   }, [args.isAudioMuted]);
 
   useEffect(() => {
