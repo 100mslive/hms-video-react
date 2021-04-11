@@ -1,27 +1,25 @@
-const closeMediaStream = function(stream: MediaStream | undefined) {
+const getVideoTileLabel = (
+  peerName: string,
+  isLocal: boolean,
+  videoSource: 'screen' | 'camera' | 'canvas'
+) => {
+  // Map [isLocal, videoSource] to the label to be displayed.
+  const labelMap = new Map<string, string>([
+    [[true, 'screen'].toString(), 'Your Screen'],
+    [[true, 'camera'].toString(), 'You'],
+    [[false, 'screen'].toString(), `${peerName}'s Screen`],
+    [[false, 'camera'].toString(), peerName],
+  ]);
+
+  return labelMap.get([isLocal, videoSource].toString());
+};
+
+const closeMediaStream = (stream: MediaStream | undefined) => {
   if (!stream) {
     return;
   }
-  if (MediaStreamTrack) {
-    var tracks, i, len;
-
-    if (stream.getTracks) {
-      tracks = stream.getTracks();
-      for (i = 0, len = tracks.length; i < len; i += 1) {
-        tracks[i].stop();
-      }
-    } else {
-      tracks = stream.getAudioTracks();
-      for (i = 0, len = tracks.length; i < len; i += 1) {
-        tracks[i].stop();
-      }
-
-      tracks = stream.getVideoTracks();
-      for (i = 0, len = tracks.length; i < len; i += 1) {
-        tracks[i].stop();
-      }
-    }
-  }
+  const tracks = stream.getTracks();
+  tracks.forEach(track => track.stop());
 };
 
-export { closeMediaStream };
+export { closeMediaStream, getVideoTileLabel };

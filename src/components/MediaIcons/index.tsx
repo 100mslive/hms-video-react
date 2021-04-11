@@ -4,7 +4,7 @@ import { MicOff, MicOn } from '../../icons';
 export const AudioMuteButton = ({ isAudioMuted = false }) => {
   return (
     <button
-      className={`inline-block p-2 rounded-lg outline-none ${
+      className={`inline-block p-2 rounded-lg focus:outline-none ${
         isAudioMuted
           ? 'bg-red-main hover:bg-red-tint'
           : 'hover:bg-transparent-light'

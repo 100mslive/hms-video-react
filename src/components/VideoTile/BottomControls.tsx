@@ -1,110 +1,89 @@
 import React from 'react';
-import { MicOff, MicOn } from '../../icons';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators/index';
+import { AudioMuteIndicator, AudioMuteButton } from '../MediaIcons';
 import './index.css';
 
-interface BottomControlsProps {
-  label: string;
+export interface BottomControlsProps {
+  label?: string;
   isAudioMuted?: boolean;
-  showAvatar?: boolean;
-  avatar?: React.ReactNode;
   showGradient?: boolean;
   showAudioMuteStatus?: boolean;
   allowRemoteMute?: boolean;
-  showControls?: boolean;
   showAudioLevel?: boolean;
   audioLevelDisplayType?: AudioLevelDisplayType;
   audioLevel?: number;
+  classes?: {
+    root?: string;
+    controlStatus?: string;
+    label?: string;
+    controls?: string;
+  };
 }
 
-const AudioMuteButton = ({ isAudioMuted = false }) => {
-  return (
-    <button
-      className={`inline-block p-2 rounded-lg outline-none ${
-        isAudioMuted
-          ? 'bg-red-main hover:bg-red-tint'
-          : 'hover:bg-transparent-light'
-      }`}
-    >
-      {isAudioMuted ? MicOff : MicOn}
-    </button>
-  );
-};
-
-const AudioMuteIndicator = ({ isAudioMuted = false, className = '' }) => {
-  return (
-    <span
-      className={`inline-block p-1 rounded-lg ${
-        isAudioMuted ? 'bg-red-main' : ''
-      } ${className}`}
-    >
-      {isAudioMuted ? MicOff : MicOn}
-    </span>
-  );
-};
-
-const BottomControls = ({
-  label,
+export const BottomControls = ({
+  label = '',
   isAudioMuted = false,
-  showAvatar = false,
-  avatar = null,
   showGradient = true,
   showAudioMuteStatus = true,
   allowRemoteMute = false,
-  showControls = false,
   showAudioLevel = false,
   audioLevelDisplayType = 'inline-wave',
   audioLevel,
+  classes = {
+    root: 'text-center rounded-lg',
+  },
 }: BottomControlsProps) => {
-  let labelLayer = <span>{label}</span>;
-  let controlLayer = null;
-
-  if ((showAudioLevel || showAudioMuteStatus) && !showControls) {
-    let audioStatus;
-    if (showAudioMuteStatus)
-      audioStatus = <AudioMuteIndicator isAudioMuted={isAudioMuted} />;
-    if (showAudioLevel && audioLevelDisplayType !== 'border')
-      if (isAudioMuted)
-        audioStatus = <AudioMuteIndicator isAudioMuted={isAudioMuted} />;
-      else
-        audioStatus = (
-          <AudioLevelIndicator
-            type={audioLevelDisplayType}
-            level={audioLevel as number}
-          />
-        );
-
-    labelLayer = (
-      <div className="flex items-center mx-2">
-        <div className="flex-1 text-left">{showAvatar && avatar}</div>
-        <span>{label}</span>
-        <div className="flex-1 text-right">{audioStatus}</div>
-      </div>
-    );
-  }
-
-  if (showControls) {
-    controlLayer = (
-      <div className="bottom-controls text-center mt-1">
-        {allowRemoteMute ? (
-          <AudioMuteButton isAudioMuted={isAudioMuted} />
-        ) : (
-          <AudioMuteIndicator isAudioMuted={isAudioMuted} />
-        )}
-      </div>
-    );
-  }
+  // Map [showAudioMuteStatus, showAudioLevel, isAudioMuted] to audio status - actual element to render.
+  const audioStatusMap = new Map<string, React.ReactNode>([
+    [
+      [true, true, true].toString(),
+      <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
+    ],
+    [
+      [true, false, true].toString(),
+      <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
+    ],
+    [
+      [true, true, false].toString(),
+      <AudioLevelIndicator
+        type={audioLevelDisplayType}
+        level={audioLevel as number}
+      />,
+    ],
+    [
+      [false, true, false].toString(),
+      <AudioLevelIndicator
+        type={audioLevelDisplayType}
+        level={audioLevel as number}
+      />,
+    ],
+  ]);
 
   return (
     <div
-      className="bottom-controls-container pb-2 text-center text-white rounded-lg"
+      className={`bottom-controls-container pb-2 text-white px-2 ${classes?.root}`}
       style={!showGradient ? { background: 'none' } : {}}
     >
-      {labelLayer}
-      {controlLayer}
+      <div>
+        <div
+          className={`bottom-controls-status ${
+            allowRemoteMute ? 'hover-hide' : ''
+          } ${classes?.controlStatus}`}
+        >
+          {audioStatusMap.get(
+            [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString()
+          )}
+        </div>
+        <div className={`mt-1 ${classes?.label}`}>{label}</div>
+      </div>
+      {allowRemoteMute && (
+        <div
+          className={`bottom-controls text-center mt-1 ${classes?.controls}`}
+        >
+          <AudioMuteButton isAudioMuted={isAudioMuted} />
+        </div>
+      )}
     </div>
   );
 };
-
-export default BottomControls;

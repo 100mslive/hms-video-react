@@ -14,6 +14,7 @@ const meta: Meta = {
   component: VideoTile,
   argTypes: {
     audioLevel: { control: { type: 'range' } },
+    stream: { control: { disable: true } },
   },
 };
 
@@ -24,12 +25,16 @@ const Template: Story<VideoTileProps> = args => {
 
   useEffect(() => {
     const track = stream?.getVideoTracks()[0];
-    if (track) track.enabled = !args.isVideoMuted;
+    if (track) {
+      track.enabled = !args.isVideoMuted;
+    }
   }, [args.isVideoMuted]);
 
   useEffect(() => {
     const track = stream?.getAudioTracks()[0];
-    if (track) track.enabled = !args.isAudioMuted;
+    if (track) {
+      track.enabled = !args.isAudioMuted;
+    }
   }, [args.isAudioMuted]);
 
   useEffect(() => {
@@ -39,8 +44,6 @@ const Template: Story<VideoTileProps> = args => {
       window.navigator.mediaDevices
         .getUserMedia({ video: true })
         .then(function(stream) {
-          // @ts-ignore
-          window.stream = stream;
           setStream(stream);
         });
     } else if (args.videoSource === 'screen') {
@@ -48,8 +51,6 @@ const Template: Story<VideoTileProps> = args => {
         // @ts-ignore
         .getDisplayMedia({ video: true })
         .then(function(stream: MediaStream | undefined) {
-          // @ts-ignore
-          window.stream = stream;
           setStream(stream);
         });
     }
@@ -70,7 +71,7 @@ const Template: Story<VideoTileProps> = args => {
 // https://storybook.js.org/docs/react/workflows/unit-testing
 export const DefaultVideoTile = Template.bind({});
 export const GoogleMeetVideoTile = Template.bind({});
-export const AroundVideoTile = Template.bind({});
+export const CampFireVideoTile = Template.bind({});
 
 DefaultVideoTile.args = {
   isLocal: true,
@@ -90,10 +91,17 @@ GoogleMeetVideoTile.args = {
   showAudioLevel: true,
   audioLevelDisplayType: 'inline-wave',
   audioLevel: 40,
-  className: '',
+  classes: {
+    video: ' ',
+    bottomControls: {
+      root: 'bg-none text-left',
+      controlStatus: 'inline-block mr-2',
+      label: 'inline-block',
+    },
+  },
 };
 
-AroundVideoTile.args = {
+CampFireVideoTile.args = {
   isLocal: true,
   peer: { id: '123', displayName: 'Eswar' },
   displayShape: 'circle',
