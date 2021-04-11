@@ -64,6 +64,8 @@ export const VideoList = ({
   let videoCount: number = maxTileCount
     ? Math.min(streams.length, maxTileCount)
     : streams.length;
+  aspectRatio =
+    displayShape == 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
   return (
     <div
@@ -90,12 +92,17 @@ export const VideoList = ({
             <React.Fragment>
               {streams.slice(0, videoCount).map((item, index) => {
                 return (
-                  <div style={{ maxHeight: h, maxWidth: w }} key={index}>
+                  <div
+                    style={{ height: h, width: w }}
+                    key={index}
+                    className="p-2"
+                  >
                     <VideoTile
                       {...item}
                       displayFit={displayFit}
                       displayShape={displayShape}
                       audioLevelDisplayType={audioLevelDisplayType}
+                      showAudioLevel={true}
                     />
                   </div>
                 );

@@ -75,7 +75,7 @@ const Template: Story<VideoListProps> = args => {
       closeMediaStream(screenStream);
       closeMediaStream(cameraStream);
     };
-  }, [isCameraStreamRequired]);
+  }, [args.streams]);
 
   return (
     <div className="h-screen">
@@ -105,16 +105,19 @@ DefaultList.args = {
       stream: new MediaStream(),
       peer: { id: '123', displayName: 'Nikhil1' },
       videoSource: 'camera',
+      audioLevel: 50,
     },
     {
       stream: new MediaStream(),
       peer: { id: '123', displayName: 'Nikhil2' },
       videoSource: 'camera',
+      audioLevel: 100,
     },
     {
       stream: new MediaStream(),
       peer: { id: '123', displayName: 'Nikhil3' },
       videoSource: 'camera',
+      audioLevel: 10,
     },
     // {
     //   stream: new MediaStream(),

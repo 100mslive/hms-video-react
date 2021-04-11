@@ -87,7 +87,7 @@ export const VideoTile = ({
   useEffect(() => {
     const videoTile = videoRef.current?.parentElement;
     const parent = videoTile?.parentElement;
-    const height = parent?.getBoundingClientRect().height as number;
+    const height = parent?.clientHeight as number;
     setHeight(height);
   }, [stream, aspectRatio, displayShape]);
 
@@ -120,7 +120,7 @@ export const VideoTile = ({
 
   return (
     <div
-      className={`video-tile flex h-full relative items-center m-2`}
+      className={`video-tile flex h-full relative items-center `}
       style={videoTileStyle}
     >
       <video
