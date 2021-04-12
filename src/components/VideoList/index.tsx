@@ -7,6 +7,11 @@ import { largestRect } from 'rect-scaler';
 import { Avatar } from '../Avatar';
 
 import * as CSS from 'csstype';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from 'react-slick';
+import './index.css';
+
 export interface VideoListProps {
   /**
     MediaStream to be displayed.
@@ -47,25 +52,37 @@ export interface VideoListProps {
 
 export const VideoList = ({
   streams,
-  maxTileHeight,
-  maxTileWidth,
-  overflow,
+  overflow = 'scroll-x',
   maxTileCount,
   tileArrangeDirection = 'row',
   dominantSpeakers,
   className,
   displayFit = 'contain',
-  aspectRatio = { width: 16, height: 9 },
+  aspectRatio = { width: 1, height: 1 },
   displayShape = 'rectangle',
   audioLevelDisplayType,
 }: VideoListProps) => {
   let height: number;
   let width: number;
-  let videoCount: number = maxTileCount
-    ? Math.min(streams.length, maxTileCount)
-    : streams.length;
+  let videoCount = streams.length;
   aspectRatio =
     displayShape == 'circle' ? { width: 1, height: 1 } : aspectRatio;
+  if (maxTileCount) {
+    videoCount = Math.min(streams.length, maxTileCount);
+  } else if (maxTileHeight || maxTileWidth) {
+  }
+
+  var settings = {
+    dots: true,
+    infinite: false,
+    speed: 500,
+
+    swipeToSlide: true,
+    vertical: overflow === 'scroll-y',
+
+    //can be exposed a props
+    // centerMode: true,
+  };
 
   return (
     <div
@@ -89,25 +106,55 @@ export const VideoList = ({
           console.log(width, height);
           console.log(videoCount);
           return (
-            <React.Fragment>
-              {streams.slice(0, videoCount).map((item, index) => {
-                return (
-                  <div
-                    style={{ height: h, width: w }}
-                    key={index}
-                    className="p-2"
-                  >
-                    <VideoTile
-                      {...item}
-                      displayFit={displayFit}
-                      displayShape={displayShape}
-                      audioLevelDisplayType={audioLevelDisplayType}
-                      showAudioLevel={true}
-                    />
-                  </div>
-                );
-              })}
-            </React.Fragment>
+            <Slider {...settings} className="w-full h-full">
+              {streams
+                .reduce(
+                  (
+                    resultArray: JSX.Element[][],
+                    item: MediaStreamWithInfo,
+                    index: number
+                  ) => {
+                    const chunkIndex = Math.floor(index / videoCount);
+
+                    if (chunkIndex > 0 && overflow == 'hidden')
+                      return resultArray;
+
+                    if (!resultArray[chunkIndex]) {
+                      resultArray[chunkIndex] = []; // start a new chunk
+                    }
+
+                    resultArray[chunkIndex].push(
+                      <div
+                        style={{ height: h, width: w }}
+                        key={item.peer.displayName}
+                        className="p-2"
+                      >
+                        <VideoTile
+                          {...item}
+                          displayFit={displayFit}
+                          displayShape={displayShape}
+                          audioLevelDisplayType={audioLevelDisplayType}
+                          showAudioLevel={true}
+                        />
+                      </div>
+                    );
+                    console.log(resultArray);
+                    return resultArray;
+                  },
+                  []
+                )
+                .map((item, index) => {
+                  return (
+                    <div className="w-full h-full">
+                      <div
+                        className={`h-full w-full flex flex-wrap justify-center content-evenly justify-items-center ${className} flex-${tileArrangeDirection} `}
+                      >
+                        {item}
+                      </div>
+                    </div>
+                  );
+                })}
+            </Slider>
           );
         }}
       </ContainerDimensions>

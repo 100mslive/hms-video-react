@@ -119,6 +119,24 @@ DefaultList.args = {
       videoSource: 'camera',
       audioLevel: 10,
     },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil4' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil5' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil6' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
     // {
     //   stream: new MediaStream(),
     //   peer: { id: '123', displayName: 'Nikhil' },

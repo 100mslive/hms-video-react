@@ -76,6 +76,10 @@
   },
   "dependencies": {
     "react-container-dimensions": "^1.4.1",
-    "rect-scaler": "^1.0.0"
+    "react-grid-carousel": "^1.0.1",
+    "react-slick": "^0.28.1",
+    "rect-scaler": "^1.0.0",
+    "slick-carousel": "^1.8.1",
+    "tailwind-percentage-heights-plugin": "^0.1.4"
   }
 }
