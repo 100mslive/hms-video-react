@@ -2,6 +2,7 @@ import { useEffect } from '@storybook/client-api';
 import { Meta, Story } from '@storybook/react';
 import React, { useState } from 'react';
 import { VideoTile, VideoTileProps } from '.';
+import VideoTileDocs from './VideoTile.mdx';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
 import { VideoTileControls } from './Controls';
 import { MicOff, MicOn } from '../../icons';
@@ -9,6 +10,11 @@ import { MicOff, MicOn } from '../../icons';
 const meta: Meta = {
   title: 'Video Tile/Video Tile',
   component: VideoTile,
+  parameters: {
+    docs: {
+      page: VideoTileDocs,
+    },
+  },
   argTypes: {
     audioLevel: { control: { type: 'range' } },
     stream: { control: { disable: true } },
