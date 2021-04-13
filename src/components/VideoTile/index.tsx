@@ -85,6 +85,10 @@ export interface VideoTileProps {
      */
     video?: string;
   };
+  /**
+   * Custom controls component to display label, audio mute status, audio level, remote mute control.
+   * Default is VideoTileControls.
+   */
   controlsComponent?: React.ReactNode;
 }
 
