@@ -20,10 +20,10 @@ interface VideoListStoryProps extends VideoListProps {
 const Template: Story<VideoListStoryProps> = args => {
   const { streams, ...rest } = args;
   const isCameraStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'camera'
+    stream => stream.videoSource === 'camera',
   );
   const isScreenStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'screen'
+    stream => stream.videoSource === 'screen',
   );
   const [cameraStream, setCameraStream] = useState<MediaStream>();
   const [screenStream, setScreenStream] = useState<MediaStream>();
@@ -79,7 +79,7 @@ const Template: Story<VideoListStoryProps> = args => {
             streams={streams
               .filter(
                 item =>
-                  item.videoSource == 'screen' || item.videoSource == 'camera'
+                  item.videoSource == 'screen' || item.videoSource == 'camera',
               )
               .map((item): any => ({
                 ...item,
@@ -132,13 +132,49 @@ DefaultList.args = {
       videoSource: 'camera',
       audioLevel: 10,
     },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil7' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil8' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil9' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil10' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil11' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil12' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
     // {
     //   stream: new MediaStream(),
     //   peer: { id: '123', displayName: 'Nikhil' },
     //   videoSource: 'screen',
     // },
   ],
-  maxTileCount: 4,
+  maxColCount: 4,
   height: '98vh',
   width: '100%',
   classes: {
@@ -154,7 +190,7 @@ CenterStage.args = {
       stream: new MediaStream(),
       peer: { id: '123', displayName: 'Nikhil1' },
       videoSource: 'camera',
-      audioLevel: 5,
+      audioLevel: 50,
     },
     {
       stream: new MediaStream(),
@@ -162,6 +198,35 @@ CenterStage.args = {
       videoSource: 'camera',
       audioLevel: 100,
     },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil3' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil4' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil5' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil6' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    // {
+    //   stream: new MediaStream(),
+    //   peer: { id: '123', displayName: 'Nikhil' },
+    //   videoSource: 'screen',
+    // },
   ],
   maxTileCount: 2,
   audioLevelDisplayType: 'border',

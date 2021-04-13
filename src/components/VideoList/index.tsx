@@ -11,6 +11,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import './index.css';
+import { transposeMatrix } from '../../utils/index';
 
 export interface VideoListProps {
   /**
@@ -48,6 +49,8 @@ export interface VideoListProps {
     videoTileRoot?: string;
     video?: string;
   };
+  maxRowCount?: number;
+  maxColCount?: number;
 }
 
 export const VideoList = ({
@@ -63,15 +66,69 @@ export const VideoList = ({
   audioLevelDisplayType,
   showAudioLevel,
   classes,
+  maxRowCount,
+  maxColCount,
 }: VideoListProps) => {
-  let height: number;
-  let width: number;
   let videoCount = streams.length;
   aspectRatio =
     displayShape == 'circle' ? { width: 1, height: 1 } : aspectRatio;
-  if (maxTileCount) {
-    videoCount = Math.min(streams.length, maxTileCount);
-  }
+
+  const getTileDimensions = (
+    parentWidth: number,
+    parentHeight: number,
+  ): { width: number; height: number; rows: number; cols: number } => {
+    if (maxTileCount) {
+      videoCount = Math.min(streams.length, maxTileCount);
+
+      let largestRectObj = largestRect(
+        parentWidth,
+        parentHeight,
+        videoCount,
+        aspectRatio.width,
+        aspectRatio.height,
+      );
+      return largestRectObj;
+    } else if (maxRowCount) {
+      //let cols = ;
+      let rows = maxRowCount;
+      //let width = parentWidth / cols;
+      let height = parentHeight / rows;
+
+      let cols = Math.floor(parentWidth / height);
+      let width = parentWidth / cols;
+      cols = cols == 0 ? 1 : cols;
+      console.log(cols, 'hii');
+
+      videoCount = rows * cols;
+      return {
+        ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
+      };
+    } else if (maxColCount) {
+      let cols = maxColCount;
+      //let width = parentWidth / cols;
+      let width = parentWidth / cols;
+      //let height = (width * aspectRatio.height) / aspectRatio.width;
+
+      let rows = Math.floor(parentHeight / width);
+      rows = rows == 0 ? 1 : rows;
+      console.log(rows, width, parentHeight, 'row calculation here');
+      let height = parentHeight / rows;
+      videoCount = rows * cols;
+
+      return {
+        ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
+        rows,
+        cols,
+      };
+    } else
+      return largestRect(
+        parentWidth,
+        parentHeight,
+        videoCount,
+        aspectRatio.width,
+        aspectRatio.height,
+      );
+  };
 
   var settings = {
     dots: true,
@@ -91,19 +148,10 @@ export const VideoList = ({
     >
       <ContainerDimensions>
         {({ width, height }) => {
-          let w = '100%';
-          let h = '100%';
-
-          let largestRectObj = largestRect(
-            width,
-            height,
-            videoCount,
-            aspectRatio.width,
-            aspectRatio.height
-          );
-          w = largestRectObj.width;
-          h = largestRectObj.height;
-          console.log(largestRectObj);
+          let dimensions = getTileDimensions(width, height);
+          let w = dimensions.width;
+          let h = dimensions.height;
+          console.log(dimensions);
           console.log(width, height);
           console.log(videoCount);
           return (
@@ -113,11 +161,11 @@ export const VideoList = ({
                   (
                     resultArray: JSX.Element[][],
                     item: MediaStreamWithInfo,
-                    index: number
+                    index: number,
                   ) => {
                     const chunkIndex = Math.floor(index / videoCount);
 
-                    if (chunkIndex > 0 && overflow == 'hidden') {
+                    if (chunkIndex > 0 && overflow === 'hidden') {
                       return resultArray;
                     }
 
@@ -129,6 +177,7 @@ export const VideoList = ({
                       <div
                         style={{ height: h, width: w }}
                         key={item.peer.displayName}
+                        className="flex justify-center"
                       >
                         <VideoTile
                           {...item}
@@ -140,19 +189,45 @@ export const VideoList = ({
                             root: classes?.videoTileRoot,
                             video: classes?.video,
                           }}
+                          aspectRatio={aspectRatio}
                         />
-                      </div>
+                      </div>,
                     );
-                    console.log(resultArray);
+                    console.log(resultArray, streams.length, index, videoCount);
                     return resultArray;
                   },
-                  []
+                  [],
                 )
+                .map((item, index) => {
+                  if (tileArrangeDirection === 'col') {
+                    const newArr = [];
+                    let last = 0;
+                    for (let i = 0; i < dimensions.cols; i++) {
+                      for (let j = 0; j < dimensions.rows; j++) {
+                        console.log(
+                          item[last],
+                          j * dimensions.rows + i,
+                          dimensions,
+                        );
+                        newArr[j * dimensions.rows + i] = item[last++];
+                      }
+                    }
+
+                    console.log(newArr, '2d array');
+                  }
+                  return item;
+                })
                 .map((item, index) => {
                   return (
                     <div className="w-full h-full">
                       <div
-                        className={`h-full w-full flex flex-wrap justify-center content-evenly justify-items-center  flex-${tileArrangeDirection} `}
+                        className={`h-full w-full flex flex-wrap justify-center items-center  flex-${
+                          maxRowCount
+                            ? 'col'
+                            : maxColCount
+                            ? 'row'
+                            : tileArrangeDirection
+                        } `}
                       >
                         {item}
                       </div>

@@ -47,3 +47,7 @@
 .video-tile:hover .bottom-controls * {
   visibility: visible;
 }
+
+.video-tile {
+  width: 100%;
+}

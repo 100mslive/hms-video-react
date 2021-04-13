@@ -122,6 +122,7 @@ const Video = forwardRef(
       videoStyle['width'] = isSquareOrCircle
         ? `${height}px`
         : `${(aspectRatio.width / aspectRatio.height) * height}px`;
+      console.log((aspectRatio.width / aspectRatio.height) * height, height);
       videoStyle['transform'] =
         isLocal && videoSource === 'camera' ? 'scale(-1, 1)' : undefined;
 
@@ -193,7 +194,7 @@ export const VideoTile = ({
 
   return (
     <div
-      className={`video-tile flex h-full relative items-center m-2 ${classes.root}`}
+      className={`video-tile flex h-full relative items-center m-2 justify-center ${classes.root} `}
       style={{ width: isSquareOrCircle ? `${height}px` : undefined }}
     >
       <Video

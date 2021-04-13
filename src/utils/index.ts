@@ -22,4 +22,22 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
   tracks.forEach(track => track.stop());
 };
 
-export { closeMediaStream, getVideoTileLabel };
+const transposeMatrix = (
+  matrix: JSX.Element[],
+  rows: number,
+  cols: number,
+  isColTranspose: boolean,
+): JSX.Element[] => {
+  const newArr = [];
+  while (matrix.length) newArr.push(matrix.splice(0, cols));
+  // Object.keys(newArr[0]).map(function(c) {
+  //   return matrix[i].map(function(r) {
+  //     return r[c];
+  //   });
+  // });
+  console.log(newArr, '2d array');
+
+  return matrix;
+};
+
+export { closeMediaStream, getVideoTileLabel, transposeMatrix };
