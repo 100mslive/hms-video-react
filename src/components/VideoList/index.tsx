@@ -69,7 +69,6 @@ export const VideoList = ({
     displayShape == 'circle' ? { width: 1, height: 1 } : aspectRatio;
   if (maxTileCount) {
     videoCount = Math.min(streams.length, maxTileCount);
-  } else if (maxTileHeight || maxTileWidth) {
   }
 
   var settings = {
