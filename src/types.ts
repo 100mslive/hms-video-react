@@ -3,7 +3,7 @@ export interface Peer {
   displayName: string;
 }
 
-export type VideoSource = 'screen' | 'camera';
+export type VideoSource = 'screen' | 'camera' | 'canvas';
 
 export interface MediaStreamWithInfo {
   stream: MediaStream;
@@ -12,6 +12,6 @@ export interface MediaStreamWithInfo {
   audioMuteStatus?: boolean;
   videoMuteStatus?: boolean;
   isLocal?: boolean;
-  videoSource?: VideoSource;
+  videoSource: VideoSource;
 }
 export type AudioLevelDisplayType = 'inline-wave' | 'inline-circle' | 'border';

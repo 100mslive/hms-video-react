@@ -5,6 +5,9 @@ import { VideoTileControls, VideoTileControlsProps } from '.';
 const meta: Meta = {
   title: 'Video Tile/Controls',
   component: VideoTileControls,
+  argTypes: {
+    audioLevel: { control: { type: 'range' } },
+  },
 };
 
 export default meta;
