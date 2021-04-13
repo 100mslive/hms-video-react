@@ -12,19 +12,12 @@ const meta: Meta = {
 
 export default meta;
 
-// interface VideoListStoryProps extends VideoListProps {
-//   streams: {
-//     stream?: MediaStream;
-//     peer: Peer;
-//     audioLevel?: number;
-//     audioMuteStatus?: boolean;
-//     videoMuteStatus?: boolean;
-//     isLocal?: boolean;
-//     videoSource?: VideoSource;
-//   }[];
-// }
+interface VideoListStoryProps extends VideoListProps {
+  width?: string;
+  height?: string;
+}
 
-const Template: Story<VideoListProps> = args => {
+const Template: Story<VideoListStoryProps> = args => {
   const { streams, ...rest } = args;
   const isCameraStreamRequired: boolean = args.streams.some(
     stream => stream.videoSource === 'camera'
@@ -78,7 +71,7 @@ const Template: Story<VideoListProps> = args => {
   }, [args.streams]);
 
   return (
-    <div className="h-screen">
+    <div style={{ width: args.width, height: args.height }}>
       {cameraStream && (
         <VideoList
           {...rest}
@@ -143,5 +136,109 @@ DefaultList.args = {
     //   videoSource: 'screen',
     // },
   ],
-  maxTileCount: 4,
+  maxTileCount: 2,
+  height: '100vh',
+  width: '100%',
 };
+
+export const CenterStage = Template.bind({});
+CenterStage.args = {
+  streams: [
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil1' },
+      videoSource: 'camera',
+      audioLevel: 5,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil2' },
+      videoSource: 'camera',
+      audioLevel: 100,
+    },
+  ],
+  maxTileCount: 2,
+  audioLevelDisplayType: 'border',
+  height: '100vh',
+  width: '100%',
+};
+
+export const Campfire = Template.bind({});
+Campfire.args = {
+  streams: [
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil1' },
+      videoSource: 'camera',
+      audioLevel: 5,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil2' },
+      videoSource: 'camera',
+      audioLevel: 100,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil3' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil4' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+    {
+      stream: new MediaStream(),
+      peer: { id: '123', displayName: 'Nikhil5' },
+      videoSource: 'camera',
+      audioLevel: 10,
+    },
+  ],
+  audioLevelDisplayType: 'border',
+  displayShape: 'circle',
+  height: '200px',
+  width: '100%',
+};
+
+// export const SideBar = Template.bind({});
+// SideBar.args = {
+//   streams: [
+//     {
+//       stream: new MediaStream(),
+//       peer: { id: '123', displayName: 'Nikhil1' },
+//       videoSource: 'camera',
+//       audioLevel: 5,
+//     },
+//     {
+//       stream: new MediaStream(),
+//       peer: { id: '123', displayName: 'Nikhil2' },
+//       videoSource: 'camera',
+//       audioLevel: 100,
+//     },
+//     {
+//       stream: new MediaStream(),
+//       peer: { id: '123', displayName: 'Nikhil3' },
+//       videoSource: 'camera',
+//       audioLevel: 10,
+//     },
+//     {
+//       stream: new MediaStream(),
+//       peer: { id: '123', displayName: 'Nikhil4' },
+//       videoSource: 'camera',
+//       audioLevel: 10,
+//     },
+//     {
+//       stream: new MediaStream(),
+//       peer: { id: '123', displayName: 'Nikhil5' },
+//       videoSource: 'camera',
+//       audioLevel: 10,
+//     },
+//   ],
+//   audioLevelDisplayType: 'border',
+//   displayShape: 'circle',
+//   height: '100vh',
+//   width: '200',
+// };
