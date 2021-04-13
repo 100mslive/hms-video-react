@@ -13,7 +13,7 @@ const InlineWave = ({ level }: InlineWaveProps) => {
           className="inline-block bg-blue-tint rounded-full "
           style={{
             width: '5px',
-            height: 0.12 * level + 'px',
+            height: `${0.12 * level}px`,
             boxShadow: `0px 0px ${0.02 * level}px #0F6CFF, 0px 0px ${0.05 *
               level}px #0F6CFF`,
           }}
@@ -22,7 +22,7 @@ const InlineWave = ({ level }: InlineWaveProps) => {
           className="inline-block bg-blue-tint rounded-full "
           style={{
             width: '5px',
-            height: 0.18 * level + 'px',
+            height: `${0.18 * level}px`,
             boxShadow: `0px 0px ${0.02 * level}px #0F6CFF, 0px 0px ${0.05 *
               level}px #0F6CFF`,
           }}
@@ -31,7 +31,7 @@ const InlineWave = ({ level }: InlineWaveProps) => {
           className="inline-block bg-blue-tint rounded-full "
           style={{
             width: '5px',
-            height: 0.11 * level + 'px',
+            height: `${0.11 * level}px`,
             boxShadow: `0px 0px ${0.02 * level}px #0F6CFF, 0px 0px ${0.05 *
               level}px #0F6CFF`,
           }}

@@ -52,14 +52,14 @@ const Video = forwardRef(
       displayShape,
       className,
     }: VideoProps,
-    ref: React.Ref<HTMLVideoElement>
+    ref: React.Ref<HTMLVideoElement>,
   ) => {
     const getVideoStyles = () => {
       const videoStyle: React.CSSProperties = { objectFit };
 
       videoStyle['width'] = isSquareOrCircle
-        ? height + 'px'
-        : (aspectRatio.width / aspectRatio.height) * height + 'px';
+        ? `${height}px`
+        : `${(aspectRatio.width / aspectRatio.height) * height}px`;
       videoStyle['transform'] =
         isLocal && videoSource === 'camera' ? 'scale(-1, 1)' : undefined;
 
@@ -86,7 +86,7 @@ const Video = forwardRef(
         style={getVideoStyles()}
       ></video>
     );
-  }
+  },
 );
 
 export const VideoTile = ({
@@ -132,7 +132,7 @@ export const VideoTile = ({
   return (
     <div
       className={`video-tile flex h-full relative items-center m-2 ${classes.root}`}
-      style={{ width: isSquareOrCircle ? height + 'px' : undefined }}
+      style={{ width: isSquareOrCircle ? `${height}px` : undefined }}
     >
       <Video
         ref={videoRef}
