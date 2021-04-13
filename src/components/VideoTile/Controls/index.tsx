@@ -71,7 +71,7 @@ export const VideoTileControls = ({
           }`}
         >
           {audioStatusMap.get(
-            [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString()
+            [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString(),
           )}
         </div>
         <div className={`mt-1 mx-1`}>{label}</div>

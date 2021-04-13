@@ -5,6 +5,7 @@ import { VideoTile, VideoTileProps } from '.';
 import VideoTileDocs from './VideoTile.mdx';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
 import { VideoTileControls } from './Controls';
+import { MicOff, MicOn } from '../../icons';
 
 const meta: Meta = {
   title: 'Video Tile/Video Tile',
@@ -117,23 +118,32 @@ const MeetTemplate: Story<VideoTileProps> = args => {
           {...args}
           stream={stream}
           controlsComponent={
-            <VideoTileControls
-              label={getVideoTileLabel(
-                args.peer.displayName,
-                args.isLocal || false,
-                args.videoSource
+            <>
+              {args.allowRemoteMute && (
+                <div className="inset-center">
+                  <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
+                    {args.isAudioMuted ? MicOff : MicOn}
+                  </div>
+                </div>
               )}
-              isAudioMuted={args.isAudioMuted}
-              showAudioMuteStatus={args.showAudioMuteStatus}
-              showGradient={false}
-              allowRemoteMute={false}
-              showAudioLevel={args.showAudioLevel}
-              audioLevelDisplayType="inline-wave"
-              audioLevel={args.audioLevel}
-              classes={{
-                labelContainer: 'flex justify-around items-center w-min',
-              }}
-            />
+              <VideoTileControls
+                label={getVideoTileLabel(
+                  args.peer.displayName,
+                  args.isLocal || false,
+                  args.videoSource,
+                )}
+                isAudioMuted={args.isAudioMuted}
+                showAudioMuteStatus={args.showAudioMuteStatus}
+                showGradient={false}
+                allowRemoteMute={false}
+                showAudioLevel={args.showAudioLevel}
+                audioLevelDisplayType="inline-wave"
+                audioLevel={args.audioLevel}
+                classes={{
+                  labelContainer: 'flex justify-around items-center w-min',
+                }}
+              />
+            </>
           }
         />
       )}

@@ -12,8 +12,8 @@ const InlineCircle = ({ level }: InlineCircleProps) => {
         <span
           className="inline-block bg-blue-tint rounded-full "
           style={{
-            width: 0.18 * level + 'px',
-            height: 0.18 * level + 'px',
+            width: `${0.18 * level}px`,
+            height: `${0.18 * level}px`,
             boxShadow: `0px 0px ${0.02 * level}px #0F6CFF, 0px 0px ${0.05 *
               level}px #0F6CFF`,
           }}
