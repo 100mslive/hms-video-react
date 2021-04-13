@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
 import ContainerDimensions from 'react-container-dimensions';
@@ -17,22 +17,16 @@ export interface VideoListProps {
     MediaStream to be displayed.
     */
   streams: MediaStreamWithInfo[];
-  maxTileHeight?: CSS.Property.MaxHeight;
-  maxTileWidth?: CSS.Property.MaxWidth;
   maxTileCount?: number;
   overflow?: 'scroll-x' | 'scroll-y' | 'hidden';
   tileArrangeDirection?: 'row' | 'col';
   dominantSpeakers?: Peer[];
 
   /**
-    Additional classnames to be applied.
-    */
-  className?: string;
-  /**
    Indicates if Audio Status will be shown or not.
    */
   showAudioMuteStatus?: boolean;
-  displayFit?: 'contain' | 'cover';
+  objectFit?: 'contain' | 'cover';
   /**
    Aspect ratio in which the video tile should be shown, will only be applied if display shape is rectangle.
    */
@@ -48,6 +42,12 @@ export interface VideoListProps {
   Sets display type of Audio Level, inline-wave, inline-circle, border, avatar-circle are types available.
    */
   audioLevelDisplayType?: AudioLevelDisplayType;
+  showAudioLevel?: boolean;
+  classes?: {
+    root?: string;
+    videoTileRoot?: string;
+    video?: string;
+  };
 }
 
 export const VideoList = ({
@@ -56,11 +56,13 @@ export const VideoList = ({
   maxTileCount,
   tileArrangeDirection = 'row',
   dominantSpeakers,
-  className,
-  displayFit = 'contain',
+  objectFit = 'cover',
+
   aspectRatio = { width: 1, height: 1 },
   displayShape = 'rectangle',
   audioLevelDisplayType,
+  showAudioLevel,
+  classes,
 }: VideoListProps) => {
   let height: number;
   let width: number;
@@ -85,7 +87,7 @@ export const VideoList = ({
 
   return (
     <div
-      className={`h-full w-full flex flex-wrap justify-center content-evenly justify-items-center ${className} flex-${tileArrangeDirection} `}
+      className={`h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
     >
       <ContainerDimensions>
         {({ width, height }) => {
@@ -115,8 +117,9 @@ export const VideoList = ({
                   ) => {
                     const chunkIndex = Math.floor(index / videoCount);
 
-                    if (chunkIndex > 0 && overflow == 'hidden')
+                    if (chunkIndex > 0 && overflow == 'hidden') {
                       return resultArray;
+                    }
 
                     if (!resultArray[chunkIndex]) {
                       resultArray[chunkIndex] = []; // start a new chunk
@@ -126,14 +129,17 @@ export const VideoList = ({
                       <div
                         style={{ height: h, width: w }}
                         key={item.peer.displayName}
-                        className="p-2"
                       >
                         <VideoTile
                           {...item}
-                          displayFit={displayFit}
+                          objectFit={objectFit}
                           displayShape={displayShape}
                           audioLevelDisplayType={audioLevelDisplayType}
-                          showAudioLevel={true}
+                          showAudioLevel={showAudioLevel}
+                          classes={{
+                            root: classes?.videoTileRoot,
+                            video: classes?.video,
+                          }}
                         />
                       </div>
                     );
@@ -146,7 +152,7 @@ export const VideoList = ({
                   return (
                     <div className="w-full h-full">
                       <div
-                        className={`h-full w-full flex flex-wrap justify-center content-evenly justify-items-center ${className} flex-${tileArrangeDirection} `}
+                        className={`h-full w-full flex flex-wrap justify-center content-evenly justify-items-center  flex-${tileArrangeDirection} `}
                       >
                         {item}
                       </div>

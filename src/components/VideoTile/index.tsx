@@ -19,7 +19,7 @@ export interface VideoTileProps {
   audioLevel?: number;
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
-  showAudioMuteStatus: boolean;
+  showAudioMuteStatus?: boolean;
   showAudioLevel?: boolean;
   objectFit: 'contain' | 'cover';
   aspectRatio?: {
@@ -31,7 +31,7 @@ export interface VideoTileProps {
   Sets display type of Audio Level, inline-wave, inline-circle, border, avatar-circle are types
    */
   audioLevelDisplayType?: AudioLevelDisplayType;
-  allowRemoteMute: boolean;
+  allowRemoteMute?: boolean;
   classes?: {
     root?: string;
     video?: string;
@@ -140,7 +140,7 @@ export const VideoTile = ({
 
   return (
     <div
-      className={`video-tile flex h-full relative items-center m-2 ${classes.root}`}
+      className={`video-tile flex h-full relative items-center ${classes.root}`}
       style={{ width: isSquareOrCircle ? height + 'px' : undefined }}
     >
       <Video
