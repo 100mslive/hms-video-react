@@ -3,12 +3,6 @@ export interface Peer {
   displayName: string;
 }
 
-export type AudioLevelDisplayType =
-  | 'inline-wave'
-  | 'inline-circle'
-  | 'border'
-  | 'avatar-circle';
-
 export type VideoSource = 'screen' | 'camera';
 
 export interface MediaStreamWithInfo {
@@ -20,3 +14,4 @@ export interface MediaStreamWithInfo {
   isLocal?: boolean;
   videoSource?: VideoSource;
 }
+export type AudioLevelDisplayType = 'inline-wave' | 'inline-circle' | 'border';
