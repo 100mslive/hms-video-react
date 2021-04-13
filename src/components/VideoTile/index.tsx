@@ -1,7 +1,7 @@
 import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import { AudioLevelDisplayType, Peer } from '../../types';
 import './index.css';
-import { BottomControls, BottomControlsProps } from './BottomControls';
+import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
 import { getVideoTileLabel } from '../../utils';
 
@@ -84,11 +84,8 @@ export interface VideoTileProps {
      * The actual video element.
      */
     video?: string;
-    /**
-     * Additional classes for the label/controls component at the bottom.
-     */
-    bottomControls?: BottomControlsProps['classes'];
   };
+  controlsComponent?: React.ReactNode;
 }
 
 interface VideoProps extends Partial<VideoTileProps> {
@@ -169,6 +166,7 @@ export const VideoTile = ({
     root: '',
     video: 'rounded-lg shadow-lg',
   },
+  controlsComponent,
 }: VideoTileProps) => {
   const [height, setHeight] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -214,8 +212,10 @@ export const VideoTile = ({
           <Avatar label={peer.displayName} />
         </div>
       )}
-      <div className="absolute bottom-0 w-full">
-        <BottomControls
+      {controlsComponent ? (
+        controlsComponent
+      ) : (
+        <VideoTileControls
           label={label}
           isAudioMuted={isAudioMuted}
           showAudioMuteStatus={showAudioMuteStatus}
@@ -224,9 +224,8 @@ export const VideoTile = ({
           showAudioLevel={showAudioLevel && audioLevelDisplayType !== 'border'}
           audioLevelDisplayType={audioLevelDisplayType}
           audioLevel={audioLevel}
-          classes={classes.bottomControls}
         />
-      </div>
+      )}
     </div>
   );
 };
