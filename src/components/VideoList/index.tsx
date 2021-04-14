@@ -1,6 +1,6 @@
 import React from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
-import { VideoTile } from '../VideoTile/index';
+import { VideoTile, VideoTileProps } from '../VideoTile/index';
 import ContainerDimensions from 'react-container-dimensions';
 // @ts-ignore
 import { largestRect } from 'rect-scaler';
@@ -24,6 +24,7 @@ export interface VideoListProps {
     MediaStream to be displayed.
     */
   streams: MediaStreamWithInfo[];
+
   maxTileCount?: number;
   overflow?: 'scroll-x' | 'scroll-y' | 'hidden';
   tileArrangeDirection?: 'row' | 'col';
@@ -57,6 +58,8 @@ export interface VideoListProps {
   };
   maxRowCount?: number;
   maxColCount?: number;
+  videoTileControls?: React.ReactNode[];
+  allowRemoteMute?: boolean;
 }
 
 export const VideoList = ({
@@ -74,6 +77,7 @@ export const VideoList = ({
   classes,
   maxRowCount,
   maxColCount,
+  videoTileControls,
 }: VideoListProps) => {
   let videoCount = streams.length;
   aspectRatio =
@@ -233,6 +237,9 @@ export const VideoList = ({
                             video: classes?.video,
                           }}
                           aspectRatio={aspectRatio}
+                          controlsComponent={
+                            videoTileControls && videoTileControls[index]
+                          }
                         />
                       </div>,
                     );
@@ -245,7 +252,7 @@ export const VideoList = ({
                   return (
                     <div className="w-full h-full">
                       <div
-                        className={`h-full w-full flex flex-wrap justify-center items-center  flex-${
+                        className={`h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
                           maxRowCount
                             ? 'col'
                             : maxColCount
