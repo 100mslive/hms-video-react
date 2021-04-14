@@ -33,7 +33,7 @@ export interface VideoTileProps {
   /**
    * Indicates whether to show if the audio of the stream is muted or not.
    */
-  showAudioMuteStatus: boolean;
+  showAudioMuteStatus?: boolean;
   /**
    * Indicates whether to show the volume of the stream's audio.
    */
@@ -71,7 +71,7 @@ export interface VideoTileProps {
   /**
    * Indicates whether to show controls for remote muting/unmuting other participants.
    */
-  allowRemoteMute: boolean;
+  allowRemoteMute?: boolean;
   /**
    * Additional classes to be included for the components.
    */
@@ -193,7 +193,7 @@ export const VideoTile = ({
 
   return (
     <div
-      className={`video-tile flex h-full relative items-center m-2 ${classes.root}`}
+      className={`video-tile flex h-full relative items-center  ${classes.root}`}
       style={{ width: isSquareOrCircle ? `${height}px` : undefined }}
     >
       <Video

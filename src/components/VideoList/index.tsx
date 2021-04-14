@@ -236,7 +236,7 @@ export const VideoList = ({
                         />
                       </div>,
                     );
-                    console.log(resultArray, streams.length, index, videoCount);
+                    //console.log(resultArray, streams.length, index, videoCount);
                     return resultArray;
                   },
                   [],

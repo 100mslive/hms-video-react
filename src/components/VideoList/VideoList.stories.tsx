@@ -174,11 +174,11 @@ DefaultList.args = {
     //   videoSource: 'screen',
     // },
   ],
-  maxColCount: 2,
+  maxColCount: 3,
   height: '98vh',
   width: '100%',
   classes: {
-    videoTileRoot: 'p-1',
+    //videoTileRoot: 'p-1',
     video: 'rounded-lg shadow-lg',
   },
 };
