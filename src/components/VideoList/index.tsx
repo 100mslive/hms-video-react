@@ -9,9 +9,15 @@ import { Avatar } from '../Avatar';
 import * as CSS from 'csstype';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Slider from 'react-slick';
+import Slider, { CustomArrowProps } from 'react-slick';
 import './index.css';
-import { transposeMatrix } from '../../utils/index';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faChevronRight,
+  faChevronDown,
+  faChevronLeft,
+  faChevronUp,
+} from '@fortawesome/free-solid-svg-icons';
 
 export interface VideoListProps {
   /**
@@ -130,13 +136,50 @@ export const VideoList = ({
       );
   };
 
+  function SampleNextArrow(props: CustomArrowProps) {
+    const { style, onClick } = props;
+    return (
+      <div
+        className="slick-arrow absolute top-1/2 right-0 z-2"
+        style={{ ...style, display: 'block' }}
+        onClick={onClick}
+      >
+        <button className="text-2xl bg-white rounded-sm">
+          <FontAwesomeIcon
+            icon={overflow === 'scroll-x' ? faChevronRight : faChevronDown}
+          />
+        </button>
+      </div>
+    );
+  }
+
+  function SamplePrevArrow(props: CustomArrowProps) {
+    const { style, onClick } = props;
+    return (
+      <div
+        className=" top-1/2 z-10 absolute"
+        style={{ ...style, display: 'block' }}
+        onClick={onClick}
+      >
+        <button className="text-2xl bg-white rounded-sm">
+          <FontAwesomeIcon
+            icon={overflow === 'scroll-x' ? faChevronLeft : faChevronUp}
+          />
+        </button>
+      </div>
+    );
+  }
+
   var settings = {
-    dots: true,
+    dots: false,
     infinite: false,
     speed: 500,
 
     swipeToSlide: true,
     vertical: overflow === 'scroll-y',
+    nextArrow: <SampleNextArrow />,
+    prevArrow: <SamplePrevArrow />,
+    //arrows: false,
 
     //can be exposed a props
     // centerMode: true,
@@ -198,25 +241,6 @@ export const VideoList = ({
                   },
                   [],
                 )
-                .map((item, index) => {
-                  if (tileArrangeDirection === 'col') {
-                    const newArr = [];
-                    let last = 0;
-                    for (let i = 0; i < dimensions.cols; i++) {
-                      for (let j = 0; j < dimensions.rows; j++) {
-                        console.log(
-                          item[last],
-                          j * dimensions.rows + i,
-                          dimensions,
-                        );
-                        newArr[j * dimensions.rows + i] = item[last++];
-                      }
-                    }
-
-                    console.log(newArr, '2d array');
-                  }
-                  return item;
-                })
                 .map((item, index) => {
                   return (
                     <div className="w-full h-full">

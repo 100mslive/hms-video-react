@@ -174,7 +174,7 @@ DefaultList.args = {
     //   videoSource: 'screen',
     // },
   ],
-  maxColCount: 4,
+  maxColCount: 2,
   height: '98vh',
   width: '100%',
   classes: {
