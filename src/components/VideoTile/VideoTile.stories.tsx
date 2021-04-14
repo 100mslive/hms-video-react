@@ -1,6 +1,5 @@
-import { useEffect } from '@storybook/client-api';
 import { Meta, Story } from '@storybook/react';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { VideoTile, VideoTileProps } from '.';
 import VideoTileDocs from './VideoTile.mdx';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
@@ -27,11 +26,13 @@ export default meta;
 const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   const [stream, setStream] = useState<MediaStream>();
 
+  // Stream is not added in dependency array to avoid creating a new stream for every mute/unmute change which causes visual flicker in the storybook canvas.
   useEffect(() => {
     const track = stream?.getVideoTracks()[0];
     if (track) {
       track.enabled = !args.isVideoMuted;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.isVideoMuted]);
 
   useEffect(() => {
@@ -39,6 +40,7 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
     if (track) {
       track.enabled = !args.isAudioMuted;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.isAudioMuted]);
 
   useEffect(() => {
@@ -61,6 +63,7 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
     return () => {
       closeMediaStream(stream);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.videoSource]);
 
   return (
@@ -78,6 +81,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
     if (track) {
       track.enabled = !args.isVideoMuted;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.isVideoMuted]);
 
   useEffect(() => {
@@ -85,6 +89,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
     if (track) {
       track.enabled = !args.isAudioMuted;
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.isAudioMuted]);
 
   useEffect(() => {
@@ -108,6 +113,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
     return () => {
       closeMediaStream(stream);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.videoSource]);
 
   return (
