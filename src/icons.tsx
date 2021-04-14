@@ -1,4 +1,12 @@
+import {
+  faChevronDown,
+  faChevronLeft,
+  faChevronRight,
+  faChevronUp,
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
+import { CustomArrowProps } from 'react-slick';
 
 export const MicOff = (
   <svg
@@ -33,3 +41,63 @@ export const MicOn = (
     />
   </svg>
 );
+
+export function SliderRightArrow(props: CustomArrowProps) {
+  const { style, onClick } = props;
+  return (
+    <div
+      className="slick-arrow absolute top-1/2 right-0 z-2"
+      style={{ ...style, display: 'block' }}
+      onClick={onClick}
+    >
+      <button className="text-2xl bg-white rounded-sm">
+        <FontAwesomeIcon icon={faChevronRight} />
+      </button>
+    </div>
+  );
+}
+
+export function SliderDownArrow(props: CustomArrowProps) {
+  const { style, onClick } = props;
+  return (
+    <div
+      className="slick-arrow absolute top-1/2 right-0 z-2"
+      style={{ ...style, display: 'block' }}
+      onClick={onClick}
+    >
+      <button className="text-2xl bg-white rounded-sm">
+        <FontAwesomeIcon icon={faChevronDown} />
+      </button>
+    </div>
+  );
+}
+
+export function SliderUpArrow(props: CustomArrowProps) {
+  const { style, onClick } = props;
+  return (
+    <div
+      className=" top-1/2 z-10 absolute"
+      style={{ ...style, display: 'block' }}
+      onClick={onClick}
+    >
+      <button className="text-2xl bg-white rounded-sm">
+        <FontAwesomeIcon icon={faChevronUp} />
+      </button>
+    </div>
+  );
+}
+
+export function SliderLeftArrow(props: CustomArrowProps) {
+  const { style, onClick } = props;
+  return (
+    <div
+      className=" top-1/2 z-10 absolute"
+      style={{ ...style, display: 'block' }}
+      onClick={onClick}
+    >
+      <button className="text-2xl bg-white rounded-sm">
+        <FontAwesomeIcon icon={faChevronLeft} />
+      </button>
+    </div>
+  );
+}

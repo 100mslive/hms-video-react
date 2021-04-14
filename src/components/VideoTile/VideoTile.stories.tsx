@@ -7,7 +7,7 @@ import { VideoTileControls } from './Controls';
 import { MicOff, MicOn } from '../../icons';
 
 const meta: Meta = {
-  title: 'Video Tile/Video Tile',
+  title: 'Video / Tile',
   component: VideoTile,
   parameters: {
     docs: {

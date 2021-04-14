@@ -1,23 +1,25 @@
 import React from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
-import { VideoTile, VideoTileProps } from '../VideoTile/index';
+import { VideoTile } from '../VideoTile/index';
 import ContainerDimensions from 'react-container-dimensions';
 // @ts-ignore
 import { largestRect } from 'rect-scaler';
-import { Avatar } from '../Avatar';
 
-import * as CSS from 'csstype';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import Slider, { CustomArrowProps } from 'react-slick';
+import Slider from 'react-slick';
 import './index.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faChevronRight,
-  faChevronDown,
-  faChevronLeft,
-  faChevronUp,
-} from '@fortawesome/free-solid-svg-icons';
+  SliderRightArrow,
+  SliderDownArrow,
+  SliderLeftArrow,
+  SliderUpArrow,
+} from '../../icons';
+import {
+  colToRowTransform,
+  groupTilesIntoPage,
+  rowToColTransform,
+} from '../../utils/index';
 
 export interface VideoListProps {
   /**
@@ -67,7 +69,6 @@ export const VideoList = ({
   overflow = 'scroll-x',
   maxTileCount,
   tileArrangeDirection = 'row',
-  dominantSpeakers,
   objectFit = 'cover',
 
   aspectRatio = { width: 1, height: 1 },
@@ -107,7 +108,6 @@ export const VideoList = ({
       let cols = Math.floor(parentWidth / height);
       let width = parentWidth / cols;
       cols = cols == 0 ? 1 : cols;
-      console.log(cols, 'hii');
 
       videoCount = rows * cols;
       return {
@@ -121,7 +121,7 @@ export const VideoList = ({
 
       let rows = Math.floor(parentHeight / width);
       rows = rows == 0 ? 1 : rows;
-      console.log(rows, width, parentHeight, 'row calculation here');
+
       let height = parentHeight / rows;
       videoCount = rows * cols;
 
@@ -140,51 +140,17 @@ export const VideoList = ({
       );
   };
 
-  function SampleNextArrow(props: CustomArrowProps) {
-    const { style, onClick } = props;
-    return (
-      <div
-        className="slick-arrow absolute top-1/2 right-0 z-2"
-        style={{ ...style, display: 'block' }}
-        onClick={onClick}
-      >
-        <button className="text-2xl bg-white rounded-sm">
-          <FontAwesomeIcon
-            icon={overflow === 'scroll-x' ? faChevronRight : faChevronDown}
-          />
-        </button>
-      </div>
-    );
-  }
-
-  function SamplePrevArrow(props: CustomArrowProps) {
-    const { style, onClick } = props;
-    return (
-      <div
-        className=" top-1/2 z-10 absolute"
-        style={{ ...style, display: 'block' }}
-        onClick={onClick}
-      >
-        <button className="text-2xl bg-white rounded-sm">
-          <FontAwesomeIcon
-            icon={overflow === 'scroll-x' ? faChevronLeft : faChevronUp}
-          />
-        </button>
-      </div>
-    );
-  }
-
   var settings = {
     dots: false,
     infinite: false,
     speed: 500,
-
     swipeToSlide: true,
     vertical: overflow === 'scroll-y',
-    nextArrow: <SampleNextArrow />,
-    prevArrow: <SamplePrevArrow />,
+    nextArrow:
+      overflow === 'scroll-x' ? <SliderRightArrow /> : <SliderDownArrow />,
+    prevArrow:
+      overflow === 'scroll-x' ? <SliderLeftArrow /> : <SliderUpArrow />,
     //arrows: false,
-
     //can be exposed a props
     // centerMode: true,
   };
@@ -203,128 +169,51 @@ export const VideoList = ({
           console.log(videoCount);
           return (
             <Slider {...settings} className="w-full h-full">
-              {streams
-                .reduce(
-                  (
-                    resultArray: JSX.Element[][],
-                    item: MediaStreamWithInfo,
-                    index: number,
-                  ) => {
-                    const chunkIndex = Math.floor(index / videoCount);
-
-                    if (chunkIndex > 0 && overflow === 'hidden') {
-                      return resultArray;
-                    }
-
-                    if (!resultArray[chunkIndex]) {
-                      resultArray[chunkIndex] = []; // start a new chunk
-                    }
-
-                    resultArray[chunkIndex].push(
-                      <div
-                        style={{ height: h, width: w }}
-                        key={item.peer.displayName}
-                        className="flex justify-center"
-                      >
-                        <VideoTile
-                          {...item}
-                          objectFit={objectFit}
-                          displayShape={displayShape}
-                          audioLevelDisplayType={audioLevelDisplayType}
-                          showAudioLevel={showAudioLevel}
-                          classes={{
-                            root: classes?.videoTileRoot,
-                            video: classes?.video,
-                          }}
-                          aspectRatio={aspectRatio}
-                          controlsComponent={
-                            videoTileControls && videoTileControls[index]
-                          }
-                        />
-                      </div>,
-                    );
-                    //console.log(resultArray, streams.length, index, videoCount);
-                    return resultArray;
-                  },
-                  [],
-                )
-                .map((page, index) => {
+              {groupTilesIntoPage(
+                streams.map((stream, index) => (
+                  <div
+                    style={{ height: h, width: w }}
+                    key={stream.peer.displayName}
+                    className="flex justify-center"
+                  >
+                    <VideoTile
+                      {...stream}
+                      objectFit={objectFit}
+                      displayShape={displayShape}
+                      audioLevelDisplayType={audioLevelDisplayType}
+                      showAudioLevel={showAudioLevel}
+                      classes={{
+                        root: classes?.videoTileRoot,
+                        video: classes?.video,
+                      }}
+                      aspectRatio={aspectRatio}
+                      controlsComponent={
+                        videoTileControls && videoTileControls[index]
+                      }
+                    />
+                  </div>
+                )),
+                videoCount,
+                overflow === 'hidden',
+              )
+                .map(page => {
                   if (
                     tileArrangeDirection === 'col' &&
                     !maxTileCount &&
                     !maxRowCount &&
                     maxColCount
                   ) {
-                    let cols = maxColCount;
-                    let rows = Math.ceil(page.length / cols);
-                    let remLastRowElem = page.length % cols;
-                    console.log(remLastRowElem, 'number to be skipped');
-                    let grid: JSX.Element[][] = [];
-                    let newArray: JSX.Element[] = [];
-
-                    let last = 0;
-                    for (let i = 0; i < cols && last < page.length; i++) {
-                      for (let j = 0; j < rows && last < page.length; j++) {
-                        if (j == rows - 1 && page.length % cols !== 0) {
-                          if (remLastRowElem == 0) {
-                            console.log('skipped', last, remLastRowElem);
-                            continue;
-                          }
-                          remLastRowElem--;
-                        }
-                        if (!grid[j]) grid[j] = [];
-                        console.log(last + 'inserted at ' + j, i);
-                        grid[j][i] = page[last];
-                        last++;
-                      }
-                    }
-                    last = 0;
-                    for (let i = 0; i < rows; i++)
-                      for (let j = 0; j < cols; j++)
-                        if (grid[i] && grid[i][j])
-                          newArray[last++] = grid[i][j];
-                    console.log(grid, cols, rows);
-                    return newArray;
+                    return colToRowTransform(page, maxColCount);
                   } else if (
                     tileArrangeDirection === 'row' &&
                     maxRowCount &&
                     !maxTileCount
                   ) {
-                    let rows = maxRowCount;
-                    let cols = Math.ceil(page.length / rows);
-                    let remLastColElem = page.length % rows;
-                    let grid: JSX.Element[][] = [];
-                    let newArray: JSX.Element[] = [];
-
-                    let last = 0;
-                    for (let i = 0; i < rows && last < page.length; i++) {
-                      for (let j = 0; j < cols && last < page.length; j++) {
-                        if (j == cols - 1 && page.length % rows !== 0) {
-                          if (remLastColElem == 0) {
-                            console.log('skipped', last, remLastColElem);
-                            continue;
-                          }
-                          remLastColElem--;
-                        }
-                        if (!grid[i]) grid[i] = [];
-                        console.log(last + 'inserted at ' + i, j);
-                        grid[i][j] = page[last];
-                        last++;
-                      }
-                    }
-                    last = 0;
-                    for (let i = 0; i < cols; i++)
-                      for (let j = 0; j < rows; j++)
-                        if (grid[j][i]) {
-                          newArray[last++] = grid[j][i];
-                        }
-
-                    console.log(grid);
-                    return newArray;
+                    return rowToColTransform(page, maxRowCount);
                   }
                   return page;
                 })
-                .map((item, index) => {
+                .map(item => {
                   return (
                     <div className="w-full h-full">
                       <div
@@ -334,7 +223,7 @@ export const VideoList = ({
                             : maxColCount
                             ? 'row'
                             : tileArrangeDirection
-                        } `}
+                        } ${classes?.root} `}
                       >
                         {item}
                       </div>

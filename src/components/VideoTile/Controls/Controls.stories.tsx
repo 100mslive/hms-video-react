@@ -3,7 +3,7 @@ import React from 'react';
 import { VideoTileControls, VideoTileControlsProps } from '.';
 
 const meta: Meta = {
-  title: 'Video Tile/Controls',
+  title: 'Video /TileControls',
   component: VideoTileControls,
   argTypes: {
     audioLevel: { control: { type: 'range' } },

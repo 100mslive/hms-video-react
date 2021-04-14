@@ -11,7 +11,7 @@ import {
 import { MicOff, MicOn } from '../../icons';
 
 const meta: Meta = {
-  title: 'Video List',
+  title: 'Video/ List',
   component: VideoList,
 };
 
