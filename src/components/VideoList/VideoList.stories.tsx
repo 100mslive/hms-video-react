@@ -13,6 +13,15 @@ import { MicOff, MicOn } from '../../icons';
 const meta: Meta = {
   title: 'Video/ List',
   component: VideoList,
+  argTypes: {
+    maxTileCount: { control: { type: 'range' } },
+    maxRowCount: { control: { type: 'range' } },
+    maxColCount: { control: { type: 'range' } },
+    videoTileControls: { control: { disable: true } },
+    width: { control: false },
+    height: { control: { disable: true } },
+  },
+  parameters: { controls: { sort: 'requiredFirst' } },
 };
 
 export default meta;
@@ -181,7 +190,7 @@ const streams: MediaStreamWithInfo[] = [
 export const DefaultList = Template.bind({});
 DefaultList.args = {
   streams: streams,
-  maxRowCount: 3,
+  maxTileCount: 3,
   height: '98vh',
   width: '100%',
   classes: {
