@@ -181,7 +181,7 @@ const streams: MediaStreamWithInfo[] = [
 export const DefaultList = Template.bind({});
 DefaultList.args = {
   streams: streams,
-  maxColCount: 3,
+  maxRowCount: 3,
   height: '98vh',
   width: '100%',
   classes: {

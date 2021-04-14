@@ -248,6 +248,82 @@ export const VideoList = ({
                   },
                   [],
                 )
+                .map((page, index) => {
+                  if (
+                    tileArrangeDirection === 'col' &&
+                    !maxTileCount &&
+                    !maxRowCount &&
+                    maxColCount
+                  ) {
+                    let cols = maxColCount;
+                    let rows = Math.ceil(page.length / cols);
+                    let remLastRowElem = page.length % cols;
+                    console.log(remLastRowElem, 'number to be skipped');
+                    let grid: JSX.Element[][] = [];
+                    let newArray: JSX.Element[] = [];
+
+                    let last = 0;
+                    for (let i = 0; i < cols && last < page.length; i++) {
+                      for (let j = 0; j < rows && last < page.length; j++) {
+                        if (j == rows - 1 && page.length % cols !== 0) {
+                          if (remLastRowElem == 0) {
+                            console.log('skipped', last, remLastRowElem);
+                            continue;
+                          }
+                          remLastRowElem--;
+                        }
+                        if (!grid[j]) grid[j] = [];
+                        console.log(last + 'inserted at ' + j, i);
+                        grid[j][i] = page[last];
+                        last++;
+                      }
+                    }
+                    last = 0;
+                    for (let i = 0; i < rows; i++)
+                      for (let j = 0; j < cols; j++)
+                        if (grid[i] && grid[i][j])
+                          newArray[last++] = grid[i][j];
+                    console.log(grid, cols, rows);
+                    return newArray;
+                  } else if (
+                    tileArrangeDirection === 'row' &&
+                    maxRowCount &&
+                    !maxTileCount
+                  ) {
+                    let rows = maxRowCount;
+                    let cols = Math.ceil(page.length / rows);
+                    let remLastColElem = page.length % rows;
+                    let grid: JSX.Element[][] = [];
+                    let newArray: JSX.Element[] = [];
+
+                    let last = 0;
+                    for (let i = 0; i < rows && last < page.length; i++) {
+                      for (let j = 0; j < cols && last < page.length; j++) {
+                        if (j == cols - 1 && page.length % rows !== 0) {
+                          if (remLastColElem == 0) {
+                            console.log('skipped', last, remLastColElem);
+                            continue;
+                          }
+                          remLastColElem--;
+                        }
+                        if (!grid[i]) grid[i] = [];
+                        console.log(last + 'inserted at ' + i, j);
+                        grid[i][j] = page[last];
+                        last++;
+                      }
+                    }
+                    last = 0;
+                    for (let i = 0; i < cols; i++)
+                      for (let j = 0; j < rows; j++)
+                        if (grid[j][i]) {
+                          newArray[last++] = grid[j][i];
+                        }
+
+                    console.log(grid);
+                    return newArray;
+                  }
+                  return page;
+                })
                 .map((item, index) => {
                   return (
                     <div className="w-full h-full">
