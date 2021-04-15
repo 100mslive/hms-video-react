@@ -101,7 +101,7 @@ export const VideoList = ({
       return largestRectObj;
     } else if (maxRowCount) {
       //let cols = ;
-      let rows = maxRowCount;
+      let rows = Math.min(maxRowCount, videoCount);
       //let width = parentWidth / cols;
       let height = parentHeight / rows;
 
@@ -114,7 +114,7 @@ export const VideoList = ({
         ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
       };
     } else if (maxColCount) {
-      let cols = maxColCount;
+      let cols = Math.min(maxColCount, videoCount);
       //let width = parentWidth / cols;
       let width = parentWidth / cols;
       //let height = (width * aspectRatio.height) / aspectRatio.width;
