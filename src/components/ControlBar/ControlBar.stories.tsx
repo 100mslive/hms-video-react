@@ -9,10 +9,10 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<ControlBarProps> = (args) => (
+const Template: Story<ControlBarProps> = args => (
   <div className="bg-black">
     <ControlBar {...args} />
   </div>
 );
 
-export const DefaultThing = Template.bind({});
+export const Default = Template.bind({});

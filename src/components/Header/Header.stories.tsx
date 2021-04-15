@@ -9,10 +9,10 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story = (args) => (
+const Template: Story = args => (
   <div className="bg-black">
     <Header {...args} />
   </div>
 );
 
-export const DefaultThing = Template.bind({});
+export const Default = Template.bind({});
