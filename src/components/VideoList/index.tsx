@@ -55,7 +55,8 @@ export interface VideoListProps {
   showAudioLevel?: boolean;
   classes?: {
     root?: string;
-    videoTileRoot?: string;
+    videoTileParent?: string;
+    videoTile?: string;
     video?: string;
   };
   maxRowCount?: number;
@@ -157,7 +158,7 @@ export const VideoList = ({
 
   return (
     <div
-      className={`h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
+      className={`${classes?.root} h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
     >
       <ContainerDimensions>
         {({ width, height }) => {
@@ -174,7 +175,7 @@ export const VideoList = ({
                   <div
                     style={{ height: h, width: w }}
                     key={stream.peer.displayName}
-                    className="flex justify-center"
+                    className={`${classes?.videoTileParent} flex justify-center`}
                   >
                     <VideoTile
                       {...stream}
@@ -183,7 +184,7 @@ export const VideoList = ({
                       audioLevelDisplayType={audioLevelDisplayType}
                       showAudioLevel={showAudioLevel}
                       classes={{
-                        root: classes?.videoTileRoot,
+                        root: classes?.videoTile,
                         video: classes?.video,
                       }}
                       aspectRatio={aspectRatio}
@@ -219,13 +220,15 @@ export const VideoList = ({
                   return (
                     <div className="w-full h-full">
                       <div
-                        className={`h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
+                        className={` ${
+                          classes?.root
+                        } h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
                           maxRowCount
                             ? 'col'
                             : maxColCount
                             ? 'row'
                             : tileArrangeDirection
-                        } ${classes?.root} `}
+                        } `}
                       >
                         {item}
                       </div>

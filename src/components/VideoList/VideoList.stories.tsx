@@ -208,7 +208,7 @@ CenterStage.args = {
   height: '98vh',
   width: '100%',
   classes: {
-    videoTileRoot: 'p-2',
+    videoTile: 'p-2',
     video: 'rounded-lg shadow-lg',
   },
 };
@@ -222,8 +222,9 @@ Campfire.args = {
   height: '200px',
   width: '100%',
   classes: {
-    videoTileRoot: 'p-2',
+    videoTile: 'p-2',
     video: 'rounded-lg shadow-lg',
+    root: 'bg-red-50 rounded-lg',
   },
 };
 
@@ -234,7 +235,7 @@ SideBar.args = {
   height: '100vh',
   width: '300px',
   classes: {
-    videoTileRoot: 'p-1',
+    videoTile: 'p-1',
     video: 'rounded-lg shadow-lg',
   },
 };
