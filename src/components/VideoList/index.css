@@ -1,0 +1,31 @@
+.slick-next {
+  right: 10px;
+  z-index: 2;
+  height: 40px;
+  width: 40px;
+}
+
+.slick-prev {
+  left: 10px;
+  z-index: 2;
+  height: 40px;
+  width: 40px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: #1265ff;
+  font-size: xx-large;
+}
+
+.slick-list {
+  height: 100%;
+}
+
+.slick-track {
+  height: 100%;
+}
+
+.slick-slide > div {
+  height: 100%;
+}

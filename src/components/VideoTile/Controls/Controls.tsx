@@ -1,10 +1,10 @@
 import React from 'react';
-import { AudioLevelDisplayType } from '../../types';
-import { AudioLevelIndicator } from '../AudioLevelIndicators/index';
-import { AudioMuteIndicator, AudioMuteButton } from '../MediaIcons';
-import './index.css';
+import { AudioLevelDisplayType } from '../../../types';
+import { AudioLevelIndicator } from '../../AudioLevelIndicators/index';
+import { AudioMuteIndicator, AudioMuteButton } from '../../MediaIcons';
+import '../index.css';
 
-export interface BottomControlsProps {
+export interface VideoTileControlsProps {
   label?: string;
   isAudioMuted?: boolean;
   showGradient?: boolean;
@@ -15,13 +15,12 @@ export interface BottomControlsProps {
   audioLevel?: number;
   classes?: {
     root?: string;
-    controlStatus?: string;
-    label?: string;
+    labelContainer?: string;
     controls?: string;
   };
 }
 
-export const BottomControls = ({
+export const VideoTileControls = ({
   label = '',
   isAudioMuted = false,
   showGradient = true,
@@ -33,7 +32,7 @@ export const BottomControls = ({
   classes = {
     root: 'text-center rounded-lg',
   },
-}: BottomControlsProps) => {
+}: VideoTileControlsProps) => {
   // Map [showAudioMuteStatus, showAudioLevel, isAudioMuted] to audio status - actual element to render.
   const audioStatusMap = new Map<string, React.ReactNode>([
     [
@@ -62,20 +61,20 @@ export const BottomControls = ({
 
   return (
     <div
-      className={`bottom-controls-container pb-2 text-white px-2 ${classes?.root}`}
+      className={`bottom-controls-container absolute bottom-0 w-full pb-2 text-white px-2 ${classes?.root}`}
       style={!showGradient ? { background: 'none' } : {}}
     >
-      <div>
+      <div className={`${classes.labelContainer}`}>
         <div
-          className={`bottom-controls-status ${
+          className={`bottom-controls-status mx-1 ${
             allowRemoteMute ? 'hover-hide' : ''
-          } ${classes?.controlStatus}`}
+          }`}
         >
           {audioStatusMap.get(
-            [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString()
+            [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString(),
           )}
         </div>
-        <div className={`mt-1 ${classes?.label}`}>{label}</div>
+        <div className={`mt-1 mx-1`}>{label}</div>
       </div>
       {allowRemoteMute && (
         <div
