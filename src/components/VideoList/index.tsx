@@ -201,13 +201,15 @@ export const VideoList = ({
                     tileArrangeDirection === 'col' &&
                     !maxTileCount &&
                     !maxRowCount &&
-                    maxColCount
+                    maxColCount &&
+                    maxColCount < page.length
                   ) {
                     return colToRowTransform(page, maxColCount);
                   } else if (
                     tileArrangeDirection === 'row' &&
                     maxRowCount &&
-                    !maxTileCount
+                    !maxTileCount &&
+                    maxRowCount < page.length
                   ) {
                     return rowToColTransform(page, maxRowCount);
                   }
