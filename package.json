@@ -36,7 +36,7 @@
     "trailingComma": "all"
   },
   "name": "100ms-sdk-components",
-  "author": "eswar-clynn",
+  "author": "100ms",
   "module": "dist/100ms-sdk-components.esm.js",
   "size-limit": [
     {
