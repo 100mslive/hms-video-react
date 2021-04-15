@@ -1,5 +1,5 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.2",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -35,7 +35,7 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
-  "name": "100ms-sdk-components",
+  "name": "@100mslive/sdk-components",
   "author": "100ms",
   "module": "dist/100ms-sdk-components.esm.js",
   "size-limit": [
