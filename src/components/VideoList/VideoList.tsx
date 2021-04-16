@@ -185,10 +185,6 @@ export const VideoList = ({
                       audioLevelDisplayType={audioLevelDisplayType}
                       showAudioLevel={showAudioLevel}
                       showAudioMuteStatus={showAudioMuteStatus}
-                      classes={{
-                        root: classes?.videoTile,
-                        video: classes?.video,
-                      }}
                       aspectRatio={aspectRatio}
                       controlsComponent={
                         videoTileControls && videoTileControls[index]
@@ -199,7 +195,7 @@ export const VideoList = ({
                 videoCount,
                 overflow === 'hidden',
               )
-                .map((page) => {
+                .map(page => {
                   if (
                     tileArrangeDirection === 'col' &&
                     !maxTileCount &&
@@ -218,7 +214,7 @@ export const VideoList = ({
                   }
                   return page;
                 })
-                .map((item) => {
+                .map(item => {
                   return (
                     <div className="w-full h-full">
                       <div

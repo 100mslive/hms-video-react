@@ -9,7 +9,7 @@ const getVideoTileLabel = (
     [[true, 'camera'].toString(), 'You'],
     [[false, 'screen'].toString(), `${peerName}'s Screen`],
     [[false, 'camera'].toString(), peerName],
-    [[false, undefined].toString(), peerName]
+    [[false, undefined].toString(), peerName],
   ]);
 
   return labelMap.get([isLocal, videoSource].toString());
