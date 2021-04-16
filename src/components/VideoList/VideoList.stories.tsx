@@ -59,7 +59,7 @@ const Template: Story<VideoListStoryProps> = (args) => {
         .then(function (stream) {
           // @ts-ignore
           window.stream = stream;
-          c; //onsole.log(stream);
+          //console.log(stream);
           setCameraStream(stream);
         });
     }
