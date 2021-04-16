@@ -181,9 +181,6 @@ GoogleMeetVideoTile.args = {
   showAudioLevel: true,
   audioLevelDisplayType: 'inline-wave',
   audioLevel: 40,
-  classes: {
-    video: ' ',
-  },
   videoSource: 'camera',
 };
 
