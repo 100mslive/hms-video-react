@@ -130,8 +130,9 @@ const Video = forwardRef(
         showAudioLevel &&
         audioLevel &&
         audioLevelDisplayType === 'border'
-          ? `0px 0px ${0.12 * audioLevel}px #0F6CFF, 0px 0px ${0.8 *
-              audioLevel}px #0F6CFF`
+          ? `0px 0px ${0.12 * audioLevel}px #0F6CFF, 0px 0px ${
+              0.8 * audioLevel
+            }px #0F6CFF`
           : undefined;
 
       return videoStyle;
@@ -139,7 +140,7 @@ const Video = forwardRef(
 
     return (
       <video
-        muted
+        muted={isLocal || isAudioMuted}
         autoPlay
         className={`h-full ${className} ${
           displayShape === 'circle' ? 'rounded-full' : ''

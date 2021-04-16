@@ -48,15 +48,15 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
 
     if (args.videoSource === 'camera') {
       window.navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then(function(stream) {
+        .getUserMedia({ audio: true, video: true })
+        .then(function (stream) {
           setStream(stream);
         });
     } else if (args.videoSource === 'screen') {
       window.navigator.mediaDevices
         // @ts-ignore
         .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
+        .then(function (stream: MediaStream | undefined) {
           setStream(stream);
         });
     }
@@ -73,7 +73,7 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   );
 };
 
-const MeetTemplate: Story<VideoTileProps> = args => {
+const MeetTemplate: Story<VideoTileProps> = (args) => {
   const [stream, setStream] = useState<MediaStream>();
 
   useEffect(() => {
@@ -97,15 +97,15 @@ const MeetTemplate: Story<VideoTileProps> = args => {
 
     if (args.videoSource === 'camera') {
       window.navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then(function(stream) {
+        .getUserMedia({ audio: true, video: true })
+        .then(function (stream) {
           setStream(stream);
         });
     } else if (args.videoSource === 'screen') {
       window.navigator.mediaDevices
         // @ts-ignore
         .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
+        .then(function (stream: MediaStream | undefined) {
           setStream(stream);
         });
     }
