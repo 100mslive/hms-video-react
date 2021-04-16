@@ -95,7 +95,7 @@ export const Video = forwardRef(
     return (
       <>
         <video
-          muted
+          muted={isLocal}
           autoPlay
           className={` ${classes.video} 
           ${displayShape === 'circle' ? classes.videoCircle : ''}
