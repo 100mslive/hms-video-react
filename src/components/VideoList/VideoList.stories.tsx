@@ -4,10 +4,7 @@ import React, { useState } from 'react';
 import { VideoList, VideoListProps } from '.';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
 import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
-import {
-  VideoTileControlsProps,
-  VideoTileControls,
-} from '../VideoTile/Controls';
+import { VideoTileControls } from '../VideoTile/Controls';
 import { MicOff, MicOn } from '../../icons';
 
 const meta: Meta = {
@@ -82,7 +79,13 @@ const Template: Story<VideoListStoryProps> = (args) => {
       closeMediaStream(screenStream);
       closeMediaStream(cameraStream);
     };
-  }, [args.streams]);
+  }, [
+    args.streams,
+    cameraStream,
+    isCameraStreamRequired,
+    isScreenStreamRequired,
+    screenStream,
+  ]);
 
   return (
     <div className="h-screen w-full flex flex-wrap justify-center content-evenly justify-items-center">
@@ -93,15 +96,13 @@ const Template: Story<VideoListStoryProps> = (args) => {
             streams={streams
               .filter(
                 (item) =>
-                  item.videoSource == 'screen' || item.videoSource == 'camera',
+                  item.videoSource === 'screen' ||
+                  item.videoSource === 'camera',
               )
               .map((item): any => ({
                 ...item,
-                stream: !item.isVideoMuted
-                  ? item.videoSource == 'screen'
-                    ? screenStream
-                    : cameraStream
-                  : new MediaStream(),
+                stream:
+                  item.videoSource === 'screen' ? screenStream : cameraStream,
               }))}
           />
         )}
@@ -373,7 +374,13 @@ const MeetTemplate: Story<VideoListStoryProps> = (
       closeMediaStream(screenStream);
       closeMediaStream(cameraStream);
     };
-  }, [args.streams]);
+  }, [
+    args.streams,
+    cameraStream,
+    isCameraStreamRequired,
+    isScreenStreamRequired,
+    screenStream,
+  ]);
 
   return (
     <div className="h-screen w-full flex flex-wrap justify-center content-evenly justify-items-center">
@@ -389,7 +396,7 @@ const MeetTemplate: Story<VideoListStoryProps> = (
               .map((item): any => ({
                 ...item,
                 stream:
-                  item.videoSource == 'screen' ? screenStream : cameraStream,
+                  item.videoSource === 'screen' ? screenStream : cameraStream,
               }))}
             videoTileControls={streams.map((stream) => (
               <GoogleMeetControls
