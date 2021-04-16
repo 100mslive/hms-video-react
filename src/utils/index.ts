@@ -114,10 +114,25 @@ const groupTilesIntoPage = (
   );
 };
 
+const getInitialsFromName = (name:string | undefined) => {
+  if(!name){
+    return undefined;
+  }
+  else {
+    const rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
+    let initials:RegExpMatchArray[] | string = [...name.matchAll(rgx)] || [];
+    initials = (
+        (initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')
+      ).toUpperCase();
+    return initials  
+  }
+}
+
 export {
   closeMediaStream,
   getVideoTileLabel,
   colToRowTransform,
   rowToColTransform,
   groupTilesIntoPage,
+  getInitialsFromName
 };
