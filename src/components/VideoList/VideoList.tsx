@@ -69,7 +69,6 @@ export const VideoList = ({
   maxTileCount,
   tileArrangeDirection = 'row',
   objectFit = 'cover',
-
   aspectRatio = { width: 1, height: 1 },
   displayShape = 'rectangle',
   audioLevelDisplayType,
