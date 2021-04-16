@@ -1,11 +1,7 @@
-// @ts-ignore
-import { largestRect } from 'rect-scaler';
-import { MediaStreamWithInfo } from '../types';
-
 const getVideoTileLabel = (
   peerName: string,
   isLocal: boolean,
-  videoSource: 'screen' | 'camera' | 'canvas',
+  videoSource: 'screen' | 'camera' | 'canvas' | undefined,
 ) => {
   // Map [isLocal, videoSource] to the label to be displayed.
   const labelMap = new Map<string, string>([
@@ -13,6 +9,7 @@ const getVideoTileLabel = (
     [[true, 'camera'].toString(), 'You'],
     [[false, 'screen'].toString(), `${peerName}'s Screen`],
     [[false, 'camera'].toString(), peerName],
+    [[false, undefined].toString(), peerName],
   ]);
 
   return labelMap.get([isLocal, videoSource].toString());
@@ -23,38 +20,44 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
     return;
   }
   const tracks = stream.getTracks();
-  tracks.forEach(track => track.stop());
+  tracks.forEach((track) => track.stop());
 };
 
 const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
   let cols = maxColCount;
   let rows = Math.ceil(page.length / cols);
   let remLastRowElem = page.length % cols;
-  console.log(remLastRowElem, 'number to be skipped');
+  //console.log(remLastRowElem, 'number to be skipped');
   let grid: JSX.Element[][] = [];
   let newArray: JSX.Element[] = [];
 
   let last = 0;
   for (let i = 0; i < cols && last < page.length; i++) {
     for (let j = 0; j < rows && last < page.length; j++) {
-      if (j == rows - 1 && page.length % cols !== 0) {
-        if (remLastRowElem == 0) {
-          console.log('skipped', last, remLastRowElem);
+      if (j === rows - 1 && page.length % cols !== 0) {
+        if (remLastRowElem === 0) {
+          //console.log('skipped', last, remLastRowElem);
           continue;
         }
         remLastRowElem--;
       }
-      if (!grid[j]) grid[j] = [];
-      console.log(last + 'inserted at ' + j, i);
+      if (!grid[j]) {
+        grid[j] = [];
+      }
+      //console.log(`${last}inserted at ${j}`, i);
       grid[j][i] = page[last];
       last++;
     }
   }
   last = 0;
-  for (let i = 0; i < rows; i++)
-    for (let j = 0; j < cols; j++)
-      if (grid[i] && grid[i][j]) newArray[last++] = grid[i][j];
-  console.log(grid, cols, rows);
+  for (let i = 0; i < rows; i++) {
+    for (let j = 0; j < cols; j++) {
+      if (grid[i] && grid[i][j]) {
+        newArray[last++] = grid[i][j];
+      }
+    }
+  }
+  //console.log(grid, cols, rows);
   return newArray;
 };
 
@@ -68,27 +71,31 @@ const rowToColTransform = (page: JSX.Element[], maxRowCount: number) => {
   let last = 0;
   for (let i = 0; i < rows && last < page.length; i++) {
     for (let j = 0; j < cols && last < page.length; j++) {
-      if (j == cols - 1 && page.length % rows !== 0) {
-        if (remLastColElem == 0) {
-          console.log('skipped', last, remLastColElem);
+      if (j === cols - 1 && page.length % rows !== 0) {
+        if (remLastColElem === 0) {
+          //console.log('skipped', last, remLastColElem);
           continue;
         }
         remLastColElem--;
       }
-      if (!grid[i]) grid[i] = [];
-      console.log(last + 'inserted at ' + i, j);
+      if (!grid[i]) {
+        grid[i] = [];
+      }
+      //console.log(`${last}inserted at ${i}`, j);
       grid[i][j] = page[last];
       last++;
     }
   }
   last = 0;
-  for (let i = 0; i < cols; i++)
-    for (let j = 0; j < rows; j++)
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
       if (grid[j][i]) {
         newArray[last++] = grid[j][i];
       }
+    }
+  }
 
-  console.log(grid);
+  //console.log(grid);
   return newArray;
 };
 
@@ -114,19 +121,77 @@ const groupTilesIntoPage = (
   );
 };
 
-const getInitialsFromName = (name:string | undefined) => {
-  if(!name){
+const getInitialsFromName = (name: string | undefined) => {
+  if (!name) {
     return undefined;
-  }
-  else {
+  } else {
     const rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
-    let initials:RegExpMatchArray[] | string = [...name.matchAll(rgx)] || [];
+    let initials: RegExpMatchArray[] | string = [...name.matchAll(rgx)] || [];
     initials = (
-        (initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')
-      ).toUpperCase();
-    return initials  
+      (initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')
+    ).toUpperCase();
+    return initials;
   }
-}
+};
+
+/**
+ * Finds the largest rectangle area when trying to place N rectangle into a containing
+ * rectangle without rotation.
+ *
+ * @param {Number}  containerWidth      The width of the container.
+ * @param {Number}  containerHeight     The height of the container.
+ * @param {Number}  numSquares          How many rectangles must fit within.
+ * @param {Number}  width               The unscaled width of the rectangles to be placed.
+ * @param {Number}  height              The unscaled height of the rectangles to be placed.
+ * @return {Object}                     The area and number of rows and columns that fit.
+ */
+const largestRect = (
+  containerWidth: number,
+  containerHeight: number,
+  numRects: number,
+  width: number | undefined,
+  height: number | undefined,
+) => {
+  if (containerWidth < 0 || containerHeight < 0) {
+    throw new Error('Container must have a non-negative area');
+  }
+  if (numRects < 1 || !Number.isInteger(numRects)) {
+    throw new Error('Number of shapes to place must be a positive integer');
+  }
+  const aspectRatio = width && height && (width / height || 1);
+  if (!aspectRatio || isNaN(aspectRatio)) {
+    throw new Error('Aspect ratio must be a number');
+  }
+
+  let best = { area: 0, cols: 0, rows: 0, width: 0, height: 0 };
+
+  // TODO: Don't start with obviously-bad candidates.
+  const startCols = numRects;
+  const colDelta = -1;
+
+  // For each combination of rows + cols that can fit the number of rectangles,
+  // place them and see the area.
+  for (let cols = startCols; cols > 0; cols += colDelta) {
+    const rows = Math.ceil(numRects / cols);
+    const hScale = containerWidth / (cols * aspectRatio);
+    const vScale = containerHeight / rows;
+    let width;
+    let height;
+    // Determine which axis is the constraint.
+    if (hScale <= vScale) {
+      width = containerWidth / cols;
+      height = width / aspectRatio;
+    } else {
+      height = containerHeight / rows;
+      width = height * aspectRatio;
+    }
+    const area = width * height;
+    if (area > best.area) {
+      best = { area, width, height, rows, cols };
+    }
+  }
+  return best;
+};
 
 export {
   closeMediaStream,
@@ -134,5 +199,6 @@ export {
   colToRowTransform,
   rowToColTransform,
   groupTilesIntoPage,
-  getInitialsFromName
+  getInitialsFromName,
+  largestRect,
 };

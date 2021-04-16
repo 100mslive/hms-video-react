@@ -48,7 +48,7 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
 
     if (args.videoSource === 'camera') {
       window.navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ audio: true, video: true })
         .then(function(stream) {
           setStream(stream);
         });
@@ -97,7 +97,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
 
     if (args.videoSource === 'camera') {
       window.navigator.mediaDevices
-        .getUserMedia({ video: true })
+        .getUserMedia({ audio: true, video: true })
         .then(function(stream) {
           setStream(stream);
         });
@@ -181,9 +181,6 @@ GoogleMeetVideoTile.args = {
   showAudioLevel: true,
   audioLevelDisplayType: 'inline-wave',
   audioLevel: 40,
-  classes: {
-    video: ' ',
-  },
   videoSource: 'camera',
 };
 

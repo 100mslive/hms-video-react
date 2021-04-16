@@ -1,7 +1,6 @@
 import React from 'react';
 import { MicOff, MicOn, CamOff, CamOn, Logo, LeaveRoom } from '../../icons';
 
-
 export const LogoButton = () => {
   return (
     <button className="inline-block p-2 focus:outline-none">{Logo}</button>
@@ -49,6 +48,7 @@ export const VideoButton = ({ isVideoMuted = false, buttonDisplay = 'square' }) 
     </button>
   );
 };
+
 
 export const LeaveButton = ({buttonDisplay = 'square'}) => {
   return (

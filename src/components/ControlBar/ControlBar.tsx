@@ -2,11 +2,13 @@ import React from 'react';
 import { LeaveRoom } from '../../icons';
 import {ButtonDisplayType} from '../../types'
 
+
 import {
   AudioButton,
   VideoButton,
   LeaveButton
 } from '../MediaIcons';
+
 
 export interface ControlBarProps {
   isAudioMuted?: boolean;
@@ -63,6 +65,7 @@ export const ControlBar = ({
          >
            Leave Room
           </div>
+
         </button>
       </div>
     </div>

@@ -1,5 +1,5 @@
 {
-  "version": "0.2.5",
+  "version": "0.2.7",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -66,6 +66,7 @@
     "babel-loader": "^8.2.2",
     "husky": "^6.0.0",
     "postcss": "^7",
+    "prettier": "1.19.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-is": "^17.0.2",

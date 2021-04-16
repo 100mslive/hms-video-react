@@ -9,8 +9,8 @@ export interface MediaStreamWithInfo {
   stream: MediaStream;
   peer: Peer;
   audioLevel?: number;
-  audioMuteStatus?: boolean;
-  videoMuteStatus?: boolean;
+  isAudioMuted?: boolean;
+  isVideoMuted?: boolean;
   isLocal?: boolean;
   videoSource: VideoSource;
 }

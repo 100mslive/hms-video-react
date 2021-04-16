@@ -2,9 +2,7 @@ import React from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
 import ContainerDimensions from 'react-container-dimensions';
-// @ts-ignore
-import { largestRect } from 'rect-scaler';
-
+import { largestRect } from '../../utils';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
@@ -71,7 +69,6 @@ export const VideoList = ({
   maxTileCount,
   tileArrangeDirection = 'row',
   objectFit = 'cover',
-
   aspectRatio = { width: 1, height: 1 },
   displayShape = 'rectangle',
   audioLevelDisplayType,
@@ -80,10 +77,11 @@ export const VideoList = ({
   maxRowCount,
   maxColCount,
   videoTileControls,
+  showAudioMuteStatus,
 }: VideoListProps) => {
   let videoCount = streams.length;
   aspectRatio =
-    displayShape == 'circle' ? { width: 1, height: 1 } : aspectRatio;
+    displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
   const getTileDimensions = (
     parentWidth: number,
@@ -108,7 +106,7 @@ export const VideoList = ({
 
       let cols = Math.floor(parentWidth / height);
       let width = parentWidth / cols;
-      cols = cols == 0 ? 1 : cols;
+      cols = cols === 0 ? 1 : cols;
 
       videoCount = rows * cols;
       return {
@@ -121,7 +119,7 @@ export const VideoList = ({
       //let height = (width * aspectRatio.height) / aspectRatio.width;
 
       let rows = Math.floor(parentHeight / width);
-      rows = rows == 0 ? 1 : rows;
+      rows = rows === 0 ? 1 : rows;
 
       let height = parentHeight / rows;
       videoCount = rows * cols;
@@ -131,7 +129,7 @@ export const VideoList = ({
         rows,
         cols,
       };
-    } else
+    } else {
       return largestRect(
         parentWidth,
         parentHeight,
@@ -139,6 +137,7 @@ export const VideoList = ({
         aspectRatio.width,
         aspectRatio.height,
       );
+    }
   };
 
   var settings = {
@@ -165,9 +164,7 @@ export const VideoList = ({
           let dimensions = getTileDimensions(width, height);
           let w = dimensions.width;
           let h = dimensions.height;
-          console.log(dimensions);
-          console.log(width, height);
-          console.log(videoCount);
+
           return (
             <Slider {...settings} className="w-full h-full">
               {groupTilesIntoPage(
@@ -183,10 +180,7 @@ export const VideoList = ({
                       displayShape={displayShape}
                       audioLevelDisplayType={audioLevelDisplayType}
                       showAudioLevel={showAudioLevel}
-                      classes={{
-                        root: classes?.videoTile,
-                        video: classes?.video,
-                      }}
+                      showAudioMuteStatus={showAudioMuteStatus}
                       aspectRatio={aspectRatio}
                       controlsComponent={
                         videoTileControls && videoTileControls[index]
@@ -197,7 +191,7 @@ export const VideoList = ({
                 videoCount,
                 overflow === 'hidden',
               )
-                .map(page => {
+                .map((page) => {
                   if (
                     tileArrangeDirection === 'col' &&
                     !maxTileCount &&
@@ -216,7 +210,7 @@ export const VideoList = ({
                   }
                   return page;
                 })
-                .map(item => {
+                .map((item) => {
                   return (
                     <div className="w-full h-full">
                       <div

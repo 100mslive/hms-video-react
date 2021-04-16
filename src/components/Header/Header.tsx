@@ -3,7 +3,6 @@ import { LogoButton } from '../MediaIcons';
 import { Volume, Clock } from '../../icons';
 import {Peer} from '../../types';
 
-
 export interface HeaderProps{
   peer: Peer,
   time: number,
@@ -23,6 +22,7 @@ export const Header = ({
     label: "flex flex-grow justify-center self-center"
   }
 }:HeaderProps) => {
+
   return (
     <div className={classes.root}>
         <div className={classes.clock}>

@@ -1,22 +1,21 @@
-import React, {useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './index.css';
-import {Peer} from '../../types'
-import {Video, VideoProps, VideoClasses} from '../Video'
+import { Peer } from '../../types';
+import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import { getVideoTileLabel } from '../../utils';
-import {largestRect} from 'rect-scaler';
+import { getVideoTileLabel, largestRect } from '../../utils';
 
-export interface VideoTileProps extends VideoProps{
-        /**
+export interface VideoTileProps extends VideoProps {
+  /**
    * MediaStream to be displayed.
    */
-    stream: MediaStream; //TODO move to Video
-    /**
-    * HMS Peer object for which the tile is shown.
-    */
-    peer: Peer;
-       
+  stream: MediaStream; //TODO move to Video
+  /**
+   * HMS Peer object for which the tile is shown.
+   */
+  peer: Peer;
+
   /**
    * Indicates if the stream's audio is muted or not. Ignored if showAudioMuteStatus is false.
    */
@@ -31,7 +30,7 @@ export interface VideoTileProps extends VideoProps{
   showAudioMuteStatus?: boolean;
   /**
    * Aspect ratio of the video container(if objectFit is set to 'cover').
-   * If aspectRatio is defined, the video container expands to fit the largest rectangle maintaining the aspec ratio. 
+   * If aspectRatio is defined, the video container expands to fit the largest rectangle maintaining the aspec ratio.
    * If aspectRatio is not defined, the video container takes the parent's width and height.
    * Ignored when displayShape is 'circle' or objectFit is 'contain'.
    */
@@ -54,23 +53,20 @@ export interface VideoTileProps extends VideoProps{
   controlsComponent?: React.ReactNode;
 }
 
-
-export interface VideoTileClasses extends VideoClasses{
-    /**
-     * The top-level container.
-     */
-    root?: string;
-    /**
-     * The video container.
-     */
-    videoContainer?: string;
-    /** 
-     * The avatar container. 
-    */
-    avatarContainer?:string;
-  };
-
-
+export interface VideoTileClasses extends VideoClasses {
+  /**
+   * The top-level container.
+   */
+  root?: string;
+  /**
+   * The video container.
+   */
+  videoContainer?: string;
+  /**
+   * The avatar container.
+   */
+  avatarContainer?: string;
+}
 
 export const VideoTile = ({
   stream,
@@ -86,12 +82,13 @@ export const VideoTile = ({
   aspectRatio,
   displayShape = 'rectangle',
   audioLevelDisplayType = 'border',
-  audioLevelDisplayColor='#0F6CFF',
+  audioLevelDisplayColor = '#0F6CFF',
   allowRemoteMute = false,
   classes = {
     root: 'w-full h-full flex relative items-center justify-center',
-    videoContainer:'relative rounded-lg shadow-lg',
-    avatarContainer:'relative w-full h-full bg-gray-100 flex items-center justify-center',
+    videoContainer: 'relative rounded-lg shadow-lg',
+    avatarContainer:
+      'relative w-full h-full bg-gray-100 flex items-center justify-center',
   },
   controlsComponent,
 }: VideoTileProps) => {
@@ -101,75 +98,129 @@ export const VideoTile = ({
   const videoRef = useRef<HTMLVideoElement>(null);
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
   const isSquare =
-    displayShape === 'rectangle' && aspectRatio && aspectRatio.width === aspectRatio.height;
+    displayShape === 'rectangle' &&
+    aspectRatio &&
+    aspectRatio.width === aspectRatio.height;
   const isCircle = displayShape === 'circle';
   const isSquareOrCircle = isSquare || isCircle;
-  const videoClasses = (classes.video || classes.videoCircle || classes.videoLocal || classes.videoContain || classes.videoCover)?{video:classes.video, videoCircle:classes.videoCircle, videoLocal:classes.videoLocal, videoCover:classes.videoCover, videoContain:classes.videoContain}:undefined;
+  const videoClasses =
+    classes.video ||
+    classes.videoCircle ||
+    classes.videoLocal ||
+    classes.videoContain ||
+    classes.videoCover
+      ? {
+          video: classes.video,
+          videoCircle: classes.videoCircle,
+          videoLocal: classes.videoLocal,
+          videoCover: classes.videoCover,
+          videoContain: classes.videoContain,
+        }
+      : undefined;
 
   useEffect(() => {
-    if(videoRef.current &&  videoRef.current.parentElement && videoRef.current.parentElement.parentElement){
+    if (
+      videoRef.current &&
+      videoRef.current.parentElement &&
+      videoRef.current.parentElement.parentElement
+    ) {
       /*
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent
        * If aspect ratio is not defined, container width is the same as the video dimensions
        */
       const parent = videoRef.current.parentElement.parentElement;
-      const {width: parentWidth, height: parentHeight} = parent.getBoundingClientRect();
-      const {width: selfWidth, height: selfHeight} = (stream && stream.getVideoTracks()[0])?stream.getVideoTracks()[0].getSettings():{width:parentWidth,height:parentHeight};
-      const inputAspectRatio = (objectFit==='cover' && aspectRatio)?aspectRatio:{width:selfWidth, height:selfHeight};
-      const inferredAspectRatio = {width:isSquareOrCircle?1:inputAspectRatio.width, height:isSquareOrCircle?1:inputAspectRatio.height};
-      const {width, height} = largestRect(parentWidth, parentHeight, 1, inferredAspectRatio.width, inferredAspectRatio.height);
+      const {
+        width: parentWidth,
+        height: parentHeight,
+      } = parent.getBoundingClientRect();
+      const { width: selfWidth, height: selfHeight } =
+        stream && stream.getVideoTracks()[0]
+          ? stream.getVideoTracks()[0].getSettings()
+          : { width: parentWidth, height: parentHeight };
+      const containerAspectRatio =
+        objectFit === 'cover'
+          ? { width: parentWidth, height: parentHeight }
+          : { width: selfWidth, height: selfHeight };
+      const containerAspectRatioAfterUserOverride =
+        aspectRatio && objectFit === 'cover'
+          ? aspectRatio
+          : containerAspectRatio;
+      const containerAspectRatioAfterShapeOverride = {
+        width: isSquareOrCircle
+          ? 1
+          : containerAspectRatioAfterUserOverride.width,
+        height: isSquareOrCircle
+          ? 1
+          : containerAspectRatioAfterUserOverride.height,
+      };
+      const { width, height } = largestRect(
+        parentWidth,
+        parentHeight,
+        1,
+        containerAspectRatioAfterShapeOverride.width,
+        containerAspectRatioAfterShapeOverride.height,
+      );
       setHeight(height);
       setWidth(width);
     }
-  }, [stream, aspectRatio, displayShape, objectFit, isStreamSet]);
+  }, [
+    stream,
+    aspectRatio,
+    displayShape,
+    objectFit,
+    isStreamSet,
+    isSquareOrCircle,
+  ]);
 
   useEffect(() => {
-    if(videoRef && videoRef.current && stream){
+    if (videoRef && videoRef.current && stream) {
       videoRef.current!.srcObject = stream;
     }
-    setIsStreamSet(videoRef.current?.srcObject===stream);
+    setIsStreamSet(videoRef.current?.srcObject === stream);
   }, [videoRef, stream]);
 
   return (
     <div className={classes.root}>
-    <div
-      className={`${classes.videoContainer}`}
-      style={{ width: `${width}px` ,height:`${height}px` }}
-    >
-      {!isVideoMuted && (
-        <Video
-        ref={videoRef}
-        objectFit={objectFit}
-        isLocal={isLocal}
-        videoSource={videoSource}
-        showAudioLevel={showAudioLevel}
-        audioLevel={audioLevel}
-        audioLevelDisplayType={audioLevelDisplayType}
-        audioLevelDisplayColor={audioLevelDisplayColor}
-        displayShape={displayShape}
-        classes={videoClasses}
-      />
-      )}
-      {isVideoMuted && (
-        <div className={classes.avatarContainer}>
-          <Avatar label={peer.displayName}/>            
-        </div>
-      )}
-      {controlsComponent ? (
-        controlsComponent
-      ) : (
-        <VideoTileControls
-          label={label}
-          isAudioMuted={isAudioMuted}
-          showAudioMuteStatus={showAudioMuteStatus}
-          showGradient={!isCircle}
-          allowRemoteMute={allowRemoteMute}
-          showAudioLevel={showAudioLevel && audioLevelDisplayType !== 'border'}
-          audioLevelDisplayType={audioLevelDisplayType}
-          audioLevel={audioLevel }
-        />
-      )}
-    </div>
+      <div
+        className={`${classes.videoContainer}`}
+        style={{ width: `${width}px`, height: `${height}px` }}
+      >
+        {!isVideoMuted && (
+          <Video
+            ref={videoRef}
+            objectFit={objectFit}
+            isLocal={isLocal}
+            videoSource={videoSource}
+            showAudioLevel={showAudioLevel}
+            audioLevel={audioLevel}
+            audioLevelDisplayType={audioLevelDisplayType}
+            audioLevelDisplayColor={audioLevelDisplayColor}
+            displayShape={displayShape}
+            classes={videoClasses}
+          />
+        )}
+        {isVideoMuted && (
+          <div className={classes.avatarContainer}>
+            <Avatar label={peer.displayName} />
+          </div>
+        )}
+        {controlsComponent ? (
+          controlsComponent
+        ) : (
+          <VideoTileControls
+            label={label}
+            isAudioMuted={isAudioMuted}
+            showAudioMuteStatus={showAudioMuteStatus}
+            showGradient={!isCircle}
+            allowRemoteMute={allowRemoteMute}
+            showAudioLevel={
+              showAudioLevel && audioLevelDisplayType !== 'border'
+            }
+            audioLevelDisplayType={audioLevelDisplayType}
+            audioLevel={audioLevel}
+          />
+        )}
+      </div>
     </div>
   );
 };
