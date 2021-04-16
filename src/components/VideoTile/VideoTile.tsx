@@ -66,7 +66,15 @@ export interface VideoTileClasses extends VideoClasses {
    * The avatar container.
    */
   avatarContainer?: string;
-}
+  /**
+   * Classes added to Avatar container if its a circle
+   */
+   avatarContainerCircle?: string;
+  /**
+   * Classes added to Video container if its a circle
+   */
+   videoContainerCircle?: string;
+  }
 
 export const VideoTile = ({
   stream,
@@ -89,6 +97,8 @@ export const VideoTile = ({
     videoContainer: 'relative rounded-lg shadow-lg',
     avatarContainer:
       'relative w-full h-full bg-gray-100 flex items-center justify-center',
+    avatarContainerCircle:'rounded-full',
+    videoContainerCircle:'rounded-full',
   },
   controlsComponent,
 }: VideoTileProps) => {
@@ -96,6 +106,7 @@ export const VideoTile = ({
   const [width, setWidth] = useState(0);
   const [isStreamSet, setIsStreamSet] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
   const isSquare =
     displayShape === 'rectangle' &&
@@ -120,15 +131,17 @@ export const VideoTile = ({
 
   useEffect(() => {
     if (
-      videoRef.current &&
-      videoRef.current.parentElement &&
-      videoRef.current.parentElement.parentElement
+      containerRef && 
+      containerRef.current
     ) {
       /*
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent
        * If aspect ratio is not defined, container width is the same as the video dimensions
        */
-      const parent = videoRef.current.parentElement.parentElement;
+      //@ts-ignore
+      window.stream=stream;
+      console.log(stream.getVideoTracks());
+      const parent = containerRef.current;
       const {
         width: parentWidth,
         height: parentHeight,
@@ -180,9 +193,9 @@ export const VideoTile = ({
   }, [videoRef, stream]);
 
   return (
-    <div className={classes.root}>
+    <div ref={containerRef} className={classes.root}>
       <div
-        className={`${classes.videoContainer}`}
+        className={`${classes.videoContainer} ${displayShape==='circle'?classes.videoContainerCircle:''}`}
         style={{ width: `${width}px`, height: `${height}px` }}
       >
         {!isVideoMuted && (
@@ -200,7 +213,7 @@ export const VideoTile = ({
           />
         )}
         {isVideoMuted && (
-          <div className={classes.avatarContainer}>
+          <div className={`${classes.avatarContainer} ${displayShape==='circle'?classes.avatarContainerCircle:''}`}>
             <Avatar label={peer.displayName} />
           </div>
         )}

@@ -31,7 +31,6 @@ const StyledMaterialAvatar = withStyles({
     fontSize: '2rem',
   },
 })(MaterialAvatar);
-//const defaultRootClasses = 'w-12 h-12 p-2';
 
 export const Avatar = ({ image, icon, label, ...props }: AvatarProps) => {
   return (
