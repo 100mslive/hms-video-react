@@ -4,9 +4,7 @@ import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import { getVideoTileLabel } from '../../utils';
-//@ts-ignore
-import { largestRect } from 'rect-scaler';
+import { getVideoTileLabel, largestRect } from '../../utils';
 
 export interface VideoTileProps extends VideoProps {
   /**
@@ -139,20 +137,28 @@ export const VideoTile = ({
         stream && stream.getVideoTracks()[0]
           ? stream.getVideoTracks()[0].getSettings()
           : { width: parentWidth, height: parentHeight };
-      const inputAspectRatio =
-        objectFit === 'cover' && aspectRatio
-          ? aspectRatio
+      const containerAspectRatio =
+        objectFit === 'cover'
+          ? { width: parentWidth, height: parentHeight }
           : { width: selfWidth, height: selfHeight };
-      const inferredAspectRatio = {
-        width: isSquareOrCircle ? 1 : inputAspectRatio.width,
-        height: isSquareOrCircle ? 1 : inputAspectRatio.height,
+      const containerAspectRatioAfterUserOverride =
+        aspectRatio && objectFit === 'cover'
+          ? aspectRatio
+          : containerAspectRatio;
+      const containerAspectRatioAfterShapeOverride = {
+        width: isSquareOrCircle
+          ? 1
+          : containerAspectRatioAfterUserOverride.width,
+        height: isSquareOrCircle
+          ? 1
+          : containerAspectRatioAfterUserOverride.height,
       };
       const { width, height } = largestRect(
         parentWidth,
         parentHeight,
         1,
-        inferredAspectRatio.width,
-        inferredAspectRatio.height,
+        containerAspectRatioAfterShapeOverride.width,
+        containerAspectRatioAfterShapeOverride.height,
       );
       setHeight(height);
       setWidth(width);

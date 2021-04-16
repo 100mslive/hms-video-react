@@ -2,9 +2,7 @@ import React from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
 import ContainerDimensions from 'react-container-dimensions';
-// @ts-ignore
-import { largestRect } from 'rect-scaler';
-
+import { largestRect } from '../../utils';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';

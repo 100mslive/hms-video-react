@@ -133,6 +133,65 @@ const getInitialsFromName = (name: string | undefined) => {
   }
 };
 
+/**
+ * Finds the largest rectangle area when trying to place N rectangle into a containing
+ * rectangle without rotation.
+ *
+ * @param {Number}  containerWidth      The width of the container.
+ * @param {Number}  containerHeight     The height of the container.
+ * @param {Number}  numSquares          How many rectangles must fit within.
+ * @param {Number}  width               The unscaled width of the rectangles to be placed.
+ * @param {Number}  height              The unscaled height of the rectangles to be placed.
+ * @return {Object}                     The area and number of rows and columns that fit.
+ */
+const largestRect = (
+  containerWidth: number,
+  containerHeight: number,
+  numRects: number,
+  width: number | undefined,
+  height: number | undefined,
+) => {
+  if (containerWidth < 0 || containerHeight < 0) {
+    throw new Error('Container must have a non-negative area');
+  }
+  if (numRects < 1 || !Number.isInteger(numRects)) {
+    throw new Error('Number of shapes to place must be a positive integer');
+  }
+  const aspectRatio = width / height || 1;
+  if (isNaN(aspectRatio)) {
+    throw new Error('Aspect ratio must be a number');
+  }
+
+  let best = { area: 0, cols: 0, rows: 0, width: 0, height: 0 };
+
+  // TODO: Don't start with obviously-bad candidates.
+  const startCols = numRects;
+  const colDelta = -1;
+
+  // For each combination of rows + cols that can fit the number of rectangles,
+  // place them and see the area.
+  for (let cols = startCols; cols > 0; cols += colDelta) {
+    const rows = Math.ceil(numRects / cols);
+    const hScale = containerWidth / (cols * aspectRatio);
+    const vScale = containerHeight / rows;
+    let width;
+    let height;
+    // Determine which axis is the constraint.
+    if (hScale <= vScale) {
+      width = containerWidth / cols;
+      height = width / aspectRatio;
+    } else {
+      height = containerHeight / rows;
+      width = height * aspectRatio;
+    }
+    const area = width * height;
+    if (area > best.area) {
+      best = { area, width, height, rows, cols };
+    }
+  }
+  return best;
+};
+
 export {
   closeMediaStream,
   getVideoTileLabel,
@@ -140,4 +199,5 @@ export {
   rowToColTransform,
   groupTilesIntoPage,
   getInitialsFromName,
+  largestRect,
 };
