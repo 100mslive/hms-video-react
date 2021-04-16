@@ -1,5 +1,5 @@
 import React from 'react';
-import { MicOff, MicOn, CamOff, CamOn, Logo } from '../../icons';
+import { MicOff, MicOn, CamOff, CamOn, Logo, LeaveRoom } from '../../icons';
 
 export const LogoButton = () => {
   return (
@@ -21,10 +21,24 @@ export const AudioMuteButton = ({ isAudioMuted = false }) => {
   );
 };
 
-export const VideoMuteButton = ({ isVideoMuted = false }) => {
+export const AudioButton = ({ isAudioMuted = false, buttonDisplay = 'square' }) => {
   return (
     <button
-      className={`inline-block p-2 rounded-lg focus:outline-none ${
+      className={`inline-block p-2 rounded-${buttonDisplay=='square'?'lg':'full'} focus:outline-none ${
+        isAudioMuted
+          ? 'bg-red-main hover:bg-red-tint'
+          : 'hover:bg-transparent-light'
+      }`}
+    >
+      {isAudioMuted ? MicOff : MicOn}
+    </button>
+  );
+};
+
+export const VideoButton = ({ isVideoMuted = false, buttonDisplay = 'square' }) => {
+  return (
+    <button
+      className={`inline-block p-2 rounded-${buttonDisplay=='square'?'lg':'full'} focus:outline-none ${
         isVideoMuted
           ? 'bg-red-main hover:bg-red-tint'
           : 'hover:bg-transparent-light'
@@ -34,6 +48,18 @@ export const VideoMuteButton = ({ isVideoMuted = false }) => {
     </button>
   );
 };
+
+
+export const LeaveButton = ({buttonDisplay = 'square'}) => {
+  return (
+    <button
+      className={`inline-block p-2 rounded-${buttonDisplay=='square'?'lg':'full'} focus:outline-none bg-red-main`}
+    >
+      {LeaveRoom}
+    </button>
+  );
+};
+
 
 export const AudioMuteIndicator = ({
   isAudioMuted = false,
