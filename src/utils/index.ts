@@ -157,8 +157,8 @@ const largestRect = (
   if (numRects < 1 || !Number.isInteger(numRects)) {
     throw new Error('Number of shapes to place must be a positive integer');
   }
-  const aspectRatio = width / height || 1;
-  if (isNaN(aspectRatio)) {
+  const aspectRatio = (width && height) && (width / height || 1);
+  if (!aspectRatio || isNaN(aspectRatio)) {
     throw new Error('Aspect ratio must be a number');
   }
 
