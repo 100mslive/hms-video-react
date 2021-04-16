@@ -28,13 +28,13 @@ interface VideoListStoryProps extends VideoListProps {
   height?: string;
 }
 
-const Template: Story<VideoListStoryProps> = args => {
+const Template: Story<VideoListStoryProps> = (args) => {
   const { streams, ...rest } = args;
   const isCameraStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'camera',
+    (stream) => !stream.isVideoMuted && stream.videoSource === 'camera',
   );
   const isScreenStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'screen',
+    (stream) => !stream.isVideoMuted && stream.videoSource === 'screen',
   );
   const [cameraStream, setCameraStream] = useState<MediaStream>();
   const [screenStream, setScreenStream] = useState<MediaStream>();
@@ -55,11 +55,11 @@ const Template: Story<VideoListStoryProps> = args => {
 
     if (isCameraStreamRequired) {
       window.navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then(function(stream) {
+        .getUserMedia({ audio: true, video: true })
+        .then(function (stream) {
           // @ts-ignore
           window.stream = stream;
-          console.log(stream);
+          c; //onsole.log(stream);
           setCameraStream(stream);
         });
     }
@@ -67,10 +67,10 @@ const Template: Story<VideoListStoryProps> = args => {
       window.navigator.mediaDevices
         // @ts-ignore
         .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
+        .then(function (stream: MediaStream | undefined) {
           // @ts-ignore
           window.stream = stream;
-          console.log(stream);
+          //console.log(stream);
           setScreenStream(stream);
         });
     }
@@ -95,7 +95,7 @@ const Template: Story<VideoListStoryProps> = args => {
             {...rest}
             streams={streams
               .filter(
-                item =>
+                (item) =>
                   item.videoSource === 'screen' ||
                   item.videoSource === 'camera',
               )
@@ -123,66 +123,88 @@ const streams: MediaStreamWithInfo[] = [
     peer: { id: '123', displayName: 'Nikhil2' },
     videoSource: 'camera',
     audioLevel: 100,
+    isAudioMuted: true,
+    isVideoMuted: false,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil3' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: false,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil4' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: true,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil5' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: true,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil6' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: false,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil7' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: false,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil8' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: false,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil9' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: false,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil10' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: false,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil11' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: false,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil12' },
     videoSource: 'camera',
     audioLevel: 10,
+    isAudioMuted: true,
+    isVideoMuted: false,
   },
   // {
   //   stream: new MediaStream(),
@@ -228,8 +250,9 @@ Campfire.args = {
   classes: {
     videoTile: 'p-2',
     video: 'rounded-lg shadow-lg',
-    root: 'bg-red-50 rounded-lg',
+    root: 'bg-gray-100 rounded-lg',
   },
+  showAudioMuteStatus: false,
 };
 
 export const SideBar = Template.bind({});
@@ -303,10 +326,10 @@ const MeetTemplate: Story<VideoListStoryProps> = (
     showAudioMuteStatus = true,
   } = rest;
   const isCameraStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'camera',
+    (stream) => stream.videoSource === 'camera',
   );
   const isScreenStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'screen',
+    (stream) => stream.videoSource === 'screen',
   );
   const [cameraStream, setCameraStream] = useState<MediaStream>();
   const [screenStream, setScreenStream] = useState<MediaStream>();
@@ -327,11 +350,11 @@ const MeetTemplate: Story<VideoListStoryProps> = (
 
     if (isCameraStreamRequired) {
       window.navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then(function(stream) {
+        .getUserMedia({ audio: true, video: true })
+        .then(function (stream) {
           // @ts-ignore
           window.stream = stream;
-          console.log(stream);
+          //console.log(stream);
           setCameraStream(stream);
         });
     }
@@ -339,10 +362,10 @@ const MeetTemplate: Story<VideoListStoryProps> = (
       window.navigator.mediaDevices
         // @ts-ignore
         .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
+        .then(function (stream: MediaStream | undefined) {
           // @ts-ignore
           window.stream = stream;
-          console.log(stream);
+          //console.log(stream);
           setScreenStream(stream);
         });
     }
@@ -367,7 +390,7 @@ const MeetTemplate: Story<VideoListStoryProps> = (
             {...rest}
             streams={streams
               .filter(
-                item =>
+                (item) =>
                   item.videoSource === 'screen' ||
                   item.videoSource === 'camera',
               )
@@ -376,10 +399,10 @@ const MeetTemplate: Story<VideoListStoryProps> = (
                 stream:
                   item.videoSource === 'screen' ? screenStream : cameraStream,
               }))}
-            videoTileControls={streams.map(stream => (
+            videoTileControls={streams.map((stream) => (
               <GoogleMeetControls
                 allowRemoteMute={allowRemoteMute}
-                isAudioMuted={stream.audioMuteStatus}
+                isAudioMuted={stream.isAudioMuted}
                 peer={stream.peer}
                 isLocal={stream.isLocal}
                 videoSource={stream.videoSource}

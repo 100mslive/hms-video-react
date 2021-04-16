@@ -1,10 +1,3 @@
-import {
-  faChevronDown,
-  faChevronLeft,
-  faChevronRight,
-  faChevronUp,
-} from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React from 'react';
 import { CustomArrowProps } from 'react-slick';
 
@@ -380,8 +373,19 @@ export function SliderRightArrow(props: CustomArrowProps) {
       style={{ ...style, display: 'block' }}
       onClick={onClick}
     >
-      <button className="text-2xl bg-white rounded-sm">
-        <FontAwesomeIcon icon={faChevronRight} />
+      <button className="text-2xl text-blue-main focus:outline-none">
+        <svg
+          width="10"
+          height="16"
+          viewBox="0 0 10 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M9.28424 8C9.27545 8.30762 9.16119 8.58887 8.9151 8.81738L2.07721 15.4971C1.88385 15.6904 1.63776 15.7959 1.34772 15.7959C0.76764 15.7959 0.30182 15.3389 0.301819 14.7588C0.301819 14.4775 0.416077 14.2051 0.618226 14.0029L6.77936 8.00879L0.618225 1.99707C0.424866 1.79492 0.301819 1.53125 0.301819 1.24121C0.301819 0.661133 0.767639 0.204102 1.34772 0.204102C1.63776 0.204102 1.88385 0.30957 2.07721 0.50293L8.9151 7.19141C9.16119 7.42871 9.28424 7.69238 9.28424 8Z"
+            fill="white"
+          />
+        </svg>
       </button>
     </div>
   );
@@ -395,8 +399,19 @@ export function SliderDownArrow(props: CustomArrowProps) {
       style={{ ...style, display: 'block' }}
       onClick={onClick}
     >
-      <button className="text-2xl bg-white rounded-sm">
-        <FontAwesomeIcon icon={faChevronDown} />
+      <button className="text-2xl rounded-sm focus:outline-none">
+        <svg
+          width="16"
+          height="10"
+          viewBox="0 0 16 10"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M8 9.31971C8.30762 9.31092 8.58887 9.19667 8.81738 8.95057L15.4971 2.11268C15.6904 1.91932 15.7959 1.67323 15.7959 1.38319C15.7959 0.803112 15.3389 0.337292 14.7588 0.337292C14.4775 0.337292 14.2051 0.45155 14.0029 0.653698L8.00879 6.81483L1.99707 0.653698C1.79492 0.460339 1.53125 0.337292 1.24121 0.337292C0.661133 0.337292 0.204102 0.803112 0.204102 1.38319C0.204102 1.67323 0.30957 1.91932 0.50293 2.11268L7.19141 8.95057C7.42871 9.19667 7.69238 9.31971 8 9.31971Z"
+            fill="white"
+          />
+        </svg>
       </button>
     </div>
   );
@@ -410,8 +425,19 @@ export function SliderUpArrow(props: CustomArrowProps) {
       style={{ ...style, display: 'block' }}
       onClick={onClick}
     >
-      <button className="text-2xl bg-white rounded-sm">
-        <FontAwesomeIcon icon={faChevronUp} />
+      <button className="text-2xl  rounded-sm focus:outline-none">
+        <svg
+          width="16"
+          height="10"
+          viewBox="0 0 16 10"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M8 0.780922C7.69238 0.789711 7.41113 0.903969 7.18262 1.15006L0.50293 7.98795C0.30957 8.18131 0.204102 8.42741 0.204102 8.71745C0.204102 9.29752 0.661133 9.76334 1.24121 9.76334C1.52246 9.76334 1.79492 9.64909 1.99707 9.44694L7.99121 3.2858L14.0029 9.44694C14.2051 9.6403 14.4688 9.76334 14.7588 9.76334C15.3389 9.76334 15.7959 9.29752 15.7959 8.71745C15.7959 8.42741 15.6904 8.18131 15.4971 7.98795L8.80859 1.15006C8.57129 0.903969 8.30762 0.780922 8 0.780922Z"
+            fill="white"
+          />
+        </svg>
       </button>
     </div>
   );
@@ -425,8 +451,19 @@ export function SliderLeftArrow(props: CustomArrowProps) {
       style={{ ...style, display: 'block' }}
       onClick={onClick}
     >
-      <button className="text-2xl bg-white rounded-sm">
-        <FontAwesomeIcon icon={faChevronLeft} />
+      <button className="text-2xl  rounded-sm focus:outline-none">
+        <svg
+          width="10"
+          height="16"
+          viewBox="0 0 10 16"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0.847931 8C0.85672 8.30762 0.970977 8.58887 1.21707 8.81738L8.05496 15.4971C8.24832 15.6904 8.49441 15.7959 8.78445 15.7959C9.36453 15.7959 9.83035 15.3389 9.83035 14.7588C9.83035 14.4775 9.71609 14.2051 9.51395 14.0029L3.35281 8.00879L9.51395 1.99707C9.70731 1.79492 9.83035 1.53125 9.83035 1.24121C9.83035 0.661133 9.36453 0.204102 8.78445 0.204102C8.49442 0.204102 8.24832 0.30957 8.05496 0.50293L1.21707 7.19141C0.970977 7.42871 0.847931 7.69238 0.847931 8Z"
+            fill="white"
+          />
+        </svg>
       </button>
     </div>
   );
