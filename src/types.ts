@@ -15,3 +15,5 @@ export interface MediaStreamWithInfo {
   videoSource: VideoSource;
 }
 export type AudioLevelDisplayType = 'inline-wave' | 'inline-circle' | 'border';
+
+export type ButtonDisplayType = 'rounded' | 'square';
