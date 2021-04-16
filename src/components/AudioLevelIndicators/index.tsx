@@ -1,6 +1,6 @@
 import React from 'react';
 import { AudioLevelDisplayType } from '../../types';
-import {DisplayShapes} from '../VideoTile/VideoTile';
+import { DisplayShapes } from '../Video';
 import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 import AudioLevelBorder from './Border';
@@ -8,14 +8,14 @@ import AudioLevelBorder from './Border';
 export interface AudioLevelIndicatorProps {
   type: AudioLevelDisplayType;
   level: number;
-  color?:string;
+  color?: string;
   displayShape?: DisplayShapes;
-  classes?:{
+  classes?: {
     /**
      * Style attached when display shape is circle
      */
-    videoCircle?:string
-  }
+    videoCircle?: string;
+  };
 }
 
 export const AudioLevelIndicator = ({
@@ -24,7 +24,7 @@ export const AudioLevelIndicator = ({
   color,
   displayShape = 'rectangle',
   classes = {
-    videoCircle:'rounded-full',
+    videoCircle: 'rounded-full',
   },
 }: AudioLevelIndicatorProps) => {
   switch (type) {
@@ -33,7 +33,14 @@ export const AudioLevelIndicator = ({
     case 'inline-wave':
       return <InlineWave level={level} />;
     case 'border':
-      return <AudioLevelBorder level={level} displayShape={displayShape} color={color} classes={classes}/>
+      return (
+        <AudioLevelBorder
+          level={level}
+          displayShape={displayShape}
+          color={color}
+          classes={classes}
+        />
+      );
     default:
       return null;
   }

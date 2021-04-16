@@ -83,7 +83,7 @@ export const VideoList = ({
 }: VideoListProps) => {
   let videoCount = streams.length;
   aspectRatio =
-    displayShape == 'circle' ? { width: 1, height: 1 } : aspectRatio;
+    displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
   const getTileDimensions = (
     parentWidth: number,
@@ -108,7 +108,7 @@ export const VideoList = ({
 
       let cols = Math.floor(parentWidth / height);
       let width = parentWidth / cols;
-      cols = cols == 0 ? 1 : cols;
+      cols = cols === 0 ? 1 : cols;
 
       videoCount = rows * cols;
       return {
@@ -121,7 +121,7 @@ export const VideoList = ({
       //let height = (width * aspectRatio.height) / aspectRatio.width;
 
       let rows = Math.floor(parentHeight / width);
-      rows = rows == 0 ? 1 : rows;
+      rows = rows === 0 ? 1 : rows;
 
       let height = parentHeight / rows;
       videoCount = rows * cols;
@@ -131,7 +131,7 @@ export const VideoList = ({
         rows,
         cols,
       };
-    } else
+    } else {
       return largestRect(
         parentWidth,
         parentHeight,
@@ -139,6 +139,7 @@ export const VideoList = ({
         aspectRatio.width,
         aspectRatio.height,
       );
+    }
   };
 
   var settings = {
