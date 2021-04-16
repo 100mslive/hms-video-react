@@ -28,13 +28,13 @@ interface VideoListStoryProps extends VideoListProps {
   height?: string;
 }
 
-const Template: Story<VideoListStoryProps> = args => {
+const Template: Story<VideoListStoryProps> = (args) => {
   const { streams, ...rest } = args;
   const isCameraStreamRequired: boolean = args.streams.some(
-    stream => !stream.isVideoMuted && stream.videoSource === 'camera',
+    (stream) => !stream.isVideoMuted && stream.videoSource === 'camera',
   );
   const isScreenStreamRequired: boolean = args.streams.some(
-    stream => !stream.isVideoMuted && stream.videoSource === 'screen',
+    (stream) => !stream.isVideoMuted && stream.videoSource === 'screen',
   );
   const [cameraStream, setCameraStream] = useState<MediaStream>();
   const [screenStream, setScreenStream] = useState<MediaStream>();
@@ -56,10 +56,10 @@ const Template: Story<VideoListStoryProps> = args => {
     if (isCameraStreamRequired) {
       window.navigator.mediaDevices
         .getUserMedia({ audio: true, video: true })
-        .then(function(stream) {
+        .then(function (stream) {
           // @ts-ignore
           window.stream = stream;
-          console.log(stream);
+          c; //onsole.log(stream);
           setCameraStream(stream);
         });
     }
@@ -67,10 +67,10 @@ const Template: Story<VideoListStoryProps> = args => {
       window.navigator.mediaDevices
         // @ts-ignore
         .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
+        .then(function (stream: MediaStream | undefined) {
           // @ts-ignore
           window.stream = stream;
-          console.log(stream);
+          //console.log(stream);
           setScreenStream(stream);
         });
     }
@@ -95,7 +95,7 @@ const Template: Story<VideoListStoryProps> = args => {
             {...rest}
             streams={streams
               .filter(
-                item =>
+                (item) =>
                   item.videoSource === 'screen' ||
                   item.videoSource === 'camera',
               )
@@ -326,10 +326,10 @@ const MeetTemplate: Story<VideoListStoryProps> = (
     showAudioMuteStatus = true,
   } = rest;
   const isCameraStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'camera',
+    (stream) => stream.videoSource === 'camera',
   );
   const isScreenStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'screen',
+    (stream) => stream.videoSource === 'screen',
   );
   const [cameraStream, setCameraStream] = useState<MediaStream>();
   const [screenStream, setScreenStream] = useState<MediaStream>();
@@ -351,10 +351,10 @@ const MeetTemplate: Story<VideoListStoryProps> = (
     if (isCameraStreamRequired) {
       window.navigator.mediaDevices
         .getUserMedia({ audio: true, video: true })
-        .then(function(stream) {
+        .then(function (stream) {
           // @ts-ignore
           window.stream = stream;
-          console.log(stream);
+          //console.log(stream);
           setCameraStream(stream);
         });
     }
@@ -362,10 +362,10 @@ const MeetTemplate: Story<VideoListStoryProps> = (
       window.navigator.mediaDevices
         // @ts-ignore
         .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
+        .then(function (stream: MediaStream | undefined) {
           // @ts-ignore
           window.stream = stream;
-          console.log(stream);
+          //console.log(stream);
           setScreenStream(stream);
         });
     }
@@ -390,7 +390,7 @@ const MeetTemplate: Story<VideoListStoryProps> = (
             {...rest}
             streams={streams
               .filter(
-                item =>
+                (item) =>
                   item.videoSource === 'screen' ||
                   item.videoSource === 'camera',
               )
@@ -399,7 +399,7 @@ const MeetTemplate: Story<VideoListStoryProps> = (
                 stream:
                   item.videoSource === 'screen' ? screenStream : cameraStream,
               }))}
-            videoTileControls={streams.map(stream => (
+            videoTileControls={streams.map((stream) => (
               <GoogleMeetControls
                 allowRemoteMute={allowRemoteMute}
                 isAudioMuted={stream.isAudioMuted}

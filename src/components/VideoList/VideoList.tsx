@@ -79,7 +79,6 @@ export const VideoList = ({
   videoTileControls,
   showAudioMuteStatus,
 }: VideoListProps) => {
-  console.log(showAudioMuteStatus, ' audiomute status');
   let videoCount = streams.length;
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
@@ -165,10 +164,7 @@ export const VideoList = ({
           let dimensions = getTileDimensions(width, height);
           let w = dimensions.width;
           let h = dimensions.height;
-          console.log(dimensions);
-          console.log(width, height);
-          console.log(videoCount);
-          console.log(streams[0]);
+
           return (
             <Slider {...settings} className="w-full h-full">
               {groupTilesIntoPage(
@@ -195,7 +191,7 @@ export const VideoList = ({
                 videoCount,
                 overflow === 'hidden',
               )
-                .map(page => {
+                .map((page) => {
                   if (
                     tileArrangeDirection === 'col' &&
                     !maxTileCount &&
@@ -214,7 +210,7 @@ export const VideoList = ({
                   }
                   return page;
                 })
-                .map(item => {
+                .map((item) => {
                   return (
                     <div className="w-full h-full">
                       <div

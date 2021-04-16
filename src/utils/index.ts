@@ -20,14 +20,14 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
     return;
   }
   const tracks = stream.getTracks();
-  tracks.forEach(track => track.stop());
+  tracks.forEach((track) => track.stop());
 };
 
 const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
   let cols = maxColCount;
   let rows = Math.ceil(page.length / cols);
   let remLastRowElem = page.length % cols;
-  console.log(remLastRowElem, 'number to be skipped');
+  //console.log(remLastRowElem, 'number to be skipped');
   let grid: JSX.Element[][] = [];
   let newArray: JSX.Element[] = [];
 
@@ -36,7 +36,7 @@ const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
     for (let j = 0; j < rows && last < page.length; j++) {
       if (j === rows - 1 && page.length % cols !== 0) {
         if (remLastRowElem === 0) {
-          console.log('skipped', last, remLastRowElem);
+          //console.log('skipped', last, remLastRowElem);
           continue;
         }
         remLastRowElem--;
@@ -44,7 +44,7 @@ const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
       if (!grid[j]) {
         grid[j] = [];
       }
-      console.log(`${last}inserted at ${j}`, i);
+      //console.log(`${last}inserted at ${j}`, i);
       grid[j][i] = page[last];
       last++;
     }
@@ -57,7 +57,7 @@ const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
       }
     }
   }
-  console.log(grid, cols, rows);
+  //console.log(grid, cols, rows);
   return newArray;
 };
 
@@ -73,7 +73,7 @@ const rowToColTransform = (page: JSX.Element[], maxRowCount: number) => {
     for (let j = 0; j < cols && last < page.length; j++) {
       if (j === cols - 1 && page.length % rows !== 0) {
         if (remLastColElem === 0) {
-          console.log('skipped', last, remLastColElem);
+          //console.log('skipped', last, remLastColElem);
           continue;
         }
         remLastColElem--;
@@ -81,7 +81,7 @@ const rowToColTransform = (page: JSX.Element[], maxRowCount: number) => {
       if (!grid[i]) {
         grid[i] = [];
       }
-      console.log(`${last}inserted at ${i}`, j);
+      //console.log(`${last}inserted at ${i}`, j);
       grid[i][j] = page[last];
       last++;
     }
@@ -95,7 +95,7 @@ const rowToColTransform = (page: JSX.Element[], maxRowCount: number) => {
     }
   }
 
-  console.log(grid);
+  //console.log(grid);
   return newArray;
 };
 
