@@ -1,7 +1,7 @@
 const getVideoTileLabel = (
   peerName: string,
   isLocal: boolean,
-  videoSource: 'screen' | 'camera' | 'canvas',
+  videoSource: 'screen' | 'camera' | 'canvas' | undefined,
 ) => {
   // Map [isLocal, videoSource] to the label to be displayed.
   const labelMap = new Map<string, string>([
@@ -9,6 +9,7 @@ const getVideoTileLabel = (
     [[true, 'camera'].toString(), 'You'],
     [[false, 'screen'].toString(), `${peerName}'s Screen`],
     [[false, 'camera'].toString(), peerName],
+    [[false, undefined].toString(), peerName]
   ]);
 
   return labelMap.get([isLocal, videoSource].toString());
