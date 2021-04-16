@@ -182,10 +182,6 @@ export const VideoList = ({
                       displayShape={displayShape}
                       audioLevelDisplayType={audioLevelDisplayType}
                       showAudioLevel={showAudioLevel}
-                      classes={{
-                        root: classes?.videoTile,
-                        video: classes?.video,
-                      }}
                       aspectRatio={aspectRatio}
                       controlsComponent={
                         videoTileControls && videoTileControls[index]
