@@ -1,7 +1,6 @@
 import React from 'react';
 import { LogoButton } from '../MediaIcons';
 
-
 export const Header = () => {
   return (
     <div className="flex flex-wrap h-full items-stretch">
