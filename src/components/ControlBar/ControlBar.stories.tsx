@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ControlBarProps, ControlBar } from './index';
+import { faDeaf } from '@fortawesome/free-solid-svg-icons';
 
 const meta: Meta = {
   title: 'ControlBar',
@@ -16,3 +17,14 @@ const Template: Story<ControlBarProps> = args => (
 );
 
 export const Default = Template.bind({});
+Default.args = {
+  audioButtonOnClick: () => {
+    alert('audio toggled');
+  },
+  videoButtonOnClick: () => {
+    alert('video toggled');
+  },
+  leaveButtonOnClick: () => {
+    alert('left room');
+  },
+};

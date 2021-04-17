@@ -24,6 +24,11 @@ export const AudioMuteButton = ({ isAudioMuted = false }) => {
 export const AudioButton = ({
   isAudioMuted = false,
   buttonDisplay = 'square',
+  clickHandler,
+}: {
+  isAudioMuted: boolean;
+  buttonDisplay: string;
+  clickHandler: React.MouseEventHandler;
 }) => {
   return (
     <button
@@ -34,6 +39,7 @@ export const AudioButton = ({
           ? 'bg-red-main hover:bg-red-tint'
           : 'hover:bg-transparent-light'
       }`}
+      onClick={clickHandler}
     >
       {isAudioMuted ? MicOff : MicOn}
     </button>
@@ -43,6 +49,11 @@ export const AudioButton = ({
 export const VideoButton = ({
   isVideoMuted = false,
   buttonDisplay = 'square',
+  clickHandler,
+}: {
+  isVideoMuted: boolean;
+  buttonDisplay: string;
+  clickHandler: React.MouseEventHandler;
 }) => {
   return (
     <button
@@ -53,6 +64,7 @@ export const VideoButton = ({
           ? 'bg-red-main hover:bg-red-tint'
           : 'hover:bg-transparent-light'
       }`}
+      onClick={clickHandler}
     >
       {isVideoMuted ? CamOff : CamOn}
     </button>
