@@ -11,21 +11,25 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<ControlBarProps> = args => {
-  return (<div className="bg-black">
-    <ControlBar {...args} />
-  </div>)
-  
+  return (
+    <div className="bg-black">
+      <ControlBar {...args} />
+    </div>
+  );
 };
 
 export const Default = Template.bind({});
 Default.args = {
   audioButtonOnClick: () => {
-    // alert('audio toggled');
+    alert('audio toggled');
   },
   videoButtonOnClick: () => {
-    // alert('video toggled');
+    alert('video toggled');
   },
   leaveButtonOnClick: () => {
-    // alert('left room');
+    alert('left room');
+  },
+  screenshareButtonOnClick: () => {
+    alert('Share Screen room');
   },
 };

@@ -31,25 +31,27 @@ export const Header = ({
   return (
     <div className={classes.root}>
       <div className={classes.clock}>
-      {leftComponents.find( (name ) => name === 'logo')!=undefined && 
-      <div>
-          <LogoButton />
-        </div>}
-        {leftComponents.find( (name ) => name === 'timer')!=undefined && 
-        <div>
-          {Clock}
-        </div>}
-        {leftComponents.find( (name ) => name === 'timer')!=undefined && 
-        <div>
-          {parseInt((time / 60).toString())} m {time % 60} s
-        </div>}
+        {leftComponents.find(name => name === 'logo') != undefined && (
+          <div>
+            <LogoButton />
+          </div>
+        )}
+        {leftComponents.find(name => name === 'timer') != undefined && (
+          <div>{Clock}</div>
+        )}
+        {leftComponents.find(name => name === 'timer') != undefined && (
+          <div>
+            {parseInt((time / 60).toString())} m {time % 60} s
+          </div>
+        )}
       </div>
-      
+
       <div className={classes.center}>
-      {centerComponents.find( (name ) => name === 'label')!=undefined && 
-      <div>
-        {Volume} You, {peer.displayName}
-      </div>}
+        {centerComponents.find(name => name === 'label') != undefined && (
+          <div>
+            {Volume} You, {peer.displayName}
+          </div>
+        )}
       </div>
     </div>
   );
