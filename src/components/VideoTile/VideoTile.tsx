@@ -136,10 +136,6 @@ export const VideoTile = ({
   } = useResizeDetector();
 
   useEffect(() => {
-    console.log(containerWidth, containerHeight, containerRef);
-  }, [containerHeight, containerWidth, containerRef]);
-
-  useEffect(() => {
     if (containerWidth && containerHeight) {
       /*
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent

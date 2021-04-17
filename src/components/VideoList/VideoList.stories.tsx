@@ -125,7 +125,6 @@ const streams: MediaStreamWithInfo[] = [
     audioLevel: 100,
     isAudioMuted: true,
     isVideoMuted: false,
-    isLocal: true,
   },
   {
     stream: new MediaStream(),
