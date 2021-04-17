@@ -94,10 +94,10 @@ export const VideoTile = ({
   audioLevelDisplayColor = '#0F6CFF',
   allowRemoteMute = false,
   classes = {
-    root: 'w-full h-full flex relative items-center justify-center',
+    root: 'w-full h-full flex relative items-center justify-center rounded-lg',
     videoContainer: 'relative rounded-lg shadow-lg',
     avatarContainer:
-      'relative w-full h-full bg-gray-100 flex items-center justify-center',
+      'relative w-full h-full bg-gray-100 flex items-center justify-center rounded-lg',
     avatarContainerCircle: 'rounded-full',
     videoContainerCircle: 'rounded-full',
   },
