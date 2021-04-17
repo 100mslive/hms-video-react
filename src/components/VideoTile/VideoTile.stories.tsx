@@ -1,8 +1,9 @@
-import { Args, Meta, Story } from '@storybook/react';
+import { Meta, Story } from '@storybook/react';
 import React, { useState, useEffect, useRef } from 'react';
 import { VideoTile, VideoTileProps } from '.';
 import VideoTileDocs from './VideoTile.mdx';
-import { closeMediaStream, getVideoTileLabel } from '../../utils';
+import { getVideoTileLabel } from '../../utils';
+import { loadStream } from '../../storybook/utils';
 import { VideoTileControls } from './Controls';
 import { MicOff, MicOn } from '../../icons';
 
@@ -19,53 +20,15 @@ const meta: Meta = {
     stream: { control: { disable: true } },
     controlsComponent: { control: { disable: true } },
   },
+  //decorators: [addDummyVideos] //TODO this is a placeholder for future use
 };
 
 export default meta;
 
-const loadStream = (
-  stream: MediaStream | undefined,
-  args: Args,
-  dummyVideoRef: React.RefObject<HTMLVideoElement>,
-  setStream: React.Dispatch<React.SetStateAction<MediaStream | undefined>>,
-) => {
-  closeMediaStream(stream);
-
-  if (args.videoSource === 'camera' && args.isLocal) {
-    window.navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      .then(function(stream) {
-        setStream(stream);
-      });
-  } else if (args.videoSource === 'screen' && args.isLocal) {
-    window.navigator.mediaDevices
-      // @ts-ignore
-      .getDisplayMedia({ video: true })
-      .then(function(stream: MediaStream | undefined) {
-        setStream(stream);
-      });
-  } else if (args.videoSource === 'screen' && !args.isLocal) {
-    console.log('Screen remote');
-    dummyVideoRef.current?.setAttribute(
-      'src',
-      'https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618376/Screen_Recording_2021-04-17_at_5.36.24_AM_if70nz_wl31nt.mp4',
-    );
-  } else if (!args.isLocal) {
-    console.log('Camera remote');
-    dummyVideoRef.current?.setAttribute(
-      'src',
-      'https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618246/pexels-mart-production-7261921_XCEC2bNM_osJG_lhdtua.mp4',
-    );
-  }
-  return () => {
-    closeMediaStream(stream);
-  };
-};
-
 const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   const [stream, setStream] = useState<MediaStream>();
   const dummyVideoRef = useRef<HTMLVideoElement>(null);
-
+  const testVideoRef = useRef<HTMLVideoElement>(null);
   // Stream is not added in dependency array to avoid creating a new stream for every mute/unmute change which causes visual flicker in the storybook canvas.
   useEffect(() => {
     const track = stream?.getVideoTracks()[0];
@@ -84,12 +47,46 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   }, [args.isAudioMuted]);
 
   useEffect(() => {
-    return loadStream(stream, args, dummyVideoRef, setStream);
+    if (testVideoRef.current && stream) {
+      testVideoRef.current.srcObject = stream;
+    }
+  }, [stream]);
+
+  useEffect(() => {
+    if (dummyVideoRef) {
+      console.log('Loading stream');
+      return loadStream({
+        stream,
+        isLocal: args.isLocal,
+        videoSource: args.videoSource,
+        dummyVideoRef,
+        setStream,
+      });
+    } else {
+      console.log('Nothing changed');
+      return;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.videoSource, args.isLocal]);
 
   return (
     <div className="flex items-center justify-center h-full sm:h-80">
+      <video
+        crossOrigin="anonymous"
+        className="hidden"
+        width="400"
+        height="225"
+        ref={dummyVideoRef}
+        loop
+        autoPlay
+        onPlay={() => {
+          if (dummyVideoRef && dummyVideoRef.current) {
+            //@ts-ignore
+            setStream(dummyVideoRef.current.captureStream());
+          }
+        }}
+      ></video>
+      {/* <video width="400" height="225" loop autoPlay muted ref={testVideoRef}/> */}
       {stream && <VideoTile {...args} stream={stream} />}
     </div>
   );
@@ -116,7 +113,17 @@ const MeetTemplate: Story<VideoTileProps> = args => {
   }, [args.isAudioMuted]);
 
   useEffect(() => {
-    return loadStream(stream, args, dummyVideoRef, setStream);
+    if (dummyVideoRef) {
+      return loadStream({
+        stream,
+        isLocal: args.isLocal,
+        videoSource: args.videoSource,
+        dummyVideoRef,
+        setStream,
+      });
+    } else {
+      return;
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.videoSource, args.isLocal]);
 

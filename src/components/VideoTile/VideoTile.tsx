@@ -4,7 +4,7 @@ import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import { getVideoTileLabel, largestRect } from '../../utils';
+import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
 
 export interface VideoTileProps extends VideoProps {
   /**
@@ -130,46 +130,26 @@ export const VideoTile = ({
       : undefined;
 
   useEffect(() => {
-    if (containerRef && containerRef.current) {
+    if (
+      containerRef &&
+      containerRef.current &&
+      containerRef.current.parentElement
+    ) {
       /*
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent
        * If aspect ratio is not defined, container width is the same as the video dimensions
        */
-      //@ts-ignore
-      window.stream = stream;
-      console.log(stream.getVideoTracks());
-      const parent = containerRef.current;
-      const {
-        width: parentWidth,
-        height: parentHeight,
-      } = parent.getBoundingClientRect();
-      const { width: selfWidth, height: selfHeight } =
-        stream && stream.getVideoTracks()[0]
-          ? stream.getVideoTracks()[0].getSettings()
-          : { width: parentWidth, height: parentHeight };
-      const containerAspectRatio =
-        objectFit === 'cover'
-          ? { width: parentWidth, height: parentHeight }
-          : { width: selfWidth, height: selfHeight };
-      const containerAspectRatioAfterUserOverride =
-        aspectRatio && objectFit === 'cover'
-          ? aspectRatio
-          : containerAspectRatio;
-      const containerAspectRatioAfterShapeOverride = {
-        width: isSquareOrCircle
-          ? 1
-          : containerAspectRatioAfterUserOverride.width,
-        height: isSquareOrCircle
-          ? 1
-          : containerAspectRatioAfterUserOverride.height,
-      };
-      const { width, height } = largestRect(
-        parentWidth,
-        parentHeight,
-        1,
-        containerAspectRatioAfterShapeOverride.width,
-        containerAspectRatioAfterShapeOverride.height,
-      );
+      console.log('Calling dimensions from useEffect');
+      const { width, height } = getTileContainerDimensions({
+        parentWidth: containerRef.current.parentElement.getBoundingClientRect()
+          .width,
+        parentHeight: containerRef.current.parentElement.getBoundingClientRect()
+          .height,
+        stream,
+        objectFit,
+        aspectRatio,
+        isSquareOrCircle,
+      });
       setHeight(height);
       setWidth(width);
     }
@@ -183,14 +163,21 @@ export const VideoTile = ({
   ]);
 
   useEffect(() => {
+    console.log('Inside tile useEffect', videoRef, videoRef.current, stream);
     if (videoRef && videoRef.current && stream) {
-      videoRef.current!.srcObject = stream;
+      console.log('Setting stream ');
+      videoRef.current.srcObject = stream;
     }
     setIsStreamSet(videoRef.current?.srcObject === stream);
   }, [videoRef, stream]);
 
   return (
     <div ref={containerRef} className={classes.root}>
+      {/* <ContainerDimensions>
+        {({ width:parentWidth, height:parentHeight }) => {
+      //TODO why is this not being rendered infinitely?        
+      const {width, height} = getTileContainerDimensions({parentHeight, parentWidth, stream, objectFit, aspectRatio, isSquareOrCircle})
+      return( */}
       <div
         className={`${classes.videoContainer} ${
           displayShape === 'circle' ? classes.videoContainerCircle : ''
@@ -198,6 +185,7 @@ export const VideoTile = ({
         style={{ width: `${width}px`, height: `${height}px` }}
       >
         {!isVideoMuted && (
+          //TODO move stream inside
           <Video
             ref={videoRef}
             objectFit={objectFit}
@@ -237,6 +225,8 @@ export const VideoTile = ({
           />
         )}
       </div>
+      {/* )}}
+      </ContainerDimensions> */}
     </div>
   );
 };
