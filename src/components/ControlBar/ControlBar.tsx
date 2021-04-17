@@ -13,12 +13,18 @@ export interface ControlBarProps {
     leaveRoot?: string;
     leavebutton?: string;
   };
+  audioButtonOnClick: React.MouseEventHandler;
+  videoButtonOnClick: React.MouseEventHandler;
+  leaveButtonOnClick: React.MouseEventHandler;
 }
 
 export const ControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
   buttonDisplay = 'square',
+  audioButtonOnClick,
+  videoButtonOnClick,
+  leaveButtonOnClick,
   classes = {
     root:
       'flex flex-grow h-full justify-center items-center p-3 relative self-center',
@@ -33,12 +39,14 @@ export const ControlBar = ({
         <AudioButton
           isAudioMuted={isAudioMuted}
           buttonDisplay={buttonDisplay}
+          clickHandler={audioButtonOnClick}
         />
       </div>
       <div className="ml-1">
         <VideoButton
           isVideoMuted={isVideoMuted}
           buttonDisplay={buttonDisplay}
+          clickHandler={videoButtonOnClick}
         />
       </div>
       {/* <div>
@@ -49,6 +57,7 @@ export const ControlBar = ({
           className={` ${classes.leavebutton} rounded-${
             buttonDisplay === 'square' ? 'lg' : 'full'
           } `}
+          onClick={leaveButtonOnClick}
         >
           <div className="inline-block">{LeaveRoom}</div>
           <div className="pl-2 hidden md:inline-block">Leave Room</div>
