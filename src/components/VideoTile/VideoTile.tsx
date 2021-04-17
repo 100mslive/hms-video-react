@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './index.css';
 import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
@@ -129,6 +129,10 @@ export const VideoTile = ({
         }
       : undefined;
 
+  useLayoutEffect(() => {
+    console.log('Is something happening?');
+  }, []);
+
   useEffect(() => {
     if (
       containerRef &&
@@ -139,7 +143,6 @@ export const VideoTile = ({
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent
        * If aspect ratio is not defined, container width is the same as the video dimensions
        */
-      console.log('Calling dimensions from useEffect');
       const { width, height } = getTileContainerDimensions({
         parentWidth: containerRef.current.parentElement.getBoundingClientRect()
           .width,
@@ -163,9 +166,7 @@ export const VideoTile = ({
   ]);
 
   useEffect(() => {
-    console.log('Inside tile useEffect', videoRef, videoRef.current, stream);
     if (videoRef && videoRef.current && stream) {
-      console.log('Setting stream ');
       videoRef.current.srcObject = stream;
     }
     setIsStreamSet(videoRef.current?.srcObject === stream);

@@ -54,7 +54,6 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
 
   useEffect(() => {
     if (dummyVideoRef) {
-      console.log('Loading stream');
       return loadStream({
         stream,
         isLocal: args.isLocal,
@@ -63,7 +62,6 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
         setStream,
       });
     } else {
-      console.log('Nothing changed');
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
