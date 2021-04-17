@@ -21,10 +21,15 @@ export const AudioMuteButton = ({ isAudioMuted = false }) => {
   );
 };
 
-export const AudioButton = ({ isAudioMuted = false, buttonDisplay = 'square' }) => {
+export const AudioButton = ({
+  isAudioMuted = false,
+  buttonDisplay = 'square',
+}) => {
   return (
     <button
-      className={`inline-block p-2 rounded-${buttonDisplay=='square'?'lg':'full'} focus:outline-none ${
+      className={`inline-block p-2 rounded-${
+        buttonDisplay === 'square' ? 'lg' : 'full'
+      } focus:outline-none ${
         isAudioMuted
           ? 'bg-red-main hover:bg-red-tint'
           : 'hover:bg-transparent-light'
@@ -35,10 +40,15 @@ export const AudioButton = ({ isAudioMuted = false, buttonDisplay = 'square' }) 
   );
 };
 
-export const VideoButton = ({ isVideoMuted = false, buttonDisplay = 'square' }) => {
+export const VideoButton = ({
+  isVideoMuted = false,
+  buttonDisplay = 'square',
+}) => {
   return (
     <button
-      className={`inline-block p-2 rounded-${buttonDisplay=='square'?'lg':'full'} focus:outline-none ${
+      className={`inline-block p-2 rounded-${
+        buttonDisplay === 'square' ? 'lg' : 'full'
+      } focus:outline-none ${
         isVideoMuted
           ? 'bg-red-main hover:bg-red-tint'
           : 'hover:bg-transparent-light'
@@ -49,17 +59,17 @@ export const VideoButton = ({ isVideoMuted = false, buttonDisplay = 'square' }) 
   );
 };
 
-
-export const LeaveButton = ({buttonDisplay = 'square'}) => {
+export const LeaveButton = ({ buttonDisplay = 'square' }) => {
   return (
     <button
-      className={`inline-block p-2 rounded-${buttonDisplay=='square'?'lg':'full'} focus:outline-none bg-red-main`}
+      className={`inline-block p-2 rounded-${
+        buttonDisplay === 'square' ? 'lg' : 'full'
+      } focus:outline-none bg-red-main`}
     >
       {LeaveRoom}
     </button>
   );
 };
-
 
 export const AudioMuteIndicator = ({
   isAudioMuted = false,

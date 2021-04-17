@@ -19,5 +19,5 @@ export const Default = Template.bind({});
 
 Default.args = {
   peer: { id: '123', displayName: 'Siddhant' },
-  time: 1865
+  time: 1865,
 };

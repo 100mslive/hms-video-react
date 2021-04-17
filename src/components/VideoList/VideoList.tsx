@@ -191,7 +191,7 @@ export const VideoList = ({
                 videoCount,
                 overflow === 'hidden',
               )
-                .map((page) => {
+                .map(page => {
                   if (
                     tileArrangeDirection === 'col' &&
                     !maxTileCount &&
@@ -210,7 +210,7 @@ export const VideoList = ({
                   }
                   return page;
                 })
-                .map((item) => {
+                .map(item => {
                   return (
                     <div className="w-full h-full">
                       <div

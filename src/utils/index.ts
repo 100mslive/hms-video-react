@@ -20,7 +20,7 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
     return;
   }
   const tracks = stream.getTracks();
-  tracks.forEach((track) => track.stop());
+  tracks.forEach(track => track.stop());
 };
 
 const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
