@@ -1,10 +1,11 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './index.css';
 import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
 import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
+import { useResizeDetector } from 'react-resize-detector';
 
 export interface VideoTileProps extends VideoProps {
   /**
@@ -106,7 +107,6 @@ export const VideoTile = ({
   const [width, setWidth] = useState(0);
   const [isStreamSet, setIsStreamSet] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
   const isSquare =
     displayShape === 'rectangle' &&
@@ -129,25 +129,25 @@ export const VideoTile = ({
         }
       : undefined;
 
-  useLayoutEffect(() => {
-    console.log('Is something happening?');
-  }, []);
+  const {
+    width: containerWidth,
+    height: containerHeight,
+    ref: containerRef,
+  } = useResizeDetector();
 
   useEffect(() => {
-    if (
-      containerRef &&
-      containerRef.current &&
-      containerRef.current.parentElement
-    ) {
+    console.log(containerWidth, containerHeight, containerRef);
+  }, [containerHeight, containerWidth, containerRef]);
+
+  useEffect(() => {
+    if (containerWidth && containerHeight) {
       /*
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent
        * If aspect ratio is not defined, container width is the same as the video dimensions
        */
       const { width, height } = getTileContainerDimensions({
-        parentWidth: containerRef.current.parentElement.getBoundingClientRect()
-          .width,
-        parentHeight: containerRef.current.parentElement.getBoundingClientRect()
-          .height,
+        parentWidth: containerWidth,
+        parentHeight: containerHeight,
         stream,
         objectFit,
         aspectRatio,
@@ -163,6 +163,8 @@ export const VideoTile = ({
     objectFit,
     isStreamSet,
     isSquareOrCircle,
+    containerWidth,
+    containerHeight,
   ]);
 
   useEffect(() => {
@@ -174,11 +176,6 @@ export const VideoTile = ({
 
   return (
     <div ref={containerRef} className={classes.root}>
-      {/* <ContainerDimensions>
-        {({ width:parentWidth, height:parentHeight }) => {
-      //TODO why is this not being rendered infinitely?        
-      const {width, height} = getTileContainerDimensions({parentHeight, parentWidth, stream, objectFit, aspectRatio, isSquareOrCircle})
-      return( */}
       <div
         className={`${classes.videoContainer} ${
           displayShape === 'circle' ? classes.videoContainerCircle : ''
@@ -226,8 +223,6 @@ export const VideoTile = ({
           />
         )}
       </div>
-      {/* )}}
-      </ContainerDimensions> */}
     </div>
   );
 };

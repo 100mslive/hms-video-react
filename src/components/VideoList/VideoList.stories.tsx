@@ -67,9 +67,9 @@ const Template: Story<VideoListStoryProps> = args => {
                 streamWithInfo.videoSource !== 'screen'
               ) {
                 let newStreamsWithInfo = [...streamsWithInfo];
-                //@ts-ignore
                 newStreamsWithInfo[
                   index
+                  //@ts-ignore
                 ].stream = dummyCameraVideoRef.current.captureStream();
                 setStreamsWithInfo(newStreamsWithInfo);
               }
@@ -95,9 +95,9 @@ const Template: Story<VideoListStoryProps> = args => {
                 streamWithInfo.videoSource === 'screen'
               ) {
                 let newStreamsWithInfo = [...streamsWithInfo];
-                //@ts-ignore
                 newStreamsWithInfo[
                   index
+                  //@ts-ignore
                 ].stream = dummyScreenVideoRef.current.captureStream();
                 setStreamsWithInfo(newStreamsWithInfo);
               }
