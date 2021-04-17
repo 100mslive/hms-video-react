@@ -7,12 +7,13 @@ const AudioLevelBorder = ({
   color = '#0F6CFF',
   displayShape,
   classes = {
+    root: 'w-full h-full absolute left-0 top-0 rounded-lg',
     videoCircle: 'rounded-full',
   },
 }: AudioLevelProps) => {
   return (
     <div
-      className={`w-full h-full absolute left-0 top-0         ${
+      className={`${classes.root} ${
         displayShape === 'circle' ? classes.videoCircle : ''
       }
         `}

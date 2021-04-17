@@ -12,6 +12,10 @@ export interface AudioLevelIndicatorProps {
   displayShape?: DisplayShapes;
   classes?: {
     /**
+     * Style attached to avatar
+     */
+    root?: string;
+    /**
      * Style attached when display shape is circle
      */
     videoCircle?: string;
@@ -24,6 +28,7 @@ export const AudioLevelIndicator = ({
   color,
   displayShape = 'rectangle',
   classes = {
+    root: 'w-full h-full absolute left-0 top-0 rounded-lg',
     videoCircle: 'rounded-full',
   },
 }: AudioLevelIndicatorProps) => {

@@ -22,9 +22,13 @@ export interface VideoClasses {
    */
   videoCover?: string;
   /**
-   * Extra styles added when objectFir is contain
+   * Extra styles added when objectFit is contain
    */
   videoContain?: string;
+  /**
+   * Extra styles added when to audio level border
+   */
+  borderAudioRoot?: string;
 }
 
 export interface VideoProps {
@@ -83,11 +87,12 @@ export const Video = forwardRef(
       audioLevelDisplayColor,
       displayShape,
       classes = {
-        video: 'h-full w-full',
+        video: 'h-full w-full rounded-lg',
         videoCircle: 'rounded-full',
         videoLocal: '-scale-x-1',
         videoCover: 'object-cover',
         videoContain: 'object-contain',
+        borderAudioRoot: 'w-full h-full absolute left-0 top-0 rounded-lg',
       },
     }: VideoProps,
     ref: React.Ref<HTMLVideoElement>,
@@ -110,7 +115,10 @@ export const Video = forwardRef(
             type={'border'}
             level={audioLevel}
             displayShape={displayShape}
-            classes={{ videoCircle: classes.videoCircle }}
+            classes={{
+              videoCircle: classes.videoCircle,
+              root: classes.borderAudioRoot,
+            }}
             color={audioLevelDisplayColor}
           />
         )}
