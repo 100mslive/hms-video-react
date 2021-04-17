@@ -1,5 +1,5 @@
-import { Meta, Story } from '@storybook/react';
-import React, { useState, useEffect } from 'react';
+import { Args, Meta, Story } from '@storybook/react';
+import React, { useState, useEffect, useRef } from 'react';
 import { VideoTile, VideoTileProps } from '.';
 import VideoTileDocs from './VideoTile.mdx';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
@@ -23,8 +23,48 @@ const meta: Meta = {
 
 export default meta;
 
+const loadStream = (
+  stream: MediaStream | undefined,
+  args: Args,
+  dummyVideoRef: React.RefObject<HTMLVideoElement>,
+  setStream: React.Dispatch<React.SetStateAction<MediaStream | undefined>>,
+) => {
+  closeMediaStream(stream);
+
+  if (args.videoSource === 'camera' && args.isLocal) {
+    window.navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true })
+      .then(function(stream) {
+        setStream(stream);
+      });
+  } else if (args.videoSource === 'screen' && args.isLocal) {
+    window.navigator.mediaDevices
+      // @ts-ignore
+      .getDisplayMedia({ video: true })
+      .then(function(stream: MediaStream | undefined) {
+        setStream(stream);
+      });
+  } else if (args.videoSource === 'screen' && !args.isLocal) {
+    console.log('Screen remote');
+    dummyVideoRef.current?.setAttribute(
+      'src',
+      'https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618376/Screen_Recording_2021-04-17_at_5.36.24_AM_if70nz_wl31nt.mp4',
+    );
+  } else if (!args.isLocal) {
+    console.log('Camera remote');
+    dummyVideoRef.current?.setAttribute(
+      'src',
+      'https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618246/pexels-mart-production-7261921_XCEC2bNM_osJG_lhdtua.mp4',
+    );
+  }
+  return () => {
+    closeMediaStream(stream);
+  };
+};
+
 const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   const [stream, setStream] = useState<MediaStream>();
+  const dummyVideoRef = useRef<HTMLVideoElement>(null);
 
   // Stream is not added in dependency array to avoid creating a new stream for every mute/unmute change which causes visual flicker in the storybook canvas.
   useEffect(() => {
@@ -44,27 +84,9 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   }, [args.isAudioMuted]);
 
   useEffect(() => {
-    closeMediaStream(stream);
-
-    if (args.videoSource === 'camera') {
-      window.navigator.mediaDevices
-        .getUserMedia({ audio: true, video: true })
-        .then(function(stream) {
-          setStream(stream);
-        });
-    } else if (args.videoSource === 'screen') {
-      window.navigator.mediaDevices
-        // @ts-ignore
-        .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
-          setStream(stream);
-        });
-    }
-    return () => {
-      closeMediaStream(stream);
-    };
+    return loadStream(stream, args, dummyVideoRef, setStream);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.videoSource]);
+  }, [args.videoSource, args.isLocal]);
 
   return (
     <div className="flex items-center justify-center h-full sm:h-80">
@@ -75,6 +97,7 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
 
 const MeetTemplate: Story<VideoTileProps> = args => {
   const [stream, setStream] = useState<MediaStream>();
+  const dummyVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     const track = stream?.getVideoTracks()[0];
@@ -93,66 +116,64 @@ const MeetTemplate: Story<VideoTileProps> = args => {
   }, [args.isAudioMuted]);
 
   useEffect(() => {
-    closeMediaStream(stream);
-
-    if (args.videoSource === 'camera') {
-      window.navigator.mediaDevices
-        .getUserMedia({ audio: true, video: true })
-        .then(function(stream) {
-          setStream(stream);
-        });
-    } else if (args.videoSource === 'screen') {
-      window.navigator.mediaDevices
-        // @ts-ignore
-        .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
-          setStream(stream);
-        });
-    }
-
-    return () => {
-      closeMediaStream(stream);
-    };
+    return loadStream(stream, args, dummyVideoRef, setStream);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.videoSource]);
+  }, [args.videoSource, args.isLocal]);
 
   return (
-    <div className="flex items-center justify-center h-72 sm:h-80">
-      {stream && (
-        <VideoTile
-          {...args}
-          stream={stream}
-          controlsComponent={
-            <>
-              {args.allowRemoteMute && (
-                <div className="inset-center">
-                  <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
-                    {args.isAudioMuted ? MicOff : MicOn}
+    <>
+      <div className="flex items-center justify-center h-72 sm:h-80">
+        <video
+          crossOrigin="anonymous"
+          className="hidden"
+          width="400"
+          height="225"
+          ref={dummyVideoRef}
+          loop
+          autoPlay
+          onPlay={() => {
+            if (dummyVideoRef && dummyVideoRef.current) {
+              //@ts-ignore
+              setStream(dummyVideoRef.current.captureStream());
+            }
+          }}
+        ></video>
+        {stream && (
+          <VideoTile
+            {...args}
+            stream={stream}
+            controlsComponent={
+              <>
+                {args.allowRemoteMute && (
+                  <div className="inset-center">
+                    <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
+                      {args.isAudioMuted ? MicOff : MicOn}
+                    </div>
                   </div>
-                </div>
-              )}
-              <VideoTileControls
-                label={getVideoTileLabel(
-                  args.peer.displayName,
-                  args.isLocal || false,
-                  args.videoSource,
                 )}
-                isAudioMuted={args.isAudioMuted}
-                showAudioMuteStatus={args.showAudioMuteStatus}
-                showGradient={false}
-                allowRemoteMute={false}
-                showAudioLevel={args.showAudioLevel}
-                audioLevelDisplayType="inline-wave"
-                audioLevel={args.audioLevel}
-                classes={{
-                  labelContainer: 'flex justify-around items-center w-min',
-                }}
-              />
-            </>
-          }
-        />
-      )}
-    </div>
+                <VideoTileControls
+                  label={getVideoTileLabel(
+                    args.peer.displayName,
+                    args.isLocal || false,
+                    args.videoSource,
+                  )}
+                  isAudioMuted={args.isAudioMuted}
+                  showAudioMuteStatus={args.showAudioMuteStatus}
+                  showGradient={false}
+                  allowRemoteMute={false}
+                  showAudioLevel={args.showAudioLevel}
+                  audioLevelDisplayType="inline-wave"
+                  audioLevel={args.audioLevel}
+                  classes={{
+                    labelContainer: 'flex justify-around items-center w-min',
+                  }}
+                />
+              </>
+            }
+          />
+        )}
+      </div>
+    </>
   );
 };
 
