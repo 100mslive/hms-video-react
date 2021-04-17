@@ -193,6 +193,56 @@ const largestRect = (
   return best;
 };
 
+export interface getTileContainerDimensionsProps {
+  stream: MediaStream;
+  parentWidth: number;
+  parentHeight: number;
+  objectFit?: 'contain' | 'cover';
+  aspectRatio?: {
+    width: number;
+    height: number;
+  };
+  isSquareOrCircle?: boolean;
+}
+
+const getTileContainerDimensions = ({
+  stream,
+  objectFit,
+  aspectRatio,
+  parentWidth,
+  parentHeight,
+  isSquareOrCircle,
+}: getTileContainerDimensionsProps) => {
+  //console.log(stream, objectFit, aspectRatio, parentWidth, parentHeight);
+  const { width: selfWidth, height: selfHeight } =
+    stream && stream.getVideoTracks()[0]
+      ? stream.getVideoTracks()[0].getSettings()
+      : { width: parentWidth, height: parentHeight };
+  //console.log(selfHeight, selfWidth);
+  const containerAspectRatio =
+    objectFit === 'cover'
+      ? { width: parentWidth, height: parentHeight }
+      : { width: selfWidth, height: selfHeight };
+  //console.log(containerAspectRatio);
+  const containerAspectRatioAfterUserOverride =
+    aspectRatio && objectFit === 'cover' ? aspectRatio : containerAspectRatio;
+  //console.log(containerAspectRatioAfterUserOverride);
+  const containerAspectRatioAfterShapeOverride = {
+    width: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.width,
+    height: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.height,
+  };
+  //console.log(containerAspectRatioAfterShapeOverride);
+  const { width, height } = largestRect(
+    parentWidth,
+    parentHeight,
+    1,
+    containerAspectRatioAfterShapeOverride.width,
+    containerAspectRatioAfterShapeOverride.height,
+  );
+  //console.log(width, height);
+  return { width, height };
+};
+
 export {
   closeMediaStream,
   getVideoTileLabel,
@@ -201,4 +251,5 @@ export {
   groupTilesIntoPage,
   getInitialsFromName,
   largestRect,
+  getTileContainerDimensions,
 };
