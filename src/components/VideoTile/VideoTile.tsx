@@ -4,7 +4,8 @@ import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import { getVideoTileLabel, largestRect } from '../../utils';
+import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
+import { useResizeDetector } from 'react-resize-detector';
 
 export interface VideoTileProps extends VideoProps {
   /**
@@ -106,7 +107,6 @@ export const VideoTile = ({
   const [width, setWidth] = useState(0);
   const [isStreamSet, setIsStreamSet] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
   const isSquare =
     displayShape === 'rectangle' &&
@@ -129,47 +129,26 @@ export const VideoTile = ({
         }
       : undefined;
 
+  const {
+    width: containerWidth,
+    height: containerHeight,
+    ref: containerRef,
+  } = useResizeDetector();
+
   useEffect(() => {
-    if (containerRef && containerRef.current) {
+    if (containerWidth && containerHeight) {
       /*
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent
        * If aspect ratio is not defined, container width is the same as the video dimensions
        */
-      //@ts-ignore
-      window.stream = stream;
-      console.log(stream.getVideoTracks());
-      const parent = containerRef.current;
-      const {
-        width: parentWidth,
-        height: parentHeight,
-      } = parent.getBoundingClientRect();
-      const { width: selfWidth, height: selfHeight } =
-        stream && stream.getVideoTracks()[0]
-          ? stream.getVideoTracks()[0].getSettings()
-          : { width: parentWidth, height: parentHeight };
-      const containerAspectRatio =
-        objectFit === 'cover'
-          ? { width: parentWidth, height: parentHeight }
-          : { width: selfWidth, height: selfHeight };
-      const containerAspectRatioAfterUserOverride =
-        aspectRatio && objectFit === 'cover'
-          ? aspectRatio
-          : containerAspectRatio;
-      const containerAspectRatioAfterShapeOverride = {
-        width: isSquareOrCircle
-          ? 1
-          : containerAspectRatioAfterUserOverride.width,
-        height: isSquareOrCircle
-          ? 1
-          : containerAspectRatioAfterUserOverride.height,
-      };
-      const { width, height } = largestRect(
-        parentWidth,
-        parentHeight,
-        1,
-        containerAspectRatioAfterShapeOverride.width,
-        containerAspectRatioAfterShapeOverride.height,
-      );
+      const { width, height } = getTileContainerDimensions({
+        parentWidth: containerWidth,
+        parentHeight: containerHeight,
+        stream,
+        objectFit,
+        aspectRatio,
+        isSquareOrCircle,
+      });
       setHeight(height);
       setWidth(width);
     }
@@ -180,11 +159,13 @@ export const VideoTile = ({
     objectFit,
     isStreamSet,
     isSquareOrCircle,
+    containerWidth,
+    containerHeight,
   ]);
 
   useEffect(() => {
     if (videoRef && videoRef.current && stream) {
-      videoRef.current!.srcObject = stream;
+      videoRef.current.srcObject = stream;
     }
     setIsStreamSet(videoRef.current?.srcObject === stream);
   }, [videoRef, stream]);
@@ -198,6 +179,7 @@ export const VideoTile = ({
         style={{ width: `${width}px`, height: `${height}px` }}
       >
         {!isVideoMuted && (
+          //TODO move stream inside
           <Video
             ref={videoRef}
             objectFit={objectFit}

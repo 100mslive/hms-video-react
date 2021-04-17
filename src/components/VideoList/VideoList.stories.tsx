@@ -1,11 +1,12 @@
 import { useEffect } from '@storybook/client-api';
 import { Meta, Story } from '@storybook/react';
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { VideoList, VideoListProps } from '.';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
 import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
 import { VideoTileControls } from '../VideoTile/Controls';
 import { MicOff, MicOn } from '../../icons';
+import { loadStreams } from '../../storybook/utils';
 
 const meta: Meta = {
   title: 'Video/ List',
@@ -29,84 +30,82 @@ interface VideoListStoryProps extends VideoListProps {
 }
 
 const Template: Story<VideoListStoryProps> = args => {
-  const { streams, ...rest } = args;
-  const isCameraStreamRequired: boolean = args.streams.some(
-    stream => !stream.isVideoMuted && stream.videoSource === 'camera',
+  const [streamsWithInfo, setStreamsWithInfo] = useState<MediaStreamWithInfo[]>(
+    args.streams,
   );
-  const isScreenStreamRequired: boolean = args.streams.some(
-    stream => !stream.isVideoMuted && stream.videoSource === 'screen',
-  );
-  const [cameraStream, setCameraStream] = useState<MediaStream>();
-  const [screenStream, setScreenStream] = useState<MediaStream>();
-
-  // useEffect(() => {
-  //   const track = stream?.getVideoTracks()[0];
-  //   if (track) track.enabled = !args.isVideoMuted;
-  // }, [args.peer.isVideoMuted]);
-
-  // useEffect(() => {
-  //   const track = stream?.getAudioTracks()[0];
-  //   if (track) track.enabled = !args.isAudioMuted;
-  // }, [args.isAudioMuted]);
+  const dummyCameraVideoRef = useRef<HTMLVideoElement>(null);
+  const dummyScreenVideoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    closeMediaStream(cameraStream);
-    closeMediaStream(screenStream);
-
-    if (isCameraStreamRequired) {
-      window.navigator.mediaDevices
-        .getUserMedia({ audio: true, video: true })
-        .then(function(stream) {
-          // @ts-ignore
-          window.stream = stream;
-          //console.log(stream);
-          setCameraStream(stream);
-        });
-    }
-    if (isScreenStreamRequired) {
-      window.navigator.mediaDevices
-        // @ts-ignore
-        .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
-          // @ts-ignore
-          window.stream = stream;
-          //console.log(stream);
-          setScreenStream(stream);
-        });
-    }
-
-    return () => {
-      closeMediaStream(screenStream);
-      closeMediaStream(cameraStream);
-    };
-  }, [
-    args.streams,
-    cameraStream,
-    isCameraStreamRequired,
-    isScreenStreamRequired,
-    screenStream,
-  ]);
+    //TODO can be refactored to simplify
+    //TODO move to decorator
+    return loadStreams({
+      streamsWithInfo,
+      dummyCameraVideoRef,
+      dummyScreenVideoRef,
+      setStreamsWithInfo,
+    });
+  }, [streamsWithInfo]);
 
   return (
-    <div className="h-screen w-full flex flex-wrap justify-center content-evenly justify-items-center">
-      <div style={{ width: args.width, height: args.height }} className="p-8">
-        {cameraStream && (
-          <VideoList
-            {...rest}
-            streams={streams
-              .filter(
-                item =>
-                  item.videoSource === 'screen' ||
-                  item.videoSource === 'camera',
-              )
-              .map((item): any => ({
-                ...item,
-                stream:
-                  item.videoSource === 'screen' ? screenStream : cameraStream,
-              }))}
-          />
-        )}
-      </div>
+    <div className="flex items-center justify-center h-screen">
+      <video
+        crossOrigin="anonymous"
+        className="hidden"
+        width="400"
+        height="225"
+        ref={dummyCameraVideoRef}
+        src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618246/pexels-mart-production-7261921_XCEC2bNM_osJG_lhdtua.mp4"
+        loop
+        autoPlay
+        onPlay={() => {
+          if (dummyCameraVideoRef && dummyCameraVideoRef.current) {
+            //@ts-ignore
+            streamsWithInfo?.forEach((streamWithInfo, index) => {
+              if (
+                !streamWithInfo.isLocal &&
+                streamWithInfo.videoSource !== 'screen'
+              ) {
+                let newStreamsWithInfo = [...streamsWithInfo];
+                newStreamsWithInfo[
+                  index
+                  //@ts-ignore
+                ].stream = dummyCameraVideoRef.current.captureStream();
+                setStreamsWithInfo(newStreamsWithInfo);
+              }
+            });
+          }
+        }}
+      ></video>
+      <video
+        crossOrigin="anonymous"
+        className="hidden"
+        width="400"
+        height="225"
+        ref={dummyScreenVideoRef}
+        src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618376/Screen_Recording_2021-04-17_at_5.36.24_AM_if70nz_wl31nt.mp4"
+        loop
+        autoPlay
+        onPlay={() => {
+          if (dummyScreenVideoRef && dummyScreenVideoRef.current) {
+            //@ts-ignore
+            streamsWithInfo?.forEach((streamWithInfo, index) => {
+              if (
+                !streamWithInfo.isLocal &&
+                streamWithInfo.videoSource === 'screen'
+              ) {
+                let newStreamsWithInfo = [...streamsWithInfo];
+                newStreamsWithInfo[
+                  index
+                  //@ts-ignore
+                ].stream = dummyScreenVideoRef.current.captureStream();
+                setStreamsWithInfo(newStreamsWithInfo);
+              }
+            });
+          }
+        }}
+      ></video>
+      <VideoList {...args} streams={streamsWithInfo} />
     </div>
   );
 };
@@ -117,11 +116,12 @@ const streams: MediaStreamWithInfo[] = [
     peer: { id: '123', displayName: 'Nikhil1' },
     videoSource: 'camera',
     audioLevel: 50,
+    isLocal: true,
   },
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil2' },
-    videoSource: 'camera',
+    videoSource: 'screen',
     audioLevel: 100,
     isAudioMuted: true,
     isVideoMuted: false,
@@ -137,10 +137,10 @@ const streams: MediaStreamWithInfo[] = [
   {
     stream: new MediaStream(),
     peer: { id: '123', displayName: 'Nikhil4' },
-    videoSource: 'camera',
+    videoSource: 'screen',
     audioLevel: 10,
     isAudioMuted: true,
-    isVideoMuted: true,
+    isVideoMuted: false,
   },
   {
     stream: new MediaStream(),
@@ -156,7 +156,7 @@ const streams: MediaStreamWithInfo[] = [
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
-    isVideoMuted: false,
+    isVideoMuted: true,
   },
   {
     stream: new MediaStream(),
