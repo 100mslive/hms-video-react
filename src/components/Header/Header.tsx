@@ -11,9 +11,9 @@ export interface HeaderProps {
     clock?: string;
     center?: string;
   };
-  leftComponents: Array<String>;
-  centerComponents: Array<String>;
-  rightComponents: Array<String>;
+  // leftComponents: Array<String>;
+  // centerComponents: Array<String>;
+  // rightComponents: Array<String>;
 }
 
 export const Header = ({
@@ -24,18 +24,17 @@ export const Header = ({
     clock: 'flex self-center items-center space-x-2 absolute',
     center: 'flex flex-grow justify-center self-center',
   },
-  leftComponents = ['logo', 'timer'],
-  centerComponents = ['label'],
-  rightComponents = [],
+  // leftComponents = ['logo', 'timer'],
+  // centerComponents = ['label'],
+  // rightComponents = [],
 }: HeaderProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.clock}>
-        {leftComponents.find(name => name === 'logo') != undefined && (
           <div>
             <LogoButton />
           </div>
-        )}
+{/*         
         {leftComponents.find(name => name === 'timer') != undefined && (
           <div>{Clock}</div>
         )}
@@ -51,7 +50,7 @@ export const Header = ({
           <div>
             {Volume} You, {peer.displayName}
           </div>
-        )}
+        )}*/}
       </div>
     </div>
   );
