@@ -164,14 +164,16 @@ export const VideoList = ({
           let dimensions = getTileDimensions(width, height);
           let w = dimensions.width;
           let h = dimensions.height;
-
+          console.log(`SDK-Component: ${JSON.stringify(dimensions)}, parentHeight:${w} , parentwidth:${h} , videoCount:${videoCount}`)
           return (
             <Slider {...settings} className="w-full h-full">
               {groupTilesIntoPage(
                 streams.map((stream, index) => (
                   <div
                     style={{ height: h, width: w }}
-                    key={stream.peer.displayName}
+                    key={Math.random()
+                      .toString(36)
+                      .substring(7)}
                     className={`${classes?.videoTileParent} flex justify-center`}
                   >
                     <VideoTile
