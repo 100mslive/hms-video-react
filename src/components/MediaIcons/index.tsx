@@ -1,5 +1,13 @@
 import React from 'react';
-import { MicOff, MicOn, CamOff, CamOn, Logo, LeaveRoom } from '../../icons';
+import {
+  MicOff,
+  MicOn,
+  CamOff,
+  CamOn,
+  Logo,
+  LeaveRoom,
+  ShareScreen,
+} from '../../icons';
 
 export const LogoButton = () => {
   return (
@@ -71,14 +79,29 @@ export const VideoButton = ({
   );
 };
 
-export const LeaveButton = ({ buttonDisplay = 'square' }) => {
+export const LeaveButton = ({
+  buttonDisplay = 'square',
+  clickHandler,
+}: {
+  clickHandler: React.MouseEventHandler;
+  buttonDisplay: string;
+}) => {
   return (
+    // <button
+    //   className={`md:hidden inline-block p-2 rounded-${
+    //     buttonDisplay === 'square' ? 'lg' : 'full'
+    //   } focus:outline-none bg-red-main`}
+    // >
+    //   {LeaveRoom}
+    // </button>
     <button
-      className={`inline-block p-2 rounded-${
+      className={` md:right-0 md:absolute self-center p-2 lg:w-40 md:w-36 bg-red-main focus:outline-none text-lg text-white rounded-${
         buttonDisplay === 'square' ? 'lg' : 'full'
-      } focus:outline-none bg-red-main`}
+      } `}
+      onClick={clickHandler}
     >
-      {LeaveRoom}
+      <div className="inline-block">{LeaveRoom}</div>
+      <div className="md:pl-2 hidden md:inline-block">Leave Room</div>
     </button>
   );
 };
@@ -95,5 +118,24 @@ export const AudioMuteIndicator = ({
     >
       {isAudioMuted ? MicOff : MicOn}
     </span>
+  );
+};
+
+export const ShareScreenButton = ({
+  buttonDisplay = 'square',
+  clickHandler,
+}: {
+  clickHandler: React.MouseEventHandler;
+  buttonDisplay: string;
+}) => {
+  return (
+    <button
+      className={`inline-block p-2 rounded-${
+        buttonDisplay === 'square' ? 'lg' : 'full'
+      } focus:outline-none hover:bg-transparent-light`}
+      onClick={clickHandler}
+    >
+      {ShareScreen}
+    </button>
   );
 };

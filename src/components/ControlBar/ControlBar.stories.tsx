@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ControlBarProps, ControlBar } from './index';
@@ -9,11 +10,13 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<ControlBarProps> = args => (
-  <div className="bg-black">
-    <ControlBar {...args} />
-  </div>
-);
+const Template: Story<ControlBarProps> = args => {
+  return (
+    <div className="bg-black">
+      <ControlBar {...args} />
+    </div>
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {
@@ -25,5 +28,8 @@ Default.args = {
   },
   leaveButtonOnClick: (e: React.MouseEvent) => {
     alert('left room');
+  },
+  screenshareButtonOnClick: () => {
+    alert('Share Screen room');
   },
 };

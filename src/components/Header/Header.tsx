@@ -9,32 +9,48 @@ export interface HeaderProps {
   classes?: {
     root?: string;
     clock?: string;
-    label?: string;
+    center?: string;
   };
+  // leftComponents: Array<String>;
+  // centerComponents: Array<String>;
+  // rightComponents: Array<String>;
 }
 
 export const Header = ({
   peer,
   time,
   classes = {
-    root: 'flex h-full hidden md:flex p-3 m-1 text-white relative',
-    clock: 'flex flex-none self-center items-center space-x-2 absolute',
-    label: 'flex flex-grow justify-center self-center',
+    root: 'flex  lg:h-11 md:h-9 hidden md:flex p-3 text-white relative',
+    clock: 'flex self-center items-center space-x-2 absolute',
+    center: 'flex flex-grow justify-center self-center',
   },
+  // leftComponents = ['logo', 'timer'],
+  // centerComponents = ['label'],
+  // rightComponents = [],
 }: HeaderProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.clock}>
-        <div>
-          <LogoButton />
-        </div>
-        <div>{Clock}</div>
-        <div>
-          {parseInt((time / 60).toString())} m {time % 60} s
-        </div>
+          <div>
+            <LogoButton />
+          </div>
+{/*         
+        {leftComponents.find(name => name === 'timer') != undefined && (
+          <div>{Clock}</div>
+        )}
+        {leftComponents.find(name => name === 'timer') != undefined && (
+          <div>
+            {parseInt((time / 60).toString())} m {time % 60} s
+          </div>
+        )}
       </div>
-      <div className={classes.label}>
-        {Volume} You, {peer.displayName}
+
+      <div className={classes.center}>
+        {centerComponents.find(name => name === 'label') != undefined && (
+          <div>
+            {Volume} You, {peer.displayName}
+          </div>
+        )}*/}
       </div>
     </div>
   );
