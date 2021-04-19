@@ -1,67 +1,16 @@
 import React, { useState, useContext, createContext, useEffect } from 'react';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
-import HMSRoom from '@100mslive/100ms-web-sdk/dist/interfaces/room';
-import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
-import HMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
-
-interface Props {
-    peers: HMSPeer[];
-    localPeer: HMSPeer;
-    join: (config: HMSConfig, listener: HMSUpdateListener) => void;
-    leave: () => void;
-    toggleMute: (track: HMSTrack) => void;
-};
-
-const createListener = (
-    incomingListener: HMSUpdateListener,
-    setPeers: any,
-    setLocalPeer: any,
-    sdk: HMSSdk
-) => {
-    const myListener = {
-        onJoin: (room: HMSRoom) => {
-            console.log("INSIDE MY LISTENER ONJOIN");
-
-            setPeers(sdk.getPeers());
-            setLocalPeer(sdk.getLocalPeer());
-            incomingListener.onJoin(room);
-        },
-
-        onPeerUpdate: (type: any, peer: HMSPeer) => {
-            console.log("INSIDE MY LISTENER ONPEERUPDATE");
-
-            setPeers(sdk.getPeers());
-            incomingListener.onPeerUpdate(type, peer);
-        },
-
-        onRoomUpdate: (type: any, room: HMSRoom) => { 
-            console.log("INSIDE MY LISTENER ONROOMUPDATE");
-        },
-
-        onTrackUpdate: (type: any, track: HMSTrack, peer: HMSPeer) => {
-            console.log("INSIDE MY LISTENER ONTRACKUPDATE");
-
-            incomingListener.onTrackUpdate(type, track, peer);
-        },
-
-        onError: (exception: HMSException) => {
-            console.log("INSIDE MY LISTENER ONERROR");
-
-            incomingListener.onError(exception);
-        },
-    };
-
-    return myListener;
-};
+import HMSRoomProps from './interfaces/HMSRoomProps';
+import createListener from './helpers/createListener';
 
 const sdk = new HMSSdk();
 
-const HMSContext = createContext<Props | null>(null);
+const HMSContext = createContext<HMSRoomProps | null>(null);
 
-export const HMSRoomProvider = (props: { children: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined; }) => {
+export const HMSRoomProvider: React.FC = (props) => {
 
     const [peers, setPeers] = useState(sdk.getPeers());
 
@@ -98,7 +47,7 @@ export const HMSRoomProvider = (props: { children: boolean | React.ReactChild | 
     );
 };
 
-export const useHMSRoom = () => {
+export const useHMSRoom = (): HMSRoomProps => {
     const HMSContextConsumer = useContext(HMSContext);
 
     if (HMSContextConsumer === null) {
