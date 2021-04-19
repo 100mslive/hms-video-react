@@ -1,5 +1,5 @@
 import React, { useState, useContext, createContext, useEffect } from 'react';
-import HMSSdk from '@100mslive/100ms-web-sdk';
+import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
 import HMSRoom from '@100mslive/100ms-web-sdk/dist/interfaces/room';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
