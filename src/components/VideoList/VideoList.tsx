@@ -6,6 +6,7 @@ import { largestRect } from '../../utils';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
+import ReactResizeDetector from 'react-resize-detector';
 import './index.css';
 import {
   SliderRightArrow,
@@ -171,9 +172,9 @@ export const VideoList = ({
     <div
       className={`${classes?.root} h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
     >
-      <ContainerDimensions>
+      <ReactResizeDetector handleWidth handleHeight>
         {({ width, height }) => {
-          let dimensions = getTileDimensions(width, height, streams.length);
+          let dimensions = getTileDimensions(width!, height!, streams.length);
 
           let { width: w, height: h, videoCount } = dimensions;
           console.log(
@@ -250,7 +251,7 @@ export const VideoList = ({
             </Slider>
           );
         }}
-      </ContainerDimensions>
+      </ReactResizeDetector>
     </div>
   );
 };
