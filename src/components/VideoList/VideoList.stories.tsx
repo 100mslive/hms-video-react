@@ -113,14 +113,14 @@ const Template: Story<VideoListStoryProps> = args => {
 const streams: MediaStreamWithInfo[] = [
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil1' },
+    peer: { id: '1', displayName: 'Nikhil1' },
     videoSource: 'camera',
     audioLevel: 50,
     isLocal: true,
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil2' },
+    peer: { id: '2', displayName: 'Nikhil2' },
     videoSource: 'screen',
     audioLevel: 100,
     isAudioMuted: true,
@@ -128,7 +128,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil3' },
+    peer: { id: '3', displayName: 'Nikhil3' },
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
@@ -136,7 +136,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil4' },
+    peer: { id: '4', displayName: 'Nikhil4' },
     videoSource: 'screen',
     audioLevel: 10,
     isAudioMuted: true,
@@ -144,7 +144,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil5' },
+    peer: { id: '1235', displayName: 'Nikhil5' },
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
@@ -152,7 +152,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil6' },
+    peer: { id: '1236', displayName: 'Nikhil6' },
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
@@ -160,7 +160,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil7' },
+    peer: { id: '1237', displayName: 'Nikhil7' },
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
@@ -168,7 +168,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil8' },
+    peer: { id: '1238', displayName: 'Nikhil8' },
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
@@ -176,7 +176,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil9' },
+    peer: { id: '1239', displayName: 'Nikhil9' },
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
@@ -184,7 +184,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil10' },
+    peer: { id: '12310', displayName: 'Nikhil10' },
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
@@ -192,7 +192,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil11' },
+    peer: { id: '12311', displayName: 'Nikhil11' },
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
@@ -200,7 +200,7 @@ const streams: MediaStreamWithInfo[] = [
   },
   {
     stream: new MediaStream(),
-    peer: { id: '123', displayName: 'Nikhil12' },
+    peer: { id: '12312', displayName: 'Nikhil12' },
     videoSource: 'camera',
     audioLevel: 10,
     isAudioMuted: true,
