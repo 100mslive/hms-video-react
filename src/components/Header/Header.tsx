@@ -24,17 +24,17 @@ export const Header = ({
     clock: 'flex self-center items-center space-x-2 absolute',
     center: 'flex flex-grow justify-center self-center',
   },
-  // leftComponents = ['logo', 'timer'],
-  // centerComponents = ['label'],
-  // rightComponents = [],
-}: HeaderProps) => {
+}: // leftComponents = ['logo', 'timer'],
+// centerComponents = ['label'],
+// rightComponents = [],
+HeaderProps) => {
   return (
     <div className={classes.root}>
       <div className={classes.clock}>
-          <div>
-            <LogoButton />
-          </div>
-{/*         
+        <div>
+          <LogoButton />
+        </div>
+        {/*         
         {leftComponents.find(name => name === 'timer') != undefined && (
           <div>{Clock}</div>
         )}
