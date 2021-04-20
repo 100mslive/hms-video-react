@@ -7,6 +7,8 @@ import {
   Logo,
   LeaveRoom,
   ShareScreen,
+  Attachment,
+  Close,
 } from '../../icons';
 
 export const LogoButton = () => {
@@ -138,4 +140,12 @@ export const ShareScreenButton = ({
       {ShareScreen}
     </button>
   );
+};
+
+export const AttachmentButton = () => {
+  return <button>{Attachment}</button>;
+};
+
+export const CloseButton = () => {
+  return <button>{Close}</button>;
 };
