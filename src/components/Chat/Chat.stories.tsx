@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Chat, ChatProps } from './Chat';
+import { Chat, ChatProps, Message } from './Chat';
 
 const meta: Meta = {
   title: 'Chat',
@@ -10,7 +10,7 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<ChatProps> = args => {
-  const [messages, setMesaages] = useState<any>(args.messages);
+  const [messages, setMesaages] = useState<Message[]>(args.messages);
   const onSend = (message: string) => {
     setMesaages(prevMessages => {
       let messages = [...prevMessages];

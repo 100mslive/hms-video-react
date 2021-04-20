@@ -18,6 +18,11 @@ export interface ChatProps {
 
 export const Chat = ({ messages, onSend }: ChatProps) => {
   const [message, setMessage] = useState('');
+  const messagesEndRef = React.createRef<HTMLDivElement>();
+  const scrollToBottom = () => {
+    messagesEndRef.current!.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="w-full h-full ">
       <div className="bg-gray-200 rounded-t-2xl p-3 text-gray-500 flex flex-col justify-center items-center">
@@ -68,6 +73,7 @@ export const Chat = ({ messages, onSend }: ChatProps) => {
             </div>
           );
         })}
+        <div ref={messagesEndRef} />
       </div>
       <div className="bg-gray-200 h-11 rounded-b-2xl flex w-full justify-between p-3">
         <input
@@ -82,6 +88,7 @@ export const Chat = ({ messages, onSend }: ChatProps) => {
           onClick={() => {
             onSend(message);
             setMessage('');
+            scrollToBottom();
           }}
         >
           {Attachment}
