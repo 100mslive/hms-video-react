@@ -79,16 +79,23 @@ export const VideoList = ({
   videoTileControls,
   showAudioMuteStatus,
 }: VideoListProps) => {
-  let videoCount = streams.length;
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
   const getTileDimensions = (
     parentWidth: number,
     parentHeight: number,
-  ): { width: number; height: number; rows: number; cols: number } => {
+    count: number,
+  ): {
+    width: number;
+    height: number;
+    rows: number;
+    cols: number;
+    videoCount: number;
+  } => {
+    let videoCount = count;
     if (maxTileCount) {
-      videoCount = Math.min(streams.length, maxTileCount);
+      videoCount = Math.min(count, maxTileCount);
 
       let largestRectObj = largestRect(
         parentWidth,
@@ -97,7 +104,7 @@ export const VideoList = ({
         aspectRatio.width,
         aspectRatio.height,
       );
-      return largestRectObj;
+      return { ...largestRectObj, videoCount };
     } else if (maxRowCount) {
       //let cols = ;
       let rows = Math.min(maxRowCount, videoCount);
@@ -111,6 +118,7 @@ export const VideoList = ({
       videoCount = rows * cols;
       return {
         ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
+        videoCount,
       };
     } else if (maxColCount) {
       let cols = Math.min(maxColCount, videoCount);
@@ -128,15 +136,19 @@ export const VideoList = ({
         ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
         rows,
         cols,
+        videoCount,
       };
     } else {
-      return largestRect(
-        parentWidth,
-        parentHeight,
+      return {
+        ...largestRect(
+          parentWidth,
+          parentHeight,
+          videoCount,
+          aspectRatio.width,
+          aspectRatio.height,
+        ),
         videoCount,
-        aspectRatio.width,
-        aspectRatio.height,
-      );
+      };
     }
   };
 
@@ -161,13 +173,15 @@ export const VideoList = ({
     >
       <ContainerDimensions>
         {({ width, height }) => {
-          let dimensions = getTileDimensions(width, height);
-          let w = dimensions.width;
-          let h = dimensions.height;
+          let dimensions = getTileDimensions(width, height, streams.length);
+
+          let { width: w, height: h, videoCount } = dimensions;
           console.log(
             `SDK-Component: ${JSON.stringify(
               dimensions,
-            )}, parentHeight:${w} , parentwidth:${h} , videoCount:${videoCount}`,
+            )}, parentHeight:${width} , parentwidth:${height}, streams: ${
+              streams.length
+            }`,
           );
           return (
             <Slider {...settings} className="w-full h-full">
