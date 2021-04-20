@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Chat, ChatProps } from './Chat';
 
@@ -9,24 +9,41 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<ChatProps> = args => (
-  <div className="w-full h-full flex justify-center">
-    <div style={{ height: '466px', width: '240px' }} className="w-88 h-44">
-      <Chat {...args} />
+const Template: Story<ChatProps> = args => {
+  const [messages, setMesaages] = useState<any>(args.messages);
+  const onSend = (message: string) => {
+    setMesaages(prevMessages => {
+      let messages = [...prevMessages];
+      messages.push({
+        message,
+        sender: { id: '123', displayName: 'You' },
+        timeSent: 'now',
+      });
+      return messages;
+    });
+  };
+  return (
+    <div className="w-full h-1/2 flex justify-center">
+      <div style={{ height: '300px', width: '240px' }} className="w-88 h-44">
+        <Chat messages={messages} onSend={onSend} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export const Default = Template.bind({});
 Default.args = {
   messages: [
     {
-      message: 'HII',
+      message: 'Hi guys',
       sender: { id: '123', displayName: 'Eswar' },
-      timeSent: '12 Dec 2012',
+      timeSent: '10 mins ago',
+    },
+    {
+      message: 'Ivy L left meeting',
+
+      timeSent: '10 mins ago',
+      notification: true,
     },
   ],
-  onSend: (message: string) => {
-    alert(message);
-  },
 };

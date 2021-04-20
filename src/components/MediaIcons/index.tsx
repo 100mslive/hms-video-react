@@ -142,8 +142,16 @@ export const ShareScreenButton = ({
   );
 };
 
-export const AttachmentButton = () => {
-  return <button>{Attachment}</button>;
+export const AttachmentButton = (clickHandler: (message: string) => void) => {
+  return (
+    <button
+      onClick={() => {
+        clickHandler('hii');
+      }}
+    >
+      {Attachment}
+    </button>
+  );
 };
 
 export const CloseButton = () => {
