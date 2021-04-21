@@ -7,6 +7,8 @@ import {
   Logo,
   LeaveRoom,
   ShareScreen,
+  MuteList,
+  SpotlightList,
 } from '../../icons';
 
 export const LogoButton = () => {
@@ -137,5 +139,17 @@ export const ShareScreenButton = ({
     >
       {ShareScreen}
     </button>
+  );
+};
+
+export const MuteListButton = () => {
+  return (
+    <button className="inline-block p-2 focus:outline-none opacity-0 hover:opacity-100">{MuteList}</button>
+  );
+};
+
+export const SpotlightListButton = () => {
+  return (
+    <button className="inline-block p-2 focus:outline-none opacity-0 hover:opacity-100">{SpotlightList}</button>
   );
 };
