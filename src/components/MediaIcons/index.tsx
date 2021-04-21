@@ -144,12 +144,14 @@ export const ShareScreenButton = ({
 
 export const MuteListButton = () => {
   return (
-    <button className="inline-block p-2 focus:outline-none opacity-0 hover:opacity-100">{MuteList}</button>
+    <button className="inline-block p-1 focus:outline-none">{MuteList}</button>
   );
 };
 
 export const SpotlightListButton = () => {
   return (
-    <button className="inline-block p-2 focus:outline-none opacity-0 hover:opacity-100">{SpotlightList}</button>
+    <button className="inline-block p-1 focus:outline-none ">
+      {SpotlightList}
+    </button>
   );
 };
