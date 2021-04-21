@@ -78,6 +78,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
+    "@100mslive/100ms-web-sdk": "^0.0.9-1",
     "@fortawesome/fontawesome-svg-core": "^1.2.35",
     "@fortawesome/free-solid-svg-icons": "^5.15.3",
     "@fortawesome/react-fontawesome": "^0.1.14",

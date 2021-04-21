@@ -2,7 +2,7 @@ import React from 'react';
 import { LogoButton } from '../MediaIcons';
 import { Volume, Clock } from '../../icons';
 import { Participant, Peer } from '../../types';
-import {ParticipantList} from '../ParticipantList'
+import { ParticipantList } from '../ParticipantList';
 
 export interface HeaderProps {
   peer: Peer;
@@ -51,7 +51,7 @@ const participants = [
     isAudioMuted: false,
     isStarMarked: false,
   },
-]
+];
 export const Header = ({
   peer,
   time,
@@ -71,15 +71,13 @@ export const Header = ({
 }: HeaderProps) => {
   return (
     <div className={classes.root}>
-      <div className={classes.leftRoot}>
-          {leftComponents}
-      </div>
+      <div className={classes.leftRoot}>{leftComponents}</div>
       <div className={classes.rightRoot}>
-          {/* <div> */}
-          {rightComponents}
-            {/* <ParticipantList participantList={Participants} /> */}
-          {/* </div> */}
-          </div>
+        {/* <div> */}
+        {rightComponents}
+        {/* <ParticipantList participantList={Participants} /> */}
+        {/* </div> */}
       </div>
+    </div>
   );
 };
