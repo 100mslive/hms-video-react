@@ -40,7 +40,6 @@ export const Avatar = ({ image, icon, label, ...props }: AvatarProps) => {
   );
 };
 
-
 const StyledMaterialAvatarList = withStyles({
   root: {
     width: '20px',
@@ -57,4 +56,3 @@ export const AvatarList = ({ image, icon, label, ...props }: AvatarProps) => {
     </StyledMaterialAvatarList>
   );
 };
-

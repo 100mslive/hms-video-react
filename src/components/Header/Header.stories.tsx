@@ -49,10 +49,10 @@ const participants = [
     isAudioMuted: false,
     isStarMarked: false,
   },
-]
+];
 
 Default.args = {
   peer: { id: '123', displayName: 'Siddhant' },
   time: 1865,
-  rightComponents : [<ParticipantList participantList={participants} />,]
+  rightComponents: [<ParticipantList participantList={participants} />],
 };
