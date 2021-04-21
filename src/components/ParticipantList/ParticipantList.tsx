@@ -5,7 +5,7 @@ import {
   SpotlightListButton,
 } from '../MediaIcons';
 import { DownCarret, MuteList, SpotlightList, UpCarret } from '../../icons';
-import { Peer, Participant } from '../../types';
+import { Peer, Participant, MediaStreamWithInfo } from '../../types';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AvatarList } from '../Avatar';
 import Popper from '@material-ui/core/Popper';
@@ -40,14 +40,10 @@ const useStyle = makeStyles((theme: Theme) =>
 );
 
 export interface ParticipantListProps {
-  teacherList: Array<Participant>;
-  studentList: Array<Participant>;
+  participantList: Array<Participant>;
 }
 
-export const ParticipantList = ({
-  teacherList,
-  studentList,
-}: ParticipantListProps) => {
+export const ParticipantList = ({ participantList }: ParticipantListProps) => {
   const classes = useStyles();
   const [dense, setDense] = React.useState(false);
   const classesPop = useStyle();
@@ -58,6 +54,14 @@ export const ParticipantList = ({
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
+  const roles = new Map<string, Participant[]>();
+  participantList.forEach(participant => {
+    let role = participant.peer.role || 'Audience';
+    let list = roles.get(role) || [];
+    list.push(participant);
+    roles.set(role, list);
+  });
+
   return (
     <div className="flex flex-grow justify-content:center border-opacity-0">
       <button
@@ -66,7 +70,7 @@ export const ParticipantList = ({
         className="text-gray-500 border-opacity-0 m-1.5 focus:outline-none  w-60 rounded-tl-lg rounded-tr-lg bg-gray-100 self-center p-1.5"
         onClick={handleClick}
       >
-        {teacherList.length + studentList.length} in room
+        {participantList.length} in room
         <span className="p-1">{open ? UpCarret : DownCarret}</span>
       </button>
       <Popper id={id} open={open} anchorEl={anchorEl}>
@@ -77,62 +81,48 @@ export const ParticipantList = ({
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          <div role="none">
-            <a
-              href="#"
-              className="text-gray-500 group flex items-center px-3 py-2 text-base"
-              role="menuitem"
-              tabIndex={-1}
-            >
-              Teachers
-            </a>
-          </div>
-          <div role="none">
-            {teacherList.map((teacher, index) => (
-              <a
-                href="#"
-                className="text-white group flex items-center space-x-2 px-3 py-2 text-base"
-                role="menuitem"
-                tabIndex={-1}
-                id="menu-item-0"
-              >
-                <AvatarList label={teacher.peer.displayName} />
-                <div>{teacher.peer.displayName}</div>
-              </a>
-            ))}
-          </div>
-          <div role="none">
-            <a
-              href="#"
-              className="text-gray-500 group flex items-center px-3 py-2 text-base"
-              role="menuitem"
-              tabIndex={-1}
-            >
-              Students ({studentList.length})
-            </a>
-          </div>
-          <div role="none">
-            {studentList.map((student, index) => (
-              <a
-                href="#"
-                className="text-white group flex items-center space-x-2 px-3 py-2 text-base"
-                role="menuitem"
-                tabIndex={-1}
-                id="menu-item-3"
-              >
-                <AvatarList label={student.peer.displayName} />
-                <div className="flex justify-between">
-                  {student.peer.displayName}
+          {Array.from(roles.keys()).map(role => {
+            let list = roles.get(role) || [];
+            return (
+              <>
+                <div role="none" key={role}>
+                  <a
+                    href="#"
+                    className="text-gray-500 group flex items-center px-3 py-2 text-base"
+                    role="menuitem"
+                    tabIndex={-1}
+                  >
+                    {role} ({roles.get(role)?.length})
+                  </a>
                 </div>
-                <div className="flex flex-grow justify-end">
-                  {student.isAudioMuted && (
-                    <AudioMuteButton isAudioMuted={student.isAudioMuted} />
-                  )}
-                  {student.isStarMarked && <SpotlightListButton />}
+                <div role="none">
+                  {list.map((participant, index) => (
+                    <a
+                      href="#"
+                      className="text-white group flex items-center space-x-2 px-3 py-2 text-base"
+                      role="menuitem"
+                      tabIndex={-1}
+                      id="menu-item-3"
+                      key={participant.peer.id}
+                    >
+                      <AvatarList label={participant.peer.displayName} />
+                      <div className="flex justify-between">
+                        {participant.peer.displayName}
+                      </div>
+                      <div className="flex flex-grow justify-end">
+                        {participant.isAudioMuted && (
+                          <AudioMuteButton
+                            isAudioMuted={participant.isAudioMuted}
+                          />
+                        )}
+                        {participant.isStarMarked && <SpotlightListButton />}
+                      </div>
+                    </a>
+                  ))}
                 </div>
-              </a>
-            ))}
-          </div>
+              </>
+            );
+          })}
         </div>
       </Popper>
     </div>

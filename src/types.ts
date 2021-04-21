@@ -1,6 +1,7 @@
 export interface Peer {
   id: string;
   displayName: string;
+  role?: string;
 }
 
 export type VideoSource = 'screen' | 'camera' | 'canvas';
