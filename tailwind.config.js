@@ -53,6 +53,9 @@ module.exports = {
       maxHeight: {
         100: '37.5rem', 
       },
+      width :{
+        7.5: '1.875rem',
+      },
       scale:{
         '-100':'-1'
       }
