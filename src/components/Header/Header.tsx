@@ -20,7 +20,38 @@ export interface HeaderProps {
   // centerComponents: Array<String>;
   // rightComponents: Array<String>;
 }
-
+const participants = [
+  {
+    peer: { id: '123', displayName: 'Alex Tinmayson', role: 'Teacher' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Ankita Bhattacharya', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Anshul Kumar', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Ishaan Awasthi', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Ivy Loppinbug', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+]
 export const Header = ({
   peer,
   time,
@@ -38,31 +69,16 @@ export const Header = ({
   centerComponents = [],
   rightComponents = [],
 }: HeaderProps) => {
-  const teacher = Array<Participant>();
-  const student = Array<Participant>();
-  teacher.push({
-    peer: { id: '123', displayName: 'Sanjana Ma`am (You)' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  });
-  student.push({
-    peer: { id: '123', displayName: 'Alex Tinmayson' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  });
-  student.push({
-      peer: { id: '123', displayName: 'Ankita Bhattacharya ' },
-      isAudioMuted: false,
-      isStarMarked: false});
   return (
     <div className={classes.root}>
       <div className={classes.leftRoot}>
           {leftComponents}
       </div>
       <div className={classes.rightRoot}>
-          <div>
-            <ParticipantList teacherList = {teacher} studentList={student} />
-          </div>
+          {/* <div> */}
+          {rightComponents}
+            {/* <ParticipantList participantList={Participants} /> */}
+          {/* </div> */}
           </div>
       </div>
   );
