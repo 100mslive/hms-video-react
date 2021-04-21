@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Attachment, People } from '../../icons';
 import { Peer } from '../../types';
 import './index.css';
 import { AttachmentButton, CloseButton } from '../MediaIcons';
 
-interface Message {
+export interface Message {
   message: string;
   sender?: Peer;
   timeSent: string;
@@ -22,6 +22,9 @@ export const Chat = ({ messages, onSend }: ChatProps) => {
   const scrollToBottom = () => {
     messagesEndRef.current!.scrollIntoView({ behavior: 'smooth' });
   };
+  useEffect(() => {
+    scrollToBottom();
+  }, [message]);
 
   return (
     <div className="w-full h-full ">
@@ -88,7 +91,6 @@ export const Chat = ({ messages, onSend }: ChatProps) => {
           onClick={() => {
             onSend(message);
             setMessage('');
-            scrollToBottom();
           }}
         >
           {Attachment}
