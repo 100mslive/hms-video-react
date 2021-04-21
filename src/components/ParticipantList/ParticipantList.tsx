@@ -63,7 +63,7 @@ export const ParticipantList = ({
       <button
         aria-describedby={id}
         type="button"
-        className="text-gray-500 border-opacity-0 m-1.5 focus:outline-none  w-60 rounded-tl-lg rounded-tr-lg bg-gray-100 self-center p-1.5"
+        className="text-gray-500 border-opacity-0 focus:outline-none pt-1.5 w-60 rounded-tl-lg rounded-tr-lg bg-gray-100 self-center px-3"
         onClick={handleClick}
       >
         {teacherList.length + studentList.length} in room
@@ -138,48 +138,3 @@ export const ParticipantList = ({
     </div>
   );
 };
-
-{
-  /* <List dense={dense}>
-            <ListSubheader>Teacher</ListSubheader>
-                <ListItem>
-                    <ListItemText primary="Teacher" />
-                </ListItem>
-              {generate(
-                <ListItem>
-                  <ListItemAvatar>
-                    <AvatarList label="Siddhant Agarwal"/>
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary="Single"
-                  />
-                  <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="mute" className="opacity-0 hover:opacity-100"> 
-                      {MuteList}
-                      {/* {MuteList} */
-}
-//         </IconButton>
-//         <IconButton edge="end" aria-label="mute" className="opacity-0 hover:opacity-100">
-//           {SpotlightList}
-//         </IconButton>
-//       </ListItemSecondaryAction>
-//     </ListItem>,
-//   )}
-//    <ListItem>
-//         <ListItemText primary="Student" />
-//     </ListItem>
-//     {generate(
-//     <ListItem>
-//       <ListItemAvatar>
-//         <AvatarList label="Siddhant Agarwal"/>
-//       </ListItemAvatar>
-//       <ListItemText
-//         primary="Single"
-//       />
-//       <ListItemSecondaryAction>
-//         <MuteListButton/>
-//         <SpotlightListButton/>
-//       </ListItemSecondaryAction>
-//     </ListItem>,
-//   )}
-// </List> */}
