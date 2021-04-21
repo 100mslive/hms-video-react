@@ -39,3 +39,22 @@ export const Avatar = ({ image, icon, label, ...props }: AvatarProps) => {
     </StyledMaterialAvatar>
   );
 };
+
+
+const StyledMaterialAvatarList = withStyles({
+  root: {
+    width: '20px',
+    height: '20px',
+    fontSize: '9px',
+    backgroundColor: '#0099ff',
+  },
+})(MaterialAvatar);
+
+export const AvatarList = ({ image, icon, label, ...props }: AvatarProps) => {
+  return (
+    <StyledMaterialAvatarList src={image} alt={label} {...props}>
+      {icon ? icon : getInitialsFromName(label)}
+    </StyledMaterialAvatarList>
+  );
+};
+
