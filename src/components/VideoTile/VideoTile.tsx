@@ -172,53 +172,55 @@ export const VideoTile = ({
 
   return (
     <div ref={containerRef} className={classes.root}>
-      <div
-        className={`${classes.videoContainer} ${
-          displayShape === 'circle' ? classes.videoContainerCircle : ''
-        }`}
-        style={{ width: `${width}px`, height: `${height}px` }}
-      >
-        {!isVideoMuted && (
-          //TODO move stream inside
-          <Video
-            ref={videoRef}
-            objectFit={objectFit}
-            isLocal={isLocal}
-            videoSource={videoSource}
-            showAudioLevel={showAudioLevel}
-            audioLevel={audioLevel}
-            audioLevelDisplayType={audioLevelDisplayType}
-            audioLevelDisplayColor={audioLevelDisplayColor}
-            displayShape={displayShape}
-            classes={videoClasses}
-          />
-        )}
-        {isVideoMuted && (
-          <div
-            className={`${classes.avatarContainer} ${
-              displayShape === 'circle' ? classes.avatarContainerCircle : ''
-            }`}
-          >
-            <Avatar label={peer.displayName} />
-          </div>
-        )}
-        {controlsComponent ? (
-          controlsComponent
-        ) : (
-          <VideoTileControls
-            label={label}
-            isAudioMuted={isAudioMuted}
-            showAudioMuteStatus={showAudioMuteStatus}
-            showGradient={!isCircle}
-            allowRemoteMute={allowRemoteMute}
-            showAudioLevel={
-              showAudioLevel && audioLevelDisplayType !== 'border'
-            }
-            audioLevelDisplayType={audioLevelDisplayType}
-            audioLevel={audioLevel}
-          />
-        )}
-      </div>
+      {containerHeight && containerWidth && (
+        <div
+          className={`${classes.videoContainer} ${
+            displayShape === 'circle' ? classes.videoContainerCircle : ''
+          }`}
+          style={{ width: `${width}px`, height: `${height}px` }}
+        >
+          {!isVideoMuted && (
+            //TODO move stream inside
+            <Video
+              ref={videoRef}
+              objectFit={objectFit}
+              isLocal={isLocal}
+              videoSource={videoSource}
+              showAudioLevel={showAudioLevel}
+              audioLevel={audioLevel}
+              audioLevelDisplayType={audioLevelDisplayType}
+              audioLevelDisplayColor={audioLevelDisplayColor}
+              displayShape={displayShape}
+              classes={videoClasses}
+            />
+          )}
+          {isVideoMuted && (
+            <div
+              className={`${classes.avatarContainer} ${
+                displayShape === 'circle' ? classes.avatarContainerCircle : ''
+              }`}
+            >
+              <Avatar label={peer.displayName} />
+            </div>
+          )}
+          {controlsComponent ? (
+            controlsComponent
+          ) : (
+            <VideoTileControls
+              label={label}
+              isAudioMuted={isAudioMuted}
+              showAudioMuteStatus={showAudioMuteStatus}
+              showGradient={!isCircle}
+              allowRemoteMute={allowRemoteMute}
+              showAudioLevel={
+                showAudioLevel && audioLevelDisplayType !== 'border'
+              }
+              audioLevelDisplayType={audioLevelDisplayType}
+              audioLevel={audioLevel}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };

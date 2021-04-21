@@ -2,7 +2,7 @@ import React from 'react';
 import { LogoButton } from '../MediaIcons';
 import { Volume, Clock } from '../../icons';
 import { Participant, Peer } from '../../types';
-import {ParticipantList} from '../ParticipantList'
+import { ParticipantList } from '../ParticipantList';
 
 export interface HeaderProps {
   peer: Peer;
@@ -20,7 +20,38 @@ export interface HeaderProps {
   // centerComponents: Array<String>;
   // rightComponents: Array<String>;
 }
-
+const participants = [
+  {
+    peer: { id: '123', displayName: 'Alex Tinmayson', role: 'Teacher' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Ankita Bhattacharya', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Anshul Kumar', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Ishaan Awasthi', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Ivy Loppinbug', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+  {
+    peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  },
+];
 export const Header = ({
   peer,
   time,
@@ -56,14 +87,13 @@ export const Header = ({
       isStarMarked: false});
   return (
     <div className={classes.root}>
-      <div className={classes.leftRoot}>
-          {leftComponents}
-      </div>
+      <div className={classes.leftRoot}>{leftComponents}</div>
       <div className={classes.rightRoot}>
-          <div>
-            <ParticipantList teacherList = {teacher} studentList={student} />
-          </div>
-          </div>
+        {/* <div> */}
+        {rightComponents}
+        {/* <ParticipantList participantList={Participants} /> */}
+        {/* </div> */}
+      </div>
       </div>
   );
 };
