@@ -4,7 +4,7 @@ import {
   MuteListButton,
   SpotlightListButton,
 } from '../MediaIcons';
-import { MuteList, SpotlightList } from '../../icons';
+import { DownCarret, MuteList, SpotlightList, UpCarret } from '../../icons';
 import { Peer, Participant } from '../../types';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { AvatarList } from '../Avatar';
@@ -63,10 +63,11 @@ export const ParticipantList = ({
       <button
         aria-describedby={id}
         type="button"
-        className="text-gray-500 border-opacity-0 mt-1.5 focus:outline-none pt-1.5 w-60 rounded-tl-lg rounded-tr-lg bg-gray-100 self-center px-3"
+        className="text-gray-500 border-opacity-0 m-1.5 focus:outline-none  w-60 rounded-tl-lg rounded-tr-lg bg-gray-100 self-center p-1.5"
         onClick={handleClick}
       >
         {teacherList.length + studentList.length} in room
+        <span className="p-1">{open ? UpCarret : DownCarret}</span>
       </button>
       <Popper id={id} open={open} anchorEl={anchorEl}>
         <div
