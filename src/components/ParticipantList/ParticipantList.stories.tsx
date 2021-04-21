@@ -18,41 +18,34 @@ const Template: Story<ParticipantListProps> = args => (
 export const Default = Template.bind({});
 
 Default.args = {
-  teacherList: [
+  participantList: [
     {
-      peer: { id: '123', displayName: 'Sanjana Ma`am (You)' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-  ],
-  studentList: [
-    {
-      peer: { id: '123', displayName: 'Alex Tinmayson' },
+      peer: { id: '123', displayName: 'Alex Tinmayson', role: 'Teacher' },
       isAudioMuted: false,
       isStarMarked: false,
     },
     {
-      peer: { id: '123', displayName: 'Ankita Bhattacharya ' },
+      peer: { id: '123', displayName: 'Ankita Bhattacharya', role: 'Student' },
       isAudioMuted: false,
       isStarMarked: false,
     },
     {
-      peer: { id: '123', displayName: 'Anshul Kumar' },
+      peer: { id: '123', displayName: 'Anshul Kumar', role: 'Student' },
       isAudioMuted: false,
       isStarMarked: false,
     },
     {
-      peer: { id: '123', displayName: 'Ishaan Awasthi' },
+      peer: { id: '123', displayName: 'Ishaan Awasthi', role: 'Student' },
       isAudioMuted: false,
       isStarMarked: false,
     },
     {
-      peer: { id: '123', displayName: 'Ivy Loppinbug' },
+      peer: { id: '123', displayName: 'Ivy Loppinbug', role: 'Student' },
       isAudioMuted: false,
       isStarMarked: false,
     },
     {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar' },
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
       isAudioMuted: false,
       isStarMarked: false,
     },
