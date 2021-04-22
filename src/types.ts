@@ -6,8 +6,10 @@ export interface Peer {
 
 export type VideoSource = 'screen' | 'camera' | 'canvas';
 
+//TODO match with HMSPeer interface
 export interface MediaStreamWithInfo {
-  stream: MediaStream;
+  videoTrack: MediaStreamTrack;
+  audioTrack: MediaStreamTrack;
   peer: Peer;
   audioLevel?: number;
   isAudioMuted?: boolean;

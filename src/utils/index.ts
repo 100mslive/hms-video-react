@@ -194,7 +194,7 @@ const largestRect = (
 };
 
 export interface getTileContainerDimensionsProps {
-  stream: MediaStream;
+  videoTrack: MediaStreamTrack;
   parentWidth: number;
   parentHeight: number;
   objectFit?: 'contain' | 'cover';
@@ -206,7 +206,7 @@ export interface getTileContainerDimensionsProps {
 }
 
 const getTileContainerDimensions = ({
-  stream,
+  videoTrack,
   objectFit,
   aspectRatio,
   parentWidth,
@@ -214,10 +214,9 @@ const getTileContainerDimensions = ({
   isSquareOrCircle,
 }: getTileContainerDimensionsProps) => {
   //console.log(stream, objectFit, aspectRatio, parentWidth, parentHeight);
-  const { width: selfWidth, height: selfHeight } =
-    stream && stream.getVideoTracks()[0]
-      ? stream.getVideoTracks()[0].getSettings()
-      : { width: parentWidth, height: parentHeight };
+  const { width: selfWidth, height: selfHeight } = videoTrack
+    ? videoTrack.getSettings()
+    : { width: parentWidth, height: parentHeight };
   //console.log(selfHeight, selfWidth);
   const containerAspectRatio =
     objectFit === 'cover'
