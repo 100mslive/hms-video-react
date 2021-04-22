@@ -118,9 +118,9 @@ export const Logo = (
         y2="26.3116"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#2475F5" stop-opacity="0.25" />
-        <stop offset="0.5" stop-color="#2475F5" stop-opacity="0.2" />
-        <stop offset="1" stop-color="#2475F5" stop-opacity="0.25" />
+        <stop stopColor="#2475F5" stopOpacity="0.25" />
+        <stop offset="0.5" stopColor="#2475F5" stopOpacity="0.2" />
+        <stop offset="1" stopColor="#2475F5" stopOpacity="0.25" />
       </linearGradient>
       <radialGradient
         id="paint1_radial"
@@ -130,8 +130,8 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
         gradientTransform="translate(15.7074 14.5179) rotate(136.716) scale(11.1139 11.1387)"
       >
-        <stop stop-color="#2475F5" stop-opacity="0.3" />
-        <stop offset="0.612889" stop-color="#2475F5" stop-opacity="0.45" />
+        <stop stopColor="#2475F5" stopOpacity="0.3" />
+        <stop offset="0.612889" stopColor="#2475F5" stopOpacity="0.45" />
       </radialGradient>
       <linearGradient
         id="paint2_linear"
@@ -141,8 +141,8 @@ export const Logo = (
         y2="14.9243"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#571939" stop-opacity="0" />
-        <stop offset="1" stop-color="#571939" />
+        <stop stopColor="#571939" stopOpacity="0" />
+        <stop offset="1" stopColor="#571939" />
       </linearGradient>
       <linearGradient
         id="paint3_linear"
@@ -152,8 +152,8 @@ export const Logo = (
         y2="15.0625"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#551938" stop-opacity="0" />
-        <stop offset="1" stop-color="#561939" />
+        <stop stopColor="#551938" stopOpacity="0" />
+        <stop offset="1" stopColor="#561939" />
       </linearGradient>
       <linearGradient
         id="paint4_linear"
@@ -164,7 +164,7 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0.1359" />
-        <stop offset="1" stop-opacity="0" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint5_linear"
@@ -174,8 +174,8 @@ export const Logo = (
         y2="12.5791"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-opacity="0.7" />
-        <stop offset="1" stop-opacity="0" />
+        <stop stopOpacity="0.7" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint6_linear"
@@ -186,7 +186,7 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0.1359" />
-        <stop offset="1" stop-opacity="0" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint7_linear"
@@ -196,8 +196,8 @@ export const Logo = (
         y2="12.5903"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-opacity="0.7" />
-        <stop offset="1" stop-opacity="0" />
+        <stop stopOpacity="0.7" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint8_linear"
@@ -208,7 +208,7 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0.1359" />
-        <stop offset="1" stop-opacity="0" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint9_linear"
@@ -218,8 +218,8 @@ export const Logo = (
         y2="17.3983"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-opacity="0.7" />
-        <stop offset="1" stop-opacity="0" />
+        <stop stopOpacity="0.7" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint10_linear"
@@ -230,7 +230,7 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0.1359" />
-        <stop offset="1" stop-opacity="0" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint11_linear"
@@ -240,8 +240,8 @@ export const Logo = (
         y2="17.4293"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-opacity="0.7" />
-        <stop offset="1" stop-opacity="0" />
+        <stop stopOpacity="0.7" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <image
         id="image0"
