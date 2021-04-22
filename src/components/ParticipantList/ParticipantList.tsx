@@ -35,7 +35,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
         } self-center px-3`}
         onClick={handleClick}
       >
-        <div className="flex flex-grow inline-block justify-center px-3 tracking-wide self-center">
+        <div className="flex flex-grow justify-center px-3 tracking-wide self-center">
           {participantList.length} in room
           <span className="pl-2 self-center">
             {open ? UpCarret : DownCarret}
@@ -50,10 +50,10 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          {Array.from(roles.keys()).map(role => {
+          {Array.from(roles.keys()).map((role,index) => {
             let list = roles.get(role) || [];
             return (
-              <>
+              <div key={index}>
                 <div role="none" key={role}>
                   <a
                     href="#"
@@ -72,7 +72,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
                       role="menuitem"
                       tabIndex={-1}
                       id="menu-item-3"
-                      key={participant.peer.id}
+                      key={index}
                     >
                       <AvatarList label={participant.peer.displayName} />
                       <div className="flex justify-between">
@@ -87,7 +87,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
                     </a>
                   ))}
                 </div>
-              </>
+              </div>
             );
           })}
         </div>
