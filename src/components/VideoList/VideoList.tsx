@@ -1,7 +1,6 @@
 import React from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
-import ContainerDimensions from 'react-container-dimensions';
 import { largestRect } from '../../utils';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -18,7 +17,7 @@ import {
   groupTilesIntoPage,
   rowToColTransform,
 } from '../../utils/index';
-import ReactResizeDetector, { useResizeDetector } from 'react-resize-detector';
+import { useResizeDetector } from 'react-resize-detector';
 
 export interface VideoListProps {
   /**
