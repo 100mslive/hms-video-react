@@ -25,7 +25,14 @@ const Template: Story<ChatProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center">
       <div style={{ height: '300px', width: '240px' }} className="w-88 h-44">
-        <Chat messages={messages} onSend={onSend} />
+        <Chat
+          messages={messages}
+          onSend={onSend}
+          isOpen={args.isOpen}
+          onClose={() => {
+            alert('closing');
+          }}
+        />
       </div>
     </div>
   );
@@ -46,4 +53,5 @@ Default.args = {
       notification: true,
     },
   ],
+  isOpen: true,
 };

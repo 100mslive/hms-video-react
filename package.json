@@ -85,6 +85,7 @@
     "@fortawesome/react-fontawesome": "^0.1.14",
     "@material-ui/core": "^4.11.3",
     "@material-ui/icons": "^4.11.2",
+    "autolinker": "^3.14.3",
     "react-container-dimensions": "^1.4.1",
     "react-grid-carousel": "^1.0.1",
     "react-resize-detector": "^6.6.5",
