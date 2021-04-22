@@ -6,3 +6,5 @@ export { VideoList, VideoListProps } from './components/VideoList/index';
 export * from './components/MediaIcons/index';
 export * from './components/ControlBar/index';
 export * from './components/Header/index';
+export * from './components/ParticipantList';
+export { HMSRoomProvider, useHMSRoom } from './hooks/HMSRoomProvider';

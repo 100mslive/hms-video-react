@@ -7,7 +7,10 @@ import {
   Logo,
   LeaveRoom,
   ShareScreen,
-  Attachment,
+  MuteList,
+  SpotlightList,
+  MuteListOn,
+  SpotlightListOn,
   Close,
 } from '../../icons';
 
@@ -142,14 +145,18 @@ export const ShareScreenButton = ({
   );
 };
 
-export const AttachmentButton = (clickHandler: (message: string) => void) => {
+export const MuteListButton = ({ isMuteOn = false }) => {
   return (
-    <button
-      onClick={() => {
-        clickHandler('hii');
-      }}
-    >
-      {Attachment}
+    <button className="inline-block p-1 opacity-0 hover:opacity-100 focus:outline-none">
+      {isMuteOn ? MuteList : MuteListOn}
+    </button>
+  );
+};
+
+export const SpotlightListButton = ({ isSpotlightOn = false }) => {
+  return (
+    <button className="inline-block p-1 opacity-0 hover:opacity-100 focus:outline-none ">
+      {isSpotlightOn ? SpotlightList : SpotlightListOn}
     </button>
   );
 };
