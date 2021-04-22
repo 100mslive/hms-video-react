@@ -93,18 +93,5 @@
     "rect-scaler": "^1.0.0",
     "slick-carousel": "^1.8.1",
     "tailwind-percentage-heights-plugin": "^0.1.4"
-  },
-  "description": "Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.",
-  "directories": {
-    "example": "example",
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/100mslive/100ms-sdk-components.git"
-  },
-  "bugs": {
-    "url": "https://github.com/100mslive/100ms-sdk-components/issues"
-  },
-  "homepage": "https://github.com/100mslive/100ms-sdk-components#readme"
+  }
 }
