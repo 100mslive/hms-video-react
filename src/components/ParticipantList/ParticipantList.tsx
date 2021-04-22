@@ -71,7 +71,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
         onClick={handleClick}
       >
         {participantList.length} in room
-        <span className="p-1">{open ? UpCarret : DownCarret}</span>
+        {/* <span className="p-1">{open ? UpCarret : DownCarret}</span> */}
       </button>
       <Popper id={id} open={open} anchorEl={anchorEl}>
         <div
@@ -109,13 +109,9 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
                       <div className="flex justify-between">
                         {participant.peer.displayName}
                       </div>
-                      <div className="flex flex-grow justify-end">
-                        {participant.isAudioMuted && (
-                          <AudioMuteButton
-                            isAudioMuted={participant.isAudioMuted}
-                          />
-                        )}
-                        {participant.isStarMarked && <SpotlightListButton />}
+                      <div className="flex flex-grow justify-end right-0 absolute">
+                        <MuteListButton />
+                        <SpotlightListButton />
                       </div>
                     </a>
                   ))}
