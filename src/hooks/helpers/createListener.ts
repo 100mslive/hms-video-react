@@ -17,7 +17,7 @@ const createListener = (
 ) => {
   const myListener = {
     onJoin: (room: HMSRoom) => {
-      console.log('INSIDE MY LISTENER ONJOIN');
+      console.debug('HMSui-component: [onJoin] Inside listener');
 
       setPeers(sdk.getPeers());
       setLocalPeer(sdk.getLocalPeer());
@@ -25,7 +25,7 @@ const createListener = (
     },
 
     onPeerUpdate: (type: HMSPeerUpdate, peer: HMSPeer) => {
-      console.log('INSIDE MY LISTENER ONPEERUPDATE');
+      console.debug('HMSui-component: [onPeerUpdate] Inside listener');
 
       setPeers(sdk.getPeers());
       setLocalPeer(sdk.getLocalPeer());
@@ -33,11 +33,11 @@ const createListener = (
     },
 
     onRoomUpdate: (type: HMSRoomUpdate, room: HMSRoom) => {
-      console.log('INSIDE MY LISTENER ONROOMUPDATE');
+      console.debug('HMSui-component: [onRoomUpdate] Inside listener');
     },
 
     onTrackUpdate: (type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) => {
-      console.log('INSIDE MY LISTENER ONTRACKUPDATE');
+      console.debug('HMSui-component: [onTrackUpdate] Inside listener');
 
       setPeers(sdk.getPeers());
       setLocalPeer(sdk.getLocalPeer());
@@ -45,7 +45,7 @@ const createListener = (
     },
 
     onError: (exception: HMSException) => {
-      console.log('INSIDE MY LISTENER ONERROR');
+      console.debug('HMSui-component: [onError] Inside listener');
 
       incomingListener.onError(exception);
     },

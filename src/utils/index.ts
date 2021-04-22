@@ -122,6 +122,7 @@ const groupTilesIntoPage = (
 };
 
 const getInitialsFromName = (name: string | undefined) => {
+  console.debug("HMSui-component: [Participant List] Getting initials of", name);
   if (!name) {
     return undefined;
   } else {
@@ -130,6 +131,7 @@ const getInitialsFromName = (name: string | undefined) => {
     initials = (
       (initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')
     ).toUpperCase();
+    console.debug("HMSui-component: [Participant List] Initials are", initials);
     return initials;
   }
 };
