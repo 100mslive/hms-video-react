@@ -7,6 +7,14 @@ import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
 import { VideoTileControls } from '../VideoTile/Controls';
 import { MicOff, MicOn } from '../../icons';
 import { loadStreams } from '../../storybook/utils';
+declare global {
+  interface HTMLVideoElement {
+    captureStream(frameRate?: number): MediaStream;
+  }
+  interface MediaDevices {
+    getDisplayMedia(constraints?: MediaStreamConstraints): Promise<MediaStream>;
+  }
+}
 
 const meta: Meta = {
   title: 'Video/ List',
@@ -39,6 +47,8 @@ const Template: Story<VideoListStoryProps> = args => {
   useEffect(() => {
     //TODO can be refactored to simplify
     //TODO move to decorator
+    //TODO make this a composite story with videoTile stories
+    //Currently video is not muted in the story if videoMute is set to true
     return loadStreams({
       streamsWithInfo,
       dummyCameraVideoRef,
@@ -60,17 +70,23 @@ const Template: Story<VideoListStoryProps> = args => {
         autoPlay
         onPlay={() => {
           if (dummyCameraVideoRef && dummyCameraVideoRef.current) {
-            //@ts-ignore
             streamsWithInfo?.forEach((streamWithInfo, index) => {
               if (
                 !streamWithInfo.isLocal &&
-                streamWithInfo.videoSource !== 'screen'
+                streamWithInfo.videoSource !== 'screen' &&
+                dummyCameraVideoRef.current
               ) {
                 let newStreamsWithInfo = [...streamsWithInfo];
                 newStreamsWithInfo[
                   index
-                  //@ts-ignore
-                ].stream = dummyCameraVideoRef.current.captureStream();
+                ].videoTrack = dummyCameraVideoRef.current
+                  .captureStream()
+                  .getVideoTracks()[0];
+                newStreamsWithInfo[
+                  index
+                ].audioTrack = dummyCameraVideoRef.current
+                  .captureStream()
+                  .getAudioTracks()[0];
                 setStreamsWithInfo(newStreamsWithInfo);
               }
             });
@@ -88,17 +104,23 @@ const Template: Story<VideoListStoryProps> = args => {
         autoPlay
         onPlay={() => {
           if (dummyScreenVideoRef && dummyScreenVideoRef.current) {
-            //@ts-ignore
             streamsWithInfo?.forEach((streamWithInfo, index) => {
               if (
                 !streamWithInfo.isLocal &&
-                streamWithInfo.videoSource === 'screen'
+                streamWithInfo.videoSource === 'screen' &&
+                dummyScreenVideoRef.current
               ) {
                 let newStreamsWithInfo = [...streamsWithInfo];
                 newStreamsWithInfo[
                   index
-                  //@ts-ignore
-                ].stream = dummyScreenVideoRef.current.captureStream();
+                ].videoTrack = dummyScreenVideoRef.current
+                  .captureStream()
+                  .getVideoTracks()[0];
+                newStreamsWithInfo[
+                  index
+                ].audioTrack = dummyScreenVideoRef.current
+                  .captureStream()
+                  .getAudioTracks()[0];
                 setStreamsWithInfo(newStreamsWithInfo);
               }
             });
@@ -110,16 +132,14 @@ const Template: Story<VideoListStoryProps> = args => {
   );
 };
 
-const streams: MediaStreamWithInfo[] = [
+const streams = [
   {
-    stream: new MediaStream(),
     peer: { id: '1', displayName: 'Nikhil1' },
     videoSource: 'camera',
     audioLevel: 50,
     isLocal: true,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '2', displayName: 'Nikhil2' },
     videoSource: 'screen',
     audioLevel: 100,
@@ -127,7 +147,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: false,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '3', displayName: 'Nikhil3' },
     videoSource: 'camera',
     audioLevel: 10,
@@ -135,7 +154,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: false,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '4', displayName: 'Nikhil4' },
     videoSource: 'screen',
     audioLevel: 10,
@@ -143,7 +161,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: false,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '1235', displayName: 'Nikhil5' },
     videoSource: 'camera',
     audioLevel: 10,
@@ -151,7 +168,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: true,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '1236', displayName: 'Nikhil6' },
     videoSource: 'camera',
     audioLevel: 10,
@@ -159,7 +175,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: true,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '1237', displayName: 'Nikhil7' },
     videoSource: 'camera',
     audioLevel: 10,
@@ -167,7 +182,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: false,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '1238', displayName: 'Nikhil8' },
     videoSource: 'camera',
     audioLevel: 10,
@@ -175,7 +189,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: false,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '1239', displayName: 'Nikhil9' },
     videoSource: 'camera',
     audioLevel: 10,
@@ -183,7 +196,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: false,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '12310', displayName: 'Nikhil10' },
     videoSource: 'camera',
     audioLevel: 10,
@@ -191,7 +203,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: false,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '12311', displayName: 'Nikhil11' },
     videoSource: 'camera',
     audioLevel: 10,
@@ -199,7 +210,6 @@ const streams: MediaStreamWithInfo[] = [
     isVideoMuted: false,
   },
   {
-    stream: new MediaStream(),
     peer: { id: '12312', displayName: 'Nikhil12' },
     videoSource: 'camera',
     audioLevel: 10,
@@ -215,6 +225,8 @@ const streams: MediaStreamWithInfo[] = [
 
 export const DefaultList = Template.bind({});
 DefaultList.args = {
+  //Figure out how to initiate empty tracks to remote the typeerror
+  //@ts-ignore
   streams: streams,
   maxTileCount: 3,
   height: '98vh',
@@ -227,6 +239,7 @@ DefaultList.args = {
 
 export const CenterStage = Template.bind({});
 CenterStage.args = {
+  //@ts-ignore
   streams: streams,
   maxTileCount: 2,
   overflow: 'hidden',
@@ -241,6 +254,7 @@ CenterStage.args = {
 
 export const Campfire = Template.bind({});
 Campfire.args = {
+  //@ts-ignore
   streams: streams,
   maxTileCount: 5,
   showAudioLevel: false,
@@ -257,10 +271,10 @@ Campfire.args = {
 
 export const SideBar = Template.bind({});
 SideBar.args = {
+  //TODO use decorator to constuct correct div
+  //@ts-ignore
   streams: streams.slice(0, 4),
   showAudioLevel: false,
-  height: '100vh',
-  width: '300px',
   classes: {
     videoTile: 'p-1',
     video: 'rounded-lg shadow-lg',
@@ -352,19 +366,14 @@ const MeetTemplate: Story<VideoListStoryProps> = (
       window.navigator.mediaDevices
         .getUserMedia({ audio: true, video: true })
         .then(function(stream) {
-          // @ts-ignore
-          window.stream = stream;
           //console.log(stream);
           setCameraStream(stream);
         });
     }
     if (isScreenStreamRequired) {
       window.navigator.mediaDevices
-        // @ts-ignore
         .getDisplayMedia({ video: true })
         .then(function(stream: MediaStream | undefined) {
-          // @ts-ignore
-          window.stream = stream;
           //console.log(stream);
           setScreenStream(stream);
         });
@@ -420,6 +429,7 @@ const MeetTemplate: Story<VideoListStoryProps> = (
 
 export const GoogleMeet = MeetTemplate.bind({});
 GoogleMeet.args = {
+  //@ts-ignore
   streams: streams,
   maxTileCount: 6,
   overflow: 'hidden',
