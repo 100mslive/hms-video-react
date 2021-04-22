@@ -88,8 +88,6 @@
     "react-grid-carousel": "^1.0.1",
     "react-resize-detector": "^6.6.5",
     "react-slick": "^0.28.1",
-    "react-window": "^1.8.6",
-    "rect-scaler": "^1.0.0",
     "slick-carousel": "^1.8.1",
     "tailwind-percentage-heights-plugin": "^0.1.4",
     "tailwindcss": "^2.1.1"
