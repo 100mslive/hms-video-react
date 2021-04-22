@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
-import ContainerDimensions from 'react-container-dimensions';
 import { largestRect } from '../../utils';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
-import ReactResizeDetector, { useResizeDetector } from 'react-resize-detector';
 import './index.css';
 import {
   SliderRightArrow,
@@ -19,6 +17,7 @@ import {
   groupTilesIntoPage,
   rowToColTransform,
 } from '../../utils/index';
+import { useResizeDetector } from 'react-resize-detector';
 
 export interface VideoListProps {
   /**
@@ -80,22 +79,13 @@ export const VideoList = ({
   videoTileControls,
   showAudioMuteStatus,
 }: VideoListProps) => {
-  const [height, setHeight] = useState(0);
-  const [width, setWidth] = useState(0);
-  const [videoCount, setVideoCount] = useState(streams.length);
-
+  const { width = 0, height = 0, ref } = useResizeDetector();
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
-  const {
-    width: containerWidth,
-    height: containerHeight,
-    ref: containerRef,
-  } = useResizeDetector();
 
   const getTileDimensions = (
     parentWidth: number,
     parentHeight: number,
-    count: number,
   ): {
     width: number;
     height: number;
@@ -103,21 +93,20 @@ export const VideoList = ({
     cols: number;
     videoCount: number;
   } => {
-    let videoCount = count;
     if (maxTileCount) {
-      videoCount = Math.min(count, maxTileCount);
-
-      let largestRectObj = largestRect(
-        parentWidth,
-        parentHeight,
-        videoCount,
-        aspectRatio.width,
-        aspectRatio.height,
-      );
-      return { ...largestRectObj, videoCount };
+      return {
+        ...largestRect(
+          parentWidth,
+          parentHeight,
+          Math.min(streams.length, maxTileCount),
+          aspectRatio.width,
+          aspectRatio.height,
+        ),
+        videoCount: Math.min(streams.length, maxTileCount),
+      };
     } else if (maxRowCount) {
       //let cols = ;
-      let rows = Math.min(maxRowCount, videoCount);
+      let rows = Math.min(maxRowCount, streams.length);
       //let width = parentWidth / cols;
       let height = parentHeight / rows;
 
@@ -125,13 +114,12 @@ export const VideoList = ({
       let width = parentWidth / cols;
       cols = cols === 0 ? 1 : cols;
 
-      videoCount = rows * cols;
       return {
         ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
-        videoCount,
+        videoCount: rows * cols,
       };
     } else if (maxColCount) {
-      let cols = Math.min(maxColCount, videoCount);
+      let cols = Math.min(maxColCount, streams.length);
       //let width = parentWidth / cols;
       let width = parentWidth / cols;
       //let height = (width * aspectRatio.height) / aspectRatio.width;
@@ -140,24 +128,23 @@ export const VideoList = ({
       rows = rows === 0 ? 1 : rows;
 
       let height = parentHeight / rows;
-      videoCount = rows * cols;
 
       return {
         ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
         rows,
         cols,
-        videoCount,
+        videoCount: rows * cols,
       };
     } else {
       return {
         ...largestRect(
           parentWidth,
           parentHeight,
-          videoCount,
+          streams.length,
           aspectRatio.width,
           aspectRatio.height,
         ),
-        videoCount,
+        videoCount: streams.length,
       };
     }
   };
@@ -177,50 +164,41 @@ export const VideoList = ({
     // centerMode: true,
   };
 
-  useEffect(() => {
-    let dimensions = getTileDimensions(
-      containerWidth!,
-      containerHeight!,
-      streams.length,
-    );
-
-    let { width: w, height: h, videoCount } = dimensions;
-    setHeight(h);
-    setWidth(w);
-    setVideoCount(videoCount);
-    console.log(
-      `SDK-Component: ${JSON.stringify(
-        dimensions,
-      )}, parentHeight:${containerHeight} , parentwidth:${containerWidth}, streams: ${
-        streams.length
-      }`,
-    );
-  }, [width, height, streams]);
+  const dimensions = getTileDimensions(width, height);
+  const { width: w, height: h, videoCount } = dimensions;
+  console.log(
+    `SDK-Component: ${JSON.stringify(
+      dimensions,
+    )}, parentHeight:${width} , parentwidth:${height}  , streams: ${
+      streams.length
+    }`,
+  );
 
   return (
-    <div className="w-full h-full" ref={containerRef}>
+    <div
+      className={`${classes?.root} h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
+      ref={ref}
+    >
       <Slider {...settings} className="w-full h-full">
         {groupTilesIntoPage(
           streams.map((stream, index) => (
             <div
-              style={{ height, width }}
+              style={{ height: h, width: w }}
               key={stream.peer.id}
               className={`${classes?.videoTileParent} flex justify-center`}
             >
-              {containerHeight && containerWidth && (
-                <VideoTile
-                  {...stream}
-                  objectFit={objectFit}
-                  displayShape={displayShape}
-                  audioLevelDisplayType={audioLevelDisplayType}
-                  showAudioLevel={showAudioLevel}
-                  showAudioMuteStatus={showAudioMuteStatus}
-                  aspectRatio={aspectRatio}
-                  controlsComponent={
-                    videoTileControls && videoTileControls[index]
-                  }
-                />
-              )}
+              <VideoTile
+                {...stream}
+                objectFit={objectFit}
+                displayShape={displayShape}
+                audioLevelDisplayType={audioLevelDisplayType}
+                showAudioLevel={showAudioLevel}
+                showAudioMuteStatus={showAudioMuteStatus}
+                aspectRatio={aspectRatio}
+                controlsComponent={
+                  videoTileControls && videoTileControls[index]
+                }
+              />
             </div>
           )),
           videoCount,

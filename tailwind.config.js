@@ -50,6 +50,12 @@ module.exports = {
         xl: ['1.125rem', { lineHeight: '1.5rem' }],
         '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
       },
+      maxHeight: {
+        100: '37.5rem', 
+      },
+      width :{
+        7.5: '1.875rem',
+      },
       scale:{
         '-100':'-1'
       }

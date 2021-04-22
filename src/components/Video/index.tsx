@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
 
@@ -32,6 +32,15 @@ export interface VideoClasses {
 }
 
 export interface VideoProps {
+  //TODO make one of audioTrack and videoTrack mandatory instead of both
+  /**
+   * Video Track to be displayed.
+   */
+  videoTrack: MediaStreamTrack;
+  /**
+   * Audio Track to be displayed.
+   */
+  audioTrack: MediaStreamTrack;
   /**
    * Indicates if the stream belongs to the user viewing it. Used in labelling and styling.
    */
@@ -75,54 +84,64 @@ export interface VideoProps {
   classes?: VideoClasses;
 }
 
-export const Video = forwardRef(
-  (
-    {
-      objectFit,
-      isLocal,
-      videoSource,
-      showAudioLevel,
-      audioLevel,
-      audioLevelDisplayType,
-      audioLevelDisplayColor,
-      displayShape,
-      classes = {
-        video: 'h-full w-full rounded-lg',
-        videoCircle: 'rounded-full',
-        videoLocal: '-scale-x-1',
-        videoCover: 'object-cover',
-        videoContain: 'object-contain',
-        borderAudioRoot: 'w-full h-full absolute left-0 top-0 rounded-lg',
-      },
-    }: VideoProps,
-    ref: React.Ref<HTMLVideoElement>,
-  ) => {
-    return (
-      <>
-        <video
-          muted={isLocal}
-          autoPlay
-          className={` ${classes.video} 
+export const Video = ({
+  videoTrack,
+  audioTrack,
+  objectFit,
+  isLocal,
+  videoSource,
+  showAudioLevel,
+  audioLevel,
+  audioLevelDisplayType,
+  audioLevelDisplayColor,
+  displayShape,
+  classes = {
+    video: 'h-full w-full rounded-lg',
+    videoCircle: 'rounded-full',
+    videoLocal: '-scale-x-1',
+    videoCover: 'object-cover',
+    videoContain: 'object-contain',
+    borderAudioRoot: 'w-full h-full absolute left-0 top-0 rounded-lg',
+  },
+}: VideoProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
+  useEffect(() => {
+    if (videoRef && videoRef.current && videoTrack) {
+      videoRef.current.srcObject = new MediaStream([videoTrack]);
+    }
+    if (audioRef && audioRef.current && audioTrack && !isLocal) {
+      audioRef.current.srcObject = new MediaStream([audioTrack]);
+    }
+  }, [audioRef, videoRef, videoTrack, audioTrack, isLocal]);
+
+  return (
+    <>
+      <video
+        ref={videoRef}
+        muted={true}
+        autoPlay
+        playsInline
+        className={` ${classes.video} 
           ${displayShape === 'circle' ? classes.videoCircle : ''}
           ${isLocal && videoSource === 'camera' ? classes.videoLocal : ''}
           ${objectFit === 'contain' ? classes.videoContain : ''}
           ${objectFit === 'cover' ? classes.videoCover : ''}
         `}
-          ref={ref}
-        ></video>
-        {showAudioLevel && audioLevelDisplayType === 'border' && audioLevel && (
-          <AudioLevelIndicator
-            type={'border'}
-            level={audioLevel}
-            displayShape={displayShape}
-            classes={{
-              videoCircle: classes.videoCircle,
-              root: classes.borderAudioRoot,
-            }}
-            color={audioLevelDisplayColor}
-          />
-        )}
-      </>
-    );
-  },
-);
+      ></video>
+      <audio className="hidden" autoPlay playsInline ref={audioRef}></audio>
+      {showAudioLevel && audioLevelDisplayType === 'border' && audioLevel && (
+        <AudioLevelIndicator
+          type={'border'}
+          level={audioLevel}
+          displayShape={displayShape}
+          classes={{
+            videoCircle: classes.videoCircle,
+            root: classes.borderAudioRoot,
+          }}
+          color={audioLevelDisplayColor}
+        />
+      )}
+    </>
+  );
+};
