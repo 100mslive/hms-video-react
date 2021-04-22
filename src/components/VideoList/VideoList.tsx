@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
 import { largestRect } from '../../utils';
@@ -79,29 +79,34 @@ export const VideoList = ({
   videoTileControls,
   showAudioMuteStatus,
 }: VideoListProps) => {
-  let videoCount = streams.length;
-  let { width, height, ref } = useResizeDetector();
+  const { width = 0, height = 0, ref } = useResizeDetector();
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
   const getTileDimensions = (
     parentWidth: number,
     parentHeight: number,
-  ): { width: number; height: number; rows: number; cols: number } => {
+  ): {
+    width: number;
+    height: number;
+    rows: number;
+    cols: number;
+    videoCount: number;
+  } => {
     if (maxTileCount) {
-      videoCount = Math.min(streams.length, maxTileCount);
-
-      let largestRectObj = largestRect(
-        parentWidth,
-        parentHeight,
-        videoCount,
-        aspectRatio.width,
-        aspectRatio.height,
-      );
-      return largestRectObj;
+      return {
+        ...largestRect(
+          parentWidth,
+          parentHeight,
+          Math.min(streams.length, maxTileCount),
+          aspectRatio.width,
+          aspectRatio.height,
+        ),
+        videoCount: Math.min(streams.length, maxTileCount),
+      };
     } else if (maxRowCount) {
       //let cols = ;
-      let rows = Math.min(maxRowCount, videoCount);
+      let rows = Math.min(maxRowCount, streams.length);
       //let width = parentWidth / cols;
       let height = parentHeight / rows;
 
@@ -109,12 +114,12 @@ export const VideoList = ({
       let width = parentWidth / cols;
       cols = cols === 0 ? 1 : cols;
 
-      videoCount = rows * cols;
       return {
         ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
+        videoCount: rows * cols,
       };
     } else if (maxColCount) {
-      let cols = Math.min(maxColCount, videoCount);
+      let cols = Math.min(maxColCount, streams.length);
       //let width = parentWidth / cols;
       let width = parentWidth / cols;
       //let height = (width * aspectRatio.height) / aspectRatio.width;
@@ -123,21 +128,24 @@ export const VideoList = ({
       rows = rows === 0 ? 1 : rows;
 
       let height = parentHeight / rows;
-      videoCount = rows * cols;
 
       return {
         ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
         rows,
         cols,
+        videoCount: rows * cols,
       };
     } else {
-      return largestRect(
-        parentWidth,
-        parentHeight,
-        streams.length,
-        aspectRatio.width,
-        aspectRatio.height,
-      );
+      return {
+        ...largestRect(
+          parentWidth,
+          parentHeight,
+          streams.length,
+          aspectRatio.width,
+          aspectRatio.height,
+        ),
+        videoCount: streams.length,
+      };
     }
   };
 
@@ -155,15 +163,13 @@ export const VideoList = ({
     //can be exposed a props
     // centerMode: true,
   };
-  width = width || 0;
-  height = height || 0;
-  let dimensions = getTileDimensions(width, height);
-  let w = dimensions.width;
-  let h = dimensions.height;
+
+  const dimensions = getTileDimensions(width, height);
+  const { width: w, height: h, videoCount } = dimensions;
   console.log(
     `SDK-Component: ${JSON.stringify(
       dimensions,
-    )}, parentHeight:${width} , parentwidth:${height} , videoCount:${videoCount} , streams: ${
+    )}, parentHeight:${width} , parentwidth:${height}  , streams: ${
       streams.length
     }`,
   );
