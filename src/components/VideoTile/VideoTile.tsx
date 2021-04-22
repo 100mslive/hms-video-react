@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.css';
 import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
@@ -8,10 +8,6 @@ import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
 import { useResizeDetector } from 'react-resize-detector';
 
 export interface VideoTileProps extends VideoProps {
-  /**
-   * MediaStream to be displayed.
-   */
-  stream: MediaStream; //TODO move to Video
   /**
    * HMS Peer object for which the tile is shown.
    */
@@ -78,7 +74,8 @@ export interface VideoTileClasses extends VideoClasses {
 }
 
 export const VideoTile = ({
-  stream,
+  videoTrack,
+  audioTrack,
   peer,
   isLocal = false,
   videoSource = 'camera',
@@ -97,7 +94,7 @@ export const VideoTile = ({
     root: 'w-full h-full flex relative items-center justify-center rounded-lg',
     videoContainer: 'relative rounded-lg shadow-lg',
     avatarContainer:
-      'relative w-full h-full bg-gray-100 flex items-center justify-center rounded-lg',
+      'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
     avatarContainerCircle: 'rounded-full',
     videoContainerCircle: 'rounded-full',
   },
@@ -105,8 +102,6 @@ export const VideoTile = ({
 }: VideoTileProps) => {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
-  const [isStreamSet, setIsStreamSet] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
   const isSquare =
     displayShape === 'rectangle' &&
@@ -144,7 +139,7 @@ export const VideoTile = ({
       const { width, height } = getTileContainerDimensions({
         parentWidth: containerWidth,
         parentHeight: containerHeight,
-        stream,
+        videoTrack,
         objectFit,
         aspectRatio,
         isSquareOrCircle,
@@ -153,22 +148,14 @@ export const VideoTile = ({
       setWidth(width);
     }
   }, [
-    stream,
+    videoTrack,
     aspectRatio,
     displayShape,
     objectFit,
-    isStreamSet,
     isSquareOrCircle,
     containerWidth,
     containerHeight,
   ]);
-
-  useEffect(() => {
-    if (videoRef && videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
-    }
-    setIsStreamSet(videoRef.current?.srcObject === stream);
-  }, [videoRef, stream]);
 
   return (
     <div ref={containerRef} className={classes.root}>
@@ -179,21 +166,19 @@ export const VideoTile = ({
           }`}
           style={{ width: `${width}px`, height: `${height}px` }}
         >
-          {!isVideoMuted && (
-            //TODO move stream inside
-            <Video
-              ref={videoRef}
-              objectFit={objectFit}
-              isLocal={isLocal}
-              videoSource={videoSource}
-              showAudioLevel={showAudioLevel}
-              audioLevel={audioLevel}
-              audioLevelDisplayType={audioLevelDisplayType}
-              audioLevelDisplayColor={audioLevelDisplayColor}
-              displayShape={displayShape}
-              classes={videoClasses}
-            />
-          )}
+          <Video
+            videoTrack={videoTrack}
+            audioTrack={audioTrack}
+            objectFit={objectFit}
+            isLocal={isLocal}
+            videoSource={videoSource}
+            showAudioLevel={showAudioLevel}
+            audioLevel={audioLevel}
+            audioLevelDisplayType={audioLevelDisplayType}
+            audioLevelDisplayColor={audioLevelDisplayColor}
+            displayShape={displayShape}
+            classes={videoClasses}
+          />
           {isVideoMuted && (
             <div
               className={`${classes.avatarContainer} ${
