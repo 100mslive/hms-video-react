@@ -9,6 +9,8 @@ import {
   ShareScreen,
   MuteList,
   SpotlightList,
+  MuteListOn,
+  SpotlightListOn,
 } from '../../icons';
 
 export const LogoButton = () => {
@@ -142,16 +144,18 @@ export const ShareScreenButton = ({
   );
 };
 
-export const MuteListButton = () => {
+export const MuteListButton = ({ isMuteOn = false }) => {
   return (
-    <button className="inline-block p-1 opacity-0 hover:opacity-100 focus:outline-none">{MuteList}</button>
+    <button className="inline-block p-1 opacity-0 hover:opacity-100 focus:outline-none">
+      {isMuteOn ? MuteList : MuteListOn}
+    </button>
   );
 };
 
-export const SpotlightListButton = () => {
+export const SpotlightListButton = ({ isSpotlightOn = false }) => {
   return (
     <button className="inline-block p-1 opacity-0 hover:opacity-100 focus:outline-none ">
-      {SpotlightList}
+      {isSpotlightOn ? SpotlightList : SpotlightListOn}
     </button>
   );
 };

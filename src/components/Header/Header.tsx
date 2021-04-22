@@ -1,8 +1,6 @@
 import React from 'react';
 import { LogoButton } from '../MediaIcons';
-import { Volume, Clock } from '../../icons';
 import { Participant, Peer } from '../../types';
-import { ParticipantList } from '../ParticipantList';
 
 export interface HeaderProps {
   peer: Peer;
@@ -16,42 +14,8 @@ export interface HeaderProps {
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
   rightComponents: Array<React.ReactNode>;
-  // leftComponents: Array<String>;
-  // centerComponents: Array<String>;
-  // rightComponents: Array<String>;
 }
-const participants = [
-  {
-    peer: { id: '123', displayName: 'Alex Tinmayson', role: 'Teacher' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  },
-  {
-    peer: { id: '123', displayName: 'Ankita Bhattacharya', role: 'Student' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  },
-  {
-    peer: { id: '123', displayName: 'Anshul Kumar', role: 'Student' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  },
-  {
-    peer: { id: '123', displayName: 'Ishaan Awasthi', role: 'Student' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  },
-  {
-    peer: { id: '123', displayName: 'Ivy Loppinbug', role: 'Student' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  },
-  {
-    peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  },
-];
+
 export const Header = ({
   peer,
   time,
@@ -82,18 +46,16 @@ export const Header = ({
     isStarMarked: false,
   });
   student.push({
-      peer: { id: '123', displayName: 'Ankita Bhattacharya ' },
-      isAudioMuted: false,
-      isStarMarked: false});
+    peer: { id: '123', displayName: 'Ankita Bhattacharya ' },
+    isAudioMuted: false,
+    isStarMarked: false,
+  });
   return (
-    <div className={classes.root}>
-      <div className={classes.leftRoot}>{leftComponents}</div>
-      <div className={classes.rightRoot}>
-        {/* <div> */}
-        {rightComponents}
-        {/* <ParticipantList participantList={Participants} /> */}
-        {/* </div> */}
+    <div style={{ padding: '10px 0px 0px 0px', height: '10%' }}>
+      <div className={classes.root}>
+        <div className={classes.leftRoot}>{leftComponents}</div>
+        <div className={classes.rightRoot}>{rightComponents}</div>
       </div>
-      </div>
+    </div>
   );
 };
