@@ -18,6 +18,7 @@ import {
   groupTilesIntoPage,
   rowToColTransform,
 } from '../../utils/index';
+import ReactResizeDetector, { useResizeDetector } from 'react-resize-detector';
 
 export interface VideoListProps {
   /**
@@ -80,6 +81,7 @@ export const VideoList = ({
   showAudioMuteStatus,
 }: VideoListProps) => {
   let videoCount = streams.length;
+  let { width, height, ref } = useResizeDetector();
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
@@ -133,7 +135,7 @@ export const VideoList = ({
       return largestRect(
         parentWidth,
         parentHeight,
-        videoCount,
+        streams.length,
         aspectRatio.width,
         aspectRatio.height,
       );
@@ -154,89 +156,88 @@ export const VideoList = ({
     //can be exposed a props
     // centerMode: true,
   };
+  width = width || 0;
+  height = height || 0;
+  let dimensions = getTileDimensions(width, height);
+  let w = dimensions.width;
+  let h = dimensions.height;
+  console.log(
+    `SDK-Component: ${JSON.stringify(
+      dimensions,
+    )}, parentHeight:${width} , parentwidth:${height} , videoCount:${videoCount} , streams: ${
+      streams.length
+    }`,
+  );
 
   return (
     <div
       className={`${classes?.root} h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
+      ref={ref}
     >
-      <ContainerDimensions>
-        {({ width, height }) => {
-          let dimensions = getTileDimensions(width, height);
-          let w = dimensions.width;
-          let h = dimensions.height;
-          console.log(
-            `SDK-Component: ${JSON.stringify(
-              dimensions,
-            )}, parentHeight:${w} , parentwidth:${h} , videoCount:${videoCount}`,
-          );
-          return (
-            <Slider {...settings} className="w-full h-full">
-              {groupTilesIntoPage(
-                streams.map((stream, index) => (
-                  <div
-                    style={{ height: h, width: w }}
-                    key={stream.peer.id}
-                    className={`${classes?.videoTileParent} flex justify-center`}
-                  >
-                    <VideoTile
-                      {...stream}
-                      objectFit={objectFit}
-                      displayShape={displayShape}
-                      audioLevelDisplayType={audioLevelDisplayType}
-                      showAudioLevel={showAudioLevel}
-                      showAudioMuteStatus={showAudioMuteStatus}
-                      aspectRatio={aspectRatio}
-                      controlsComponent={
-                        videoTileControls && videoTileControls[index]
-                      }
-                    />
-                  </div>
-                )),
-                videoCount,
-                overflow === 'hidden',
-              )
-                .map(page => {
-                  if (
-                    tileArrangeDirection === 'col' &&
-                    !maxTileCount &&
-                    !maxRowCount &&
-                    maxColCount &&
-                    maxColCount < page.length
-                  ) {
-                    return colToRowTransform(page, maxColCount);
-                  } else if (
-                    tileArrangeDirection === 'row' &&
-                    maxRowCount &&
-                    !maxTileCount &&
-                    maxRowCount < page.length
-                  ) {
-                    return rowToColTransform(page, maxRowCount);
-                  }
-                  return page;
-                })
-                .map(item => {
-                  return (
-                    <div className="w-full h-full">
-                      <div
-                        className={` ${
-                          classes?.root
-                        } h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
-                          maxRowCount
-                            ? 'col'
-                            : maxColCount
-                            ? 'row'
-                            : tileArrangeDirection
-                        } `}
-                      >
-                        {item}
-                      </div>
-                    </div>
-                  );
-                })}
-            </Slider>
-          );
-        }}
-      </ContainerDimensions>
+      <Slider {...settings} className="w-full h-full">
+        {groupTilesIntoPage(
+          streams.map((stream, index) => (
+            <div
+              style={{ height: h, width: w }}
+              key={stream.peer.id}
+              className={`${classes?.videoTileParent} flex justify-center`}
+            >
+              <VideoTile
+                {...stream}
+                objectFit={objectFit}
+                displayShape={displayShape}
+                audioLevelDisplayType={audioLevelDisplayType}
+                showAudioLevel={showAudioLevel}
+                showAudioMuteStatus={showAudioMuteStatus}
+                aspectRatio={aspectRatio}
+                controlsComponent={
+                  videoTileControls && videoTileControls[index]
+                }
+              />
+            </div>
+          )),
+          videoCount,
+          overflow === 'hidden',
+        )
+          .map(page => {
+            if (
+              tileArrangeDirection === 'col' &&
+              !maxTileCount &&
+              !maxRowCount &&
+              maxColCount &&
+              maxColCount < page.length
+            ) {
+              return colToRowTransform(page, maxColCount);
+            } else if (
+              tileArrangeDirection === 'row' &&
+              maxRowCount &&
+              !maxTileCount &&
+              maxRowCount < page.length
+            ) {
+              return rowToColTransform(page, maxRowCount);
+            }
+            return page;
+          })
+          .map(item => {
+            return (
+              <div className="w-full h-full">
+                <div
+                  className={` ${
+                    classes?.root
+                  } h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
+                    maxRowCount
+                      ? 'col'
+                      : maxColCount
+                      ? 'row'
+                      : tileArrangeDirection
+                  } `}
+                >
+                  {item}
+                </div>
+              </div>
+            );
+          })}
+      </Slider>
     </div>
   );
 };
