@@ -89,6 +89,11 @@ export const Chat = ({
                 </div>
               );
             })}
+            {messages.length === 0 && (
+              <div className="flex justify-center items-center text-gray-400 h-full">
+                There are no messages here.
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
           <div className="bg-gray-200 min-h-11 rounded-b-2xl flex w-full justify-between p-3 ">

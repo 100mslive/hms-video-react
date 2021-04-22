@@ -95,13 +95,12 @@ MarkDownChat.args = {
     },
     {
       message: 'Ivy L left meeting',
-
       timeSent: '10 mins ago',
       notification: true,
     },
     {
       message: `* [ ] todo
-* [x] done`,
+    * [x] done`,
       sender: { id: '123s', displayName: 'Nikhil' },
       timeSent: '10 mins ago',
     },
