@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Attachment, People } from '../../icons';
 import { Peer } from '../../types';
 import './index.css';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { CloseButton } from '../MediaIcons';
 
 export interface Message {
@@ -78,15 +79,16 @@ export const Chat = ({ messages, onSend }: ChatProps) => {
         })}
         <div ref={messagesEndRef} />
       </div>
-      <div className="bg-gray-200 h-11 rounded-b-2xl flex w-full justify-between p-3">
-        <input
-          className="bg-gray-200 placeholder-gray-500 text-white focus:outline-none leading-5 resize-y"
+      <div className="bg-gray-200 min-h-11 rounded-b-2xl flex w-full justify-between p-3 ">
+        <TextareaAutosize
+          rowsMax={3}
+          className="bg-gray-200 placeholder-gray-500 text-white focus:outline-none leading-5 overflow-y-auto no-scrollbar resize-none w-5/6"
           placeholder="Write something here"
           value={message}
           onChange={event => {
             setMessage(event.target.value);
           }}
-        ></input>
+        />
         <button
           onClick={() => {
             onSend(message);
