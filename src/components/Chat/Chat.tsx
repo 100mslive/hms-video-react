@@ -4,7 +4,6 @@ import { Peer } from '../../types';
 import './index.css';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { CloseButton } from '../MediaIcons';
-import Autolinker from 'autolinker';
 
 export interface Message {
   message: string;
@@ -18,16 +17,27 @@ export interface ChatProps {
   onSend: (message: string) => void;
   onClose: () => void;
   isOpen: boolean;
+  willScrollToBottom?: boolean;
+  scrollAnimation?: 'smooth' | 'auto';
+  messageFormatter?: (message: string) => React.ReactNode;
 }
 
-export const Chat = ({ messages, onSend, onClose, isOpen }: ChatProps) => {
+export const Chat = ({
+  messages,
+  onSend,
+  onClose,
+  isOpen,
+  willScrollToBottom = true,
+  scrollAnimation = 'smooth',
+  messageFormatter,
+}: ChatProps) => {
   const [message, setMessage] = useState('');
   const messagesEndRef = React.createRef<HTMLDivElement>();
   const scrollToBottom = () => {
-    messagesEndRef.current!.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current!.scrollIntoView({ behavior: scrollAnimation });
   };
   useEffect(() => {
-    if (isOpen) scrollToBottom();
+    if (isOpen && willScrollToBottom) scrollToBottom();
   }, [message]);
 
   return (
@@ -67,12 +77,14 @@ export const Chat = ({ messages, onSend, onClose, isOpen }: ChatProps) => {
                     <span>{message.sender!.displayName}</span>
                     <span className="text-xs">{message.timeSent} </span>
                   </div>
-                  <div className="flex justify-between text-white leading-5 ">
-                    <span
-                      dangerouslySetInnerHTML={{
-                        __html: Autolinker.link(message.message),
-                      }}
-                    ></span>
+                  <div className="flex justify-between text-white leading-5 max-w-full flex-wrap">
+                    {/* {ReactHtmlParser(
+                      Autolinker.link(message.message, { sanitizeHtml: true }),
+                    )} */}
+                    {/* <ReactMarkdown>{message.message}</ReactMarkdown> */}
+                    {messageFormatter
+                      ? messageFormatter(message.message)
+                      : message.message}
                   </div>
                 </div>
               );
