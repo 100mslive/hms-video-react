@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Attachment, People } from '../../icons';
 import { Peer } from '../../types';
 import './index.css';
-import { AttachmentButton, CloseButton } from '../MediaIcons';
+import { CloseButton } from '../MediaIcons';
 
 export interface Message {
   message: string;
