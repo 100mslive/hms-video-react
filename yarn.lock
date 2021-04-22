@@ -2,6 +2,7 @@
 # yarn lockfile v1
 
 
+
 "@100mslive/100ms-web-sdk@^0.0.9-2":
   version "0.0.9-2"
   resolved "https://registry.yarnpkg.com/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.9-2.tgz#5d9d9c3ffbaca8dbe476bf60a46f2c46fee2802d"
@@ -802,7 +803,9 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.12.13"
 
-"@babel/plugin-transform-react-jsx-development@^7.12.17":
+"@babel/plugin-transform-react-jsx-
+
+ment@^7.12.17":
   version "7.12.17"
   resolved "https://registry.npmjs.org/@babel/plugin-transform-react-jsx-development/-/plugin-transform-react-jsx-development-7.12.17.tgz"
   integrity sha512-BPjYV86SVuOaudFhsJR1zjgxxOhJDt6JHNoD48DxWEIxUCAMjV1ys6DYw4SDYZh0b1QsS2vfIA9t/ZsQGsDOUQ==
@@ -1489,6 +1492,7 @@
     prop-types "^15.7.2"
     react-is "^16.8.0 || ^17.0.0"
     react-transition-group "^4.4.0"
+
 
 "@material-ui/styles@^4.11.3":
   version "4.11.3"
@@ -3142,6 +3146,7 @@
   version "4.4.1"
   resolved "https://registry.npmjs.org/@types/react-transition-group/-/react-transition-group-4.4.1.tgz"
   integrity sha512-vIo69qKKcYoJ8wKCJjwSgCTM+z3chw3g18dkrDfVX665tMH7tmbDxEAnPdey4gTlwZz5QuHGzd+hul0OVZDqqQ==
+
   dependencies:
     "@types/react" "*"
 
@@ -9506,6 +9511,7 @@ memfs@^3.1.2:
   dependencies:
     fs-monkey "1.0.3"
 
+
 memoize-one@^5.0.0:
   version "5.1.1"
   resolved "https://registry.npmjs.org/memoize-one/-/memoize-one-5.1.1.tgz"
@@ -12363,6 +12369,7 @@ safe-identifier@^0.4.2:
   version "0.4.2"
   resolved "https://registry.npmjs.org/safe-identifier/-/safe-identifier-0.4.2.tgz"
   integrity sha512-6pNbSMW6OhAi9j+N8V+U715yBQsaWJ7eyEUaOrawX+isg5ZxhUlV1NipNtgaKHmFGiABwt+ZF04Ii+3Xjkg+8w==
+
 
 safe-regex@^1.1.0:
   version "1.1.0"

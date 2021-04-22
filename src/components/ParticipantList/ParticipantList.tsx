@@ -1,52 +1,15 @@
 import React from 'react';
-import {
-  AudioMuteButton,
-  MuteListButton,
-  SpotlightListButton,
-} from '../MediaIcons';
-import { DownCarret, MuteList, SpotlightList, UpCarret } from '../../icons';
-import { Peer, Participant, MediaStreamWithInfo } from '../../types';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { MuteListButton, SpotlightListButton } from '../MediaIcons';
+import { DownCarret, UpCarret } from '../../icons';
+import { Participant } from '../../types';
 import { AvatarList } from '../Avatar';
 import Popper from '@material-ui/core/Popper';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      flexGrow: 1,
-      maxWidth: 50,
-      maxHeight: 10,
-    },
-    demo: {
-      backgroundColor: theme.palette.background.paper,
-    },
-    title: {
-      margin: theme.spacing(4, 0, 2),
-    },
-  }),
-);
-
-const useStyle = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: '100%',
-      maxWidth: 240,
-      backgroundColor: theme.palette.background.paper,
-      position: 'relative',
-      overflow: 'auto',
-      maxHeight: 600,
-    },
-  }),
-);
 
 export interface ParticipantListProps {
   participantList: Array<Participant>;
 }
 
 export const ParticipantList = ({ participantList }: ParticipantListProps) => {
-  const classes = useStyles();
-  const [dense, setDense] = React.useState(false);
-  const classesPop = useStyle();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -67,11 +30,17 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
       <button
         aria-describedby={id}
         type="button"
-        className="text-gray-500 border-opacity-0 focus:outline-none pt-1.5 w-60 rounded-tl-lg rounded-tr-lg bg-gray-100 self-center px-3"
+        className={`text-gray-500 flex border-opacity-0 focus:outline-none w-60 pt-1.5 mb-1 rounded-tl-lg rounded-tr-lg ${
+          open ? 'bg-gray-100' : 'bg-black'
+        } self-center px-3`}
         onClick={handleClick}
       >
-        {participantList.length} in room
-        <span className="p-1">{open ? UpCarret : DownCarret}</span>
+        <div className="flex flex-grow inline-block justify-center px-3 tracking-wide self-center">
+          {participantList.length} in room
+          <span className="pl-2 self-center">
+            {open ? UpCarret : DownCarret}
+          </span>
+        </div>
       </button>
       <Popper id={id} open={open} anchorEl={anchorEl}>
         <div
@@ -99,7 +68,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
                   {list.map((participant, index) => (
                     <a
                       href="#"
-                      className="text-white group flex items-center space-x-2 px-3 py-2 text-base"
+                      className="text-white group flex items-center space-x-2 px-3 py-2 text-base hover:bg-gray-200"
                       role="menuitem"
                       tabIndex={-1}
                       id="menu-item-3"
@@ -109,13 +78,11 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
                       <div className="flex justify-between">
                         {participant.peer.displayName}
                       </div>
-                      <div className="flex flex-grow justify-end">
-                        {participant.isAudioMuted && (
-                          <AudioMuteButton
-                            isAudioMuted={participant.isAudioMuted}
-                          />
-                        )}
-                        {participant.isStarMarked && <SpotlightListButton />}
+                      <div className="flex flex-grow justify-end right-0 absolute">
+                        <MuteListButton isMuteOn={participant.isAudioMuted} />
+                        <SpotlightListButton
+                          isSpotlightOn={participant.isStarMarked}
+                        />
                       </div>
                     </a>
                   ))}
