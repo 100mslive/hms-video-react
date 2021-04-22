@@ -131,6 +131,7 @@ export const VideoTile = ({
   } = useResizeDetector();
 
   useEffect(() => {
+    console.debug("HMSui-component: Video track and container dimensions are", videoTrack, containerHeight, containerWidth);
     if (containerWidth && containerHeight) {
       /*
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent
@@ -156,6 +157,10 @@ export const VideoTile = ({
     containerWidth,
     containerHeight,
   ]);
+
+  useEffect(()=>{
+    console.debug("HMSui-component: Video and Audio Track is", videoTrack, audioTrack);
+  },[videoTrack, audioTrack])
 
   return (
     <div ref={containerRef} className={classes.root}>
