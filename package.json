@@ -35,7 +35,7 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
-  "name": "@my-username/grtsid",
+  "name": "@100mslive/sdk-components",
   "author": "100ms",
   "module": "dist/100ms-sdk-components.esm.js",
   "size-limit": [
