@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './index.css';
 import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
@@ -8,10 +8,6 @@ import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
 import { useResizeDetector } from 'react-resize-detector';
 
 export interface VideoTileProps extends VideoProps {
-  /**
-   * MediaStream to be displayed.
-   */
-  stream: MediaStream; //TODO move to Video
   /**
    * HMS Peer object for which the tile is shown.
    */
@@ -78,7 +74,8 @@ export interface VideoTileClasses extends VideoClasses {
 }
 
 export const VideoTile = ({
-  stream,
+  videoTrack,
+  audioTrack,
   peer,
   isLocal = false,
   videoSource = 'camera',
@@ -97,7 +94,7 @@ export const VideoTile = ({
     root: 'w-full h-full flex relative items-center justify-center rounded-lg',
     videoContainer: 'relative rounded-lg shadow-lg',
     avatarContainer:
-      'relative w-full h-full bg-gray-100 flex items-center justify-center rounded-lg',
+      'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
     avatarContainerCircle: 'rounded-full',
     videoContainerCircle: 'rounded-full',
   },
@@ -105,8 +102,6 @@ export const VideoTile = ({
 }: VideoTileProps) => {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
-  const [isStreamSet, setIsStreamSet] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
   const isSquare =
     displayShape === 'rectangle' &&
@@ -136,6 +131,12 @@ export const VideoTile = ({
   } = useResizeDetector();
 
   useEffect(() => {
+    console.debug(
+      'HMSui-component: [Videotile] Video track and container dimensions are',
+      videoTrack,
+      containerHeight,
+      containerWidth,
+    );
     if (containerWidth && containerHeight) {
       /*
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent
@@ -144,7 +145,7 @@ export const VideoTile = ({
       const { width, height } = getTileContainerDimensions({
         parentWidth: containerWidth,
         parentHeight: containerHeight,
-        stream,
+        videoTrack,
         objectFit,
         aspectRatio,
         isSquareOrCircle,
@@ -153,35 +154,35 @@ export const VideoTile = ({
       setWidth(width);
     }
   }, [
-    stream,
+    videoTrack,
     aspectRatio,
     displayShape,
     objectFit,
-    isStreamSet,
     isSquareOrCircle,
     containerWidth,
     containerHeight,
   ]);
 
   useEffect(() => {
-    if (videoRef && videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
-    }
-    setIsStreamSet(videoRef.current?.srcObject === stream);
-  }, [videoRef, stream]);
+    console.debug(
+      'HMSui-component: [Videotile] Video and Audio Track is',
+      videoTrack,
+      audioTrack,
+    );
+  }, [videoTrack, audioTrack]);
 
   return (
     <div ref={containerRef} className={classes.root}>
-      <div
-        className={`${classes.videoContainer} ${
-          displayShape === 'circle' ? classes.videoContainerCircle : ''
-        }`}
-        style={{ width: `${width}px`, height: `${height}px` }}
-      >
-        {!isVideoMuted && (
-          //TODO move stream inside
+      {containerHeight && containerWidth && (
+        <div
+          className={`${classes.videoContainer} ${
+            displayShape === 'circle' ? classes.videoContainerCircle : ''
+          }`}
+          style={{ width: `${width}px`, height: `${height}px` }}
+        >
           <Video
-            ref={videoRef}
+            videoTrack={videoTrack}
+            audioTrack={audioTrack}
             objectFit={objectFit}
             isLocal={isLocal}
             videoSource={videoSource}
@@ -192,33 +193,33 @@ export const VideoTile = ({
             displayShape={displayShape}
             classes={videoClasses}
           />
-        )}
-        {isVideoMuted && (
-          <div
-            className={`${classes.avatarContainer} ${
-              displayShape === 'circle' ? classes.avatarContainerCircle : ''
-            }`}
-          >
-            <Avatar label={peer.displayName} />
-          </div>
-        )}
-        {controlsComponent ? (
-          controlsComponent
-        ) : (
-          <VideoTileControls
-            label={label}
-            isAudioMuted={isAudioMuted}
-            showAudioMuteStatus={showAudioMuteStatus}
-            showGradient={!isCircle}
-            allowRemoteMute={allowRemoteMute}
-            showAudioLevel={
-              showAudioLevel && audioLevelDisplayType !== 'border'
-            }
-            audioLevelDisplayType={audioLevelDisplayType}
-            audioLevel={audioLevel}
-          />
-        )}
-      </div>
+          {isVideoMuted && (
+            <div
+              className={`${classes.avatarContainer} ${
+                displayShape === 'circle' ? classes.avatarContainerCircle : ''
+              }`}
+            >
+              <Avatar label={peer.displayName} />
+            </div>
+          )}
+          {controlsComponent ? (
+            controlsComponent
+          ) : (
+            <VideoTileControls
+              label={label}
+              isAudioMuted={isAudioMuted}
+              showAudioMuteStatus={showAudioMuteStatus}
+              showGradient={!isCircle}
+              allowRemoteMute={allowRemoteMute}
+              showAudioLevel={
+                showAudioLevel && audioLevelDisplayType !== 'border'
+              }
+              audioLevelDisplayType={audioLevelDisplayType}
+              audioLevel={audioLevel}
+            />
+          )}
+        </div>
+      )}
     </div>
   );
 };

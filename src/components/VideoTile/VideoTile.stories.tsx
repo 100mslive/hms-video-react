@@ -7,6 +7,15 @@ import { loadStream } from '../../storybook/utils';
 import { VideoTileControls } from './Controls';
 import { MicOff, MicOn } from '../../icons';
 
+declare global {
+  interface HTMLVideoElement {
+    captureStream(frameRate?: number): MediaStream;
+  }
+  interface MediaDevices {
+    getDisplayMedia(constraints?: MediaStreamConstraints): Promise<MediaStream>;
+  }
+}
+
 const meta: Meta = {
   title: 'Video / Tile',
   component: VideoTile,
@@ -26,40 +35,43 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
-  const [stream, setStream] = useState<MediaStream>();
+  const [videoTrack, setVideoTrack] = useState<MediaStreamTrack>();
+  const [audioTrack, setAudioTrack] = useState<MediaStreamTrack>();
   const dummyVideoRef = useRef<HTMLVideoElement>(null);
-  const testVideoRef = useRef<HTMLVideoElement>(null);
+  //const testVideoRef = useRef<HTMLVideoElement>(null);
   // Stream is not added in dependency array to avoid creating a new stream for every mute/unmute change which causes visual flicker in the storybook canvas.
   useEffect(() => {
-    const track = stream?.getVideoTracks()[0];
+    const track = videoTrack;
     if (track) {
       track.enabled = !args.isVideoMuted;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.isVideoMuted]);
 
   useEffect(() => {
-    const track = stream?.getAudioTracks()[0];
+    const track = audioTrack;
     if (track) {
       track.enabled = !args.isAudioMuted;
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.isAudioMuted]);
 
-  useEffect(() => {
-    if (testVideoRef.current && stream) {
-      testVideoRef.current.srcObject = stream;
-    }
-  }, [stream]);
+  // useEffect(() => {
+  //   // if (testVideoRef.current && stream) {
+  //   //   testVideoRef.current.srcObject = stream;
+  //   // }
+  // }, [stream]);
 
   useEffect(() => {
     if (dummyVideoRef) {
       return loadStream({
-        stream,
+        videoTrack,
+        audioTrack,
         isLocal: args.isLocal,
         videoSource: args.videoSource,
         dummyVideoRef,
-        setStream,
+        setVideoTrack,
+        setAudioTrack,
       });
     } else {
       return;
@@ -79,45 +91,54 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
         autoPlay
         onPlay={() => {
           if (dummyVideoRef && dummyVideoRef.current) {
-            //@ts-ignore
-            setStream(dummyVideoRef.current.captureStream());
+            setVideoTrack(
+              dummyVideoRef.current.captureStream().getVideoTracks()[0],
+            );
+            setAudioTrack(
+              dummyVideoRef.current.captureStream().getAudioTracks()[0],
+            );
           }
         }}
       ></video>
       {/* <video width="400" height="225" loop autoPlay muted ref={testVideoRef}/> */}
-      {stream && <VideoTile {...args} stream={stream} />}
+      {videoTrack && audioTrack && (
+        <VideoTile {...args} videoTrack={videoTrack} audioTrack={audioTrack} />
+      )}
     </div>
   );
 };
 
 const MeetTemplate: Story<VideoTileProps> = args => {
-  const [stream, setStream] = useState<MediaStream>();
+  const [videoTrack, setVideoTrack] = useState<MediaStreamTrack>();
+  const [audioTrack, setAudioTrack] = useState<MediaStreamTrack>();
   const dummyVideoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    const track = stream?.getVideoTracks()[0];
-    if (track) {
-      track.enabled = !args.isVideoMuted;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.isVideoMuted]);
+  // useEffect(() => {
+  //   const track = stream?.getVideoTracks()[0];
+  //   if (track) {
+  //     track.enabled = !args.isVideoMuted;
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [args.isVideoMuted]);
 
-  useEffect(() => {
-    const track = stream?.getAudioTracks()[0];
-    if (track) {
-      track.enabled = !args.isAudioMuted;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.isAudioMuted]);
+  // useEffect(() => {
+  //   const track = stream?.getAudioTracks()[0];
+  //   if (track) {
+  //     track.enabled = !args.isAudioMuted;
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [args.isAudioMuted]);
 
   useEffect(() => {
     if (dummyVideoRef) {
       return loadStream({
-        stream,
+        videoTrack,
+        audioTrack,
         isLocal: args.isLocal,
         videoSource: args.videoSource,
         dummyVideoRef,
-        setStream,
+        setVideoTrack,
+        setAudioTrack,
       });
     } else {
       return;
@@ -138,15 +159,20 @@ const MeetTemplate: Story<VideoTileProps> = args => {
           autoPlay
           onPlay={() => {
             if (dummyVideoRef && dummyVideoRef.current) {
-              //@ts-ignore
-              setStream(dummyVideoRef.current.captureStream());
+              setVideoTrack(
+                dummyVideoRef.current.captureStream().getVideoTracks()[0],
+              );
+              setAudioTrack(
+                dummyVideoRef.current.captureStream().getAudioTracks()[0],
+              );
             }
           }}
         ></video>
-        {stream && (
+        {videoTrack && audioTrack && (
           <VideoTile
             {...args}
-            stream={stream}
+            videoTrack={videoTrack}
+            audioTrack={audioTrack}
             controlsComponent={
               <>
                 {args.allowRemoteMute && (

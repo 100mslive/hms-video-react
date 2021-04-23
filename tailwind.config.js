@@ -50,9 +50,6 @@ module.exports = {
         xl: ['1.25rem', { lineHeight: '1.75rem' }],
         '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
       },
-      fontFamily: {
-        clanpro: ['Clan Pro']
-      },
       maxHeight: {
         100: '37.5rem', 
       },

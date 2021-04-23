@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
-import ContainerDimensions from 'react-container-dimensions';
 import { largestRect } from '../../utils';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -18,6 +17,7 @@ import {
   groupTilesIntoPage,
   rowToColTransform,
 } from '../../utils/index';
+import { useResizeDetector } from 'react-resize-detector';
 
 export interface VideoListProps {
   /**
@@ -79,28 +79,34 @@ export const VideoList = ({
   videoTileControls,
   showAudioMuteStatus,
 }: VideoListProps) => {
-  let videoCount = streams.length;
+  const { width = 0, height = 0, ref } = useResizeDetector();
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
   const getTileDimensions = (
     parentWidth: number,
     parentHeight: number,
-  ): { width: number; height: number; rows: number; cols: number } => {
+  ): {
+    width: number;
+    height: number;
+    rows: number;
+    cols: number;
+    videoCount: number;
+  } => {
     if (maxTileCount) {
-      videoCount = Math.min(streams.length, maxTileCount);
-
-      let largestRectObj = largestRect(
-        parentWidth,
-        parentHeight,
-        videoCount,
-        aspectRatio.width,
-        aspectRatio.height,
-      );
-      return largestRectObj;
+      return {
+        ...largestRect(
+          parentWidth,
+          parentHeight,
+          Math.min(streams.length, maxTileCount),
+          aspectRatio.width,
+          aspectRatio.height,
+        ),
+        videoCount: Math.min(streams.length, maxTileCount),
+      };
     } else if (maxRowCount) {
       //let cols = ;
-      let rows = Math.min(maxRowCount, videoCount);
+      let rows = Math.min(maxRowCount, streams.length);
       //let width = parentWidth / cols;
       let height = parentHeight / rows;
 
@@ -108,12 +114,12 @@ export const VideoList = ({
       let width = parentWidth / cols;
       cols = cols === 0 ? 1 : cols;
 
-      videoCount = rows * cols;
       return {
         ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
+        videoCount: rows * cols,
       };
     } else if (maxColCount) {
-      let cols = Math.min(maxColCount, videoCount);
+      let cols = Math.min(maxColCount, streams.length);
       //let width = parentWidth / cols;
       let width = parentWidth / cols;
       //let height = (width * aspectRatio.height) / aspectRatio.width;
@@ -122,21 +128,24 @@ export const VideoList = ({
       rows = rows === 0 ? 1 : rows;
 
       let height = parentHeight / rows;
-      videoCount = rows * cols;
 
       return {
         ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
         rows,
         cols,
+        videoCount: rows * cols,
       };
     } else {
-      return largestRect(
-        parentWidth,
-        parentHeight,
-        videoCount,
-        aspectRatio.width,
-        aspectRatio.height,
-      );
+      return {
+        ...largestRect(
+          parentWidth,
+          parentHeight,
+          streams.length,
+          aspectRatio.width,
+          aspectRatio.height,
+        ),
+        videoCount: streams.length,
+      };
     }
   };
 
@@ -155,88 +164,85 @@ export const VideoList = ({
     // centerMode: true,
   };
 
+  const dimensions = getTileDimensions(width, height);
+  const { width: w, height: h, videoCount } = dimensions;
+  console.log(
+    `SDK-Component: ${JSON.stringify(
+      dimensions,
+    )}, parentHeight:${width} , parentwidth:${height}  , streams: ${
+      streams.length
+    }`,
+  );
+
   return (
     <div
       className={`${classes?.root} h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
+      ref={ref}
     >
-      <ContainerDimensions>
-        {({ width, height }) => {
-          let dimensions = getTileDimensions(width, height);
-          let w = dimensions.width;
-          let h = dimensions.height;
-          console.log(
-            `SDK-Component: ${JSON.stringify(
-              dimensions,
-            )}, parentHeight:${w} , parentwidth:${h} , videoCount:${videoCount}`,
-          );
-          return (
-            <Slider {...settings} className="w-full h-full">
-              {groupTilesIntoPage(
-                streams.map((stream, index) => (
-                  <div
-                    style={{ height: h, width: w }}
-                    key={stream.peer.id}
-                    className={`${classes?.videoTileParent} flex justify-center`}
-                  >
-                    <VideoTile
-                      {...stream}
-                      objectFit={objectFit}
-                      displayShape={displayShape}
-                      audioLevelDisplayType={audioLevelDisplayType}
-                      showAudioLevel={showAudioLevel}
-                      showAudioMuteStatus={showAudioMuteStatus}
-                      aspectRatio={aspectRatio}
-                      controlsComponent={
-                        videoTileControls && videoTileControls[index]
-                      }
-                    />
-                  </div>
-                )),
-                videoCount,
-                overflow === 'hidden',
-              )
-                .map(page => {
-                  if (
-                    tileArrangeDirection === 'col' &&
-                    !maxTileCount &&
-                    !maxRowCount &&
-                    maxColCount &&
-                    maxColCount < page.length
-                  ) {
-                    return colToRowTransform(page, maxColCount);
-                  } else if (
-                    tileArrangeDirection === 'row' &&
-                    maxRowCount &&
-                    !maxTileCount &&
-                    maxRowCount < page.length
-                  ) {
-                    return rowToColTransform(page, maxRowCount);
-                  }
-                  return page;
-                })
-                .map(item => {
-                  return (
-                    <div className="w-full h-full">
-                      <div
-                        className={` ${
-                          classes?.root
-                        } h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
-                          maxRowCount
-                            ? 'col'
-                            : maxColCount
-                            ? 'row'
-                            : tileArrangeDirection
-                        } `}
-                      >
-                        {item}
-                      </div>
-                    </div>
-                  );
-                })}
-            </Slider>
-          );
-        }}
-      </ContainerDimensions>
+      <Slider {...settings} className="w-full h-full">
+        {groupTilesIntoPage(
+          streams.map((stream, index) => (
+            <div
+              style={{ height: h, width: w }}
+              key={stream.peer.id}
+              className={`${classes?.videoTileParent} flex justify-center`}
+            >
+              <VideoTile
+                {...stream}
+                objectFit={objectFit}
+                displayShape={displayShape}
+                audioLevelDisplayType={audioLevelDisplayType}
+                showAudioLevel={showAudioLevel}
+                showAudioMuteStatus={showAudioMuteStatus}
+                aspectRatio={aspectRatio}
+                controlsComponent={
+                  videoTileControls && videoTileControls[index]
+                }
+              />
+            </div>
+          )),
+          videoCount,
+          overflow === 'hidden',
+        )
+          .map(page => {
+            if (
+              tileArrangeDirection === 'col' &&
+              !maxTileCount &&
+              !maxRowCount &&
+              maxColCount &&
+              maxColCount < page.length
+            ) {
+              return colToRowTransform(page, maxColCount);
+            } else if (
+              tileArrangeDirection === 'row' &&
+              maxRowCount &&
+              !maxTileCount &&
+              maxRowCount < page.length
+            ) {
+              return rowToColTransform(page, maxRowCount);
+            }
+            return page;
+          })
+          .map(item => {
+            return (
+              <div className="w-full h-full">
+                <div
+                  className={` ${
+                    classes?.root
+                  } h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
+                    maxRowCount
+                      ? 'col'
+                      : maxColCount
+                      ? 'row'
+                      : tileArrangeDirection
+                  } `}
+                >
+                  {item}
+                </div>
+              </div>
+            );
+          })}
+      </Slider>
     </div>
   );
 };

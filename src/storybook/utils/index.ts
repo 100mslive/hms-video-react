@@ -1,23 +1,38 @@
 import { MediaStreamWithInfo, VideoSource } from '../../types';
-import { closeMediaStream } from '../../utils';
 
 const loadStream = (props: {
-  stream: MediaStream | undefined;
+  videoTrack: MediaStreamTrack | undefined;
+  audioTrack: MediaStreamTrack | undefined;
   dummyVideoRef: React.RefObject<HTMLVideoElement>;
-  setStream: React.Dispatch<React.SetStateAction<MediaStream | undefined>>;
+  setVideoTrack: React.Dispatch<
+    React.SetStateAction<MediaStreamTrack | undefined>
+  >;
+  setAudioTrack: React.Dispatch<
+    React.SetStateAction<MediaStreamTrack | undefined>
+  >;
   isLocal?: boolean;
   videoSource?: VideoSource;
 }) => {
-  const { stream, dummyVideoRef, setStream, isLocal, videoSource } = props;
+  const {
+    videoTrack,
+    audioTrack,
+    dummyVideoRef,
+    setVideoTrack,
+    setAudioTrack,
+    isLocal,
+    videoSource,
+  } = props;
   //console.log('Closing media stream');
-  closeMediaStream(stream);
+  videoTrack?.stop();
+  audioTrack?.stop();
 
   if (videoSource === 'camera' && isLocal) {
     window.navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then(function(stream) {
         //console.log('Updating stream with camera feed', stream);
-        setStream(stream);
+        setVideoTrack(stream.getVideoTracks()[0]);
+        setAudioTrack(stream.getAudioTracks()[0]);
       });
   } else if (videoSource === 'screen' && isLocal) {
     //console.log('Updating stream with screenshare feed');
@@ -25,7 +40,8 @@ const loadStream = (props: {
       // @ts-ignore
       .getDisplayMedia({ video: true })
       .then(function(stream: MediaStream | undefined) {
-        setStream(stream);
+        setVideoTrack(stream?.getVideoTracks()[0]);
+        setAudioTrack(stream?.getAudioTracks()[0]);
       });
   } else if (videoSource === 'screen' && !isLocal) {
     //console.log('Updating stream with remote screenshare feed');
@@ -44,7 +60,8 @@ const loadStream = (props: {
     );
   }
   return () => {
-    closeMediaStream(stream);
+    videoTrack?.stop();
+    audioTrack?.stop();
   };
 };
 
@@ -65,18 +82,27 @@ const loadStreams = ({
 }: LoadStreamsProps) => {
   streamsWithInfo?.forEach((streamWithInfo, index) => {
     loadStream({
-      stream: streamWithInfo.stream,
+      videoTrack: streamWithInfo.videoTrack,
+      audioTrack: streamWithInfo.audioTrack,
       dummyVideoRef:
         !streamWithInfo.isLocal && streamWithInfo.videoSource === 'screen'
           ? dummyScreenVideoRef
           : dummyCameraVideoRef,
-      setStream: stream => {
-        if (stream !== undefined && typeof stream === 'object') {
+      setVideoTrack: videoTrack => {
+        if (videoTrack !== undefined && typeof videoTrack === 'object') {
           let newStreamsWithInfo = [...streamsWithInfo];
-          newStreamsWithInfo[index].stream = stream;
+          newStreamsWithInfo[index].videoTrack = videoTrack;
           setStreamsWithInfo(newStreamsWithInfo);
         }
       },
+      setAudioTrack: audioTrack => {
+        if (audioTrack !== undefined && typeof audioTrack === 'object') {
+          let newStreamsWithInfo = [...streamsWithInfo];
+          newStreamsWithInfo[index].audioTrack = audioTrack;
+          setStreamsWithInfo(newStreamsWithInfo);
+        }
+      },
+
       isLocal: streamWithInfo.isLocal,
       videoSource: streamWithInfo.videoSource,
     });
