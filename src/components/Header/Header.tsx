@@ -29,7 +29,7 @@ export const Header = ({
     rightRoot:
       'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-5',
   },
-  leftComponents = [<LogoButton />],
+  leftComponents = [<LogoButton key={0}/>],
   centerComponents = [],
   rightComponents = [],
 }: HeaderProps) => {
