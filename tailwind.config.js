@@ -11,7 +11,7 @@ module.exports = {
         inject: {
           insertAt: 'top',
         },
-      })
+      }),
     );
     return config;
   },
@@ -54,7 +54,8 @@ module.exports = {
         inter: ['Inter']
       },
       maxHeight: {
-        100: '37.5rem', 
+        100: '37.5rem',
+        116: '29rem',
       },
       width :{
         7.5: '1.875rem',

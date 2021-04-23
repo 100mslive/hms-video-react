@@ -11,7 +11,7 @@ export default meta;
 
 const Template: Story<ControlBarProps> = args => {
   return (
-    <div className="bg-black">
+    <div className="bg-black ">
       <ControlBar {...args} />
     </div>
   );
@@ -31,4 +31,12 @@ Default.args = {
   screenshareButtonOnClick: () => {
     alert('Share Screen room');
   },
+  messages: [
+    {
+      message: 'Ivy L left meeting',
+
+      timeSent: '10 mins ago',
+      notification: true,
+    },
+  ],
 };
