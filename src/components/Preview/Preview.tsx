@@ -22,7 +22,7 @@ export const Preview = ({
       .getUserMedia({ audio: true, video: true })
       .then(stream => setMediaStream(stream));
     return () => closeMediaStream(mediaStream);
-  }, [mediaStream]);
+  }, []);
 
   window.onunload = () => {
     closeMediaStream(mediaStream);
