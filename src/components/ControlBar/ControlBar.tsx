@@ -8,13 +8,15 @@ import {
   VideoButton,
   LeaveButton,
   ShareScreenButton,
+  ChatButton,
 } from '../MediaIcons';
 
 export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
+  isChatOpen?: boolean;
   buttonDisplay: ButtonDisplayType;
-  messages: Message[];
+
   classes?: {
     root?: string;
     leftRoot?: string;
@@ -24,22 +26,23 @@ export interface ControlBarProps {
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
+  chatButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
-  onSend: (message: string) => void;
+
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
   rightComponents: Array<React.ReactNode>;
 }
 
 export const ControlBar = ({
-  messages,
   isAudioMuted = false,
   isVideoMuted = false,
+  isChatOpen = false,
   buttonDisplay = 'square',
   audioButtonOnClick,
   videoButtonOnClick,
   leaveButtonOnClick,
-  onSend,
+  chatButtonOnClick,
   screenshareButtonOnClick,
   classes = {
     root:
@@ -57,7 +60,7 @@ export const ControlBar = ({
       clickHandler={screenshareButtonOnClick}
       key={0}
     />,
-    <Chat messages={messages} onSend={onSend} />,
+    <ChatButton clickHandler={chatButtonOnClick} isChatOpen={isChatOpen} />,
   ],
   centerComponents = [
     <VideoButton

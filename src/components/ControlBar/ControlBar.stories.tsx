@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ControlBarProps, ControlBar } from './index';
 
@@ -31,12 +31,7 @@ Default.args = {
   screenshareButtonOnClick: () => {
     alert('Share Screen room');
   },
-  messages: [
-    {
-      message: 'Ivy L left meeting',
-
-      timeSent: '10 mins ago',
-      notification: true,
-    },
-  ],
+  chatButtonOnClick: () => {
+    alert('chat button clicked');
+  },
 };

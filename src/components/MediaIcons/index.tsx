@@ -12,6 +12,8 @@ import {
   MuteListOn,
   SpotlightListOn,
   Close,
+  ChatIconBlack,
+  ChatIconWhite,
 } from '../../icons';
 
 export const LogoButton = () => {
@@ -163,4 +165,22 @@ export const SpotlightListButton = ({ isSpotlightOn = false }) => {
 
 export const CloseButton = () => {
   return <button>{Close}</button>;
+};
+
+export const ChatButton = ({
+  clickHandler,
+  isChatOpen,
+}: {
+  clickHandler: React.MouseEventHandler;
+  isChatOpen: boolean;
+}) => {
+  return (
+    <button
+      onClick={clickHandler}
+      className={`focus:outline-none rounded-lg ${isChatOpen &&
+        'bg-white'} p-3`}
+    >
+      {isChatOpen ? ChatIconBlack : ChatIconWhite}
+    </button>
+  );
 };
