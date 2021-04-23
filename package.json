@@ -1,5 +1,5 @@
 {
-  "version": "0.2.14-998",
+  "version": "0.2.14-9986",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -71,23 +71,19 @@
     "react-dom": "^17.0.2",
     "react-is": "^17.0.2",
     "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-static-files": "^0.2.0",
     "size-limit": "^4.10.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "@100mslive/100ms-web-sdk": "0.0.9-3",
-    "@fortawesome/fontawesome-svg-core": "^1.2.35",
-    "@fortawesome/free-solid-svg-icons": "^5.15.3",
-    "@fortawesome/react-fontawesome": "^0.1.14",
+    "@100mslive/100ms-web-sdk": "0.0.9-312",
     "@material-ui/core": "^4.11.3",
-    "@material-ui/icons": "^4.11.2",
     "autolinker": "^3.14.3",
-    "autoprefixer": "^9",
-    "postcss": "^7",
+    "autoprefixer": "^9.8.6",
+    "postcss": "^7.0.35",
     "react-container-dimensions": "^1.4.1",
-    "react-grid-carousel": "^1.0.1",
     "react-html-parser": "^2.0.2",
     "react-markdown": "^6.0.0",
     "react-resize-detector": "^6.6.5",
@@ -95,6 +91,6 @@
     "remark-gfm": "^1.0.0",
     "slick-carousel": "^1.8.1",
     "tailwind-percentage-heights-plugin": "^0.1.4",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2"
   }
 }

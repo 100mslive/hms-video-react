@@ -1,5 +1,5 @@
 import './tailwind.css';
-export { Thing } from './components/Thing';
+export { Silence } from './components/Silence';
 export { VideoTile, VideoTileProps } from './components/VideoTile/index';
 export { Avatar } from './components/Avatar/index';
 export { VideoList, VideoListProps } from './components/VideoList/index';
