@@ -90,6 +90,7 @@ export const VideoTile = ({
   audioLevelDisplayType = 'border',
   audioLevelDisplayColor = '#0F6CFF',
   allowRemoteMute = false,
+  //TODO merge classes properly
   classes = {
     root: 'w-full h-full flex relative items-center justify-center rounded-lg',
     videoContainer: 'relative rounded-lg shadow-lg',
@@ -97,6 +98,12 @@ export const VideoTile = ({
       'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
     avatarContainerCircle: 'rounded-full',
     videoContainerCircle: 'rounded-full',
+    video: 'h-full w-full rounded-lg',
+    videoCircle: 'rounded-full',
+    videoLocal: 'transform -scale-x-100',
+    videoCover: 'object-cover',
+    videoContain: 'object-contain',
+    borderAudioRoot: 'w-full h-full absolute left-0 top-0 rounded-lg',
   },
   controlsComponent,
 }: VideoTileProps) => {
@@ -114,13 +121,15 @@ export const VideoTile = ({
     classes.videoCircle ||
     classes.videoLocal ||
     classes.videoContain ||
-    classes.videoCover
+    classes.videoCover ||
+    classes.borderAudioRoot
       ? {
           video: classes.video,
           videoCircle: classes.videoCircle,
           videoLocal: classes.videoLocal,
           videoCover: classes.videoCover,
           videoContain: classes.videoContain,
+          borderAudioRoot: classes.borderAudioRoot,
         }
       : undefined;
 
@@ -131,7 +140,7 @@ export const VideoTile = ({
   } = useResizeDetector();
 
   useEffect(() => {
-    console.debug(
+    console.info(
       'HMSui-component: [Videotile] Video track and container dimensions are',
       videoTrack,
       containerHeight,
@@ -164,7 +173,7 @@ export const VideoTile = ({
   ]);
 
   useEffect(() => {
-    console.debug(
+    console.info(
       'HMSui-component: [Videotile] Video and Audio Track is',
       videoTrack,
       audioTrack,

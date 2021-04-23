@@ -223,9 +223,9 @@ export const VideoList = ({
             }
             return page;
           })
-          .map(item => {
+          .map((item,index) => {
             return (
-              <div className="w-full h-full">
+              <div className="w-full h-full" key={index}>
                 <div
                   className={` ${
                     classes?.root
