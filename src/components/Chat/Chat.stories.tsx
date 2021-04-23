@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Chat, ChatProps, Message } from './Chat';
+import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Chat from './index';
+import './index.css';
 
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
 import ReactMarkdown from 'react-markdown';
+import { ChatProps, Message } from '../ChatBox/ChatBox';
+
 const gfm = require('remark-gfm');
 
 const meta: Meta = {
-  title: 'Chat',
+  title: 'Chat/ Button',
   component: Chat,
 };
 
@@ -27,21 +31,10 @@ const Template: Story<ChatProps> = args => {
       return messages;
     });
   };
+
   return (
     <div className="w-full h-1/2 flex justify-center">
-      <div style={{ height: '300px', width: '240px' }} className="w-88 h-44">
-        <Chat
-          messages={messages}
-          onSend={onSend}
-          isOpen={args.isOpen}
-          willScrollToBottom={args.willScrollToBottom}
-          scrollAnimation={args.scrollAnimation}
-          onClose={() => {
-            alert('closing');
-          }}
-          messageFormatter={args.messageFormatter}
-        />
-      </div>
+      <Chat {...args} messages={messages} onSend={onSend} />
     </div>
   );
 };
@@ -76,48 +69,6 @@ Default.args = {
       notification: true,
     },
   ],
-  isOpen: true,
-  willScrollToBottom: true,
-  messageFormatter: (message: string) => {
-    return ReactHtmlParser(
-      Autolinker.link(message, { sanitizeHtml: true, mention: 'twitter' }),
-    );
-  },
-};
 
-export const MarkDownChat = Template.bind({});
-MarkDownChat.args = {
-  messages: [
-    {
-      message: 'Hi guys',
-      sender: { id: '123', displayName: 'Yash' },
-      timeSent: '10 mins ago',
-    },
-    {
-      message: 'Ivy L left meeting',
-      timeSent: '10 mins ago',
-      notification: true,
-    },
-    {
-      message: `* [ ] todo
-    * [x] done`,
-      sender: { id: '123s', displayName: 'Nikhil' },
-      timeSent: '10 mins ago',
-    },
-    {
-      message: `> A block quote with ~strikethrough~ and a URL: https://reactjs.org.`,
-      sender: { id: '123s', displayName: 'Sunita' },
-      timeSent: '10 mins ago',
-    },
-    {
-      message: `A paragraph with *emphasis* and **strong importance**`,
-      sender: { id: '123s', displayName: 'Ann' },
-      timeSent: '10 mins ago',
-    },
-  ],
-  isOpen: true,
   willScrollToBottom: true,
-  messageFormatter: (message: string) => {
-    return <ReactMarkdown remarkPlugins={[gfm]}>{message}</ReactMarkdown>;
-  },
 };

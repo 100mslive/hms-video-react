@@ -1,5 +1,7 @@
 import React from 'react';
 import { ButtonDisplayType } from '../../types';
+import Chat from '../Chat';
+import { Message } from '../ChatBox/ChatBox';
 
 import {
   AudioButton,
@@ -12,6 +14,7 @@ export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   buttonDisplay: ButtonDisplayType;
+  messages: Message[];
   classes?: {
     root?: string;
     leftRoot?: string;
@@ -22,18 +25,21 @@ export interface ControlBarProps {
   videoButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
+  onSend: (message: string) => void;
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
   rightComponents: Array<React.ReactNode>;
 }
 
 export const ControlBar = ({
+  messages,
   isAudioMuted = false,
   isVideoMuted = false,
   buttonDisplay = 'square',
   audioButtonOnClick,
   videoButtonOnClick,
   leaveButtonOnClick,
+  onSend,
   screenshareButtonOnClick,
   classes = {
     root:
@@ -50,6 +56,7 @@ export const ControlBar = ({
       buttonDisplay={buttonDisplay}
       clickHandler={screenshareButtonOnClick}
     />,
+    <Chat messages={messages} onSend={onSend} />,
   ],
   centerComponents = [
     <VideoButton

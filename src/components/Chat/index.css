@@ -1,8 +1,9 @@
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
+.MuiPopover-paper {
+  background: local !important;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+.MuiPopover-paper::-webkit-scrollbar {
+  display: none;
 }
