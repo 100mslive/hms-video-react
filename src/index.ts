@@ -8,4 +8,5 @@ export * from './components/ControlBar/index';
 export * from './components/Header/index';
 export * from './components/Preview';
 export * from './components/ParticipantList';
+export * from './components/ChatBox/ChatBox';
 export { HMSRoomProvider, useHMSRoom } from './hooks/HMSRoomProvider';
