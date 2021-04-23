@@ -91,14 +91,14 @@ export const Video = ({
   isLocal,
   videoSource,
   showAudioLevel,
-  audioLevel,
+  audioLevel=0,
   audioLevelDisplayType,
   audioLevelDisplayColor,
   displayShape,
   classes = {
     video: 'h-full w-full rounded-lg',
     videoCircle: 'rounded-full',
-    videoLocal: '-scale-x-1',
+    videoLocal: 'transform -scale-x-100',
     videoCover: 'object-cover',
     videoContain: 'object-contain',
     borderAudioRoot: 'w-full h-full absolute left-0 top-0 rounded-lg',
@@ -130,7 +130,7 @@ export const Video = ({
         `}
       ></video>
       <audio className="hidden" autoPlay playsInline ref={audioRef}></audio>
-      {showAudioLevel && audioLevelDisplayType === 'border' && audioLevel && (
+      {showAudioLevel && audioLevelDisplayType === 'border' && (
         <AudioLevelIndicator
           type={'border'}
           level={audioLevel}

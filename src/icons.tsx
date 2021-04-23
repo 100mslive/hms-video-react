@@ -118,9 +118,9 @@ export const Logo = (
         y2="26.3116"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#2475F5" stop-opacity="0.25" />
-        <stop offset="0.5" stop-color="#2475F5" stop-opacity="0.2" />
-        <stop offset="1" stop-color="#2475F5" stop-opacity="0.25" />
+        <stop stopColor="#2475F5" stopOpacity="0.25" />
+        <stop offset="0.5" stopColor="#2475F5" stopOpacity="0.2" />
+        <stop offset="1" stopColor="#2475F5" stopOpacity="0.25" />
       </linearGradient>
       <radialGradient
         id="paint1_radial"
@@ -130,8 +130,8 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
         gradientTransform="translate(15.7074 14.5179) rotate(136.716) scale(11.1139 11.1387)"
       >
-        <stop stop-color="#2475F5" stop-opacity="0.3" />
-        <stop offset="0.612889" stop-color="#2475F5" stop-opacity="0.45" />
+        <stop stopColor="#2475F5" stopOpacity="0.3" />
+        <stop offset="0.612889" stopColor="#2475F5" stopOpacity="0.45" />
       </radialGradient>
       <linearGradient
         id="paint2_linear"
@@ -141,8 +141,8 @@ export const Logo = (
         y2="14.9243"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#571939" stop-opacity="0" />
-        <stop offset="1" stop-color="#571939" />
+        <stop stopColor="#571939" stopOpacity="0" />
+        <stop offset="1" stopColor="#571939" />
       </linearGradient>
       <linearGradient
         id="paint3_linear"
@@ -152,8 +152,8 @@ export const Logo = (
         y2="15.0625"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-color="#551938" stop-opacity="0" />
-        <stop offset="1" stop-color="#561939" />
+        <stop stopColor="#551938" stopOpacity="0" />
+        <stop offset="1" stopColor="#561939" />
       </linearGradient>
       <linearGradient
         id="paint4_linear"
@@ -164,7 +164,7 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0.1359" />
-        <stop offset="1" stop-opacity="0" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint5_linear"
@@ -174,8 +174,8 @@ export const Logo = (
         y2="12.5791"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-opacity="0.7" />
-        <stop offset="1" stop-opacity="0" />
+        <stop stopOpacity="0.7" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint6_linear"
@@ -186,7 +186,7 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0.1359" />
-        <stop offset="1" stop-opacity="0" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint7_linear"
@@ -196,8 +196,8 @@ export const Logo = (
         y2="12.5903"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-opacity="0.7" />
-        <stop offset="1" stop-opacity="0" />
+        <stop stopOpacity="0.7" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint8_linear"
@@ -208,7 +208,7 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0.1359" />
-        <stop offset="1" stop-opacity="0" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint9_linear"
@@ -218,8 +218,8 @@ export const Logo = (
         y2="17.3983"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-opacity="0.7" />
-        <stop offset="1" stop-opacity="0" />
+        <stop stopOpacity="0.7" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint10_linear"
@@ -230,7 +230,7 @@ export const Logo = (
         gradientUnits="userSpaceOnUse"
       >
         <stop offset="0.1359" />
-        <stop offset="1" stop-opacity="0" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <linearGradient
         id="paint11_linear"
@@ -240,8 +240,8 @@ export const Logo = (
         y2="17.4293"
         gradientUnits="userSpaceOnUse"
       >
-        <stop stop-opacity="0.7" />
-        <stop offset="1" stop-opacity="0" />
+        <stop stopOpacity="0.7" />
+        <stop offset="1" stopOpacity="0" />
       </linearGradient>
       <image
         id="image0"
@@ -315,7 +315,7 @@ export const CamOff = (
       d="M20.2267 20.563L2.31843 3.01785C2.05077 2.74926 2.05077 2.31385 2.31843 2.04526C2.58702 1.77668 3.02243 1.77668 3.29102 2.04526L21.1992 19.5904C21.4678 19.859 21.4678 20.2944 21.1992 20.563C20.9307 20.8307 20.4952 20.8307 20.2267 20.563ZM16.125 7.87845V10.6285C16.125 11.008 15.817 11.316 15.4375 11.316C15.058 11.316 14.75 11.008 14.75 10.6285V7.87845C14.75 7.69604 14.6776 7.52187 14.5483 7.39262C14.4191 7.26337 14.2449 7.19095 14.0625 7.19095H10.625C10.2455 7.19095 9.9375 6.88295 9.9375 6.50345C9.9375 6.12395 10.2455 5.81595 10.625 5.81595H14.0625C14.6088 5.81595 15.1341 6.0332 15.5209 6.42004C15.9077 6.80687 16.125 7.33212 16.125 7.87845ZM13.375 16.816H3.0625C2.88008 16.816 2.705 16.7435 2.57575 16.6152C2.44742 16.486 2.375 16.3109 2.375 16.1285V7.87845C2.375 7.69604 2.44742 7.52187 2.57575 7.39262C2.705 7.26337 2.88008 7.19095 3.0625 7.19095C3.442 7.19095 3.75 6.88295 3.75 6.50345C3.75 6.12395 3.442 5.81595 3.0625 5.81595C2.51525 5.81595 1.99092 6.0332 1.60408 6.42004C1.21725 6.80687 1 7.33212 1 7.87845V16.1285C1 16.6757 1.21725 17.2 1.60408 17.5869C1.99092 17.9737 2.51525 18.191 3.0625 18.191H13.375C13.7545 18.191 14.0625 17.883 14.0625 17.5035C14.0625 17.124 13.7545 16.816 13.375 16.816ZM21.0108 16.9333L18.6394 15.749C18.2966 15.5775 18.0087 15.3145 17.8071 14.9881C17.6063 14.6627 17.5 14.2869 17.5 13.9037V10.1041C17.5 9.72095 17.6063 9.34512 17.8071 9.0197V9.01879C18.0087 8.69337 18.2966 8.43029 18.6394 8.25887L21.0108 7.07362C21.2198 6.96912 21.4527 6.91962 21.6873 6.93062C21.9211 6.94162 22.1484 7.01129 22.3482 7.13504C22.5472 7.25787 22.7113 7.4302 22.8258 7.63462C22.9395 7.83904 23 8.07004 23 8.30379V15.7031C23 15.9378 22.9395 16.1679 22.8258 16.3732C22.7113 16.5776 22.5472 16.75 22.3482 16.8728C22.1484 16.9965 21.9211 17.0662 21.6873 17.0772C21.4527 17.0873 21.2198 17.0387 21.0108 16.9333ZM18.9777 14.2658C19.0446 14.3749 19.1408 14.462 19.2545 14.5197L21.625 15.7031V8.30379L19.2545 9.48812C19.1408 9.54495 19.0446 9.63295 18.9777 9.74204C18.9098 9.8502 18.875 9.97579 18.875 10.1032V13.9046C18.875 14.032 18.9098 14.1576 18.9777 14.2658Z"
       fill="white"
     />
-    <g clip-path="url(#clip0)">
+    <g clipPath="url(#clip0)">
       <path
         fillRule="evenodd"
         clipRule="evenodd"

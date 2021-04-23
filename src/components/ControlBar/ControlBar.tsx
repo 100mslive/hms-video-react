@@ -55,6 +55,7 @@ export const ControlBar = ({
     <ShareScreenButton
       buttonDisplay={buttonDisplay}
       clickHandler={screenshareButtonOnClick}
+      key={0}
     />,
     <Chat messages={messages} onSend={onSend} />,
   ],
@@ -63,17 +64,20 @@ export const ControlBar = ({
       isVideoMuted={isVideoMuted}
       buttonDisplay={buttonDisplay}
       clickHandler={videoButtonOnClick}
+      key={0}
     />,
     <AudioButton
       isAudioMuted={isAudioMuted}
       buttonDisplay={buttonDisplay}
       clickHandler={audioButtonOnClick}
+      key={1}
     />,
   ],
   rightComponents = [
     <LeaveButton
       buttonDisplay={buttonDisplay}
       clickHandler={leaveButtonOnClick}
+      key={2}
     />,
   ],
 }: ControlBarProps) => {

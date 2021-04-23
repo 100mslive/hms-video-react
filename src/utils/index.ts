@@ -122,14 +122,18 @@ const groupTilesIntoPage = (
 };
 
 const getInitialsFromName = (name: string | undefined) => {
+  console.debug("HMSui-component: Getting initials of", name);
   if (!name) {
     return undefined;
   } else {
-    const rgx = new RegExp(/(\p{L}{1})\p{L}+/, 'gu');
-    let initials: RegExpMatchArray[] | string = [...name.matchAll(rgx)] || [];
-    initials = (
-      (initials.shift()?.[1] || '') + (initials.pop()?.[1] || '')
+    const rgx = /(\p{L}{1})\p{L}+/gu;
+    console.debug("HMSui-component: rgx is", rgx, name);
+    let initialsArray = name.match(rgx) || [];
+    console.debug("HMSui-component: Initial initials are", initialsArray);
+    let initials = (
+      (initialsArray[0]?initialsArray.shift()![0]:'') + (initialsArray[0]?initialsArray.pop()![0]:'')
     ).toUpperCase();
+    console.debug("HMSui-component: Initials are", initials);
     return initials;
   }
 };
