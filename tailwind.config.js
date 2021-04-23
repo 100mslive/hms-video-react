@@ -55,6 +55,7 @@ module.exports = {
       },
       width :{
         7.5: '1.875rem',
+        100: '32.25rem',
       },
       scale:{
         '-100':'-1'

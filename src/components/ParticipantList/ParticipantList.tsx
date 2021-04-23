@@ -26,7 +26,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
   });
 
   return (
-    <div className="flex flex-grow justify-content:center border-opacity-0">
+    <div className="flex flex-grow justify-content:center border-opacity-0 hidden md:block">
       <button
         aria-describedby={id}
         type="button"
@@ -73,9 +73,9 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
                       tabIndex={-1}
                       id="menu-item-3"
                       key={participant.peer.id}
-                    >
+                    > 
                       <AvatarList label={participant.peer.displayName} />
-                      <div className="flex justify-between">
+                      <div className="flex justify-between overflow-hidden truncate">
                         {participant.peer.displayName}
                       </div>
                       <div className="flex flex-grow justify-end right-0 absolute">
