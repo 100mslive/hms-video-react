@@ -33,9 +33,13 @@ export const ChatBox = ({
   willScrollToBottom = true,
   scrollAnimation = 'smooth',
   messageFormatter = (message: string) => {
-    return ReactHtmlParser(
-      Autolinker.link(message, { sanitizeHtml: true, mention: 'twitter' }),
-    );
+    let text = Autolinker.link(message, {
+      sanitizeHtml: true,
+      mention: 'twitter',
+      className: 'text-blue-tint',
+    });
+
+    return ReactHtmlParser(text);
   },
 }: ChatProps) => {
   const [message, setMessage] = useState('');
@@ -83,7 +87,7 @@ export const ChatBox = ({
                   <span>{message.sender!.displayName}</span>
                   <span className="text-xs">{message.timeSent} </span>
                 </div>
-                <div className="flex justify-between text-white leading-5 max-w-full flex-wrap">
+                <div className=" text-white leading-5 max-w-full ">
                   {/* {ReactHtmlParser(
                       Autolinker.link(message.message, { sanitizeHtml: true }),
                     )} */}
@@ -108,16 +112,23 @@ export const ChatBox = ({
             className="bg-gray-200 placeholder-gray-500 text-white focus:outline-none leading-5 overflow-y-auto no-scrollbar resize-none w-5/6"
             placeholder="Write something here"
             value={message}
+            onKeyPress={event => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                onSend(message);
+                setMessage('');
+                event.preventDefault();
+              }
+            }}
             onChange={event => {
               setMessage(event.target.value);
             }}
           />
           <button
+            className="focus:outline-none"
             onClick={() => {
               onSend(message);
               setMessage('');
             }}
-            className="focus:outline-none"
           >
             {Send}
           </button>
