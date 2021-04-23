@@ -60,16 +60,15 @@ export const ChatBox = ({
             <div className="text-gray-500">
               <span>{People}</span> Everyone
             </div>
-            <div>
-              <button
-                onClick={() => {
-                  if (onClose) onClose();
-                }}
-                className="focus:outline-none"
-              >
-                {Close}
-              </button>
-            </div>
+
+            <button
+              onClick={() => {
+                if (onClose) onClose();
+              }}
+              className="focus:outline-none"
+            >
+              {Close}
+            </button>
           </div>
         </div>
         <div className="bg-gray-100 w-full h-full p-3 text-gray-500 overflow-y-auto no-scrollbar flex-grow">

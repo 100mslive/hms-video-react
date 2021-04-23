@@ -65,7 +65,7 @@ Default.args = {
       timeSent: '10 mins ago',
     },
     {
-      message: 'Our twiiter handle @100mslive',
+      message: 'Our twiiter handle @nikhilghodke',
       sender: { id: '123s', displayName: '100ms' },
       timeSent: '10 mins ago',
     },
