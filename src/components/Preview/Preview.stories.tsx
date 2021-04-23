@@ -24,36 +24,42 @@ const peers: HMSPeer[] = [
     name: 'Aditya 1',
     isLocal: false,
     customerDescription: 'Dummy Description',
+    auxiliaryTracks: [],
   },
   {
     peerId: '2',
     name: 'Aditya 2',
     isLocal: false,
     customerDescription: 'Dummy Description',
+    auxiliaryTracks: [],
   },
   {
     peerId: '3',
     name: 'Aditya 3',
     isLocal: false,
     customerDescription: 'Dummy Description',
+    auxiliaryTracks: [],
   },
   {
     peerId: '4',
     name: 'Aditya 4',
     isLocal: false,
     customerDescription: 'Dummy Description',
+    auxiliaryTracks: [],
   },
   {
     peerId: '5',
     name: 'Aditya 5',
     isLocal: false,
     customerDescription: 'Dummy Description',
+    auxiliaryTracks: [],
   },
   {
     peerId: '6',
     name: 'Aditya Gupta',
     isLocal: true,
     customerDescription: 'Dummy Description',
+    auxiliaryTracks: [],
   },
 ];
 

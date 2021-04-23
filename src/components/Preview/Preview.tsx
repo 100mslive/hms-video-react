@@ -39,12 +39,15 @@ export const Preview = ({
     }
   }
 
-  return localPeer && localPeer.videoTrack ? (
+  return localPeer ? (
     <div className="flex flex-col w-37.5 h-42.5 bg-gray-100 items-center justify-center overflow-auto text-white rounded-2xl">
       <div className="w-22.5 h-22.5">
         <VideoTile
           // @ts-ignore
-          stream={localPeer.videoTrack.stream.nativeStream}
+          stream={window.navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true,
+          })}
           peer={{
             id: localPeer.peerId,
             displayName: localPeer.name,
