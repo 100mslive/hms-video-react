@@ -1,81 +1,61 @@
-import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
-import React, { ReactNodeArray } from 'react';
+import React, { ReactNodeArray, useEffect, useState } from 'react';
+import { closeMediaStream } from '../../utils';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 
 export interface PreviewProps extends VideoTileProps {
-  peers: HMSPeer[];
-  roomName: string;
+  name: string,
   joinOnClick: () => void;
   goBackOnClick: () => void;
+  videoTileProps: VideoTileProps
 }
 
 export const Preview = ({
-  peers,
-  roomName,
+  name,
   joinOnClick,
   goBackOnClick,
+  videoTileProps
 }: PreviewProps) => {
-  const localPeer =
-    peers && peers.length > 0 && peers[0]
-      ? peers.filter(peer => peer.isLocal)[0]
-      : false;
-  let teachers = null;
 
-  const filteredPeers =
-    peers &&
-    peers.length > 0 &&
-    peers[0] &&
-    peers.filter(peer => peer.customerDescription != '');
+  const [mediaStream, setMediaStream] = useState(new MediaStream());
 
-  if (filteredPeers && filteredPeers.length > 0 && filteredPeers[0]) {
-    if (filteredPeers.length === 1) {
-      teachers = <span className="mb-4 text-sm">{`You`}</span>;
-    } else {
-      teachers = filteredPeers.map((peer, idx) => (
-        <span key={idx} className="mb-4 text-sm">
-          {!peer.isLocal ? `${peer.name}, ` : `and you.`}
-        </span>
-      ));
-    }
-  }
+  useEffect(() => {
+    window.navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(stream => setMediaStream(stream));
+    return (() => closeMediaStream(mediaStream));
+  }, []);
 
-  return localPeer ? (
-    <div className="flex flex-col w-37.5 h-42.5 bg-gray-100 items-center justify-center overflow-auto text-white rounded-2xl">
-      <div className="w-22.5 h-22.5">
+  return (
+    <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-auto rounded-2xl font-inter">
+      <div className="w-22.5 h-22.5 mt-1.875 mb-7">
         <VideoTile
-          // @ts-ignore
-          stream={window.navigator.mediaDevices.getUserMedia({
-            audio: true,
-            video: true,
-          })}
+          videoTrack={mediaStream.getVideoTracks()[0]}
+          audioTrack={mediaStream.getAudioTracks()[0]}
           peer={{
-            id: localPeer.peerId,
-            displayName: localPeer.name,
+            id: name,
+            displayName: name
           }}
-          objectFit="contain"
+          objectFit="cover"
           isLocal={true}
-          //@ts-ignore
-          // classes={{root: "'w-full h-full flex relative items-center justify-center rounded-lg"}}
+          aspectRatio={{
+            width: 1,
+            height: 1
+          }}
+        //@ts-ignore
+        // classes={{root: "'w-full h-full flex relative items-center justify-center rounded-lg"}}
         />
       </div>
-      <div className="mt-5 text-xl mb-2">Hello, {localPeer.name}</div>
-      <div className="mb-2 text-md">Welcome to {roomName}</div>
-      <div className="flex items-center justify-between mb-4 text-sm">
-        <div className="mr-3">Teachers: </div>
-        <div>{teachers}</div>
-      </div>
+      <div className="text-2xl font-medium mb-12">Hello, {name}</div>
       <div
-        className="flex justify-center items-center mb-4 bg-blue-main w-28 h-28 max-h-28 rounded-lg text-md cursor-pointer"
+        className="flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 bg-blue-main rounded-xl text-lg font-semibold cursor-pointer"
         onClick={joinOnClick}
       >
         Join
       </div>
       <div
-        className="mb-8 text-blue-main text-md cursor-pointer"
+        className="text-blue-main text-lg font-semibold cursor-pointer"
         onClick={goBackOnClick}
       >
         Go back
       </div>
     </div>
-  ) : null;
+  )
 };
