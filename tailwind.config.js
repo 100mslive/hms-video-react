@@ -47,20 +47,41 @@ module.exports = {
         sm: ['0.75rem', { lineHeight: '1rem' }],
         base: ['0.875rem', { lineHeight: '1.25rem' }],
         lg: ['1rem', { lineHeight: '1.5rem' }],
-        xl: ['1.125rem', { lineHeight: '1.5rem' }],
+        xl: ['1.25rem', { lineHeight: '1.75rem' }],
         '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
+      },
+      fontFamily: {
+        inter: ['Inter']
       },
       maxHeight: {
         100: '37.5rem',
         116: '29rem',
       },
-      width: {
+      width :{
         7.5: '1.875rem',
+        8.75: '8.75rem',
+        22.5: '22.5rem',
+        37.5: '37.5rem',
+        42.5: '42.5rem'
       },
-
-      scale: {
-        '-100': '-1',
+      height: {
+        3.25: '3.25rem',
+        22.5: '22.5rem',
+        37.5: '37.5rem',
+        400: '40rem',
+        42.5: '42.5rem'
       },
+      scale:{
+        '-100':'-1'
+      },
+      margin: {
+        1.625: '1.625rem',
+        1.875: '1.875rem',
+        5.5: '5.5rem',
+      },
+      padding: {
+        0.875: '0.875rem',
+      }
     },
   },
   variants: {

@@ -50,7 +50,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          {Array.from(roles.keys()).map((role,index) => {
+          {Array.from(roles.keys()).map((role, index) => {
             let list = roles.get(role) || [];
             return (
               <div key={index}>

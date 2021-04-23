@@ -16,7 +16,7 @@ const Template: Story<ParticipantListProps> = args => (
 );
 
 export const Default = Template.bind({});
-export const Real = Template.bind({})
+export const Real = Template.bind({});
 
 Default.args = {
   participantList: [
@@ -53,17 +53,19 @@ Default.args = {
   ],
 };
 
-Real.args= {
-  participantList:[
+Real.args = {
+  participantList: [
     {
-      peer:{
-        id:"dasd-232",
-        displayName:"ni",
-      }},
-      {peer:{
-        id:"asdasd232-",
-        displayName:"Aniket Behera"
-      }
-    }
-  ]
-}
+      peer: {
+        id: 'dasd-232',
+        displayName: 'ni',
+      },
+    },
+    {
+      peer: {
+        id: 'asdasd232-',
+        displayName: 'Aniket Behera',
+      },
+    },
+  ],
+};

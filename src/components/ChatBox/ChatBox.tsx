@@ -48,7 +48,9 @@ export const ChatBox = ({
     messagesEndRef.current!.scrollIntoView({ behavior: scrollAnimation });
   };
   useEffect(() => {
-    if (willScrollToBottom) scrollToBottom();
+    if (willScrollToBottom) {
+      scrollToBottom();
+    }
   }, [message]);
 
   return (
@@ -63,7 +65,9 @@ export const ChatBox = ({
             <div>
               <button
                 onClick={() => {
-                  if (onClose) onClose();
+                  if (onClose) {
+                    onClose();
+                  }
                 }}
                 className="focus:outline-none"
               >

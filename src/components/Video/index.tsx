@@ -91,7 +91,7 @@ export const Video = ({
   isLocal,
   videoSource,
   showAudioLevel,
-  audioLevel=0,
+  audioLevel = 0,
   audioLevelDisplayType,
   audioLevelDisplayColor,
   displayShape,

@@ -35,10 +35,14 @@ export const HMSRoomProvider: React.FC = props => {
 
   const toggleScreenShare = async () => {
     if (!isScreenShare) {
-      console.debug('HMSui-component: [toggleScreenshare] Starting screenshare');
+      console.debug(
+        'HMSui-component: [toggleScreenshare] Starting screenshare',
+      );
       setIsScreenShare(true);
       await sdk.startScreenShare(async () => {
-        console.debug('HMSui-component: [toggleScreenshare] Inside the onstop of screenshare');
+        console.debug(
+          'HMSui-component: [toggleScreenshare] Inside the onstop of screenshare',
+        );
         setIsScreenShare(false);
         await sdk.stopScreenShare();
       });
