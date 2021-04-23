@@ -11,6 +11,7 @@ import {
   SpotlightList,
   MuteListOn,
   SpotlightListOn,
+  Close,
 } from '../../icons';
 
 export const LogoButton = () => {
@@ -158,4 +159,8 @@ export const SpotlightListButton = ({ isSpotlightOn = false }) => {
       {isSpotlightOn ? SpotlightList : SpotlightListOn}
     </button>
   );
+};
+
+export const CloseButton = () => {
+  return <button>{Close}</button>;
 };

@@ -11,7 +11,7 @@ module.exports = {
         inject: {
           insertAt: 'top',
         },
-      })
+      }),
     );
     return config;
   },
@@ -51,14 +51,16 @@ module.exports = {
         '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
       },
       maxHeight: {
-        100: '37.5rem', 
+        100: '37.5rem',
+        116: '29rem',
       },
-      width :{
+      width: {
         7.5: '1.875rem',
       },
-      scale:{
-        '-100':'-1'
-      }
+
+      scale: {
+        '-100': '-1',
+      },
     },
   },
   variants: {
