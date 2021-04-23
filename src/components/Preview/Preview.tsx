@@ -29,7 +29,7 @@ export const Preview = ({
   };
 
   return (
-    <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-auto rounded-2xl font-inter">
+    <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-auto rounded-2xl">
       <div className="w-22.5 h-22.5 mt-1.875 mb-7">
         <VideoTile
           videoTrack={mediaStream.getVideoTracks()[0]}
@@ -48,7 +48,7 @@ export const Preview = ({
           // classes={{root: "'w-full h-full flex relative items-center justify-center rounded-lg"}}
         />
       </div>
-      <div className="text-2xl font-medium mb-12">Hello, {name}</div>
+      <div className="text-2xl font-normal mb-12">Hello, {name}</div>
       <div
         className="flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 bg-blue-main rounded-xl text-lg font-semibold cursor-pointer"
         onClick={() => {
