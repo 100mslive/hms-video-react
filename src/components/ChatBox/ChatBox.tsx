@@ -87,7 +87,7 @@ export const ChatBox = ({
                   <span>{message.sender!.displayName}</span>
                   <span className="text-xs">{message.timeSent} </span>
                 </div>
-                <div className=" text-white leading-5 max-w-full ">
+                <div className=" text-white leading-5 max-w-full break-words">
                   {/* {ReactHtmlParser(
                       Autolinker.link(message.message, { sanitizeHtml: true }),
                     )} */}
@@ -117,6 +117,14 @@ export const ChatBox = ({
                 onSend(message);
                 setMessage('');
                 event.preventDefault();
+<<<<<<< HEAD
+              } else if (event.key === 'Enter') {
+                setMessage(prev => {
+                  return prev + '\n';
+                });
+                event.preventDefault();
+=======
+>>>>>>> develop
               }
             }}
             onChange={event => {
