@@ -117,14 +117,6 @@ export const ChatBox = ({
                 onSend(message);
                 setMessage('');
                 event.preventDefault();
-<<<<<<< HEAD
-              } else if (event.key === 'Enter') {
-                setMessage(prev => {
-                  return prev + '\n';
-                });
-                event.preventDefault();
-=======
->>>>>>> develop
               }
             }}
             onChange={event => {

@@ -30,7 +30,7 @@ export const VideoTileControls = ({
   audioLevelDisplayType = 'inline-wave',
   audioLevel,
   classes = {
-    root: 'text-center rounded-lg',
+    root: 'text-center rounded-lg z-20',
   },
 }: VideoTileControlsProps) => {
   // Map [showAudioMuteStatus, showAudioLevel, isAudioMuted] to audio status - actual element to render.

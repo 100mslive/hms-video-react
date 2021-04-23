@@ -22,6 +22,8 @@ export const HMSRoomProvider: React.FC = props => {
   };
 
   const leave = () => {
+    //TODO this is not strictly necessary since SDK should clean up, but foing it for safety
+    setPeers([]);
     sdk.leave();
   };
 
