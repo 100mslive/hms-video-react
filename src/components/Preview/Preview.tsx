@@ -5,13 +5,9 @@ import { VideoTileControls } from './Controls';
 
 export interface PreviewProps {
   name: string;
-  isAudioMuted: boolean;
-  isVideoMuted: boolean;
   joinOnClick: () => void;
   goBackOnClick: () => void;
-  audioButtonOnClick: React.MouseEventHandler;
-  videoButtonOnClick: React.MouseEventHandler;
-  settingsButtonOnClick: React.MouseEventHandler;
+  toggleMute: (type: string) => void;
   videoTileProps: Partial<VideoTileProps>;
 }
 
@@ -19,21 +15,34 @@ export const Preview = ({
   name,
   joinOnClick,
   goBackOnClick,
-  audioButtonOnClick,
-  videoButtonOnClick,
-  settingsButtonOnClick,
-  isAudioMuted = false,
-  isVideoMuted = false,
+  toggleMute,
   videoTileProps,
 }: PreviewProps) => {
+
   const [mediaStream, setMediaStream] = useState(new MediaStream());
+  const [audioMuted, setAudioMuted] = useState(false);
+  const [videoMuted, setVideoMuted] = useState(false);
 
   useEffect(() => {
-    window.navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
+      getUserMedia()
       .then(stream => setMediaStream(stream));
     return () => closeMediaStream(mediaStream);
   }, []);
+
+  useEffect(() => {
+    mediaStream.getAudioTracks()[0].enabled = !audioMuted;
+  }, [audioMuted])
+
+  useEffect(() => {
+    mediaStream.getVideoTracks()[0].enabled = !videoMuted;
+  }, [videoMuted])
+
+  const toggleMediaState = (type: string) => {
+    type === 'audio' && setAudioMuted(prevMuted => !prevMuted) && toggleMute('audio');
+    type === 'video' && setVideoMuted(prevMuted => !prevMuted) && toggleMute('video');
+  };
+
+  const getUserMedia = () => window.navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 
   return (
     <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-auto rounded-2xl">
@@ -54,15 +63,13 @@ export const Preview = ({
           }}
           controlsComponent={
             <VideoTileControls
-              settingsButtonOnClick={settingsButtonOnClick}
-              audioButtonOnClick={audioButtonOnClick}
-              videoButtonOnClick={videoButtonOnClick}
-              isAudioMuted={isAudioMuted}
-              isVideoMuted={isVideoMuted}
+              settingsButtonOnClick={() => console.log("Settings Component yet to be made")}
+              audioButtonOnClick={() => toggleMediaState('audio')}
+              videoButtonOnClick={() => toggleMediaState('video')}
+              isAudioMuted={audioMuted}
+              isVideoMuted={videoMuted}
             />
           }
-          //@ts-ignore
-          // classes={{root: "'w-full h-full flex relative items-center justify-center rounded-lg"}}
         />
       </div>
       <div className="text-2xl font-medium mb-12">Hello, {name}</div>

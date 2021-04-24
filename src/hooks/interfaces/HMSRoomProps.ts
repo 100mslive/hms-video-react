@@ -8,6 +8,6 @@ export default interface HMSRoomProps {
   localPeer: HMSPeer;
   join: (config: HMSConfig, listener: HMSUpdateListener) => void;
   leave: () => void;
-  toggleMute: (track: HMSTrack) => void;
+  toggleMute: (type: 'audio' | 'video') => void;
   toggleScreenShare: () => void;
 }

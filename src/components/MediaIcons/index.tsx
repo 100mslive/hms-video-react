@@ -177,7 +177,7 @@ export const AudioPreviewButton = ({
 }) => {
   return (
     <button
-      className={`inline-block w-9 h-9 mx-1.5 rounded-${
+      className={`cursor-pointer inline-block w-9 h-9 mx-1.5 rounded-${
         buttonDisplay === 'square' ? 'xl' : 'full'
       } focus:outline-none ${
         isAudioMuted
@@ -202,7 +202,7 @@ export const VideoPreviewButton = ({
 }) => {
   return (
     <button
-      className={`inline-block w-9 h-9 mr-1.5 rounded-${
+      className={`cursor-pointer inline-block w-9 h-9 mr-1.5 rounded-${
         buttonDisplay === 'square' ? 'xl' : 'full'
       } focus:outline-none ${
         isVideoMuted
@@ -225,7 +225,7 @@ export const SettingsButton = ({
 }) => {
   return (
     <button
-      className={`inline-block w-9 h-9 mx-1.5 rounded-${
+      className={`cursor-pointer inline-block w-9 h-9 mx-1.5 rounded-${
         buttonDisplay === 'square' ? 'xl' : 'full'
       } focus:outline-none hover:bg-transparent-light`}
       onClick={clickHandler}

@@ -18,8 +18,12 @@ export const HMSRoomProvider: React.FC = props => {
 
   const [isScreenShare, setIsScreenShare] = useState(false);
 
+  const [audioMuted, setAudioMuted] = useState(false);
+  
+  const [videoMuted, setVideoMuted] = useState(false);
+
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
-    sdk.join(config, createListener(listener, setPeers, setLocalPeer, sdk));
+    sdk.join(config, createListener(listener, audioMuted, videoMuted, setPeers, setLocalPeer, toggleMuteInPeer, sdk));
   };
 
   const leave = () => {
@@ -28,8 +32,16 @@ export const HMSRoomProvider: React.FC = props => {
     sdk.leave();
   };
 
-  const toggleMute = async (track: HMSTrack) => {
-    await track.setEnabled(!track.enabled);
+  const toggleMute = (type: 'audio' | 'video') => {
+    type==='audio' && setAudioMuted(prevMuted => !prevMuted);
+    type==='video' && setVideoMuted(prevMuted => !prevMuted);
+
+    toggleMuteInPeer(type);
+  };
+
+  const toggleMuteInPeer = async (type: 'audio' | 'video') => {
+    localPeer && localPeer.audioTrack && type==='audio' && await localPeer.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
+    localPeer && localPeer.videoTrack && type==='video' && await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
     setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };
