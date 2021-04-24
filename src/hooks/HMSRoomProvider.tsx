@@ -5,6 +5,7 @@ import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSRoomProps from './interfaces/HMSRoomProps';
 import createListener from './helpers/createListener';
+import { Silence } from '../components/Silence';
 
 const sdk = new HMSSdk();
 
@@ -71,6 +72,7 @@ export const HMSRoomProvider: React.FC = props => {
         toggleScreenShare: toggleScreenShare,
       }}
     >
+      <Silence />
       {props.children}
     </HMSContext.Provider>
   );
