@@ -6,14 +6,10 @@ import {MessageModal} from '../MessageModal'
 
 export interface PreviewProps {
   name: string;
-  isAudioMuted: boolean;
-  isVideoMuted: boolean;
   joinOnClick: () => void;
   goBackOnClick: () => void;
   messageOnClose: ()=> void;
-  audioButtonOnClick: ()=>void;
-  videoButtonOnClick: React.MouseEventHandler;
-  settingsButtonOnClick: React.MouseEventHandler;
+  toggleMute: (type: string) => void;
   videoTileProps: Partial<VideoTileProps>;
 }
 
@@ -22,11 +18,7 @@ export const Preview = ({
   joinOnClick,
   goBackOnClick,
   messageOnClose,
-  audioButtonOnClick,
-  videoButtonOnClick,
-  settingsButtonOnClick,
-  isAudioMuted = false,
-  isVideoMuted = false,
+  toggleMute,
   videoTileProps,
 }: PreviewProps) => {
   const [mediaStream, setMediaStream] = useState(new MediaStream());
@@ -36,9 +28,9 @@ export const Preview = ({
   const [videoInput, setVideoInput] = useState(Array);
   const [audioInput, setAudioInput] = useState(Array);
   const [audioOutput, setAudioutput] = useState(Array);
-  // let videoDevices = [];
-  // let audioDevices = [];
-  // let audioOutputDevices = [];
+  const [audioMuted, setAudioMuted] = useState(false);
+  const [videoMuted, setVideoMuted] = useState(false);
+
   useEffect(() => {
     window.navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
@@ -59,13 +51,10 @@ export const Preview = ({
             .then(devices => {
               for (let device of devices) {
                 if (device.kind === 'videoinput') {
-                  // videoDevices.push(device);
                   setVideoInput(videoDevices => [...videoDevices, device]);
                 } else if (device.kind === 'audioinput') {
-                  // audioDevices.push(device);
                   setAudioInput([...audioInput,device]);
                 } else if (device.kind === 'audiooutput') {
-                  // audioOutputDevices.push(device);
                   setAudioutput([...audioOutput,device]);
                 }
               }
@@ -86,13 +75,43 @@ export const Preview = ({
             })
           }
       });
-    return () => closeMediaStream(mediaStream);
-  }, []);
+    },[]);
+  
+  
+
+  useEffect(() => {
+    mediaStream &&
+      mediaStream.getAudioTracks().length > 0 &&
+      toggleEnabled(mediaStream.getAudioTracks()[0], !audioMuted);
+  }, [audioMuted]);
+
+  useEffect(() => {
+    mediaStream &&
+      mediaStream.getVideoTracks().length > 0 &&
+      toggleEnabled(mediaStream.getVideoTracks()[0], !videoMuted);
+  }, [videoMuted]);
+
+  const toggleMediaState = (type: string) => {
+    type === 'audio' &&
+      setAudioMuted(prevMuted => !prevMuted) &&
+      toggleMute('audio');
+    type === 'video' &&
+      setVideoMuted(prevMuted => !prevMuted) &&
+      toggleMute('video');
+  };
+
+  const toggleEnabled = (track: MediaStreamTrack, enabled: boolean) => {
+    track.enabled = enabled;
+  };
+
+  // const getUserMedia = () =>
+  //   window.navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 
   return (
     <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl">
+      
       <div className="w-22.5 h-22.5 mt-1.875 mb-7">
-        <MessageModal show={errorState} title={title} message={message} onClose={messageOnClose}/>
+      <MessageModal show={errorState} title={title} message={message} onClose={messageOnClose}/>
         <VideoTile
           {...videoTileProps}
           videoTrack={mediaStream.getVideoTracks()[0]}
@@ -109,15 +128,15 @@ export const Preview = ({
           }}
           controlsComponent={
             <VideoTileControls
-              settingsButtonOnClick={settingsButtonOnClick}
-              audioButtonOnClick={audioButtonOnClick}
-              videoButtonOnClick={videoButtonOnClick}
-              isAudioMuted={isAudioMuted}
-              isVideoMuted={isVideoMuted}
+              settingsButtonOnClick={() =>
+                console.log('Settings Component yet to be made')
+              }
+              audioButtonOnClick={() => toggleMediaState('audio')}
+              videoButtonOnClick={() => toggleMediaState('video')}
+              isAudioMuted={audioMuted}
+              isVideoMuted={videoMuted}
             />
           }
-          //@ts-ignore
-          // classes={{root: "'w-full h-full flex relative items-center justify-center rounded-lg"}}
         />
       </div>
       <div className="text-2xl font-medium mb-12">Hello, {name}</div>
@@ -139,7 +158,9 @@ export const Preview = ({
       >
         Go back
       </div>
-      
+      {/* <div className="flex align-middle">
+    </div> */}
     </div>
-  );
-};
+    // </div>
+   );
+ };

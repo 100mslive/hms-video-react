@@ -1,7 +1,6 @@
 import React, { useState, useContext, createContext } from 'react';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
-import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSRoomProps from './interfaces/HMSRoomProps';
 import createListener from './helpers/createListener';
@@ -18,8 +17,23 @@ export const HMSRoomProvider: React.FC = props => {
 
   const [isScreenShare, setIsScreenShare] = useState(false);
 
+  const [audioMuted, setAudioMuted] = useState(false);
+
+  const [videoMuted, setVideoMuted] = useState(false);
+
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
-    sdk.join(config, createListener(listener, setPeers, setLocalPeer, sdk));
+    sdk.join(
+      config,
+      createListener(
+        listener,
+        audioMuted,
+        videoMuted,
+        setPeers,
+        setLocalPeer,
+        toggleMuteInPeer,
+        sdk,
+      ),
+    );
   };
 
   const leave = () => {
@@ -28,8 +42,22 @@ export const HMSRoomProvider: React.FC = props => {
     sdk.leave();
   };
 
-  const toggleMute = async (track: HMSTrack) => {
-    await track.setEnabled(!track.enabled);
+  const toggleMute = (type: 'audio' | 'video') => {
+    type === 'audio' && setAudioMuted(prevMuted => !prevMuted);
+    type === 'video' && setVideoMuted(prevMuted => !prevMuted);
+
+    toggleMuteInPeer(type);
+  };
+
+  const toggleMuteInPeer = async (type: 'audio' | 'video') => {
+    localPeer &&
+      localPeer.audioTrack &&
+      type === 'audio' &&
+      (await localPeer.audioTrack.setEnabled(!localPeer.audioTrack.enabled));
+    localPeer &&
+      localPeer.videoTrack &&
+      type === 'video' &&
+      (await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled));
     setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };
@@ -40,12 +68,14 @@ export const HMSRoomProvider: React.FC = props => {
         'HMSui-component: [toggleScreenshare] Starting screenshare',
       );
       setIsScreenShare(true);
-      await sdk.startScreenShare(async () => {
+      await sdk.startScreenShare(() => {
         console.debug(
           'HMSui-component: [toggleScreenshare] Inside the onstop of screenshare',
         );
         setIsScreenShare(false);
-        await sdk.stopScreenShare();
+        //await sdk.stopScreenShare();
+        setPeers(sdk.getPeers());
+        setLocalPeer(sdk.getLocalPeer());
       });
     } else {
       console.debug('HMSui-component: [toggleScreenshare] Stopping screnshare');
@@ -66,6 +96,8 @@ export const HMSRoomProvider: React.FC = props => {
       value={{
         peers: peers,
         localPeer: localPeer,
+        audioMuted: audioMuted,
+        videoMuted: videoMuted,
         join: join,
         leave: leave,
         toggleMute: toggleMute,
