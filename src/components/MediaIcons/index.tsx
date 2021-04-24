@@ -108,7 +108,8 @@ export const LeaveButton = ({
       onClick={clickHandler}
     >
       <div className="inline-block">{LeaveRoom}</div>
-      <div className="md:pl-2 hidden md:inline-block">Leave Room</div>
+      {/* TODO figure out why xs:hidden is needed */}
+      <div className="md:pl-2 xs:hidden md:inline-block">Leave Room</div>
     </button>
   );
 };

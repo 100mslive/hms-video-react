@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
+//@ts-ignore
+import {apply, CSSRules, tw, Directive, css} from 'twind/css';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -8,27 +10,27 @@ export interface VideoClasses {
   /** The actual video element
    *
    */
-  video?: string;
+  video?: Directive<CSSRules>;
   /**
    * Extra styles added when video is circular
    */
-  videoCircle?: string;
+  videoCircle?: Directive<CSSRules>;
   /**
    * Extra styles added when video is local stream
    */
-  videoLocal?: string;
+  videoLocal?: Directive<CSSRules>;
   /**
    * Extra styles added when objectFit is set to cover
    */
-  videoCover?: string;
+  videoCover?: Directive<CSSRules>;
   /**
    * Extra styles added when objectFit is contain
    */
-  videoContain?: string;
+  videoContain?: Directive<CSSRules>;
   /**
    * Extra styles added when to audio level border
    */
-  borderAudioRoot?: string;
+  borderAudioRoot?: Directive<CSSRules>;
 }
 
 export interface VideoProps {
@@ -96,12 +98,12 @@ export const Video = ({
   audioLevelDisplayColor,
   displayShape,
   classes = {
-    video: 'h-full w-full rounded-lg',
-    videoCircle: 'rounded-full',
-    videoLocal: 'transform -scale-x-100',
-    videoCover: 'object-cover',
-    videoContain: 'object-contain',
-    borderAudioRoot: 'w-full h-full absolute left-0 top-0 rounded-lg',
+    video: apply`h-full w-full rounded-lg`,
+    videoCircle: apply`rounded-full`,
+    videoLocal: apply`${css({transform:'scaleX(-1)'})}`,
+    videoCover: apply`object-cover`,
+    videoContain: apply`object-contain`,
+    borderAudioRoot: apply`w-full h-full absolute left-0 top-0 rounded-lg`,
   },
 }: VideoProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -122,14 +124,14 @@ export const Video = ({
         muted={true}
         autoPlay
         playsInline
-        className={` ${classes.video} 
+        className={tw`${classes.video} 
           ${displayShape === 'circle' ? classes.videoCircle : ''}
           ${isLocal && videoSource === 'camera' ? classes.videoLocal : ''}
           ${objectFit === 'contain' ? classes.videoContain : ''}
           ${objectFit === 'cover' ? classes.videoCover : ''}
         `}
       ></video>
-      <audio className="hidden" autoPlay playsInline ref={audioRef}></audio>
+      <audio className={tw`hidden`} autoPlay playsInline ref={audioRef}></audio>
       {showAudioLevel && audioLevelDisplayType === 'border' && (
         <AudioLevelIndicator
           type={'border'}
