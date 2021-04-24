@@ -50,10 +50,10 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          {Array.from(roles.keys()).map(role => {
+          {Array.from(roles.keys()).map((role, index) => {
             let list = roles.get(role) || [];
             return (
-              <>
+              <div key={index}>
                 <div role="none" key={role}>
                   <a
                     href="#"
@@ -72,10 +72,10 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
                       role="menuitem"
                       tabIndex={-1}
                       id="menu-item-3"
-                      key={participant.peer.id}
-                    > 
+                      key={index}
+                    >
                       <AvatarList label={participant.peer.displayName} />
-                      <div className="flex justify-between overflow-hidden truncate">
+                      <div className="flex justify-between">
                         {participant.peer.displayName}
                       </div>
                       <div className="flex flex-grow justify-end right-0 absolute">
@@ -87,7 +87,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
                     </a>
                   ))}
                 </div>
-              </>
+              </div>
             );
           })}
         </div>

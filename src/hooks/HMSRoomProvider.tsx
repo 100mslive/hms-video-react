@@ -25,23 +25,27 @@ export const HMSRoomProvider: React.FC = props => {
     sdk.leave();
   };
 
-  const toggleMute = (track: HMSTrack) => {
-    track.setEnabled(!track.enabled);
+  const toggleMute = async (track: HMSTrack) => {
+    await track.setEnabled(!track.enabled);
     setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };
 
   const toggleScreenShare = async () => {
     if (!isScreenShare) {
-      console.log('STARTING SCREENSHARE');
+      console.debug(
+        'HMSui-component: [toggleScreenshare] Starting screenshare',
+      );
       setIsScreenShare(true);
       await sdk.startScreenShare(async () => {
-        console.log('INSIDE THE ONSTOP OF STARTSCREENSHARE');
+        console.debug(
+          'HMSui-component: [toggleScreenshare] Inside the onstop of screenshare',
+        );
         setIsScreenShare(false);
         await sdk.stopScreenShare();
       });
     } else {
-      console.log('STOPPING SCREENSHARE');
+      console.debug('HMSui-component: [toggleScreenshare] Stopping screnshare');
       setIsScreenShare(false);
       await sdk.stopScreenShare();
     }
