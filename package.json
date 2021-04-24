@@ -1,5 +1,5 @@
 {
-  "version": "0.2.14-9986",
+  "version": "0.2.14-9987",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -91,6 +91,7 @@
     "remark-gfm": "^1.0.0",
     "slick-carousel": "^1.8.1",
     "tailwind-percentage-heights-plugin": "^0.1.4",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2"
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
+    "twind": "^0.16.12"
   }
 }

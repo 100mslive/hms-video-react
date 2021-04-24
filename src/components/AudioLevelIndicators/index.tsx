@@ -4,6 +4,8 @@ import { DisplayShapes } from '../Video';
 import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 import AudioLevelBorder from './Border';
+//@ts-ignore
+import {apply, CSSRules, Directive} from 'twind';
 
 export interface AudioLevelIndicatorProps {
   type: AudioLevelDisplayType;
@@ -14,11 +16,11 @@ export interface AudioLevelIndicatorProps {
     /**
      * Style attached to avatar
      */
-    root?: string;
+    root?: Directive<CSSRules>;
     /**
      * Style attached when display shape is circle
      */
-    videoCircle?: string;
+    videoCircle?: Directive<CSSRules>;
   };
 }
 
@@ -28,8 +30,8 @@ export const AudioLevelIndicator = ({
   color,
   displayShape = 'rectangle',
   classes = {
-    root: 'w-full h-full absolute left-0 top-0 rounded-lg',
-    videoCircle: 'rounded-full',
+    root: apply`w-full h-full absolute left-0 top-0 rounded-lg`,
+    videoCircle: apply`rounded-full`,
   },
 }: AudioLevelIndicatorProps) => {
   switch (type) {
