@@ -1,10 +1,13 @@
 import React from 'react';
 import { CloseMessage } from '../../icons';
+import {getLocalStreamException} from '../../utils'
 
 export interface MessageModalProps {
   title: string;
   message: string;
   secondary?: string;
+  show: boolean;
+  onClose?:() => void;
   //   classes?: {
   //     root?: string;
   //     leftRoot?: string;
@@ -17,6 +20,8 @@ export const MessageModal = ({
   title,
   message,
   secondary,
+  show = false,
+  onClose,
 }: MessageModalProps) => {
   return (
     <div
@@ -25,9 +30,9 @@ export const MessageModal = ({
       role="dialog"
       aria-modal="true"
     >
-      <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+    {show && (<div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
         <div
-          className="fixed inset-0 backdrop-opacity-100 transition-opacity"
+          className="fixed pin z-50 inset-0 transition-opacity"
           aria-hidden="true"
         ></div>
 
@@ -54,6 +59,11 @@ export const MessageModal = ({
                 <button
                   type="button"
                   className="w-full justify-end shadow-sm text-base font-medium rounded-xl focus:outline-none"
+                  onClick={() => {
+                    if (onClose) {
+                      onClose();
+                    }
+                  }}
                 >
                   {CloseMessage}
                 </button>
@@ -68,7 +78,8 @@ export const MessageModal = ({
             {/* </div> */}
           </div>
         </div>
-      </div>
+        
+      </div>)}
     </div>
   );
 };

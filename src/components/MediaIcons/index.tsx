@@ -173,7 +173,7 @@ export const AudioPreviewButton = ({
 }: {
   isAudioMuted: boolean;
   buttonDisplay: string;
-  clickHandler: React.MouseEventHandler;
+  clickHandler: ()=>void;
 }) => {
   return (
     <button

@@ -16,7 +16,7 @@ export interface VideoTileControlsProps {
     controls?: string;
     rightcontrols?: string;
   };
-  audioButtonOnClick: React.MouseEventHandler;
+  audioButtonOnClick: ()=>void;
   videoButtonOnClick: React.MouseEventHandler;
   settingsButtonOnClick: React.MouseEventHandler;
   buttonDisplay?: ButtonDisplayType;
@@ -34,7 +34,7 @@ export const VideoTileControls = ({
     controls:
       'flex flex-grow md:self-center md:justify-center inline-block hover-hide',
     rightcontrols:
-      'flex md:flex-none md:right-0 md:absolute md:self-center inline-block mx-1 hover-hide absolute',
+      'flex md:flex-none md:right-0 md:absolute md:self-center inline-block mx-1 absolute  hover-hide',
   },
 }: VideoTileControlsProps) => {
   return (

@@ -28,4 +28,7 @@ Default.args = {
   videoButtonOnClick: () => {
     alert('video toggled');
   },
+  messageOnClose: ()=> {
+    alert('Closing');
+  }
 };

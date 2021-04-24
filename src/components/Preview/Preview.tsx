@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { closeMediaStream } from '../../utils';
+import { closeMediaStream, getLocalStreamException } from '../../utils';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileControls } from './Controls';
+import {MessageModal} from '../MessageModal'
 
 export interface PreviewProps {
   name: string;
@@ -9,7 +10,8 @@ export interface PreviewProps {
   isVideoMuted: boolean;
   joinOnClick: () => void;
   goBackOnClick: () => void;
-  audioButtonOnClick: React.MouseEventHandler;
+  messageOnClose: ()=> void;
+  audioButtonOnClick: ()=>void;
   videoButtonOnClick: React.MouseEventHandler;
   settingsButtonOnClick: React.MouseEventHandler;
   videoTileProps: Partial<VideoTileProps>;
@@ -19,6 +21,7 @@ export const Preview = ({
   name,
   joinOnClick,
   goBackOnClick,
+  messageOnClose,
   audioButtonOnClick,
   videoButtonOnClick,
   settingsButtonOnClick,
@@ -27,17 +30,69 @@ export const Preview = ({
   videoTileProps,
 }: PreviewProps) => {
   const [mediaStream, setMediaStream] = useState(new MediaStream());
-
+  const [errorState, setErrorState] = useState(false);
+  const [title, setErrorTitle] = useState(String);
+  const [message, setErrorMessage] = useState(String);
+  const [videoInput, setVideoInput] = useState(Array);
+  const [audioInput, setAudioInput] = useState(Array);
+  const [audioOutput, setAudioutput] = useState(Array);
+  // let videoDevices = [];
+  // let audioDevices = [];
+  // let audioOutputDevices = [];
   useEffect(() => {
     window.navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
-      .then(stream => setMediaStream(stream));
+      .then(stream => setMediaStream(stream))
+      .catch(error =>{
+          if (error.name==="NotAllowedError")
+          {
+            setErrorState(true);
+            var errorMessage = getLocalStreamException(error);
+            setErrorTitle(errorMessage["title"]);
+            setErrorMessage(errorMessage["message"]);
+          }
+          else
+          {
+            
+            navigator.mediaDevices
+            .enumerateDevices()
+            .then(devices => {
+              for (let device of devices) {
+                if (device.kind === 'videoinput') {
+                  // videoDevices.push(device);
+                  setVideoInput(videoDevices => [...videoDevices, device]);
+                } else if (device.kind === 'audioinput') {
+                  // audioDevices.push(device);
+                  setAudioInput([...audioInput,device]);
+                } else if (device.kind === 'audiooutput') {
+                  // audioOutputDevices.push(device);
+                  setAudioutput([...audioOutput,device]);
+                }
+              }
+              if (videoInput.length===0 || audioInput.length===0){
+                error.name = "NotFoundError";
+                var errorMessage = getLocalStreamException(error);
+                setErrorTitle(errorMessage["title"]);
+                setErrorMessage(errorMessage["message"]);
+                setErrorState(true);
+              }
+              else
+              {
+                var errorMessage = getLocalStreamException(error);
+                setErrorTitle(errorMessage["title"]);
+                setErrorMessage(errorMessage["message"]);
+                setErrorState(true);
+              }
+            })
+          }
+      });
     return () => closeMediaStream(mediaStream);
   }, []);
 
   return (
-    <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-auto rounded-2xl">
+    <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl">
       <div className="w-22.5 h-22.5 mt-1.875 mb-7">
+        <MessageModal show={errorState} title={title} message={message} onClose={messageOnClose}/>
         <VideoTile
           {...videoTileProps}
           videoTrack={mediaStream.getVideoTracks()[0]}
@@ -84,6 +139,7 @@ export const Preview = ({
       >
         Go back
       </div>
+      
     </div>
   );
 };
