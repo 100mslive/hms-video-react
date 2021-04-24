@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { closeMediaStream } from '../../utils';
 import { VideoTile, VideoTileProps } from '../VideoTile';
-import {VideoTileControls} from './Controls'
+import { VideoTileControls } from './Controls';
 
 export interface PreviewProps extends VideoTileProps {
-  name: string,
+  name: string;
   joinOnClick: () => void;
   goBackOnClick: () => void;
-  audioButtonOnClick: () => void;
-  videoButtonOnClick: () => void;
+  audioButtonOnClick: React.MouseEventHandler;
+  videoButtonOnClick: React.MouseEventHandler;
+  settingsButtonOnClick: React.MouseEventHandler;
   videoTileProps: VideoTileProps;
 }
 
@@ -18,15 +19,17 @@ export const Preview = ({
   goBackOnClick,
   audioButtonOnClick,
   videoButtonOnClick,
+  settingsButtonOnClick,
   isAudioMuted = false,
   isVideoMuted = false,
 }: PreviewProps) => {
-
   const [mediaStream, setMediaStream] = useState(new MediaStream());
 
   useEffect(() => {
-    window.navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(stream => setMediaStream(stream));
-    return (() => closeMediaStream(mediaStream));
+    window.navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true })
+      .then(stream => setMediaStream(stream));
+    return () => closeMediaStream(mediaStream);
   }, []);
 
   return (
@@ -37,17 +40,25 @@ export const Preview = ({
           audioTrack={mediaStream.getAudioTracks()[0]}
           peer={{
             id: name,
-            displayName: name
+            displayName: name,
           }}
           objectFit="cover"
           isLocal={true}
           aspectRatio={{
             width: 1,
-            height: 1
+            height: 1,
           }}
-          controlsComponent = {<VideoTileControls audioButtonOnClick={audioButtonOnClick} videoButtonOnClick={videoButtonOnClick} isAudioMuted={isAudioMuted} isVideoMuted={isVideoMuted} />}
-        //@ts-ignore
-        // classes={{root: "'w-full h-full flex relative items-center justify-center rounded-lg"}}
+          controlsComponent={
+            <VideoTileControls
+              settingsButtonOnClick={settingsButtonOnClick}
+              audioButtonOnClick={audioButtonOnClick}
+              videoButtonOnClick={videoButtonOnClick}
+              isAudioMuted={isAudioMuted}
+              isVideoMuted={isVideoMuted}
+            />
+          }
+          //@ts-ignore
+          // classes={{root: "'w-full h-full flex relative items-center justify-center rounded-lg"}}
         />
       </div>
       <div className="text-2xl font-medium mb-12">Hello, {name}</div>
@@ -59,10 +70,13 @@ export const Preview = ({
       </div>
       <div
         className="text-blue-main text-lg font-semibold cursor-pointer"
-        onClick={goBackOnClick}
+        onClick={() => {
+          goBackOnClick();
+          closeMediaStream(mediaStream);
+        }}
       >
         Go back
       </div>
     </div>
-  )
+  );
 };

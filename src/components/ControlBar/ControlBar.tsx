@@ -1,17 +1,22 @@
 import React from 'react';
 import { ButtonDisplayType } from '../../types';
+import Chat from '../Chat';
+import { Message } from '../ChatBox/ChatBox';
 
 import {
   AudioButton,
   VideoButton,
   LeaveButton,
   ShareScreenButton,
+  ChatButton,
 } from '../MediaIcons';
 
 export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
+  isChatOpen?: boolean;
   buttonDisplay: ButtonDisplayType;
+
   classes?: {
     root?: string;
     leftRoot?: string;
@@ -21,7 +26,9 @@ export interface ControlBarProps {
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
+  chatButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
+
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
   rightComponents: Array<React.ReactNode>;
@@ -30,10 +37,12 @@ export interface ControlBarProps {
 export const ControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
+  isChatOpen = false,
   buttonDisplay = 'square',
   audioButtonOnClick,
   videoButtonOnClick,
   leaveButtonOnClick,
+  chatButtonOnClick,
   screenshareButtonOnClick,
   classes = {
     root:
@@ -49,24 +58,29 @@ export const ControlBar = ({
     <ShareScreenButton
       buttonDisplay={buttonDisplay}
       clickHandler={screenshareButtonOnClick}
+      key={0}
     />,
+    <ChatButton clickHandler={chatButtonOnClick} isChatOpen={isChatOpen} />,
   ],
   centerComponents = [
     <VideoButton
       isVideoMuted={isVideoMuted}
       buttonDisplay={buttonDisplay}
       clickHandler={videoButtonOnClick}
+      key={0}
     />,
     <AudioButton
       isAudioMuted={isAudioMuted}
       buttonDisplay={buttonDisplay}
       clickHandler={audioButtonOnClick}
+      key={1}
     />,
   ],
   rightComponents = [
     <LeaveButton
       buttonDisplay={buttonDisplay}
       clickHandler={leaveButtonOnClick}
+      key={2}
     />,
   ],
 }: ControlBarProps) => {

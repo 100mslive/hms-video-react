@@ -1,7 +1,11 @@
 import React from 'react';
-import { AudioPreviewButton, VideoPreviewButton , SettingsButton} from '../../MediaIcons';
+import {
+  AudioPreviewButton,
+  VideoPreviewButton,
+  SettingsButton,
+} from '../../MediaIcons';
 import '../index.css';
-import {ButtonDisplayType} from '../../../types'
+import { ButtonDisplayType } from '../../../types';
 
 export interface VideoTileControlsProps {
   isAudioMuted?: boolean;
@@ -12,10 +16,10 @@ export interface VideoTileControlsProps {
     controls?: string;
     rightcontrols?: string;
   };
-  audioButtonOnClick?: () => void;
-  videoButtonOnClick?: () => void;
-  settingsButtonOnClick?: () => void;
-  buttonDisplay?: ButtonDisplayType
+  audioButtonOnClick: React.MouseEventHandler;
+  videoButtonOnClick: React.MouseEventHandler;
+  settingsButtonOnClick: React.MouseEventHandler;
+  buttonDisplay?: ButtonDisplayType;
 }
 
 export const VideoTileControls = ({
@@ -27,27 +31,32 @@ export const VideoTileControls = ({
   settingsButtonOnClick,
   classes = {
     root: 'flex flex-grow absolute bottom-0 w-full p-3 bottom-background',
-    controls: 'flex flex-grow md:self-center md:justify-center inline-block hover-hide',
-    rightcontrols: 'flex md:flex-none md:right-0 md:absolute md:self-center inline-block mx-1 hover-hide absolute',
+    controls:
+      'flex flex-grow md:self-center md:justify-center inline-block hover-hide',
+    rightcontrols:
+      'flex md:flex-none md:right-0 md:absolute md:self-center inline-block mx-1 hover-hide absolute',
   },
 }: VideoTileControlsProps) => {
   return (
-    <div
-      className={`${classes.root}`}
-    >
-        <div
-          className={`${classes.controls}`}
-        >
-          <AudioPreviewButton clickHandler={audioButtonOnClick} buttonDisplay={buttonDisplay} isAudioMuted={isAudioMuted} />
-          <VideoPreviewButton clickHandler={videoButtonOnClick} buttonDisplay={buttonDisplay} isVideoMuted={isVideoMuted} />
-          </div>
-          <div
-          className={`${classes.rightcontrols}`}
-        >
-          <SettingsButton clickHandler={settingsButtonOnClick} buttonDisplay={buttonDisplay}/>
-        </div>
-        </div>
-      
-
+    <div className={`${classes.root}`}>
+      <div className={`${classes.controls}`}>
+        <AudioPreviewButton
+          clickHandler={audioButtonOnClick}
+          buttonDisplay={buttonDisplay}
+          isAudioMuted={isAudioMuted}
+        />
+        <VideoPreviewButton
+          clickHandler={videoButtonOnClick}
+          buttonDisplay={buttonDisplay}
+          isVideoMuted={isVideoMuted}
+        />
+      </div>
+      <div className={`${classes.rightcontrols}`}>
+        <SettingsButton
+          clickHandler={settingsButtonOnClick}
+          buttonDisplay={buttonDisplay}
+        />
+      </div>
+    </div>
   );
 };

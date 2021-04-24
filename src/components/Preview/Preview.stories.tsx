@@ -19,7 +19,7 @@ const Template: Story<PreviewProps> = args => {
 
 export const Default = Template.bind({});
 Default.args = {
-  name: "Aditya Gupta",
+  name: 'Aditya Gupta',
   joinOnClick: () => alert('Join Clicked'),
   goBackOnClick: () => alert('Go Back Clicked'),
   audioButtonOnClick: () => {

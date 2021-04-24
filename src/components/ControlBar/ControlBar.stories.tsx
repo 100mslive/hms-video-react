@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ControlBarProps, ControlBar } from './index';
 
@@ -11,7 +11,7 @@ export default meta;
 
 const Template: Story<ControlBarProps> = args => {
   return (
-    <div className="bg-black">
+    <div className="bg-black ">
       <ControlBar {...args} />
     </div>
   );
@@ -30,5 +30,8 @@ Default.args = {
   },
   screenshareButtonOnClick: () => {
     alert('Share Screen room');
+  },
+  chatButtonOnClick: () => {
+    alert('chat button clicked');
   },
 };

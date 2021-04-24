@@ -35,7 +35,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
         } self-center px-3`}
         onClick={handleClick}
       >
-        <div className="flex flex-grow inline-block justify-center px-3 tracking-wide self-center">
+        <div className="flex flex-grow justify-center px-3 tracking-wide self-center">
           {participantList.length} in room
           <span className="pl-2 self-center">
             {open ? UpCarret : DownCarret}

@@ -14,6 +14,9 @@ import {
   MutePreview,
   VideoPreview,
   Settings,
+  Close,
+  ChatIconBlack,
+  ChatIconWhite,
 } from '../../icons';
 
 export const LogoButton = () => {
@@ -170,7 +173,7 @@ export const AudioPreviewButton = ({
 }: {
   isAudioMuted: boolean;
   buttonDisplay: string;
-  clickHandler: () => void;
+  clickHandler: React.MouseEventHandler;
 }) => {
   return (
     <button
@@ -195,7 +198,7 @@ export const VideoPreviewButton = ({
 }: {
   isVideoMuted: boolean;
   buttonDisplay: string;
-  clickHandler: () => void;
+  clickHandler: React.MouseEventHandler;
 }) => {
   return (
     <button
@@ -217,7 +220,7 @@ export const SettingsButton = ({
   buttonDisplay = 'square',
   clickHandler,
 }: {
-  clickHandler: () => void;
+  clickHandler: React.MouseEventHandler;
   buttonDisplay: string;
 }) => {
   return (
@@ -228,6 +231,28 @@ export const SettingsButton = ({
       onClick={clickHandler}
     >
       {Settings}
+    </button>
+  );
+};
+
+export const CloseButton = () => {
+  return <button>{Close}</button>;
+};
+
+export const ChatButton = ({
+  clickHandler,
+  isChatOpen,
+}: {
+  clickHandler: React.MouseEventHandler;
+  isChatOpen: boolean;
+}) => {
+  return (
+    <button
+      onClick={clickHandler}
+      className={`focus:outline-none rounded-lg ${isChatOpen &&
+        'bg-white'} p-3`}
+    >
+      {isChatOpen ? ChatIconBlack : ChatIconWhite}
     </button>
   );
 };
