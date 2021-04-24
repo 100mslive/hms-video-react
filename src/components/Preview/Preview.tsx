@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { closeMediaStream } from '../../utils';
 import { VideoTile, VideoTileProps } from '../VideoTile';
+import { VideoTileControls } from './Controls';
 
 export interface PreviewProps {
   name: string;
+  isAudioMuted: boolean;
+  isVideoMuted: boolean;
   joinOnClick: () => void;
   goBackOnClick: () => void;
+  audioButtonOnClick: React.MouseEventHandler;
+  videoButtonOnClick: React.MouseEventHandler;
+  settingsButtonOnClick: React.MouseEventHandler;
   videoTileProps: Partial<VideoTileProps>;
 }
 
@@ -13,6 +19,11 @@ export const Preview = ({
   name,
   joinOnClick,
   goBackOnClick,
+  audioButtonOnClick,
+  videoButtonOnClick,
+  settingsButtonOnClick,
+  isAudioMuted = false,
+  isVideoMuted = false,
   videoTileProps,
 }: PreviewProps) => {
   const [mediaStream, setMediaStream] = useState(new MediaStream());
@@ -23,10 +34,6 @@ export const Preview = ({
       .then(stream => setMediaStream(stream));
     return () => closeMediaStream(mediaStream);
   }, []);
-
-  window.onunload = () => {
-    closeMediaStream(mediaStream);
-  };
 
   return (
     <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-auto rounded-2xl">
@@ -45,9 +52,20 @@ export const Preview = ({
             width: 1,
             height: 1,
           }}
+          controlsComponent={
+            <VideoTileControls
+              settingsButtonOnClick={settingsButtonOnClick}
+              audioButtonOnClick={audioButtonOnClick}
+              videoButtonOnClick={videoButtonOnClick}
+              isAudioMuted={isAudioMuted}
+              isVideoMuted={isVideoMuted}
+            />
+          }
+          //@ts-ignore
+          // classes={{root: "'w-full h-full flex relative items-center justify-center rounded-lg"}}
         />
       </div>
-      <div className="text-2xl font-normal mb-12">Hello, {name}</div>
+      <div className="text-2xl font-medium mb-12">Hello, {name}</div>
       <div
         className="flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 bg-blue-main rounded-xl text-lg font-semibold cursor-pointer"
         onClick={() => {
