@@ -30,7 +30,7 @@ export const VideoTileControls = ({
   videoButtonOnClick,
   settingsButtonOnClick,
   classes = {
-    root: 'flex flex-grow absolute bottom-0 w-full p-3 bottom-background',
+    root: 'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-50',
     controls:
       'flex flex-grow md:self-center md:justify-center inline-block hover-hide',
     rightcontrols:

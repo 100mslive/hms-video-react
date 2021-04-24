@@ -1,5 +1,7 @@
 import React from 'react';
 import { AudioLevelIndicatorProps } from '.';
+//@ts-ignore
+import { apply, tw } from 'twind';
 export type AudioLevelProps = Omit<AudioLevelIndicatorProps, 'type'>;
 
 const AudioLevelBorder = ({
@@ -7,13 +9,13 @@ const AudioLevelBorder = ({
   color = '#0F6CFF',
   displayShape,
   classes = {
-    root: 'w-full h-full absolute left-0 top-0 rounded-lg',
-    videoCircle: 'rounded-full',
+    root: apply`w-full h-full absolute left-0 top-0 rounded-lg`,
+    videoCircle: apply`rounded-full`,
   },
 }: AudioLevelProps) => {
   return (
     <div
-      className={`${classes.root} ${
+      className={tw`${classes.root} ${
         displayShape === 'circle' ? classes.videoCircle : ''
       }
         `}

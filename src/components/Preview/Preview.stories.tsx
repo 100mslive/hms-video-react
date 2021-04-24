@@ -22,10 +22,5 @@ Default.args = {
   name: 'Aditya Gupta',
   joinOnClick: () => alert('Join Clicked'),
   goBackOnClick: () => alert('Go Back Clicked'),
-  audioButtonOnClick: () => {
-    alert('audio toggled');
-  },
-  videoButtonOnClick: () => {
-    alert('video toggled');
-  },
+  toggleMute: () => alert('Mediastate changed'),
 };

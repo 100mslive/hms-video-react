@@ -18,31 +18,42 @@ export const Preview = ({
   toggleMute,
   videoTileProps,
 }: PreviewProps) => {
-
   const [mediaStream, setMediaStream] = useState(new MediaStream());
   const [audioMuted, setAudioMuted] = useState(false);
   const [videoMuted, setVideoMuted] = useState(false);
 
   useEffect(() => {
-      getUserMedia()
-      .then(stream => setMediaStream(stream));
+    getUserMedia().then(stream => setMediaStream(stream));
     return () => closeMediaStream(mediaStream);
   }, []);
 
   useEffect(() => {
-    mediaStream.getAudioTracks()[0].enabled = !audioMuted;
-  }, [audioMuted])
+    mediaStream &&
+      mediaStream.getAudioTracks().length > 0 &&
+      toggleEnabled(mediaStream.getAudioTracks()[0], !audioMuted);
+  }, [audioMuted]);
 
   useEffect(() => {
-    mediaStream.getVideoTracks()[0].enabled = !videoMuted;
-  }, [videoMuted])
+    mediaStream &&
+      mediaStream.getVideoTracks().length > 0 &&
+      toggleEnabled(mediaStream.getVideoTracks()[0], !videoMuted);
+  }, [videoMuted]);
 
   const toggleMediaState = (type: string) => {
-    type === 'audio' && setAudioMuted(prevMuted => !prevMuted) && toggleMute('audio');
-    type === 'video' && setVideoMuted(prevMuted => !prevMuted) && toggleMute('video');
+    type === 'audio' &&
+      setAudioMuted(prevMuted => !prevMuted) &&
+      toggleMute('audio');
+    type === 'video' &&
+      setVideoMuted(prevMuted => !prevMuted) &&
+      toggleMute('video');
   };
 
-  const getUserMedia = () => window.navigator.mediaDevices.getUserMedia({ audio: true, video: true });
+  const toggleEnabled = (track: MediaStreamTrack, enabled: boolean) => {
+    track.enabled = enabled;
+  };
+
+  const getUserMedia = () =>
+    window.navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 
   return (
     <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-auto rounded-2xl">
@@ -63,7 +74,9 @@ export const Preview = ({
           }}
           controlsComponent={
             <VideoTileControls
-              settingsButtonOnClick={() => console.log("Settings Component yet to be made")}
+              settingsButtonOnClick={() =>
+                console.log('Settings Component yet to be made')
+              }
               audioButtonOnClick={() => toggleMediaState('audio')}
               videoButtonOnClick={() => toggleMediaState('video')}
               isAudioMuted={audioMuted}

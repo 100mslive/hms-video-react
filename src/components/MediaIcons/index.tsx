@@ -111,7 +111,8 @@ export const LeaveButton = ({
       onClick={clickHandler}
     >
       <div className="inline-block">{LeaveRoom}</div>
-      <div className="md:pl-2 hidden md:inline-block">Leave Room</div>
+      {/* TODO figure out why xs:hidden is needed */}
+      <div className="md:pl-2 xs:hidden md:inline-block">Leave Room</div>
     </button>
   );
 };
@@ -177,7 +178,7 @@ export const AudioPreviewButton = ({
 }) => {
   return (
     <button
-      className={`cursor-pointer inline-block w-9 h-9 mx-1.5 rounded-${
+      className={`flex w-9 h-9 mx-1.5 justify-center items-center rounded-${
         buttonDisplay === 'square' ? 'xl' : 'full'
       } focus:outline-none ${
         isAudioMuted
@@ -202,7 +203,7 @@ export const VideoPreviewButton = ({
 }) => {
   return (
     <button
-      className={`cursor-pointer inline-block w-9 h-9 mr-1.5 rounded-${
+      className={`flex w-9 h-9 mx-1.5 justify-center items-center rounded-${
         buttonDisplay === 'square' ? 'xl' : 'full'
       } focus:outline-none ${
         isVideoMuted
@@ -225,7 +226,7 @@ export const SettingsButton = ({
 }) => {
   return (
     <button
-      className={`cursor-pointer inline-block w-9 h-9 mx-1.5 rounded-${
+      className={`flex w-9 h-9 justify-center items-center rounded-${
         buttonDisplay === 'square' ? 'xl' : 'full'
       } focus:outline-none hover:bg-transparent-light`}
       onClick={clickHandler}
