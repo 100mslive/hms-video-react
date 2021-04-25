@@ -5,6 +5,7 @@ import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSRoomProps from './interfaces/HMSRoomProps';
 import createListener from './helpers/createListener';
 import { Silence } from '../components/Silence';
+import { useEffect } from 'react';
 
 const sdk = new HMSSdk();
 
@@ -21,43 +22,45 @@ export const HMSRoomProvider: React.FC = props => {
 
   const [videoMuted, setVideoMuted] = useState(false);
 
+  useEffect(() => {
+    if (audioMuted) {
+      toggleMuteInPeer('audio');
+    }
+    if (videoMuted) {
+      toggleMuteInPeer('video');
+    }
+  }, [localPeer]);
+
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
-    sdk.join(
-      config,
-      createListener(
-        listener,
-        audioMuted,
-        videoMuted,
-        setPeers,
-        setLocalPeer,
-        toggleMuteInPeer,
-        sdk,
-      ),
-    );
+    sdk.join(config, createListener(listener, setPeers, setLocalPeer, sdk));
   };
 
   const leave = () => {
     //TODO this is not strictly necessary since SDK should clean up, but foing it for safety
     setPeers([]);
+    setAudioMuted(false);
+    setVideoMuted(false);
     sdk.leave();
   };
 
   const toggleMute = (type: 'audio' | 'video') => {
-    type === 'audio' && setAudioMuted(prevMuted => !prevMuted);
-    type === 'video' && setVideoMuted(prevMuted => !prevMuted);
+    if (type === 'audio') {
+      setAudioMuted(prevMuted => !prevMuted);
+    } else if (type === 'video') {
+      setVideoMuted(prevMuted => !prevMuted);
+    }
 
     toggleMuteInPeer(type);
   };
 
   const toggleMuteInPeer = async (type: 'audio' | 'video') => {
-    localPeer &&
-      localPeer.audioTrack &&
-      type === 'audio' &&
-      (await localPeer.audioTrack.setEnabled(!localPeer.audioTrack.enabled));
-    localPeer &&
-      localPeer.videoTrack &&
-      type === 'video' &&
-      (await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled));
+    if (localPeer && localPeer.audioTrack && type === 'audio') {
+      await localPeer.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
+    }
+    if (localPeer && localPeer.videoTrack && type === 'video') {
+      await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
+    }
+
     setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };

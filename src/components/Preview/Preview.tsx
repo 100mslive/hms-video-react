@@ -9,7 +9,7 @@ export interface PreviewProps {
   joinOnClick: () => void;
   goBackOnClick: () => void;
   messageOnClose: () => void;
-  toggleMute: (type: string) => void;
+  toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
 }
 
@@ -32,13 +32,53 @@ export const Preview = ({
   const [videoMuted, setVideoMuted] = useState(false);
 
   useEffect(() => {
+    if (name) {
+      startMediaStream();
+    }
+    return () => closeMediaStream(mediaStream);
+  }, []);
+
+  useEffect(() => {
+    mediaStream &&
+      mediaStream.getAudioTracks().length > 0 &&
+      toggleEnabled(mediaStream.getAudioTracks()[0], !audioMuted);
+  }, [audioMuted]);
+
+  useEffect(() => {
+    if (videoMuted) {
+      console.log('VIDEO IS NOW MUTED');
+      closeMediaStream(mediaStream);
+    } else {
+      console.log('VIDEO IS NOW UNMUTED');
+      startMediaStream();
+      mediaStream &&
+        mediaStream.getVideoTracks().length > 0 &&
+        toggleEnabled(mediaStream.getVideoTracks()[0], !videoMuted);
+    }
+  }, [videoMuted]);
+
+  const toggleMediaState = (type: string) => {
+    if (type === 'audio') {
+      setAudioMuted(prevMuted => !prevMuted);
+      toggleMute('audio');
+    } else if (type === 'video') {
+      setVideoMuted(prevMuted => !prevMuted);
+      toggleMute('video');
+    }
+  };
+
+  const toggleEnabled = (track: MediaStreamTrack, enabled: boolean) => {
+    track.enabled = enabled;
+  };
+
+  const startMediaStream = () => {
     window.navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then(stream => setMediaStream(stream))
       .catch(error => {
         if (error.name === 'NotAllowedError') {
           setErrorState(true);
-          var errorMessage = getLocalStreamException(error);
+          const errorMessage = getLocalStreamException(error);
           setErrorTitle(errorMessage['title']);
           setErrorMessage(errorMessage['message']);
         } else {
@@ -54,12 +94,12 @@ export const Preview = ({
             }
             if (videoInput.length === 0 || audioInput.length === 0) {
               error.name = 'NotFoundError';
-              var errorMessage = getLocalStreamException(error);
+              const errorMessage = getLocalStreamException(error);
               setErrorTitle(errorMessage['title']);
               setErrorMessage(errorMessage['message']);
               setErrorState(true);
             } else {
-              var errorMessage = getLocalStreamException(error);
+              const errorMessage = getLocalStreamException(error);
               setErrorTitle(errorMessage['title']);
               setErrorMessage(errorMessage['message']);
               setErrorState(true);
@@ -67,35 +107,7 @@ export const Preview = ({
           });
         }
       });
-  }, []);
-
-  useEffect(() => {
-    mediaStream &&
-      mediaStream.getAudioTracks().length > 0 &&
-      toggleEnabled(mediaStream.getAudioTracks()[0], !audioMuted);
-  }, [audioMuted]);
-
-  useEffect(() => {
-    mediaStream &&
-      mediaStream.getVideoTracks().length > 0 &&
-      toggleEnabled(mediaStream.getVideoTracks()[0], !videoMuted);
-  }, [videoMuted]);
-
-  const toggleMediaState = (type: string) => {
-    type === 'audio' &&
-      setAudioMuted(prevMuted => !prevMuted) &&
-      toggleMute('audio');
-    type === 'video' &&
-      setVideoMuted(prevMuted => !prevMuted) &&
-      toggleMute('video');
   };
-
-  const toggleEnabled = (track: MediaStreamTrack, enabled: boolean) => {
-    track.enabled = enabled;
-  };
-
-  // const getUserMedia = () =>
-  //   window.navigator.mediaDevices.getUserMedia({ audio: true, video: true });
 
   return (
     <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl">
@@ -152,9 +164,6 @@ export const Preview = ({
       >
         Go back
       </div>
-      {/* <div className="flex align-middle">
-    </div> */}
     </div>
-    // </div>
   );
 };

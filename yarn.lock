@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@100mslive/100ms-web-sdk@^0.0.9-3196":
+"@100mslive/100ms-web-sdk@0.0.9":
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.9.tgz#d9141253f7de03890f20ec8df74eafb5e5cc4ba5"
   integrity sha512-KDg9tHX5lTi8saUpNZps/o2yjAUFT+NTbJDK7yG6PXivKL9pKTJB8adlEOhgtDMe4WH/ajJxEhx4870BHd3SRw==

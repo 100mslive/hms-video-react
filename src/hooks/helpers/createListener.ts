@@ -11,11 +11,8 @@ import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 
 const createListener = (
   incomingListener: HMSUpdateListener,
-  audioMuted: boolean,
-  videoMuted: boolean,
   setPeers: React.Dispatch<React.SetStateAction<HMSPeer[]>>,
   setLocalPeer: React.Dispatch<React.SetStateAction<HMSPeer>>,
-  toggleMuteInPeer: (type: 'audio' | 'video') => void,
   sdk: HMSSdk,
 ) => {
   const myListener = {
@@ -27,8 +24,7 @@ const createListener = (
 
       setPeers(sdk.getPeers());
       setLocalPeer(sdk.getLocalPeer());
-      audioMuted && toggleMuteInPeer('audio');
-      videoMuted && toggleMuteInPeer('video');
+
       incomingListener.onJoin(room);
     },
 
