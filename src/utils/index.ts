@@ -1,4 +1,4 @@
-import { TW, css} from "twind/css";
+import { TW, css } from 'twind/css';
 
 const getVideoTileLabel = (
   peerName: string,
@@ -249,32 +249,44 @@ const getTileContainerDimensions = ({
   return { width, height };
 };
 
-interface GenerateClassNameProps{
-  seed: string,
-  componentName: string,
+interface GenerateClassNameProps {
+  seed: string;
+  componentName: string;
 }
 
-const packageIdentifier = "hmsui";
+const packageIdentifier = 'hmsui';
 
-const generateClassName = ({seed, componentName}:GenerateClassNameProps) => {
-  return ([packageIdentifier, componentName, seed].join('-'));
+const generateClassName = ({ seed, componentName }: GenerateClassNameProps) => {
+  return [packageIdentifier, componentName, seed].join('-');
+};
+
+interface AddGlobalCssProps<Type> {
+  seedStyleMap: Type;
+  componentName: string;
+  tw: TW;
 }
 
-interface AddGlobalCssProps<Type>{
-  seedStyleMap:Type;
-  componentName:string;
-  tw:TW,
-}
-
-function addGlobalCss<Type>({seedStyleMap, componentName, tw}:AddGlobalCssProps<Type>) {
-  let calculatedSeedStyleMap:Type | {} = {};
-  for (const seed in seedStyleMap as Type){
+function addGlobalCss<Type>({
+  seedStyleMap,
+  componentName,
+  tw,
+}: AddGlobalCssProps<Type>) {
+  let calculatedSeedStyleMap: Type | {} = {};
+  for (const seed in seedStyleMap as Type) {
     //TODO define a generic Map TS type to define classes to remove all type related ignores
     //@ts-ignore
-    const styles = <string>seedStyleMap[seed];
-    const className = generateClassName({seed, componentName});
+    const styles = seedStyleMap[seed] as string;
+    const className = generateClassName({ seed, componentName });
     //TODO add this to a private stylesheet and add a check to not write this if it already exists
-    tw(css`@global {.${className} {@apply ${styles}}}`);
+    tw(
+      css`
+        @global {
+          .${className} {
+            @apply ${styles};
+          }
+        }
+      `,
+    );
     //@ts-ignore
     calculatedSeedStyleMap[seed] = className;
   }

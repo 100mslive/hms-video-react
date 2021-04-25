@@ -74,7 +74,7 @@ export const HMSRoomProvider: React.FC = props => {
         toggleScreenShare: toggleScreenShare,
       }}
     >
-      <Silence/>
+      <Silence />
       {props.children}
     </HMSContext.Provider>
   );

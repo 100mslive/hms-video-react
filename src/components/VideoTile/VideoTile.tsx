@@ -4,10 +4,10 @@ import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import { addGlobalCss, getTileContainerDimensions, getVideoTileLabel } from '../../utils';
+import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
 import { useResizeDetector } from 'react-resize-detector';
-import {withClasses, WithClassesProps, BaseClassesProps} from '../../utils/styles';
-import {create} from 'twind';
+import { withClasses, WithClassesProps } from '../../utils/styles';
+import { create } from 'twind';
 export interface VideoTileProps extends VideoProps {
   /**
    * HMS Peer object for which the tile is shown.
@@ -70,12 +70,13 @@ export interface VideoTileClasses extends VideoClasses {
   videoContainerCircle?: string;
 }
 
-const defaultSeedStyleMap:VideoTileClasses = {
+const defaultSeedStyleMap: VideoTileClasses = {
   root: 'w-full h-full flex relative items-center justify-center rounded-lg',
-  videoContainer:'relative rounded-lg shadow-lg z-10',
-  avatarContainer:'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
-  videoContainerCircle:'rounded-full',
-}
+  videoContainer: 'relative rounded-lg shadow-lg z-10',
+  avatarContainer:
+    'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
+  videoContainerCircle: 'rounded-full',
+};
 
 const UnstyledVideoTile = ({
   videoTrack,
@@ -159,8 +160,8 @@ const UnstyledVideoTile = ({
     <div ref={containerRef} className={classes.root}>
       {containerHeight && containerWidth && (
         <div
-            //@ts-ignore
-            className={`${classes.videoContainer} ${
+          //@ts-ignore
+          className={`${classes.videoContainer} ${
             //@ts-ignore
             displayShape === 'circle' ? classes.videoContainerCircle : ''
           }`}
@@ -180,10 +181,10 @@ const UnstyledVideoTile = ({
           />
           {isVideoMuted && (
             <div
-            //@ts-ignore
-            className={`${classes.videoContainer} ${
-            //@ts-ignore
-            displayShape === 'circle' ? classes.avatarContainerCircle : ''
+              //@ts-ignore
+              className={`${classes.videoContainer} ${
+                //@ts-ignore
+                displayShape === 'circle' ? classes.avatarContainerCircle : ''
               }`}
             >
               <Avatar label={peer.displayName} />
@@ -212,4 +213,9 @@ const UnstyledVideoTile = ({
 };
 
 //@ts-expect-error
-export const VideoTile = withClasses<typeof UnstyledVideoTile, VideoTileProps>(UnstyledVideoTile, 'videoTile', defaultSeedStyleMap as Map<string, string>, create().tw);
+export const VideoTile = withClasses<typeof UnstyledVideoTile, VideoTileProps>(
+  UnstyledVideoTile,
+  'videoTile',
+  defaultSeedStyleMap as Map<string, string>,
+  create().tw,
+);

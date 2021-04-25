@@ -226,7 +226,7 @@ DefaultVideoTile.args = {
   audioLevel: 40,
   videoSource: 'camera',
   //@ts-expect-error
-  classes:{root:'hello'},
+  classes: { root: 'hello' },
 };
 
 GoogleMeetVideoTile.args = {

@@ -186,20 +186,22 @@ export const VideoList = ({
               style={{ height: h, width: w }}
               key={stream.peer.id}
               className={`${classes?.videoTileParent} flex justify-center`}
-            >{//@ts-ignore
-              <VideoTile
-                {...stream}
-                objectFit={objectFit}
-                displayShape={displayShape}
-                audioLevelDisplayType={audioLevelDisplayType}
-                showAudioLevel={showAudioLevel}
-                showAudioMuteStatus={showAudioMuteStatus}
-                aspectRatio={aspectRatio}
-                controlsComponent={
-                  videoTileControls && videoTileControls[index]
-                }
-              />
-            }
+            >
+              {
+                //@ts-ignore
+                <VideoTile
+                  {...stream}
+                  objectFit={objectFit}
+                  displayShape={displayShape}
+                  audioLevelDisplayType={audioLevelDisplayType}
+                  showAudioLevel={showAudioLevel}
+                  showAudioMuteStatus={showAudioMuteStatus}
+                  aspectRatio={aspectRatio}
+                  controlsComponent={
+                    videoTileControls && videoTileControls[index]
+                  }
+                />
+              }
             </div>
           )),
           videoCount,

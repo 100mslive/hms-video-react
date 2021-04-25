@@ -1,8 +1,8 @@
 import React from 'react';
 import { AudioLevelIndicatorProps } from '.';
-export type AudioLevelProps = Omit<AudioLevelIndicatorProps, 'type'>;
 //@ts-ignore
-import {apply, tw} from 'twind';
+import { apply, tw } from 'twind';
+export type AudioLevelProps = Omit<AudioLevelIndicatorProps, 'type'>;
 
 const AudioLevelBorder = ({
   level,

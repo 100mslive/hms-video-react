@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
 //@ts-ignore
-import {apply, CSSRules, tw, Directive, css} from 'twind/css';
+import { apply, CSSRules, tw, Directive, css } from 'twind/css';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -100,7 +100,7 @@ export const Video = ({
   classes = {
     video: apply`h-full w-full rounded-lg`,
     videoCircle: apply`rounded-full`,
-    videoLocal: apply`${css({transform:'scaleX(-1)'})}`,
+    videoLocal: apply`${css({ transform: 'scaleX(-1)' })}`,
     videoCover: apply`object-cover`,
     videoContain: apply`object-contain`,
     borderAudioRoot: apply`w-full h-full absolute left-0 top-0 rounded-lg`,
