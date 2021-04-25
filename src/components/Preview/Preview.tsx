@@ -32,46 +32,27 @@ export const Preview = ({
   const [videoMuted, setVideoMuted] = useState(false);
 
   useEffect(() => {
-    if (name) {
-      startMediaStream();
-    }
+    startMediaStream();
     return () => closeMediaStream(mediaStream);
   }, []);
-
-  useEffect(() => {
-    mediaStream &&
-      mediaStream.getAudioTracks().length > 0 &&
-      toggleEnabled(mediaStream.getAudioTracks()[0], !audioMuted);
-  }, [audioMuted]);
-
-  useEffect(() => {
-    if (videoMuted) {
-      console.log('VIDEO IS NOW MUTED');
-      closeMediaStream(mediaStream);
-    } else {
-      console.log('VIDEO IS NOW UNMUTED');
-      startMediaStream();
-      mediaStream &&
-        mediaStream.getVideoTracks().length > 0 &&
-        toggleEnabled(mediaStream.getVideoTracks()[0], !videoMuted);
-    }
-  }, [videoMuted]);
 
   const toggleMediaState = (type: string) => {
     if (type === 'audio') {
       setAudioMuted(prevMuted => !prevMuted);
       toggleMute('audio');
     } else if (type === 'video') {
+      if (!videoMuted) {
+        closeMediaStream(mediaStream);
+      } else {
+        startMediaStream();
+      }
       setVideoMuted(prevMuted => !prevMuted);
       toggleMute('video');
     }
   };
 
-  const toggleEnabled = (track: MediaStreamTrack, enabled: boolean) => {
-    track.enabled = enabled;
-  };
-
   const startMediaStream = () => {
+    console.log('MEDIA STREAM STARTED');
     window.navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then(stream => setMediaStream(stream))
@@ -108,6 +89,8 @@ export const Preview = ({
         }
       });
   };
+
+  window.onunload = () => closeMediaStream(mediaStream);
 
   return (
     <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl">

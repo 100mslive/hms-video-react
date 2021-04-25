@@ -19,6 +19,9 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
   if (!stream) {
     return;
   }
+
+  console.log('MEDIA STREAM IS ', stream);
+
   const tracks = stream.getTracks();
   tracks.forEach(track => track.stop());
 };
