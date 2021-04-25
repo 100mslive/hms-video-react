@@ -24,6 +24,7 @@ const createListener = (
 
       setPeers(sdk.getPeers());
       setLocalPeer(sdk.getLocalPeer());
+
       incomingListener.onJoin(room);
     },
 

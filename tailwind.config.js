@@ -50,6 +50,9 @@ module.exports = {
         xl: ['1.25rem', { lineHeight: '1.75rem' }],
         '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
       },
+      fontFamily: {
+        inter: ['Inter']
+      },
       maxHeight: {
         100: '37.5rem',
         116: '29rem',
@@ -59,7 +62,8 @@ module.exports = {
         8.75: '8.75rem',
         22.5: '22.5rem',
         37.5: '37.5rem',
-        42.5: '42.5rem'
+        42.5: '42.5rem',
+        100:  '32.25rem',
       },
       height: {
         3.25: '3.25rem',

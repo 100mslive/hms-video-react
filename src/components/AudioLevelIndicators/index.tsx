@@ -5,7 +5,7 @@ import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 import AudioLevelBorder from './Border';
 //@ts-ignore
-import {apply, CSSRules, Directive} from 'twind';
+import { apply, CSSRules, Directive } from 'twind';
 
 export interface AudioLevelIndicatorProps {
   type: AudioLevelDisplayType;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Silence} from './index';
+import { Silence } from './index';
 
 const meta: Meta = {
   title: 'Silence',

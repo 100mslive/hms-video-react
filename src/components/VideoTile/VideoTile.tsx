@@ -7,7 +7,7 @@ import { Avatar } from '../Avatar';
 import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
 import { useResizeDetector } from 'react-resize-detector';
 //@ts-ignore
-import {apply, CSSRules, tw, Directive, css} from 'twind/css';
+import { apply, CSSRules, tw, Directive, css } from 'twind/css';
 
 export interface VideoTileProps extends VideoProps {
   /**
@@ -97,13 +97,12 @@ export const VideoTile = ({
   classes = {
     root: apply`hmsui-videoTile-root w-full h-full flex relative items-center justify-center rounded-lg`,
     videoContainer: apply`relative rounded-lg shadow-lg z-10`,
-    avatarContainer:
-      apply`absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg`,
+    avatarContainer: apply`absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg`,
     avatarContainerCircle: apply`rounded-full`,
     videoContainerCircle: apply`rounded-full`,
     video: apply`absolute left-0 top-0 z-10 h-full w-full rounded-lg`,
     videoCircle: apply`rounded-full`,
-    videoLocal: apply`${css({transform:'scaleX(-1)'})}`,
+    videoLocal: apply`${css({ transform: 'scaleX(-1)' })}`,
     videoCover: apply`object-cover`,
     videoContain: apply`object-contain`,
     borderAudioRoot: apply`w-full h-full absolute left-0 top-0 rounded-lg z-0`,

@@ -1,11 +1,11 @@
 import React, { useState, useContext, createContext } from 'react';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
-import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSRoomProps from './interfaces/HMSRoomProps';
 import createListener from './helpers/createListener';
 import { Silence } from '../components/Silence';
+import { useEffect } from 'react';
 
 const sdk = new HMSSdk();
 
@@ -18,6 +18,19 @@ export const HMSRoomProvider: React.FC = props => {
 
   const [isScreenShare, setIsScreenShare] = useState(false);
 
+  const [audioMuted, setAudioMuted] = useState(false);
+
+  const [videoMuted, setVideoMuted] = useState(false);
+
+  useEffect(() => {
+    if (audioMuted) {
+      toggleMuteInPeer('audio');
+    }
+    if (videoMuted) {
+      toggleMuteInPeer('video');
+    }
+  }, [localPeer]);
+
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
     sdk.join(config, createListener(listener, setPeers, setLocalPeer, sdk));
   };
@@ -25,11 +38,29 @@ export const HMSRoomProvider: React.FC = props => {
   const leave = () => {
     //TODO this is not strictly necessary since SDK should clean up, but foing it for safety
     setPeers([]);
+    setAudioMuted(false);
+    setVideoMuted(false);
     sdk.leave();
   };
 
-  const toggleMute = async (track: HMSTrack) => {
-    await track.setEnabled(!track.enabled);
+  const toggleMute = (type: 'audio' | 'video') => {
+    if (type === 'audio') {
+      setAudioMuted(prevMuted => !prevMuted);
+    } else if (type === 'video') {
+      setVideoMuted(prevMuted => !prevMuted);
+    }
+
+    toggleMuteInPeer(type);
+  };
+
+  const toggleMuteInPeer = async (type: 'audio' | 'video') => {
+    if (localPeer && localPeer.audioTrack && type === 'audio') {
+      await localPeer.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
+    }
+    if (localPeer && localPeer.videoTrack && type === 'video') {
+      await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
+    }
+
     setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };
@@ -68,13 +99,15 @@ export const HMSRoomProvider: React.FC = props => {
       value={{
         peers: peers,
         localPeer: localPeer,
+        audioMuted: audioMuted,
+        videoMuted: videoMuted,
         join: join,
         leave: leave,
         toggleMute: toggleMute,
         toggleScreenShare: toggleScreenShare,
       }}
     >
-      <Silence/>
+      <Silence />
       {props.children}
     </HMSContext.Provider>
   );
