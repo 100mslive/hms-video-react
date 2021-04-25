@@ -4,11 +4,10 @@ import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
+import { addGlobalCss, getTileContainerDimensions, getVideoTileLabel } from '../../utils';
 import { useResizeDetector } from 'react-resize-detector';
-//@ts-ignore
-import {apply, CSSRules, tw, Directive, css} from 'twind/css';
-
+import {withClasses, WithClassesProps, BaseClassesProps} from '../../utils/styles';
+import {create} from 'twind';
 export interface VideoTileProps extends VideoProps {
   /**
    * HMS Peer object for which the tile is shown.
@@ -42,10 +41,6 @@ export interface VideoTileProps extends VideoProps {
    */
   allowRemoteMute?: boolean;
   /**
-   * Additional classes to be included for the components.
-   */
-  classes?: VideoTileClasses;
-  /**
    * Custom controls component to display label, audio mute status, audio level, remote mute control.
    * Default is VideoTileControls.
    */
@@ -56,26 +51,33 @@ export interface VideoTileClasses extends VideoClasses {
   /**
    * The top-level container.
    */
-  root?: Directive<CSSRules>;
+  root?: string;
   /**
    * The video container.
    */
-  videoContainer?: Directive<CSSRules>;
+  videoContainer?: string;
   /**
    * The avatar container.
    */
-  avatarContainer?: Directive<CSSRules>;
+  avatarContainer?: string;
   /**
    * Classes added to Avatar container if its a circle
    */
-  avatarContainerCircle?: Directive<CSSRules>;
+  avatarContainerCircle?: string;
   /**
    * Classes added to Video container if its a circle
    */
-  videoContainerCircle?: Directive<CSSRules>;
+  videoContainerCircle?: string;
 }
 
-export const VideoTile = ({
+const defaultSeedStyleMap:VideoTileClasses = {
+  root: 'w-full h-full flex relative items-center justify-center rounded-lg',
+  videoContainer:'relative rounded-lg shadow-lg z-10',
+  avatarContainer:'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
+  videoContainerCircle:'rounded-full',
+}
+
+const UnstyledVideoTile = ({
   videoTrack,
   audioTrack,
   peer,
@@ -92,24 +94,9 @@ export const VideoTile = ({
   audioLevelDisplayType = 'border',
   audioLevelDisplayColor = '#0F6CFF',
   allowRemoteMute = false,
-  //TODO merge classes properly with clsx
-  //TODO add a utility to add custom apply in hmsui-componentname-classname format
-  classes = {
-    root: apply`hmsui-videoTile-root w-full h-full flex relative items-center justify-center rounded-lg`,
-    videoContainer: apply`relative rounded-lg shadow-lg z-10`,
-    avatarContainer:
-      apply`absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg`,
-    avatarContainerCircle: apply`rounded-full`,
-    videoContainerCircle: apply`rounded-full`,
-    video: apply`absolute left-0 top-0 z-10 h-full w-full rounded-lg`,
-    videoCircle: apply`rounded-full`,
-    videoLocal: apply`${css({transform:'scaleX(-1)'})}`,
-    videoCover: apply`object-cover`,
-    videoContain: apply`object-contain`,
-    borderAudioRoot: apply`w-full h-full absolute left-0 top-0 rounded-lg z-0`,
-  },
+  classes,
   controlsComponent,
-}: VideoTileProps) => {
+}: Readonly<VideoTileProps & WithClassesProps<VideoTileClasses>>) => {
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
@@ -119,22 +106,6 @@ export const VideoTile = ({
     aspectRatio.width === aspectRatio.height;
   const isCircle = displayShape === 'circle';
   const isSquareOrCircle = isSquare || isCircle;
-  const videoClasses =
-    classes.video ||
-    classes.videoCircle ||
-    classes.videoLocal ||
-    classes.videoContain ||
-    classes.videoCover ||
-    classes.borderAudioRoot
-      ? {
-          video: classes.video,
-          videoCircle: classes.videoCircle,
-          videoLocal: classes.videoLocal,
-          videoCover: classes.videoCover,
-          videoContain: classes.videoContain,
-          borderAudioRoot: classes.borderAudioRoot,
-        }
-      : undefined;
 
   const {
     width: containerWidth,
@@ -184,10 +155,13 @@ export const VideoTile = ({
   }, [videoTrack, audioTrack]);
 
   return (
-    <div ref={containerRef} className={tw`${classes.root}`}>
+    //@ts-ignore
+    <div ref={containerRef} className={classes.root}>
       {containerHeight && containerWidth && (
         <div
-          className={tw`${classes.videoContainer} ${
+            //@ts-ignore
+            className={`${classes.videoContainer} ${
+            //@ts-ignore
             displayShape === 'circle' ? classes.videoContainerCircle : ''
           }`}
           style={{ width: `${width}px`, height: `${height}px` }}
@@ -203,12 +177,13 @@ export const VideoTile = ({
             audioLevelDisplayType={audioLevelDisplayType}
             audioLevelDisplayColor={audioLevelDisplayColor}
             displayShape={displayShape}
-            classes={videoClasses}
           />
           {isVideoMuted && (
             <div
-              className={tw`${classes.avatarContainer} ${
-                displayShape === 'circle' ? classes.avatarContainerCircle : ''
+            //@ts-ignore
+            className={`${classes.videoContainer} ${
+            //@ts-ignore
+            displayShape === 'circle' ? classes.avatarContainerCircle : ''
               }`}
             >
               <Avatar label={peer.displayName} />
@@ -235,3 +210,6 @@ export const VideoTile = ({
     </div>
   );
 };
+
+//@ts-expect-error
+export const VideoTile = withClasses<typeof UnstyledVideoTile, VideoTileProps>(UnstyledVideoTile, 'videoTile', defaultSeedStyleMap as Map<string, string>, create().tw);

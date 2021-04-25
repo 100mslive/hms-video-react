@@ -186,7 +186,7 @@ export const VideoList = ({
               style={{ height: h, width: w }}
               key={stream.peer.id}
               className={`${classes?.videoTileParent} flex justify-center`}
-            >
+            >{//@ts-ignore
               <VideoTile
                 {...stream}
                 objectFit={objectFit}
@@ -199,6 +199,7 @@ export const VideoList = ({
                   videoTileControls && videoTileControls[index]
                 }
               />
+            }
             </div>
           )),
           videoCount,
