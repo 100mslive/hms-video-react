@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { closeMediaStream, getLocalStreamException } from '../../utils';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileControls } from './Controls';
-import {MessageModal} from '../MessageModal'
+import { MessageModal } from '../MessageModal';
 
 export interface PreviewProps {
   name: string;
   joinOnClick: () => void;
   goBackOnClick: () => void;
-  messageOnClose: ()=> void;
+  messageOnClose: () => void;
   toggleMute: (type: string) => void;
   videoTileProps: Partial<VideoTileProps>;
 }
@@ -35,49 +35,39 @@ export const Preview = ({
     window.navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
       .then(stream => setMediaStream(stream))
-      .catch(error =>{
-          if (error.name==="NotAllowedError")
-          {
-            setErrorState(true);
-            var errorMessage = getLocalStreamException(error);
-            setErrorTitle(errorMessage["title"]);
-            setErrorMessage(errorMessage["message"]);
-          }
-          else
-          {
-            
-            navigator.mediaDevices
-            .enumerateDevices()
-            .then(devices => {
-              for (let device of devices) {
-                if (device.kind === 'videoinput') {
-                  setVideoInput(videoDevices => [...videoDevices, device]);
-                } else if (device.kind === 'audioinput') {
-                  setAudioInput([...audioInput,device]);
-                } else if (device.kind === 'audiooutput') {
-                  setAudioutput([...audioOutput,device]);
-                }
+      .catch(error => {
+        if (error.name === 'NotAllowedError') {
+          setErrorState(true);
+          var errorMessage = getLocalStreamException(error);
+          setErrorTitle(errorMessage['title']);
+          setErrorMessage(errorMessage['message']);
+        } else {
+          navigator.mediaDevices.enumerateDevices().then(devices => {
+            for (let device of devices) {
+              if (device.kind === 'videoinput') {
+                setVideoInput(videoDevices => [...videoDevices, device]);
+              } else if (device.kind === 'audioinput') {
+                setAudioInput([...audioInput, device]);
+              } else if (device.kind === 'audiooutput') {
+                setAudioutput([...audioOutput, device]);
               }
-              if (videoInput.length===0 || audioInput.length===0){
-                error.name = "NotFoundError";
-                var errorMessage = getLocalStreamException(error);
-                setErrorTitle(errorMessage["title"]);
-                setErrorMessage(errorMessage["message"]);
-                setErrorState(true);
-              }
-              else
-              {
-                var errorMessage = getLocalStreamException(error);
-                setErrorTitle(errorMessage["title"]);
-                setErrorMessage(errorMessage["message"]);
-                setErrorState(true);
-              }
-            })
-          }
+            }
+            if (videoInput.length === 0 || audioInput.length === 0) {
+              error.name = 'NotFoundError';
+              var errorMessage = getLocalStreamException(error);
+              setErrorTitle(errorMessage['title']);
+              setErrorMessage(errorMessage['message']);
+              setErrorState(true);
+            } else {
+              var errorMessage = getLocalStreamException(error);
+              setErrorTitle(errorMessage['title']);
+              setErrorMessage(errorMessage['message']);
+              setErrorState(true);
+            }
+          });
+        }
       });
-    },[]);
-  
-  
+  }, []);
 
   useEffect(() => {
     mediaStream &&
@@ -109,9 +99,13 @@ export const Preview = ({
 
   return (
     <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl">
-      
       <div className="w-22.5 h-22.5 mt-1.875 mb-7">
-      <MessageModal show={errorState} title={title} message={message} onClose={messageOnClose}/>
+        <MessageModal
+          show={errorState}
+          title={title}
+          message={message}
+          onClose={messageOnClose}
+        />
         <VideoTile
           {...videoTileProps}
           videoTrack={mediaStream.getVideoTracks()[0]}
@@ -162,5 +156,5 @@ export const Preview = ({
     </div> */}
     </div>
     // </div>
-   );
- };
+  );
+};

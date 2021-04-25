@@ -23,5 +23,4 @@ Default.args = {
   message:
     '100ms wants to access your camera and microphone so that other participants can see and hear you',
   secondary: 'Click Allow to continue',
-  
 };

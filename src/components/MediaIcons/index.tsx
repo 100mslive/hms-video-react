@@ -174,7 +174,7 @@ export const AudioPreviewButton = ({
 }: {
   isAudioMuted: boolean;
   buttonDisplay: string;
-  clickHandler: ()=>void;
+  clickHandler: () => void;
 }) => {
   return (
     <button

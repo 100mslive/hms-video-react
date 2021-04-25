@@ -167,14 +167,12 @@ localStreamErrors.set('NotAllowedError', {
 
 localStreamErrors.set('Error', {
   title: 'Camera/Microphone not accessible!',
-  message:
-    'We don\'t support Chrome on iOS device, please switch to Safari.',
+  message: "We don't support Chrome on iOS device, please switch to Safari.",
 });
 
 localStreamErrors.set('TypeError', null);
 
-
-const getLocalStreamException = (error:any) => {
+const getLocalStreamException = (error: any) => {
   let errorMessage = null;
   if (localStreamErrors.has(error.name)) {
     errorMessage = localStreamErrors.get(error.name);
@@ -188,7 +186,6 @@ const getLocalStreamException = (error:any) => {
   console.log('LocalStream error: ', { error: error.name, ...errorMessage });
   return errorMessage;
 };
-
 
 /**
  * Finds the largest rectangle area when trying to place N rectangle into a containing
