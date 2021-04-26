@@ -57,35 +57,46 @@ export const Preview = ({
       .getUserMedia({ audio: true, video: true })
       .then(stream => setMediaStream(stream))
       .catch(error => {
-        if (error.name === 'NotAllowedError') {
-          setErrorState(true);
+        console.log(error);
+        if (
+          error.name === 'NotAllowedError' ||
+          error.error === 'NotAllowedError'
+        ) {
           const errorMessage = getLocalStreamException(error);
           setErrorTitle(errorMessage['title']);
           setErrorMessage(errorMessage['message']);
+          setErrorState(true);
         } else {
-          navigator.mediaDevices.enumerateDevices().then(devices => {
-            for (let device of devices) {
-              if (device.kind === 'videoinput') {
-                setVideoInput(videoDevices => [...videoDevices, device]);
-              } else if (device.kind === 'audioinput') {
-                setAudioInput([...audioInput, device]);
-              } else if (device.kind === 'audiooutput') {
-                setAudioutput([...audioOutput, device]);
+          navigator.mediaDevices
+            .enumerateDevices()
+            .then(devices => {
+              for (let device of devices) {
+                if (device.kind === 'videoinput') {
+                  setVideoInput(videoDevices => [...videoDevices, device]);
+                } else if (device.kind === 'audioinput') {
+                  setAudioInput([...audioInput, device]);
+                } else if (device.kind === 'audiooutput') {
+                  setAudioutput([...audioOutput, device]);
+                }
               }
-            }
-            if (videoInput.length === 0 || audioInput.length === 0) {
-              error.name = 'NotFoundError';
+              if (videoInput.length === 0 || audioInput.length === 0) {
+                const errorMessage = getLocalStreamException(error);
+                setErrorTitle(errorMessage['title']);
+                setErrorMessage(errorMessage['message']);
+                setErrorState(true);
+              } else {
+                const errorMessage = getLocalStreamException(error);
+                setErrorTitle(errorMessage['title']);
+                setErrorMessage(errorMessage['message']);
+                setErrorState(true);
+              }
+            })
+            .catch(error => {
               const errorMessage = getLocalStreamException(error);
               setErrorTitle(errorMessage['title']);
               setErrorMessage(errorMessage['message']);
               setErrorState(true);
-            } else {
-              const errorMessage = getLocalStreamException(error);
-              setErrorTitle(errorMessage['title']);
-              setErrorMessage(errorMessage['message']);
-              setErrorState(true);
-            }
-          });
+            });
         }
       });
   };

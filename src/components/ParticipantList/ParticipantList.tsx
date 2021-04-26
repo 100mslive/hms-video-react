@@ -26,7 +26,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
   });
 
   return (
-    <div className="flex flex-grow justify-content:center border-opacity-0 hidden md:block">
+    <div className="flex flex-grow justify-content:center border-opacity-0 sm:hidden md:block">
       <button
         aria-describedby={id}
         type="button"

@@ -20,7 +20,7 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
     return;
   }
 
-  console.log('MEDIA STREAM IS ', stream);
+  console.log('MEDIA STREAM ENDED ', stream);
 
   const tracks = stream.getTracks();
   tracks.forEach(track => track.stop());
