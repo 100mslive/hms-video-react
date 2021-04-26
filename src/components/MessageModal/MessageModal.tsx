@@ -37,7 +37,7 @@ export const MessageModal = ({
     >
       {show && (
         <Backdrop className={classes.backdrop} open={true}>
-          <div className="flex items-center justify-center min-h-screen md:top-1/2 absolute pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex items-center justify-center min-h-screen absolute pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <span
               className="hidden sm:inline-block sm:align-middle sm:h-screen"
               aria-hidden="true"
