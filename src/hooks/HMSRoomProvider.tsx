@@ -1,11 +1,11 @@
 import React, { useState, useContext, createContext } from 'react';
-import { HMSSdk } from '@nikhilghodke/100ms-web-sdk';
-import HMSUpdateListener from '@nikhilghodke/100ms-web-sdk/dist/interfaces/update-listener';
-import HMSTrack from '@nikhilghodke/100ms-web-sdk/dist/media/tracks/HMSTrack';
-import HMSConfig from '@nikhilghodke/100ms-web-sdk/dist/interfaces/config';
+import { HMSSdk } from '@100mslive/100ms-web-sdk';
+import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
+import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
+import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSRoomProps from './interfaces/HMSRoomProps';
 import createListener from './helpers/createListener';
-import HMSMessage from '@nikhilghodke/100ms-web-sdk/dist/interfaces/message';
+import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 
 const sdk = new HMSSdk();
 
