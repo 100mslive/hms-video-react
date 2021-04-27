@@ -8,6 +8,7 @@ import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import { Silence } from '../components/Silence';
 import { useEffect } from 'react';
 import { HMSMessageType } from '@100mslive/100ms-web-sdk/dist/sdk/models/enums/HMSMessageType';
+import Message from '@100mslive/100ms-web-sdk/dist/sdk/models/HMSMessage';
 
 const sdk = new HMSSdk();
 
@@ -122,7 +123,11 @@ export const HMSRoomProvider: React.FC = props => {
       value={{
         peers: peers,
         localPeer: localPeer,
-        messages: [],
+        messages: messages.map(message => ({
+          message: message.message,
+          timeSent: 'now',
+          sender: message.sender,
+        })),
         audioMuted: audioMuted,
         videoMuted: videoMuted,
         join: join,

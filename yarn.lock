@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@100mslive/100ms-web-sdk@0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.9.tgz#d9141253f7de03890f20ec8df74eafb5e5cc4ba5"
-  integrity sha512-KDg9tHX5lTi8saUpNZps/o2yjAUFT+NTbJDK7yG6PXivKL9pKTJB8adlEOhgtDMe4WH/ajJxEhx4870BHd3SRw==
+"@100mslive/100ms-web-sdk@0.0.9-3005":
+  version "0.0.9-3005"
+  resolved "https://registry.yarnpkg.com/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.9-3005.tgz#64fdab268a2b504061cf2af6001c54a198f338d2"
+  integrity sha512-yMP8hnO5H8KT8OYPbmwZ3nWo3F4giHo+/fcxgxz1eA04ogr64okyedluYABRjo++CWLCPRifb3IfEtZEvRk2wQ==
   dependencies:
     jsonwebtoken "^8.5.1"
     loglevel "^1.7.1"

@@ -10,7 +10,7 @@ import ReactHtmlParser from 'react-html-parser';
 
 export interface Message {
   message: string;
-  sender?: Peer;
+  sender?: string;
   timeSent: string;
   notification?: boolean;
   direction?: 'left' | 'right' | 'center';
@@ -88,7 +88,7 @@ export const ChatBox = ({
             ) : (
               <div className="py-3">
                 <div className="flex justify-between">
-                  <span>{message.sender!.displayName}</span>
+                  <span>{message.sender}</span>
                   <span className="text-xs">{message.timeSent} </span>
                 </div>
                 <div className=" text-white leading-5 max-w-full break-words">
