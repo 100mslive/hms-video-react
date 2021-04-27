@@ -101,17 +101,9 @@ export const HMSRoomProvider: React.FC = props => {
     setLocalPeer(sdk.getLocalPeer());
   };
   const sendMessage = (message: string) => {
-    console.debug('HMSui-component: [senMessage] sendingMessage', message);
-    let hmsMessage = {
-      sender: sdk.getLocalPeer().peerId,
-      receiver: '',
-      message: message,
-      type: HMSMessageType.CHAT,
-      time: new Date(),
-    };
-    sdk.sendMessage('chat', message);
+    const hmsMessage = sdk.sendMessage('chat', message);
     receiveMessage(hmsMessage);
-    console.debug('HMSui-component: [senMessage] sentMessage', message);
+    console.debug('HMSui-component: [sendMessage] sentMessage', message);
   };
 
   window.onunload = () => {
