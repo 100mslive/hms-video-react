@@ -102,7 +102,6 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
       ></video>
       {/* <video width="400" height="225" loop autoPlay muted ref={testVideoRef}/> */}
       {videoTrack && audioTrack && (
-        //@ts-expect-error
         <VideoTile {...args} videoTrack={videoTrack} audioTrack={audioTrack} />
       )}
     </div>
@@ -170,7 +169,6 @@ const MeetTemplate: Story<VideoTileProps> = args => {
           }}
         ></video>
         {videoTrack && audioTrack && (
-          //@ts-expect-error
           <VideoTile
             {...args}
             videoTrack={videoTrack}
@@ -225,7 +223,6 @@ DefaultVideoTile.args = {
   audioLevelDisplayType: 'border',
   audioLevel: 40,
   videoSource: 'camera',
-  //@ts-expect-error
   classes: { root: 'hello' },
 };
 

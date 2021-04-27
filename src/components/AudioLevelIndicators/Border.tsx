@@ -1,22 +1,32 @@
 import React from 'react';
-import { AudioLevelIndicatorProps } from '.';
+import { StyledAudioLevelIndicatorProps, AudioLevelIndicatorClasses } from '.';
+import { withClasses } from '../../utils/styles';
+import { combineClasses } from '../../utils';
 //@ts-ignore
-import { apply, tw } from 'twind';
-export type AudioLevelProps = Omit<AudioLevelIndicatorProps, 'type'>;
+import { create } from 'twind';
 
-const AudioLevelBorder = ({
+type StyledAudioLevelBorderProps = Omit<StyledAudioLevelIndicatorProps, 'type'>;
+type AudioLevelBorderClasses = AudioLevelIndicatorClasses;
+
+const defaultClasses: AudioLevelIndicatorClasses = {
+  root: 'w-full h-full absolute left-0 top-0 rounded-lg',
+  videoCircle: 'rounded-full',
+};
+
+const StyledAudioLevelBorder = ({
   level,
   color = '#0F6CFF',
   displayShape,
-  classes = {
-    root: apply`w-full h-full absolute left-0 top-0 rounded-lg`,
-    videoCircle: apply`rounded-full`,
-  },
-}: AudioLevelProps) => {
+  classes: extraClasses,
+  defaultClasses,
+}: StyledAudioLevelBorderProps) => {
+  //TODO this is overlapping a lot with the previous component. Combine
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
   return (
     <div
-      className={tw`${classes.root} ${
-        displayShape === 'circle' ? classes.videoCircle : ''
+      className={`${combinedClasses?.root} ${
+        displayShape === 'circle' ? combinedClasses?.videoCircle : ''
       }
         `}
       style={
@@ -31,4 +41,15 @@ const AudioLevelBorder = ({
   );
 };
 
-export default AudioLevelBorder;
+export type AudioLevelBorderProps = Omit<
+  StyledAudioLevelBorderProps,
+  'defaultClasses'
+>;
+
+export const AudioLevelBorder = withClasses<
+  AudioLevelBorderClasses | undefined
+>(
+  defaultClasses,
+  'audioLevelBorder',
+  create().tw,
+)<StyledAudioLevelBorderProps>(StyledAudioLevelBorder);

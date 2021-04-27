@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
 import { Peer } from '../../types';
-import { Video, VideoProps, VideoClasses } from '../Video';
+import { Video, StyledVideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
+import {
+  getTileContainerDimensions,
+  getVideoTileLabel,
+  combineClasses,
+} from '../../utils';
 import { useResizeDetector } from 'react-resize-detector';
-import { withClasses, WithClassesProps } from '../../utils/styles';
+import { withClasses } from '../../utils/styles';
+//@ts-ignore
 import { create } from 'twind';
-export interface VideoTileProps extends VideoProps {
+interface StyledVideoTileProps extends StyledVideoProps {
   /**
    * HMS Peer object for which the tile is shown.
    */
@@ -45,6 +50,14 @@ export interface VideoTileProps extends VideoProps {
    * Default is VideoTileControls.
    */
   controlsComponent?: React.ReactNode;
+  /**
+   * default classes
+   */
+  defaultClasses?: VideoTileClasses;
+  /**
+   * extra classes added  by user
+   */
+  classes?: VideoTileClasses;
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -70,7 +83,7 @@ export interface VideoTileClasses extends VideoClasses {
   videoContainerCircle?: string;
 }
 
-const defaultSeedStyleMap: VideoTileClasses = {
+const defaultClasses: VideoTileClasses = {
   root: 'w-full h-full flex relative items-center justify-center rounded-lg',
   videoContainer: 'relative rounded-lg shadow-lg z-10',
   avatarContainer:
@@ -78,7 +91,7 @@ const defaultSeedStyleMap: VideoTileClasses = {
   videoContainerCircle: 'rounded-full',
 };
 
-const UnstyledVideoTile = ({
+const StyledVideoTile = ({
   videoTrack,
   audioTrack,
   peer,
@@ -95,9 +108,12 @@ const UnstyledVideoTile = ({
   audioLevelDisplayType = 'border',
   audioLevelDisplayColor = '#0F6CFF',
   allowRemoteMute = false,
-  classes,
   controlsComponent,
-}: Readonly<VideoTileProps & WithClassesProps<VideoTileClasses>>) => {
+  classes: extraClasses,
+  defaultClasses,
+}: StyledVideoTileProps) => {
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [height, setHeight] = useState(0);
   const [width, setWidth] = useState(0);
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
@@ -156,14 +172,13 @@ const UnstyledVideoTile = ({
   }, [videoTrack, audioTrack]);
 
   return (
-    //@ts-ignore
-    <div ref={containerRef} className={classes.root}>
+    <div ref={containerRef} className={combinedClasses?.root}>
       {containerHeight && containerWidth && (
         <div
-          //@ts-ignore
-          className={`${classes.videoContainer} ${
-            //@ts-ignore
-            displayShape === 'circle' ? classes.videoContainerCircle : ''
+          className={`${combinedClasses?.videoContainer} ${
+            displayShape === 'circle'
+              ? combinedClasses?.videoContainerCircle
+              : ''
           }`}
           style={{ width: `${width}px`, height: `${height}px` }}
         >
@@ -181,10 +196,10 @@ const UnstyledVideoTile = ({
           />
           {isVideoMuted && (
             <div
-              //@ts-ignore
-              className={`${classes.videoContainer} ${
-                //@ts-ignore
-                displayShape === 'circle' ? classes.avatarContainerCircle : ''
+              className={`${combinedClasses?.videoContainer} ${
+                displayShape === 'circle'
+                  ? combinedClasses?.avatarContainerCircle
+                  : ''
               }`}
             >
               <Avatar label={peer.displayName} />
@@ -212,10 +227,10 @@ const UnstyledVideoTile = ({
   );
 };
 
-//@ts-expect-error
-export const VideoTile = withClasses<typeof UnstyledVideoTile, VideoTileProps>(
-  UnstyledVideoTile,
+export type VideoTileProps = Omit<StyledVideoTileProps, 'defaultClasses'>;
+
+export const VideoTile = withClasses<VideoTileClasses | undefined>(
+  defaultClasses,
   'videoTile',
-  defaultSeedStyleMap as Map<string, string>,
   create().tw,
-);
+)<StyledVideoTileProps>(StyledVideoTile);

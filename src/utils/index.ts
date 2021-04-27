@@ -1,4 +1,6 @@
 import { TW, css } from 'twind/css';
+import clsx from 'clsx';
+import { reduce } from 'lodash';
 
 const getVideoTileLabel = (
   peerName: string,
@@ -172,7 +174,7 @@ const largestRect = (
 
   let best = { area: 0, cols: 0, rows: 0, width: 0, height: 0 };
 
-  // TODO: Don't start with obviously-bad candidates.
+  // TODO: Don't start with obviously-`ba`d candidates.
   const startCols = numRects;
   const colDelta = -1;
 
@@ -293,6 +295,22 @@ function addGlobalCss<Type>({
   return calculatedSeedStyleMap;
 }
 
+function combineClasses(
+  defaultClasses: Record<string, string | undefined> | undefined,
+  extraClasses: Record<string, string | undefined> | undefined,
+) {
+  return extraClasses
+    ? reduce(
+        defaultClasses,
+        (combinedClasses, defaultClassName, seed) => {
+          combinedClasses![seed] = clsx(defaultClassName, extraClasses![seed]);
+          return combinedClasses;
+        },
+        {} as Record<string, string>,
+      )
+    : defaultClasses;
+}
+
 export {
   closeMediaStream,
   getVideoTileLabel,
@@ -304,4 +322,5 @@ export {
   getTileContainerDimensions,
   generateClassName,
   addGlobalCss,
+  combineClasses,
 };

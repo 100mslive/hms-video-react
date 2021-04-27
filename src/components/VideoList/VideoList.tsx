@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
 import { largestRect } from '../../utils';
