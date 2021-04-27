@@ -15,36 +15,12 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<SettingsProps> = (args: SettingsProps) => {
-  const [videoTrack, setVideoTrack] = useState<MediaStreamTrack>();
-  const [audioTrack, setAudioTrack] = useState<MediaStreamTrack>();
-
-  useEffect(() => {
-    window.navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      .then(function(stream) {
-        //console.log('Updating stream with camera feed', stream);
-        setVideoTrack(stream.getVideoTracks()[0]);
-        setAudioTrack(stream.getAudioTracks()[0]);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.videoSource, args.isLocal]);
-
+  const [maxTileCount, setMaxTileCount] = useState(8);
   return (
-    <Settings
-      {...args}
-      videoTrack={videoTrack!}
-      audioTrack={audioTrack!}
-      isLocal={true}
-    />
+    <div className="w-full flex justify-center">
+      <Settings maxTileCount={maxTileCount} setMaxTileCount={setMaxTileCount} />
+    </div>
   );
 };
 
 export const Default = Template.bind({});
-
-Default.args = {
-  peer: { id: '123', displayName: 'Nikhil' },
-  aspectRatio: {
-    width: 1,
-    height: 1,
-  },
-};
