@@ -223,7 +223,7 @@ export const VideoList = ({
             }
             return page;
           })
-          .map((item,index) => {
+          .map((item, index) => {
             return (
               <div className="w-full h-full" key={index}>
                 <div

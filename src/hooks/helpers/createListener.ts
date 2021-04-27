@@ -1,14 +1,14 @@
-import { HMSSdk } from '@nikhilghodke/100ms-web-sdk';
-import HMSException from '@nikhilghodke/100ms-web-sdk/dist/error/HMSException';
-import HMSPeer from '@nikhilghodke/100ms-web-sdk/dist/interfaces/hms-peer';
-import HMSMessage from '@nikhilghodke/100ms-web-sdk/dist/interfaces/message';
-import HMSRoom from '@nikhilghodke/100ms-web-sdk/dist/interfaces/room';
+import { HMSSdk } from '@100mslive/100ms-web-sdk';
+import HMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
+import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
+import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
+import HMSRoom from '@100mslive/100ms-web-sdk/dist/interfaces/room';
 import HMSUpdateListener, {
   HMSPeerUpdate,
   HMSRoomUpdate,
   HMSTrackUpdate,
-} from '@nikhilghodke/100ms-web-sdk/dist/interfaces/update-listener';
-import HMSTrack from '@nikhilghodke/100ms-web-sdk/dist/media/tracks/HMSTrack';
+} from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
+import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 
 const createListener = (
   incomingListener: HMSUpdateListener,
@@ -26,6 +26,7 @@ const createListener = (
 
       setPeers(sdk.getPeers());
       setLocalPeer(sdk.getLocalPeer());
+
       incomingListener.onJoin(room);
     },
 

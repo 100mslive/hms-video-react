@@ -19,6 +19,9 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
   if (!stream) {
     return;
   }
+
+  console.log('MEDIA STREAM ENDED ', stream);
+
   const tracks = stream.getTracks();
   tracks.forEach(track => track.stop());
 };
@@ -122,20 +125,69 @@ const groupTilesIntoPage = (
 };
 
 const getInitialsFromName = (name: string | undefined) => {
-  console.debug("HMSui-component: Getting initials of", name);
+  console.debug('HMSui-component: Getting initials of', name);
   if (!name) {
     return undefined;
   } else {
     const rgx = /(\p{L}{1})\p{L}+/gu;
-    console.debug("HMSui-component: rgx is", rgx, name);
+    console.debug('HMSui-component: rgx is', rgx, name);
     let initialsArray = name.match(rgx) || [];
-    console.debug("HMSui-component: Initial initials are", initialsArray);
+    console.debug('HMSui-component: Initial initials are', initialsArray);
     let initials = (
-      (initialsArray[0]?initialsArray.shift()![0]:'') + (initialsArray[0]?initialsArray.pop()![0]:'')
+      (initialsArray[0] ? initialsArray.shift()![0] : '') +
+      (initialsArray[0] ? initialsArray.pop()![0] : '')
     ).toUpperCase();
-    console.debug("HMSui-component: Initials are", initials);
+    console.debug('HMSui-component: Initials are', initials);
     return initials;
   }
+};
+
+const localStreamErrors = new Map();
+//required track is missing
+localStreamErrors.set('NotFoundError', {
+  title: 'Camera/Microphone not detected!',
+  message:
+    'We were unable to detect any camera/microphone devices. Please connect and try again.',
+});
+//webcam or mic are already in use
+localStreamErrors.set('NotReadableError', {
+  title: 'Camera/Microphone not accessible!',
+  message:
+    'Please close any other application using camera/microphone and try again.',
+});
+//constraints can not be satisfied by avb. devices
+localStreamErrors.set('OverconstrainedError', {
+  title: 'Invalid Audio/Video constraints',
+  message: 'The constraints provided for audio/video cannot be met.',
+});
+//permission denied in browser
+localStreamErrors.set('NotAllowedError', {
+  title: 'Permission Denied!',
+  message:
+    'Please grant camera/microphone permissions in the address bar or site settings and try again.',
+});
+// returning null continues the call without error modal.
+
+localStreamErrors.set('Error', {
+  title: 'Camera/Microphone not accessible!',
+  message: "We don't support Chrome on iOS device, please switch to Safari.",
+});
+
+localStreamErrors.set('TypeError', null);
+
+const getLocalStreamException = (error: any) => {
+  let errorMessage = null;
+  if (localStreamErrors.has(error.name)) {
+    errorMessage = localStreamErrors.get(error.name);
+  } else {
+    //other errors
+    errorMessage = {
+      title: 'Unable to access camera/microphone!',
+      message: 'Please switch your device and try again.',
+    };
+  }
+  console.log('LocalStream error: ', { error: error.name, ...errorMessage });
+  return errorMessage;
 };
 
 /**
@@ -255,4 +307,5 @@ export {
   getInitialsFromName,
   largestRect,
   getTileContainerDimensions,
+  getLocalStreamException,
 };

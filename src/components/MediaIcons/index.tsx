@@ -11,7 +11,12 @@ import {
   SpotlightList,
   MuteListOn,
   SpotlightListOn,
+  MutePreview,
+  VideoPreview,
+  Settings,
   Close,
+  ChatIconBlack,
+  ChatIconWhite,
 } from '../../icons';
 
 export const LogoButton = () => {
@@ -106,7 +111,8 @@ export const LeaveButton = ({
       onClick={clickHandler}
     >
       <div className="inline-block">{LeaveRoom}</div>
-      <div className="md:pl-2 hidden md:inline-block">Leave Room</div>
+      {/* TODO figure out why xs:hidden is needed */}
+      <div className="md:pl-2 xs:hidden md:inline-block">Leave Room</div>
     </button>
   );
 };
@@ -161,6 +167,93 @@ export const SpotlightListButton = ({ isSpotlightOn = false }) => {
   );
 };
 
+export const AudioPreviewButton = ({
+  isAudioMuted = false,
+  buttonDisplay = 'square',
+  clickHandler,
+}: {
+  isAudioMuted: boolean;
+  buttonDisplay: string;
+  clickHandler: () => void;
+}) => {
+  return (
+    <button
+      className={`flex w-9 h-9 mx-1.5 justify-center items-center rounded-${
+        buttonDisplay === 'square' ? 'xl' : 'full'
+      } focus:outline-none ${
+        isAudioMuted
+          ? 'bg-white hover:bg-gray-500'
+          : 'hover:bg-transparent-light'
+      }`}
+      onClick={clickHandler}
+    >
+      {isAudioMuted ? MutePreview : MicOn}
+    </button>
+  );
+};
+
+export const VideoPreviewButton = ({
+  isVideoMuted = false,
+  buttonDisplay = 'square',
+  clickHandler,
+}: {
+  isVideoMuted: boolean;
+  buttonDisplay: string;
+  clickHandler: React.MouseEventHandler;
+}) => {
+  return (
+    <button
+      className={`flex w-9 h-9 mx-1.5 justify-center items-center rounded-${
+        buttonDisplay === 'square' ? 'xl' : 'full'
+      } focus:outline-none ${
+        isVideoMuted
+          ? 'bg-white hover:bg-gray-500'
+          : 'hover:bg-transparent-light'
+      }`}
+      onClick={clickHandler}
+    >
+      {isVideoMuted ? VideoPreview : CamOn}
+    </button>
+  );
+};
+
+export const SettingsButton = ({
+  buttonDisplay = 'square',
+  clickHandler,
+}: {
+  clickHandler: React.MouseEventHandler;
+  buttonDisplay: string;
+}) => {
+  return (
+    <button
+      className={`flex w-9 h-9 justify-center items-center rounded-${
+        buttonDisplay === 'square' ? 'xl' : 'full'
+      } focus:outline-none hover:bg-transparent-light`}
+      onClick={clickHandler}
+    >
+      {Settings}
+    </button>
+  );
+};
+
 export const CloseButton = () => {
   return <button>{Close}</button>;
+};
+
+export const ChatButton = ({
+  clickHandler,
+  isChatOpen,
+}: {
+  clickHandler: React.MouseEventHandler;
+  isChatOpen: boolean;
+}) => {
+  return (
+    <button
+      onClick={clickHandler}
+      className={`focus:outline-none rounded-lg ${isChatOpen &&
+        'bg-white'} p-3`}
+    >
+      {isChatOpen ? ChatIconBlack : ChatIconWhite}
+    </button>
+  );
 };

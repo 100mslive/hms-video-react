@@ -48,7 +48,9 @@ export const ChatBox = ({
     messagesEndRef.current!.scrollIntoView({ behavior: scrollAnimation });
   };
   useEffect(() => {
-    if (willScrollToBottom) scrollToBottom();
+    if (willScrollToBottom) {
+      scrollToBottom();
+    }
   }, [message]);
 
   return (
@@ -57,18 +59,21 @@ export const ChatBox = ({
         <div className="bg-gray-200 rounded-t-2xl p-3 text-gray-500 flex flex-col justify-center items-center">
           <div className="w-8 h-1 rounded bg-gray-400 m-2"></div>
           <div className=" flex w-full justify-between">
-            <div className="text-gray-500">
+            <div className="text-gray-500 flex">
               <span>{People}</span> Everyone
             </div>
-
-            <button
-              onClick={() => {
-                if (onClose) onClose();
-              }}
-              className="focus:outline-none"
-            >
-              {Close}
-            </button>
+            <div>
+              <button
+                onClick={() => {
+                  if (onClose) {
+                    onClose();
+                  }
+                }}
+                className="focus:outline-none"
+              >
+                {Close}
+              </button>
+            </div>
           </div>
         </div>
         <div className="bg-gray-100 w-full h-full p-3 text-gray-500 overflow-y-auto no-scrollbar flex-grow">

@@ -6,6 +6,8 @@ import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
 import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
 import { useResizeDetector } from 'react-resize-detector';
+//@ts-ignore
+import { apply, CSSRules, tw, Directive, css } from 'twind/css';
 
 export interface VideoTileProps extends VideoProps {
   /**
@@ -54,23 +56,23 @@ export interface VideoTileClasses extends VideoClasses {
   /**
    * The top-level container.
    */
-  root?: string;
+  root?: Directive<CSSRules>;
   /**
    * The video container.
    */
-  videoContainer?: string;
+  videoContainer?: Directive<CSSRules>;
   /**
    * The avatar container.
    */
-  avatarContainer?: string;
+  avatarContainer?: Directive<CSSRules>;
   /**
    * Classes added to Avatar container if its a circle
    */
-  avatarContainerCircle?: string;
+  avatarContainerCircle?: Directive<CSSRules>;
   /**
    * Classes added to Video container if its a circle
    */
-  videoContainerCircle?: string;
+  videoContainerCircle?: Directive<CSSRules>;
 }
 
 export const VideoTile = ({
@@ -90,20 +92,20 @@ export const VideoTile = ({
   audioLevelDisplayType = 'border',
   audioLevelDisplayColor = '#0F6CFF',
   allowRemoteMute = false,
-  //TODO merge classes properly
+  //TODO merge classes properly with clsx
+  //TODO add a utility to add custom apply in hmsui-componentname-classname format
   classes = {
-    root: 'w-full h-full flex relative items-center justify-center rounded-lg',
-    videoContainer: 'relative rounded-lg shadow-lg',
-    avatarContainer:
-      'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
-    avatarContainerCircle: 'rounded-full',
-    videoContainerCircle: 'rounded-full',
-    video: 'h-full w-full rounded-lg',
-    videoCircle: 'rounded-full',
-    videoLocal: 'transform -scale-x-100',
-    videoCover: 'object-cover',
-    videoContain: 'object-contain',
-    borderAudioRoot: 'w-full h-full absolute left-0 top-0 rounded-lg',
+    root: apply`hmsui-videoTile-root w-full h-full flex relative items-center justify-center rounded-lg`,
+    videoContainer: apply`relative rounded-lg shadow-lg z-10`,
+    avatarContainer: apply`absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg`,
+    avatarContainerCircle: apply`rounded-full`,
+    videoContainerCircle: apply`rounded-full`,
+    video: apply`absolute left-0 top-0 z-10 h-full w-full rounded-lg`,
+    videoCircle: apply`rounded-full`,
+    videoLocal: apply`${css({ transform: 'scaleX(-1)' })}`,
+    videoCover: apply`object-cover`,
+    videoContain: apply`object-contain`,
+    borderAudioRoot: apply`w-full h-full absolute left-0 top-0 rounded-lg z-0`,
   },
   controlsComponent,
 }: VideoTileProps) => {
@@ -181,10 +183,10 @@ export const VideoTile = ({
   }, [videoTrack, audioTrack]);
 
   return (
-    <div ref={containerRef} className={classes.root}>
+    <div ref={containerRef} className={tw`${classes.root}`}>
       {containerHeight && containerWidth && (
         <div
-          className={`${classes.videoContainer} ${
+          className={tw`${classes.videoContainer} ${
             displayShape === 'circle' ? classes.videoContainerCircle : ''
           }`}
           style={{ width: `${width}px`, height: `${height}px` }}
@@ -204,7 +206,7 @@ export const VideoTile = ({
           />
           {isVideoMuted && (
             <div
-              className={`${classes.avatarContainer} ${
+              className={tw`${classes.avatarContainer} ${
                 displayShape === 'circle' ? classes.avatarContainerCircle : ''
               }`}
             >
