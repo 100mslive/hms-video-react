@@ -13,18 +13,9 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<HeaderProps> = args => {
-  const [maxTileCount, setMaxTileCount] = useState(8);
   return (
     <div className="bg-black">
-      <Header
-        {...args}
-        rightComponents={[
-          <Settings
-            maxTileCount={maxTileCount}
-            setMaxTileCount={setMaxTileCount}
-          />,
-        ]}
-      />
+      <Header {...args} rightComponents={[]} />
     </div>
   );
 };

@@ -10,12 +10,14 @@ import {
   ShareScreenButton,
   ChatButton,
 } from '../MediaIcons';
+import { Settings } from '../Settings/Settings';
 
 export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   isChatOpen?: boolean;
   buttonDisplay: ButtonDisplayType;
+  maxTileCount: number;
 
   classes?: {
     root?: string;
@@ -28,6 +30,7 @@ export interface ControlBarProps {
   leaveButtonOnClick: React.MouseEventHandler;
   chatButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
+  setMaxTileCount: (count: number) => void;
 
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
@@ -39,11 +42,13 @@ export const ControlBar = ({
   isVideoMuted = false,
   isChatOpen = false,
   buttonDisplay = 'square',
+  maxTileCount,
   audioButtonOnClick,
   videoButtonOnClick,
   leaveButtonOnClick,
   chatButtonOnClick,
   screenshareButtonOnClick,
+  setMaxTileCount,
   classes = {
     root:
       'flex flex-grow h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
@@ -55,6 +60,7 @@ export const ControlBar = ({
       'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
   },
   leftComponents = [
+    <Settings maxTileCount={maxTileCount} setMaxTileCount={setMaxTileCount} />,
     <ShareScreenButton
       buttonDisplay={buttonDisplay}
       clickHandler={screenshareButtonOnClick}

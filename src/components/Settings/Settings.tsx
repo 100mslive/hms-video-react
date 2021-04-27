@@ -59,7 +59,7 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        className="bg-gray-100 rounded-lg "
+        className=" rounded-lg "
         maxWidth="sm"
       >
         <div className="bg-gray-100 text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid">
