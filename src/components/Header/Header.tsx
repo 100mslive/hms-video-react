@@ -1,6 +1,7 @@
 import React from 'react';
 import { LogoButton } from '../MediaIcons';
 import { Participant, Peer } from '../../types';
+import { Settings } from '../Settings/Settings';
 
 export interface HeaderProps {
   peer: Peer;

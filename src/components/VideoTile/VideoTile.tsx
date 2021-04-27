@@ -188,7 +188,7 @@ export const VideoTile = ({
         <div
           className={tw`${classes.videoContainer} ${
             displayShape === 'circle' ? classes.videoContainerCircle : ''
-          }`}
+          } transition-height duration-500 ease-in-out`}
           style={{ width: `${width}px`, height: `${height}px` }}
         >
           <Video
