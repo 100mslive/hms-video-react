@@ -25,7 +25,7 @@ const Template: Story<ChatProps> = args => {
       let messages = [...prevMessages];
       messages.push({
         message,
-        sender: { id: '123', displayName: 'You' },
+        sender: 'You',
         timeSent: 'now',
       });
       return messages;
@@ -44,7 +44,7 @@ Default.args = {
   messages: [
     {
       message: 'Hi guys',
-      sender: { id: '123', displayName: 'Yash' },
+      sender: 'Yash',
       timeSent: '10 mins ago',
     },
     {
@@ -55,12 +55,12 @@ Default.args = {
     },
     {
       message: 'Ping me at nikhil@100ms.live',
-      sender: { id: '123s', displayName: 'Nikhil' },
+      sender: 'Nikhil',
       timeSent: '10 mins ago',
     },
     {
       message: 'Our twiiter handle @100mslive',
-      sender: { id: '123s', displayName: '100ms' },
+      sender: '100ms',
       timeSent: '10 mins ago',
     },
     {
