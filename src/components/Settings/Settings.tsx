@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Close, SettingsIcon } from '../../icons';
 import { CloseButton } from '../MediaIcons';
 import { Video, VideoProps } from '../Video';
@@ -38,6 +38,9 @@ export interface SettingsProps {
 //TODO replace with unpkg
 export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
   const [open, setOpen] = React.useState(false);
+  const [audioInput, setAudioInput] = React.useState<MediaDeviceInfo[]>([]);
+  const [audioOutput, setAudioOutput] = React.useState<MediaDeviceInfo[]>([]);
+  const [videoInput, setVideoInput] = React.useState<MediaDeviceInfo[]>([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -50,6 +53,20 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
     console.log(newValue);
     setMaxTileCount(newValue as number);
   };
+
+  useEffect(() => {
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      for (let device of devices) {
+        if (device.kind === 'videoinput') {
+          setVideoInput(videoDevices => [...videoDevices, device]);
+        } else if (device.kind === 'audioinput') {
+          setAudioInput(prevAudioInput => [...prevAudioInput, device]);
+        } else if (device.kind === 'audiooutput') {
+          setAudioOutput(prevAudioOutput => [...prevAudioOutput, device]);
+        }
+      }
+    });
+  }, []);
 
   return (
     <>
@@ -92,9 +109,11 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
                   //   setRole(event.target.value);
                   // }}
                 >
-                  <option value="Teacher" className="p-4">
-                    Default
-                  </option>
+                  {videoInput.map(device => (
+                    <option value="Teacher" className="p-4">
+                      {device.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -111,9 +130,11 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
                   //   setRole(event.target.value);
                   // }}
                 >
-                  <option value="Teacher" className="p-4">
-                    Default
-                  </option>
+                  {audioInput.map(device => (
+                    <option value="Teacher" className="p-4">
+                      {device.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -130,9 +151,11 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
                   //   setRole(event.target.value);
                   // }}
                 >
-                  <option value="Teacher" className="p-4">
-                    Default
-                  </option>
+                  {audioOutput.map(device => (
+                    <option value="Teacher" className="p-4">
+                      {device.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
