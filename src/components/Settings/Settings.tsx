@@ -112,6 +112,25 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
                 </select>
               </div>
             </div>
+            <div className="w-full flex my-1.5">
+              <div className="w-1/3 flex justify-end items-center ">
+                <span>Audio Output:</span>
+              </div>
+              <div className="rounded-lg w-1/2 bg-gray-200 p-2 mx-2">
+                <select
+                  name="role"
+                  className="rounded-lg w-full h-full bg-gray-200 focus:outline-none"
+                  // value={role}
+                  // onChange={event => {
+                  //   setRole(event.target.value);
+                  // }}
+                >
+                  <option value="Teacher" className="p-4">
+                    Default
+                  </option>
+                </select>
+              </div>
+            </div>
             {/* <div className="w-full my-1.5">
               <div className="w-full flex  ">
                 <div className="w-1/3 flex justify-end items-center ">
@@ -214,7 +233,7 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
             <div className="w-full my-1.5">
               <div className="w-full flex  ">
                 <div className="w-1/3 flex justify-end items-center ">
-                  <span className="text-right">Participnats in view:</span>
+                  <span className="text-right">Participants in view:</span>
                 </div>
                 <div className="rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ">
                   <HMSSlider
