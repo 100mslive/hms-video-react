@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Close, SettingsIcon } from '../../icons';
+import { Close, SettingsIconSmall, SettingsIcon } from '../../icons';
 import { CloseButton } from '../MediaIcons';
 import { Video, VideoProps } from '../Video';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -87,7 +87,7 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
         <div className="bg-gray-100 text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid">
           <div className="text-2xl mb-3 p-2 border-b-2 flex justify-between">
             <span className="flex items-center">
-              <span className="pr-4">{SettingsIcon}</span>
+              <span className="pr-4">{SettingsIconSmall}</span>
               <span className="text-2xl leading-7">Settings</span>
             </span>
             <span>

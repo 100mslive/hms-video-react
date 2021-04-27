@@ -37,4 +37,7 @@ Default.args = {
   setMaxTileCount: (count: number) => {
     //alert(count + ' count set');
   },
+  isAudioMuted: true,
+  isVideoMuted: true,
+  isChatOpen: true,
 };
