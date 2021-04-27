@@ -53,7 +53,12 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
 
   return (
     <>
-      <button onClick={handleClickOpen}>{SettingsIcon}</button>
+      <button
+        onClick={handleClickOpen}
+        className="focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg"
+      >
+        {SettingsIcon}
+      </button>
       <Dialog
         open={open}
         onClose={handleClose}
