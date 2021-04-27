@@ -13,10 +13,10 @@ import {
   SpotlightListOn,
   MutePreview,
   VideoPreview,
-  Settings,
   Close,
   ChatIconBlack,
   ChatIconWhite,
+  SettingsIcon,
 } from '../../icons';
 
 export const LogoButton = () => {
@@ -231,13 +231,24 @@ export const SettingsButton = ({
       } focus:outline-none hover:bg-transparent-light`}
       onClick={clickHandler}
     >
-      {Settings}
+      {SettingsIcon}
     </button>
   );
 };
 
-export const CloseButton = () => {
-  return <button>{Close}</button>;
+export const CloseButton = ({
+  clickHandler,
+}: {
+  clickHandler: React.MouseEventHandler;
+}) => {
+  return (
+    <button
+      className="focus:outline-none p-1 hover:outline-none"
+      onClick={clickHandler}
+    >
+      {Close}
+    </button>
+  );
 };
 
 export const ChatButton = ({
