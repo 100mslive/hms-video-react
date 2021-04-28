@@ -22,7 +22,7 @@ const Template: Story<ChatProps> = args => {
       messages.push({
         message,
         sender: 'You',
-        timeSent: 'now',
+        time: new Date(),
       });
       return messages;
     });
@@ -51,27 +51,29 @@ Default.args = {
     {
       message: 'Hi guys',
       sender: 'Yash',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
     {
       message: 'Ivy L left meeting',
-      timeSent: '10 mins ago',
+      time: new Date(),
+      sender: 'admin',
       notification: true,
     },
     {
       message: 'Ping me at nikhil@100ms.live',
       sender: 'Nikhil',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
     {
       message: 'Our twiiter handle @100mslive',
       sender: '100ms',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
     {
       message: 'Nikhil left meeting',
-      timeSent: '10 mins ago',
+      time: new Date(),
       notification: true,
+      sender: 'admin',
     },
   ],
 
@@ -84,28 +86,29 @@ MarkDownChat.args = {
     {
       message: 'Hi guys',
       sender: 'Yash',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
     {
       message: 'Ivy L left meeting',
-      timeSent: '10 mins ago',
+      time: new Date(),
       notification: true,
+      sender: 'admin',
     },
     {
       message: `* [ ] todo
     * [x] done`,
       sender: 'Nikhil',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
     {
       message: `> A block quote with ~strikethrough~ and a URL: https://reactjs.org.`,
       sender: 'Sunita',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
     {
       message: `A paragraph with *emphasis* and **strong importance**`,
       sender: 'Ann',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
   ],
 

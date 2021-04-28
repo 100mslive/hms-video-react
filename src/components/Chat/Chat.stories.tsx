@@ -26,7 +26,7 @@ const Template: Story<ChatProps> = args => {
       messages.push({
         message,
         sender: 'You',
-        timeSent: 'now',
+        time: new Date(),
       });
       return messages;
     });
@@ -45,27 +45,28 @@ Default.args = {
     {
       message: 'Hi guys',
       sender: 'Yash',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
     {
       message: 'Ivy L left meeting',
-
-      timeSent: '10 mins ago',
+      sender: 'admin',
+      time: new Date(),
       notification: true,
     },
     {
       message: 'Ping me at nikhil@100ms.live',
       sender: 'Nikhil',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
     {
       message: 'Our twiiter handle @100mslive',
       sender: '100ms',
-      timeSent: '10 mins ago',
+      time: new Date(),
     },
     {
       message: 'Nikhil left meeting',
-      timeSent: '10 mins ago',
+      sender: 'admin',
+      time: new Date(),
       notification: true,
     },
   ],
