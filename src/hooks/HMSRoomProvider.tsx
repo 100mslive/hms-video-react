@@ -4,8 +4,10 @@ import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-l
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSRoomProps from './interfaces/HMSRoomProps';
 import createListener from './helpers/createListener';
+import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import { Silence } from '../components/Silence';
 import { useEffect } from 'react';
+import Message from '@100mslive/100ms-web-sdk/dist/sdk/models/HMSMessage';
 
 const sdk = new HMSSdk();
 
@@ -18,6 +20,11 @@ export const HMSRoomProvider: React.FC = props => {
 
   const [isScreenShare, setIsScreenShare] = useState(false);
 
+  const [messages, setMessages] = useState<HMSMessage[]>([]);
+
+  const receiveMessage = (message: HMSMessage) => {
+    setMessages(prevMessages => [...prevMessages, message]);
+  };
   const [audioMuted, setAudioMuted] = useState(false);
 
   const [videoMuted, setVideoMuted] = useState(false);
@@ -32,7 +39,10 @@ export const HMSRoomProvider: React.FC = props => {
   }, [localPeer]);
 
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
-    sdk.join(config, createListener(listener, setPeers, setLocalPeer, sdk));
+    sdk.join(
+      config,
+      createListener(listener, setPeers, setLocalPeer, receiveMessage, sdk),
+    );
   };
 
   const leave = () => {
@@ -89,6 +99,11 @@ export const HMSRoomProvider: React.FC = props => {
     setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };
+  const sendMessage = (message: string) => {
+    const hmsMessage = sdk.sendMessage('chat', message);
+    receiveMessage(hmsMessage);
+    console.debug('HMSui-component: [sendMessage] sentMessage', message);
+  };
 
   window.onunload = () => {
     leave();
@@ -99,12 +114,21 @@ export const HMSRoomProvider: React.FC = props => {
       value={{
         peers: peers,
         localPeer: localPeer,
+        messages: messages.map(message => ({
+          message: message.message,
+          time: message.time,
+          sender:
+            sdk.getLocalPeer().peerId == message.sender
+              ? 'You'
+              : peers.find(peer => peer.peerId === message.sender)?.name,
+        })),
         audioMuted: audioMuted,
         videoMuted: videoMuted,
         join: join,
         leave: leave,
         toggleMute: toggleMute,
         toggleScreenShare: toggleScreenShare,
+        sendMessage: sendMessage,
       }}
     >
       <Silence />

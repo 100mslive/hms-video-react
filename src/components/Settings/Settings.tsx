@@ -1,5 +1,5 @@
-import React from 'react';
-import { Close, SettingsIcon } from '../../icons';
+import React, { useEffect } from 'react';
+import { Close, SettingsIconSmall, SettingsIcon } from '../../icons';
 import { CloseButton } from '../MediaIcons';
 import { Video, VideoProps } from '../Video';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -38,6 +38,9 @@ export interface SettingsProps {
 //TODO replace with unpkg
 export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
   const [open, setOpen] = React.useState(false);
+  const [audioInput, setAudioInput] = React.useState<MediaDeviceInfo[]>([]);
+  const [audioOutput, setAudioOutput] = React.useState<MediaDeviceInfo[]>([]);
+  const [videoInput, setVideoInput] = React.useState<MediaDeviceInfo[]>([]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -51,21 +54,40 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
     setMaxTileCount(newValue as number);
   };
 
+  useEffect(() => {
+    navigator.mediaDevices.enumerateDevices().then(devices => {
+      for (let device of devices) {
+        if (device.kind === 'videoinput') {
+          setVideoInput(videoDevices => [...videoDevices, device]);
+        } else if (device.kind === 'audioinput') {
+          setAudioInput(prevAudioInput => [...prevAudioInput, device]);
+        } else if (device.kind === 'audiooutput') {
+          setAudioOutput(prevAudioOutput => [...prevAudioOutput, device]);
+        }
+      }
+    });
+  }, []);
+
   return (
     <>
-      <button onClick={handleClickOpen}>{SettingsIcon}</button>
+      <button
+        onClick={handleClickOpen}
+        className="focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg"
+      >
+        {SettingsIcon}
+      </button>
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        className="bg-gray-100 rounded-lg "
+        className=" rounded-lg "
         maxWidth="sm"
       >
         <div className="bg-gray-100 text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid">
           <div className="text-2xl mb-3 p-2 border-b-2 flex justify-between">
             <span className="flex items-center">
-              <span className="pr-4">{SettingsIcon}</span>
+              <span className="pr-4">{SettingsIconSmall}</span>
               <span className="text-2xl leading-7">Settings</span>
             </span>
             <span>
@@ -87,9 +109,11 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
                   //   setRole(event.target.value);
                   // }}
                 >
-                  <option value="Teacher" className="p-4">
-                    Default
-                  </option>
+                  {videoInput.map(device => (
+                    <option value="Teacher" className="p-4">
+                      {device.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -106,9 +130,11 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
                   //   setRole(event.target.value);
                   // }}
                 >
-                  <option value="Teacher" className="p-4">
-                    Default
-                  </option>
+                  {audioInput.map(device => (
+                    <option value="Teacher" className="p-4">
+                      {device.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -125,9 +151,11 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
                   //   setRole(event.target.value);
                   // }}
                 >
-                  <option value="Teacher" className="p-4">
-                    Default
-                  </option>
+                  {audioOutput.map(device => (
+                    <option value="Teacher" className="p-4">
+                      {device.label}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

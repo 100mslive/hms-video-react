@@ -1,6 +1,7 @@
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import HMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
+import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import HMSRoom from '@100mslive/100ms-web-sdk/dist/interfaces/room';
 import HMSUpdateListener, {
   HMSPeerUpdate,
@@ -13,6 +14,7 @@ const createListener = (
   incomingListener: HMSUpdateListener,
   setPeers: React.Dispatch<React.SetStateAction<HMSPeer[]>>,
   setLocalPeer: React.Dispatch<React.SetStateAction<HMSPeer>>,
+  receiveMessage: (message: HMSMessage) => void,
   sdk: HMSSdk,
 ) => {
   const myListener = {
@@ -62,6 +64,10 @@ const createListener = (
       console.debug('HMSui-component: [onError] Inside listener');
 
       incomingListener.onError(exception);
+    },
+    onMessageReceived: (message: HMSMessage) => {
+      console.debug('HMSui-component: [onMessageReceived] ', message);
+      receiveMessage(message);
     },
   };
 

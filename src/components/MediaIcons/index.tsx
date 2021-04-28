@@ -141,7 +141,7 @@ export const ShareScreenButton = ({
 }) => {
   return (
     <button
-      className={`inline-block p-2 rounded-${
+      className={`inline-block p-1 rounded-${
         buttonDisplay === 'square' ? 'lg' : 'full'
       } focus:outline-none hover:bg-transparent-light`}
       onClick={clickHandler}
@@ -262,7 +262,7 @@ export const ChatButton = ({
     <button
       onClick={clickHandler}
       className={`focus:outline-none rounded-lg ${isChatOpen &&
-        'bg-white'} p-3`}
+        'bg-white'} p-2 hover:bg-gray-200  m-1`}
     >
       {isChatOpen ? ChatIconBlack : ChatIconWhite}
     </button>
