@@ -39,6 +39,7 @@ const Template: Story<ChatProps> = args => {
             alert('closing');
           }}
           messageFormatter={args.messageFormatter}
+          classes={args.classes}
         />
       </div>
     </div>
@@ -75,7 +76,9 @@ Default.args = {
       notification: true,
     },
   ],
-
+  classes: {
+    header: 'bg-red-500',
+  },
   willScrollToBottom: true,
 };
 

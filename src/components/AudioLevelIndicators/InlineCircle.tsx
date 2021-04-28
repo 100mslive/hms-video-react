@@ -5,6 +5,11 @@ interface InlineCircleProps {
   level: number;
 }
 
+// const defaultClasses:  = {
+//   root: 'w-full h-full absolute left-0 top-0 rounded-lg',
+//   videoCircle: 'rounded-full',
+// };
+
 const InlineCircle = ({ level }: InlineCircleProps) => {
   return (
     <div className="inline-block" style={{ width: '22px', height: '32px' }}>

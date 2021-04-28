@@ -223,7 +223,7 @@ DefaultVideoTile.args = {
   audioLevelDisplayType: 'border',
   audioLevel: 40,
   videoSource: 'camera',
-  classes: { root: 'hello' },
+  classes: { root: 'w-1/2' },
 };
 
 GoogleMeetVideoTile.args = {
