@@ -19,7 +19,30 @@ import {
 } from '../../utils/index';
 import { useResizeDetector } from 'react-resize-detector';
 
-export interface VideoListProps {
+//@ts-ignore
+import { create } from 'twind';
+import { combineClasses } from '../../utils';
+import { withClasses } from '../../utils/styles';
+import { VideoTileClasses } from '../VideoTile/VideoTile';
+const theme = require('../../../defaultTheme.ts').theme;
+
+interface VideoListClasses {
+  root?: string;
+  page?: string;
+  pageRoot?: string;
+  videoTileParent?: string;
+}
+
+const defaultClasses: VideoListClasses = {
+  root:
+    ' h-full w-full flex flex-wrap justify-center content-evenly justify-items-center',
+  videoTileParent: ' flex justify-center',
+  page: 'w-full h-full',
+  pageRoot:
+    ' h-full w-full flex flex-wrap justify-center items-center content-center',
+};
+
+interface StyledVideoListProps {
   /**
     MediaStream to be displayed.
     */
@@ -51,19 +74,30 @@ export interface VideoListProps {
    */
   audioLevelDisplayType?: AudioLevelDisplayType;
   showAudioLevel?: boolean;
-  classes?: {
-    root?: string;
-    videoTileParent?: string;
-    videoTile?: string;
-    video?: string;
-  };
+  // classes?: {
+  //   root?: string;
+  //   videoTileParent?: string;
+  //   videoTile?: string;
+  //   video?: string;
+  // };
   maxRowCount?: number;
   maxColCount?: number;
   videoTileControls?: React.ReactNode[];
   allowRemoteMute?: boolean;
+  /**
+   * default classes
+   */
+  defaultClasses?: VideoListClasses;
+
+  /**
+   * extra classes added  by user
+   */
+  classes?: VideoListClasses;
+
+  videoTileClasses?: VideoTileClasses;
 }
 
-export const VideoList = ({
+const StyledVideoList = ({
   streams,
   overflow = 'scroll-x',
   maxTileCount,
@@ -78,7 +112,12 @@ export const VideoList = ({
   maxColCount,
   videoTileControls,
   showAudioMuteStatus,
-}: VideoListProps) => {
+  classes: extraClasses,
+  defaultClasses,
+  videoTileClasses,
+}: StyledVideoListProps) => {
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const { width = 0, height = 0, ref } = useResizeDetector();
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
@@ -175,17 +214,19 @@ export const VideoList = ({
   );
 
   return (
+    // root
     <div
-      className={`${classes?.root} h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
+      className={`${combinedClasses?.root} flex-${tileArrangeDirection} `}
       ref={ref}
     >
       <Slider {...settings} className="w-full h-full">
         {groupTilesIntoPage(
           streams.map((stream, index) => (
+            // videoTileParent
             <div
               style={{ height: h, width: w }}
               key={stream.peer.id}
-              className={`${classes?.videoTileParent} flex justify-center`}
+              className={combinedClasses?.videoTileParent}
             >
               {
                 //@ts-ignore
@@ -200,6 +241,7 @@ export const VideoList = ({
                   controlsComponent={
                     videoTileControls && videoTileControls[index]
                   }
+                  classes={videoTileClasses}
                 />
               }
             </div>
@@ -228,11 +270,11 @@ export const VideoList = ({
           })
           .map((item, index) => {
             return (
-              <div className="w-full h-full" key={index}>
+              // page
+              <div className={combinedClasses?.page} key={index}>
+                {/* pageRoot */}
                 <div
-                  className={` ${
-                    classes?.root
-                  } h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
+                  className={`${combinedClasses?.pageRoot}   flex-${
                     maxRowCount
                       ? 'col'
                       : maxColCount
@@ -249,3 +291,11 @@ export const VideoList = ({
     </div>
   );
 };
+
+export type VideoListProps = Omit<StyledVideoListProps, 'defaultClasses'>;
+
+export const VideoList = withClasses<VideoListClasses | undefined>(
+  defaultClasses,
+  'chatBox',
+  create({ theme }).tw,
+)<StyledVideoListProps>(StyledVideoList);
