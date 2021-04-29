@@ -43,14 +43,15 @@ export const MessageModal = ({
     >
       {show && (
         <Backdrop className={classes.backdrop} open={true}>
-          <div className="flex items-center justify-center top-1/3 absolute pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex items-center justify-center absolute pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <span
               className="hidden sm:inline-block sm:align-middle sm:h-screen"
               aria-hidden="true"
             >
               &#8203;
             </span>
-            <div className="focus:outline-none insert-y-10 inline-block align-bottom text-left overflow-hidden transform transition-all sm:align-middle sm:w-full">
+
+            <div className="focus:outline-none insert-y-20 inline-block align-bottom text-left overflow-hidden transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
               <div className="flex flex-col md:flex-row md:flex-wrap bg-gray-100 rounded-lg sm:items-start md:w-100 focus:outline-none rounded-tr-lg text-center font-normal pb-4 sm:text-left">
                 <div className="flex flex-grow flex-row px-5 pt-5 items-center">
                   <div className="flex flex-grow lg:text-2xl sm:text-xl self-center items-center text-white font-medium">

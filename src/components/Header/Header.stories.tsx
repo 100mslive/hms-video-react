@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Header, HeaderProps } from './index';
 import { ParticipantList } from '../ParticipantList/ParticipantList';
+import { SideBar } from '../VideoList/VideoList.stories';
+import { Settings } from '../Settings/Settings';
 
 const meta: Meta = {
   title: 'Header',
@@ -10,11 +12,13 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<HeaderProps> = args => (
-  <div className="bg-black">
-    <Header {...args} />
-  </div>
-);
+const Template: Story<HeaderProps> = args => {
+  return (
+    <div className="bg-black">
+      <Header {...args} rightComponents={[]} />
+    </div>
+  );
+};
 
 export const Default = Template.bind({});
 

@@ -7,11 +7,12 @@ import { CloseButton } from '../MediaIcons';
 
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
+import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 
 export interface Message {
   message: string;
-  sender?: Peer;
-  timeSent: string;
+  sender?: string;
+  time: Date;
   notification?: boolean;
   direction?: 'left' | 'right' | 'center';
 }
@@ -23,6 +24,7 @@ export interface ChatProps {
   willScrollToBottom?: boolean;
   scrollAnimation?: 'smooth' | 'auto';
   messageFormatter?: (message: string) => React.ReactNode;
+  timeFormatter?: (date: Date) => string;
 }
 
 export const ChatBox = ({
@@ -41,8 +43,12 @@ export const ChatBox = ({
 
     return ReactHtmlParser(text);
   },
+  timeFormatter = (date: Date) => {
+    return `${date.getHours()}:${date.getMinutes()}`;
+  },
 }: ChatProps) => {
   const [message, setMessage] = useState('');
+
   const messagesEndRef = React.createRef<HTMLDivElement>();
   const scrollToBottom = () => {
     messagesEndRef.current!.scrollIntoView({ behavior: scrollAnimation });
@@ -81,15 +87,17 @@ export const ChatBox = ({
             return message.notification ? (
               <div className="py-3">
                 <div className="flex justify-between text-gray-400">
-                  <span>Ivy L joined the room</span>
-                  <span className="text-xs">1 min ago </span>
+                  <span>{message.message}</span>
+                  <span className="text-xs">{timeFormatter(message.time)}</span>
                 </div>
               </div>
             ) : (
               <div className="py-3">
                 <div className="flex justify-between">
-                  <span>{message.sender!.displayName}</span>
-                  <span className="text-xs">{message.timeSent} </span>
+                  <span>{message.sender}</span>
+                  <span className="text-xs">
+                    {timeFormatter(message.time)}{' '}
+                  </span>
                 </div>
                 <div className=" text-white leading-5 max-w-full break-words">
                   {/* {ReactHtmlParser(
