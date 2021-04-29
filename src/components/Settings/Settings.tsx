@@ -130,7 +130,7 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
                   //   setRole(event.target.value);
                   // }}
                 >
-                  {audioInput.map((device,index) => (
+                  {audioInput.map((device, index) => (
                     <option value="Teacher" className="p-4" key={index}>
                       {device.label}
                     </option>
@@ -151,7 +151,7 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
                   //   setRole(event.target.value);
                   // }}
                 >
-                  {audioOutput.map((device,index) => (
+                  {audioOutput.map((device, index) => (
                     <option value="Teacher" className="p-4" key={index}>
                       {device.label}
                     </option>

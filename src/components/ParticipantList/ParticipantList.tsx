@@ -42,7 +42,13 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
           </span>
         </div>
       </button>
-      <Popover id={id} open={open} anchorEl={anchorEl} className="max-h-100 rounded-bl-xl rounded-br-xl" onClose={handleClick}>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        className="max-h-100 rounded-bl-xl rounded-br-xl"
+        onClose={handleClick}
+      >
         <div
           className="w-60 py-1.5 bg-gray-100 focus:outline-none"
           role="menu"
