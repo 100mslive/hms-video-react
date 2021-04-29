@@ -129,16 +129,7 @@ const getInitialsFromName = (name: string | undefined) => {
   if (!name) {
     return undefined;
   } else {
-    const rgx = /(\p{L}{1})\p{L}+/gu;
-    console.debug('HMSui-component: rgx is', rgx, name);
-    let initialsArray = name.match(rgx) || [];
-    console.debug('HMSui-component: Initial initials are', initialsArray);
-    let initials = (
-      (initialsArray[0] ? initialsArray.shift()![0] : '') +
-      (initialsArray[0] ? initialsArray.pop()![0] : '')
-    ).toUpperCase();
-    console.debug('HMSui-component: Initials are', initials);
-    return initials;
+    return name.match(/(^\S\S?|\b\S)?/g)?.join("")?.match(/(^\S|\S$)?/g)?.join("").toUpperCase();
   }
 };
 

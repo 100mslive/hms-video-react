@@ -60,11 +60,11 @@ export const ControlBar = ({
       'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
   },
   leftComponents = [
-    <Settings maxTileCount={maxTileCount} setMaxTileCount={setMaxTileCount} />,
+    <Settings maxTileCount={maxTileCount} setMaxTileCount={setMaxTileCount} key={0}/>,
     <ShareScreenButton
       buttonDisplay={buttonDisplay}
       clickHandler={screenshareButtonOnClick}
-      key={0}
+      key={1}
     />,
     <ChatButton clickHandler={chatButtonOnClick} isChatOpen={isChatOpen} />,
   ],

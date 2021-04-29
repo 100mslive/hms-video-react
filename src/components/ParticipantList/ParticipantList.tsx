@@ -3,7 +3,7 @@ import { MuteListButton, SpotlightListButton } from '../MediaIcons';
 import { DownCarret, UpCarret } from '../../icons';
 import { Participant } from '../../types';
 import { AvatarList } from '../Avatar';
-import Popper from '@material-ui/core/Popper';
+import Popover from '@material-ui/core/Popover';
 
 export interface ParticipantListProps {
   participantList: Array<Participant>;
@@ -42,9 +42,9 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
           </span>
         </div>
       </button>
-      <Popper id={id} open={open} anchorEl={anchorEl}>
+      <Popover id={id} open={open} anchorEl={anchorEl} className="max-h-100 rounded-bl-xl rounded-br-xl" onClose={handleClick}>
         <div
-          className="w-60 max-h-100 overflow-y-auto rounded-bl-xl rounded-br-xl py-1.5 bg-gray-100 focus:outline-none"
+          className="w-60 py-1.5 bg-gray-100 focus:outline-none"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
@@ -91,7 +91,7 @@ export const ParticipantList = ({ participantList }: ParticipantListProps) => {
             );
           })}
         </div>
-      </Popper>
+      </Popover>
     </div>
   );
 };

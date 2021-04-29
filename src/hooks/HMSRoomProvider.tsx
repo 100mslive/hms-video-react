@@ -8,13 +8,14 @@ import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import { Silence } from '../components/Silence';
 import { useEffect } from 'react';
 import Message from '@100mslive/100ms-web-sdk/dist/sdk/models/HMSMessage';
+import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 
 const sdk = new HMSSdk();
 
 const HMSContext = createContext<HMSRoomProps | null>(null);
 
 export const HMSRoomProvider: React.FC = props => {
-  const [peers, setPeers] = useState(sdk.getPeers());
+  const [peers, setPeers] = useState([] as HMSPeer[]);
 
   const [localPeer, setLocalPeer] = useState(sdk.getLocalPeer());
 

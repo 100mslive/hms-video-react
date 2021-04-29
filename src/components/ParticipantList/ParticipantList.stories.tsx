@@ -50,6 +50,61 @@ Default.args = {
       isAudioMuted: false,
       isStarMarked: false,
     },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
+    {
+      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      isAudioMuted: false,
+      isStarMarked: false,
+    },
   ],
 };
 
