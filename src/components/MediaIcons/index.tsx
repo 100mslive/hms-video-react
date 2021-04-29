@@ -236,8 +236,19 @@ export const SettingsButton = ({
   );
 };
 
-export const CloseButton = () => {
-  return <button>{Close}</button>;
+export const CloseButton = ({
+  clickHandler,
+}: {
+  clickHandler: React.MouseEventHandler;
+}) => {
+  return (
+    <button
+      className="focus:outline-none p-1 hover:outline-none"
+      onClick={clickHandler}
+    >
+      {Close}
+    </button>
+  );
 };
 
 export const ChatButton = ({
