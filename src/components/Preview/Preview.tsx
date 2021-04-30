@@ -5,9 +5,13 @@ import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileControls } from './Controls';
 import { MessageModal } from '../MessageModal';
 
+interface MuteStatus {
+  audioMuted?: boolean;
+  videoMuted?: boolean;
+}
 export interface PreviewProps {
   name: string;
-  joinOnClick: () => void;
+  joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
   goBackOnClick: () => void;
   toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
@@ -17,7 +21,6 @@ export const Preview = ({
   name,
   joinOnClick,
   goBackOnClick,
-  toggleMute,
   videoTileProps,
 }: PreviewProps) => {
   const [mediaStream, setMediaStream] = useState(new MediaStream());
@@ -38,16 +41,26 @@ export const Preview = ({
 
   const toggleMediaState = (type: string) => {
     if (type === 'audio') {
+      if (!audioMuted) {
+        mediaStream.getAudioTracks()[0].enabled = false;
+        //TODO add handling for green light later
+        //mediaStream.getAudioTracks()[0].stop();
+      } else {
+        mediaStream.getAudioTracks()[0].enabled = true;
+        //startMediaStream();
+      }
       setAudioMuted(prevMuted => !prevMuted);
-      toggleMute('audio');
+      //toggleMute('audio');
     } else if (type === 'video') {
       if (!videoMuted) {
-        closeMediaStream(mediaStream);
+        mediaStream.getVideoTracks()[0].enabled = false;
+        //mediaStream.getVideoTracks()[0].stop();
       } else {
-        startMediaStream();
+        mediaStream.getVideoTracks()[0].enabled = true;
+        //startMediaStream();
       }
       setVideoMuted(prevMuted => !prevMuted);
-      toggleMute('video');
+      //toggleMute('video');
     }
   };
   const agent = navigator.userAgent.toLowerCase();
@@ -205,8 +218,8 @@ export const Preview = ({
       <div
         className="flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 bg-blue-main rounded-xl text-lg font-semibold cursor-pointer"
         onClick={() => {
-          joinOnClick();
           closeMediaStream(mediaStream);
+          joinOnClick({ audioMuted, videoMuted });
         }}
       >
         Join
@@ -214,8 +227,8 @@ export const Preview = ({
       <div
         className="text-blue-main text-lg font-semibold cursor-pointer"
         onClick={() => {
-          goBackOnClick();
           closeMediaStream(mediaStream);
+          goBackOnClick();
         }}
       >
         Go back

@@ -17,7 +17,7 @@ const HMSContext = createContext<HMSRoomProps | null>(null);
 export const HMSRoomProvider: React.FC = props => {
   const [peers, setPeers] = useState([] as HMSPeer[]);
 
-  const [localPeer, setLocalPeer] = useState(sdk.getLocalPeer());
+  const [localPeer, setLocalPeer] = useState({} as HMSPeer);
 
   const [isScreenShare, setIsScreenShare] = useState(false);
 
@@ -49,6 +49,7 @@ export const HMSRoomProvider: React.FC = props => {
   const leave = () => {
     //TODO this is not strictly necessary since SDK should clean up, but foing it for safety
     setPeers([]);
+    setLocalPeer({} as HMSPeer);
     setAudioMuted(false);
     setVideoMuted(false);
     sdk.leave();
@@ -66,7 +67,7 @@ export const HMSRoomProvider: React.FC = props => {
 
   const toggleMuteInPeer = async (type: 'audio' | 'video') => {
     if (localPeer && localPeer.audioTrack && type === 'audio') {
-      await localPeer.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
+      await localPeer?.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
     }
     if (localPeer && localPeer.videoTrack && type === 'video') {
       await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);

@@ -70,7 +70,11 @@ export const ControlBar = ({
       clickHandler={screenshareButtonOnClick}
       key={1}
     />,
-    <ChatButton clickHandler={chatButtonOnClick} isChatOpen={isChatOpen} />,
+    <ChatButton
+      key={2}
+      clickHandler={chatButtonOnClick}
+      isChatOpen={isChatOpen}
+    />,
   ],
   centerComponents = [
     <VideoButton

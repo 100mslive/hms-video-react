@@ -185,7 +185,7 @@ export const VideoList = ({
             <div
               style={{ height: h, width: w }}
               key={stream.peer.id}
-              className={`${classes?.videoTileParent} flex justify-center transition-height duration-100 ease-in-out`}
+              className={`${classes?.videoTileParent} flex justify-center`}
             >
               <VideoTile
                 {...stream}
