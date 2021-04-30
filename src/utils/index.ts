@@ -217,32 +217,32 @@ const getTileContainerDimensions = ({
   parentHeight,
   isSquareOrCircle,
 }: getTileContainerDimensionsProps) => {
-  //console.log(stream, objectFit, aspectRatio, parentWidth, parentHeight);
+  console.debug("HMSui-components: [getTileContainerDimensions] all data", videoTrack, objectFit, aspectRatio, parentWidth, parentHeight);
   const { width: selfWidth, height: selfHeight } = videoTrack
     ? videoTrack.getSettings()
     : { width: parentWidth, height: parentHeight };
-  //console.log(selfHeight, selfWidth);
+  console.debug("HMSui-components: [getTileContainerDimensions] selfHeight, selfWidth", selfHeight, selfWidth);
   const containerAspectRatio =
     objectFit === 'cover'
       ? { width: parentWidth, height: parentHeight }
       : { width: selfWidth, height: selfHeight };
-  //console.log(containerAspectRatio);
+  console.debug("HMSui-components: [getTileContainerDimensions] containerAspectRatio", containerAspectRatio);
   const containerAspectRatioAfterUserOverride =
     aspectRatio && objectFit === 'cover' ? aspectRatio : containerAspectRatio;
-  //console.log(containerAspectRatioAfterUserOverride);
+  console.debug("HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterUserOverride", containerAspectRatioAfterUserOverride);
   const containerAspectRatioAfterShapeOverride = {
     width: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.width,
     height: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.height,
   };
-  //console.log(containerAspectRatioAfterShapeOverride);
-  const { width, height } = largestRect(
+  console.debug("HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterShapeOverride", containerAspectRatioAfterShapeOverride);
+  const {width, height} = (containerAspectRatioAfterShapeOverride.width && containerAspectRatioAfterShapeOverride.height)?largestRect(
     parentWidth,
     parentHeight,
     1,
     containerAspectRatioAfterShapeOverride.width,
     containerAspectRatioAfterShapeOverride.height,
-  );
-  //console.log(width, height);
+  ):{width:parentWidth,height:parentHeight};
+  console.debug("HMSui-components: [getTileContainerDimensions] width, height", width, height);
   return { width, height };
 };
 
