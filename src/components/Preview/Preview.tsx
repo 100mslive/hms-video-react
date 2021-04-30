@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { closeMediaStream, getLocalStreamException } from '../../utils';
+import { closeMediaStream } from '../../utils';
+import { getLocalStreamException, getUserMedia } from '../../utils/preview';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileControls } from './Controls';
 import { MessageModal } from '../MessageModal';
@@ -8,7 +9,6 @@ export interface PreviewProps {
   name: string;
   joinOnClick: () => void;
   goBackOnClick: () => void;
-  messageOnClose: () => void;
   toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
 }
@@ -17,7 +17,6 @@ export const Preview = ({
   name,
   joinOnClick,
   goBackOnClick,
-  messageOnClose,
   toggleMute,
   videoTileProps,
 }: PreviewProps) => {
@@ -25,6 +24,7 @@ export const Preview = ({
   const [errorState, setErrorState] = useState(false);
   const [title, setErrorTitle] = useState(String);
   const [message, setErrorMessage] = useState(String);
+  const [secondaryMessage, setSecondaryErrorMessage] = useState(String);
   const [videoInput, setVideoInput] = useState(Array);
   const [audioInput, setAudioInput] = useState(Array);
   const [audioOutput, setAudioutput] = useState(Array);
@@ -50,55 +50,114 @@ export const Preview = ({
       toggleMute('video');
     }
   };
+  const agent = navigator.userAgent.toLowerCase();
+  const chrome = agent.indexOf('chrome') > -1;
+  const safari = agent.indexOf('safari') !== -1 && !chrome;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const sayswho = (function() {
+    var ua = navigator.userAgent,
+      tem,
+      M =
+        ua.match(
+          /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i,
+        ) || [];
+    if (/trident/i.test(M[1])) {
+      tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+      return `IE ${tem[1] || ''}`;
+    }
+    if (M[1] === 'Chrome') {
+      tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
+      if (tem != null) {
+        return tem
+          .slice(1)
+          .join(' ')
+          .replace('OPR', 'Opera');
+      }
+    }
+    M = M[2] ? [M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+    if ((tem = ua.match(/version\/(\d+)/i)) != null) {
+      M.splice(1, 1, tem[1]);
+    }
+    return M;
+  })();
+  const [allow, setAllow] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  useEffect(() => {
+    setShowModal(errorState);
+  }, [errorState]);
 
   const startMediaStream = () => {
     console.log('MEDIA STREAM STARTED');
-    window.navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      .then(stream => setMediaStream(stream))
-      .catch(error => {
-        console.log(error);
-        if (
-          error.name === 'NotAllowedError' ||
-          error.error === 'NotAllowedError'
-        ) {
-          const errorMessage = getLocalStreamException(error);
-          setErrorTitle(errorMessage['title']);
-          setErrorMessage(errorMessage['message']);
-          setErrorState(true);
-        } else {
-          navigator.mediaDevices
-            .enumerateDevices()
-            .then(devices => {
-              for (let device of devices) {
-                if (device.kind === 'videoinput') {
-                  setVideoInput(videoDevices => [...videoDevices, device]);
-                } else if (device.kind === 'audioinput') {
-                  setAudioInput([...audioInput, device]);
-                } else if (device.kind === 'audiooutput') {
-                  setAudioutput([...audioOutput, device]);
+    console.log(`Version: ${sayswho}`);
+    if (chrome && isIOS) {
+      var errorMessage = getLocalStreamException('iOSChromeError', true);
+      setErrorTitle(errorMessage['title']);
+      setErrorMessage(errorMessage['message']);
+      setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+      setErrorState(true);
+      setAllow(false);
+    } else if (safari && parseInt(sayswho as string) < 14) {
+      errorMessage = getLocalStreamException('iOSSafariError', true);
+      setErrorTitle(errorMessage['title']);
+      setErrorMessage(errorMessage['message']);
+      setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+      setErrorState(true);
+      setAllow(false);
+    } else {
+      // window.navigator.mediaDevices
+      getUserMedia({ audio: true, video: true })
+        .then((stream: MediaStream) => setMediaStream(stream))
+        .catch((error: any) => {
+          console.log(error);
+          if (
+            error.name === 'NotAllowedError' ||
+            error.error === 'NotAllowedError'
+          ) {
+            var errorMessage = getLocalStreamException(error.name, safari);
+            setErrorTitle(errorMessage['title']);
+            setErrorMessage(errorMessage['message']);
+            setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+            setErrorState(true);
+          } else {
+            navigator.mediaDevices
+              .enumerateDevices()
+              .then(devices => {
+                for (let device of devices) {
+                  if (device.kind === 'videoinput') {
+                    setVideoInput(videoDevices => [...videoDevices, device]);
+                  } else if (device.kind === 'audioinput') {
+                    setAudioInput([...audioInput, device]);
+                  } else if (device.kind === 'audiooutput') {
+                    setAudioutput([...audioOutput, device]);
+                  }
                 }
-              }
-              if (videoInput.length === 0 || audioInput.length === 0) {
-                const errorMessage = getLocalStreamException(error);
+                if (videoInput.length === 0 || audioInput.length === 0) {
+                  var errorMessage = getLocalStreamException(
+                    error.name,
+                    safari,
+                  );
+                  setErrorTitle(errorMessage['title']);
+                  setErrorMessage(errorMessage['message']);
+                  setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+                  setErrorState(true);
+                } else {
+                  errorMessage = getLocalStreamException(error.name, safari);
+                  setErrorTitle(errorMessage['title']);
+                  setErrorMessage(errorMessage['message']);
+                  setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+                  setErrorState(true);
+                }
+              })
+              .catch(error => {
+                var errorMessage = getLocalStreamException(error.name, safari);
                 setErrorTitle(errorMessage['title']);
                 setErrorMessage(errorMessage['message']);
+                setSecondaryErrorMessage(errorMessage['secondaryMessage']);
                 setErrorState(true);
-              } else {
-                const errorMessage = getLocalStreamException(error);
-                setErrorTitle(errorMessage['title']);
-                setErrorMessage(errorMessage['message']);
-                setErrorState(true);
-              }
-            })
-            .catch(error => {
-              const errorMessage = getLocalStreamException(error);
-              setErrorTitle(errorMessage['title']);
-              setErrorMessage(errorMessage['message']);
-              setErrorState(true);
-            });
-        }
-      });
+              });
+          }
+        });
+    }
   };
 
   window.onunload = () => closeMediaStream(mediaStream);
@@ -107,10 +166,13 @@ export const Preview = ({
     <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl">
       <div className="w-22.5 h-22.5 mt-1.875 mb-7">
         <MessageModal
-          show={errorState}
+          show={showModal}
+          setShow={setShowModal}
           title={title}
           message={message}
-          onClose={messageOnClose}
+          secondary={secondaryMessage}
+          allow={allow}
+          gobackOnClick={goBackOnClick}
         />
         <VideoTile
           {...videoTileProps}

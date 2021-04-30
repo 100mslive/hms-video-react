@@ -17,17 +17,23 @@ export interface MessageModalProps {
   message: string;
   secondary?: string;
   show: boolean;
-  onClose?: () => void;
+  allow: boolean;
+  gobackOnClick: () => void;
+  setShow: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const MessageModal = ({
   title,
   message,
   secondary,
-  show = false,
-  onClose,
+  show,
+  allow,
+  gobackOnClick,
+  setShow,
 }: MessageModalProps) => {
   const classes = useStyles();
+  // show = !show
+  // const { isModalOpen, toggleModal} = useContext(AppContext);
   return (
     <div
       className="fixed z-50 relative overflow-y-auto"
@@ -37,7 +43,7 @@ export const MessageModal = ({
     >
       {show && (
         <Backdrop className={classes.backdrop} open={true}>
-          <div className="flex items-center justify-center min-h-screen absolute pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+          <div className="flex items-center justify-center absolute pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <span
               className="hidden sm:inline-block sm:align-middle sm:h-screen"
               aria-hidden="true"
@@ -48,7 +54,7 @@ export const MessageModal = ({
             <div className="focus:outline-none insert-y-20 inline-block align-bottom text-left overflow-hidden transform transition-all sm:align-middle sm:max-w-lg sm:w-full">
               <div className="flex flex-col md:flex-row md:flex-wrap bg-gray-100 rounded-lg sm:items-start md:w-100 focus:outline-none rounded-tr-lg text-center font-normal pb-4 sm:text-left">
                 <div className="flex flex-grow flex-row px-5 pt-5 items-center">
-                  <div className="flex flex-grow lg:text-2xl sm:text-xl md:h-9 sm:h-7 self-center items-center text-white font-medium">
+                  <div className="flex flex-grow lg:text-2xl sm:text-xl self-center items-center text-white font-medium">
                     {title}
                   </div>
                   <div className="flex flex-none self-center justify-end items-end right-0 bg-gray-100 hover:bg-gray-200 sm:flex sm:flex-row-reverse">
@@ -56,9 +62,8 @@ export const MessageModal = ({
                       type="button"
                       className="w-full justify-end shadow-sm text-base font-medium rounded-xl focus:outline-none"
                       onClick={() => {
-                        if (onClose) {
-                          onClose();
-                        }
+                        setShow(false);
+                        !allow && gobackOnClick();
                       }}
                     >
                       {CloseMessage}
