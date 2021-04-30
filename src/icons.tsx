@@ -425,7 +425,7 @@ export function SliderDownArrow(props: CustomArrowProps) {
   const { style, onClick } = props;
   return (
     <div
-      className="slick-arrow absolute top-1/2 right-0 z-2"
+      className="slick-arrow fixed left-1/2 bottom-0 z-10"
       style={{ ...style, display: 'block' }}
       onClick={onClick}
     >
@@ -451,7 +451,7 @@ export function SliderUpArrow(props: CustomArrowProps) {
   const { style, onClick } = props;
   return (
     <div
-      className=" top-1/2 z-10 absolute"
+      className="slick-arrow left-1/2 top-0 z-10 fixed"
       style={{ ...style, display: 'block' }}
       onClick={onClick}
     >
