@@ -1,6 +1,6 @@
 import { TW, css } from 'twind/css';
 import clsx from 'clsx';
-import { reduce } from 'lodash';
+import { reduce, merge } from 'lodash';
 
 const getVideoTileLabel = (
   peerName: string,

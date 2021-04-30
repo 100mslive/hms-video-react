@@ -14,6 +14,8 @@ import { create } from 'twind';
 import { combineClasses } from '../../utils';
 const theme = require('../../../defaultTheme.ts').theme;
 
+import { merge } from 'lodash';
+
 interface ChatBoxClasses {
   root?: string;
   header?: string;
@@ -245,5 +247,29 @@ export type ChatProps = Omit<StyledChatProps, 'defaultClasses'>;
 export const ChatBox = withClasses<ChatBoxClasses | undefined>(
   defaultClasses,
   'chatBox',
-  create({ theme }).tw,
+  create({
+    theme: merge(theme, {
+      extend: {
+        colors: {
+          blue: {
+            tint: '#74AAFF',
+            main: '#2F80FF',
+            shade: '#0B326F',
+          },
+          red: {
+            tint: '#E66977',
+            main: '#D74451',
+            shade: '#6F2229',
+          },
+          gray: {
+            100: '#212121',
+            200: '#3B3B3B',
+            300: '#5E5E5E',
+            400: '#8E8E8E',
+            500: '#C7C7C7',
+          },
+        },
+      },
+    }),
+  }).tw,
 )<StyledChatProps>(StyledChatBox);
