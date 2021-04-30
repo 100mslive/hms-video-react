@@ -24,7 +24,24 @@ export const HMSRoomProvider: React.FC = props => {
   const [messages, setMessages] = useState<HMSMessage[]>([]);
 
   const receiveMessage = (message: HMSMessage) => {
-    setMessages(prevMessages => [...prevMessages, message]);
+    let peer = peers.find(peer => peer.peerId === message.sender);
+    console.debug(
+      `HMSui: component ${JSON.stringify(message)} from ${JSON.stringify(
+        peer,
+      )} , is sentBy you ${localPeer.peerId === peer?.peerId}`,
+    );
+    setMessages(prevMessages => [
+      ...prevMessages,
+      {
+        ...message,
+        sender:
+          localPeer.peerId === message.sender
+            ? 'You'
+            : peer
+            ? peer.name
+            : 'Unknown',
+      },
+    ]);
   };
   const [audioMuted, setAudioMuted] = useState(false);
 
@@ -119,10 +136,7 @@ export const HMSRoomProvider: React.FC = props => {
         messages: messages.map(message => ({
           message: message.message,
           time: message.time,
-          sender:
-            sdk.getLocalPeer().peerId == message.sender
-              ? 'You'
-              : peers.find(peer => peer.peerId === message.sender)?.name,
+          sender: message.sender,
         })),
         audioMuted: audioMuted,
         videoMuted: videoMuted,
