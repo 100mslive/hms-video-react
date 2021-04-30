@@ -7,6 +7,7 @@ import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
 import { VideoTileControls } from '../VideoTile/Controls';
 import { MicOff, MicOn } from '../../icons';
 import { loadStreams } from '../../storybook/utils';
+import { getUserMedia } from '../../utils/preview';
 declare global {
   interface HTMLVideoElement {
     captureStream(frameRate?: number): MediaStream;
@@ -363,12 +364,13 @@ const MeetTemplate: Story<VideoListStoryProps> = (
     closeMediaStream(screenStream);
 
     if (isCameraStreamRequired) {
-      window.navigator.mediaDevices
-        .getUserMedia({ audio: true, video: true })
-        .then(function(stream) {
-          //console.log(stream);
-          setCameraStream(stream);
-        });
+      // window.navigator.mediaDevices
+      getUserMedia({ audio: true, video: true }).then(function(
+        stream: MediaStream | undefined,
+      ) {
+        //console.log(stream);
+        setCameraStream(stream);
+      });
     }
     if (isScreenStreamRequired) {
       window.navigator.mediaDevices

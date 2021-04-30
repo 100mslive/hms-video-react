@@ -754,7 +754,6 @@ export const SettingsIconSmall = (
     />
   </svg>
 );
-
 export const Attachment = (
   <svg
     width="16"
