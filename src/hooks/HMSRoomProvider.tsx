@@ -115,7 +115,7 @@ export const HMSRoomProvider: React.FC = props => {
 
   const sendMessage = (message: string) => {
     const hmsMessage = sdk.sendMessage('chat', message);
-    receiveMessage(hmsMessage);
+    receiveMessage({ ...hmsMessage, sender: 'You' });
     console.debug('HMSui-component: [sendMessage] sentMessage', message);
   };
 
@@ -131,10 +131,7 @@ export const HMSRoomProvider: React.FC = props => {
         messages: messages.map(message => ({
           message: message.message,
           time: message.time,
-          sender:
-            sdk.getLocalPeer().peerId == message.sender
-              ? 'You'
-              : peers.find(peer => peer.peerId === message.sender)?.name,
+          sender: message.sender,
         })),
         audioMuted: audioMuted,
         videoMuted: videoMuted,
