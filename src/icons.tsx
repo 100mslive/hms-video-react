@@ -1,4 +1,5 @@
 import React from 'react';
+import {createPortal} from 'react-dom';
 import { CustomArrowProps } from 'react-slick';
 
 export const Logo = (
@@ -395,31 +396,40 @@ export const DownCarret = (
     />
   </svg>
 );
-export function SliderRightArrow(props: CustomArrowProps) {
+
+interface IArrowProps extends CustomArrowProps {
+  container: HTMLElement | null;
+}
+
+export function SliderRightArrow({container, ...props}: IArrowProps) {
   const { style, onClick } = props;
-  return (
+  const RightArrow = (
     <div
-      className="slick-arrow absolute top-1/2 right-0 z-2"
+      className=""
       style={{ ...style, display: 'block' }}
       onClick={onClick}
     >
-      <button className="text-2xl text-blue-main focus:outline-none">
-        <svg
-          width="10"
-          height="16"
-          viewBox="0 0 10 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M9.28424 8C9.27545 8.30762 9.16119 8.58887 8.9151 8.81738L2.07721 15.4971C1.88385 15.6904 1.63776 15.7959 1.34772 15.7959C0.76764 15.7959 0.30182 15.3389 0.301819 14.7588C0.301819 14.4775 0.416077 14.2051 0.618226 14.0029L6.77936 8.00879L0.618225 1.99707C0.424866 1.79492 0.301819 1.53125 0.301819 1.24121C0.301819 0.661133 0.767639 0.204102 1.34772 0.204102C1.63776 0.204102 1.88385 0.30957 2.07721 0.50293L8.9151 7.19141C9.16119 7.42871 9.28424 7.69238 9.28424 8Z"
-            fill="white"
-          />
-        </svg>
+      <button className="text-sm text-blue-main focus:outline-none">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.6182 10C14.6108 10.2563 14.5156 10.4907 14.3105 10.6812L8.61231 16.2476C8.45117 16.4087 8.24609 16.4966 8.0044 16.4966C7.521 16.4966 7.13281 16.1157 7.13281 15.6323C7.13281 15.3979 7.22803 15.1709 7.39648 15.0024L12.5308 10.0073L7.39648 4.99756C7.23535 4.8291 7.13281 4.60938 7.13281 4.36768C7.13281 3.88428 7.521 3.50342 8.00439 3.50342C8.24609 3.50342 8.45117 3.59131 8.6123 3.75244L14.3105 9.32617C14.5156 9.52393 14.6182 9.74365 14.6182 10Z" fill="white"/>
+</svg>
       </button>
     </div>
   );
+  return container? createPortal(RightArrow, container):RightArrow
 }
+
+interface IDots {
+  container:HTMLElement | null,
+  index:number,
+}
+
+export const Dot = (<svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M0 4C0 1.79086 1.79086 0 4 0C6.20914 0 8 1.79086 8 4C8 6.20914 6.20914 8 4 8C1.79086 8 0 6.20914 0 4Z" fill="white"/>
+</svg>
+)
+
+export const HorizontalDots = ({container, index}:IDots) => container?createPortal(<a className="inline-block">{Dot}</a>, container):Dot;
 
 export function SliderDownArrow(props: CustomArrowProps) {
   const { style, onClick } = props;
@@ -473,30 +483,22 @@ export function SliderUpArrow(props: CustomArrowProps) {
   );
 }
 
-export function SliderLeftArrow(props: CustomArrowProps) {
+export function SliderLeftArrow({container, ...props}: IArrowProps) {
   const { style, onClick } = props;
-  return (
+  const LeftArrow = (
     <div
-      className=" top-1/2 z-10 absolute"
+      className=""
       style={{ ...style, display: 'block' }}
       onClick={onClick}
     >
-      <button className="text-2xl  rounded-sm focus:outline-none">
-        <svg
-          width="10"
-          height="16"
-          viewBox="0 0 10 16"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0.847931 8C0.85672 8.30762 0.970977 8.58887 1.21707 8.81738L8.05496 15.4971C8.24832 15.6904 8.49441 15.7959 8.78445 15.7959C9.36453 15.7959 9.83035 15.3389 9.83035 14.7588C9.83035 14.4775 9.71609 14.2051 9.51395 14.0029L3.35281 8.00879L9.51395 1.99707C9.70731 1.79492 9.83035 1.53125 9.83035 1.24121C9.83035 0.661133 9.36453 0.204102 8.78445 0.204102C8.49442 0.204102 8.24832 0.30957 8.05496 0.50293L1.21707 7.19141C0.970977 7.42871 0.847931 7.69238 0.847931 8Z"
-            fill="white"
-          />
-        </svg>
+      <button className="text-sm rounded-sm focus:outline-none">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M5.36621 10C5.37354 10.2563 5.46875 10.4907 5.67383 10.6812L11.3721 16.2476C11.5332 16.4087 11.7383 16.4966 11.98 16.4966C12.4634 16.4966 12.8516 16.1157 12.8516 15.6323C12.8516 15.3979 12.7563 15.1709 12.5879 15.0024L7.45361 10.0073L12.5879 4.99756C12.749 4.8291 12.8516 4.60938 12.8516 4.36768C12.8516 3.88428 12.4634 3.50342 11.98 3.50342C11.7383 3.50342 11.5332 3.59131 11.3721 3.75244L5.67383 9.32617C5.46875 9.52393 5.36621 9.74365 5.36621 10Z" fill="white"/>
+</svg>
       </button>
     </div>
   );
+  return container? createPortal(LeftArrow, container): LeftArrow;
 }
 
 export const Volume = (
