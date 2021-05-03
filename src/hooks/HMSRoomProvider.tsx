@@ -24,25 +24,9 @@ export const HMSRoomProvider: React.FC = props => {
   const [messages, setMessages] = useState<HMSMessage[]>([]);
 
   const receiveMessage = (message: HMSMessage) => {
-    let peer = peers.find(peer => peer.peerId === message.sender);
-    console.debug(
-      `HMSui: component ${JSON.stringify(message)} from ${JSON.stringify(
-        peer,
-      )} , is sentBy you ${localPeer.peerId === peer?.peerId}`,
-    );
-    setMessages(prevMessages => [
-      ...prevMessages,
-      {
-        ...message,
-        sender:
-          localPeer.peerId === message.sender
-            ? 'You'
-            : peer
-            ? peer.name
-            : 'Unknown',
-      },
-    ]);
+    setMessages(prevMessages => [...prevMessages, message]);
   };
+
   const [audioMuted, setAudioMuted] = useState(false);
 
   const [videoMuted, setVideoMuted] = useState(false);
@@ -120,7 +104,7 @@ export const HMSRoomProvider: React.FC = props => {
   };
   const sendMessage = (message: string) => {
     const hmsMessage = sdk.sendMessage('chat', message);
-    receiveMessage(hmsMessage);
+    receiveMessage({ ...hmsMessage, sender: 'You' });
     console.debug('HMSui-component: [sendMessage] sentMessage', message);
   };
 

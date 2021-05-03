@@ -67,7 +67,29 @@ const createListener = (
     },
     onMessageReceived: (message: HMSMessage) => {
       console.debug('HMSui-component: [onMessageReceived] ', message);
-      receiveMessage(message);
+      let senderPeer = sdk
+        .getPeers()
+        .find(peer => peer.peerId == message.sender);
+      let localPeer = sdk.getLocalPeer();
+      console.log(
+        `HMSui-Component: message received `,
+        message,
+        ` senderPeer`,
+        senderPeer,
+        ` localPeer`,
+        localPeer,
+        `peers`,
+        sdk.getPeers(),
+      );
+      receiveMessage({
+        ...message,
+        sender:
+          localPeer.peerId == message.sender
+            ? 'You'
+            : senderPeer
+            ? senderPeer.name
+            : 'Unknown',
+      });
     },
   };
 
