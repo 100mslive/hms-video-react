@@ -1,11 +1,11 @@
 import React from 'react';
-import { LogoButton } from '../MediaIcons';
+import { LogoButton, SpeakerTag } from '../MediaIcons';
 import { Participant, Peer } from '../../types';
-import { Settings } from '../Settings/Settings';
 
 export interface HeaderProps {
   peer: Peer;
   time: number;
+  speaker: string;
   classes?: {
     root?: string;
     leftRoot?: string;
@@ -20,18 +20,19 @@ export interface HeaderProps {
 export const Header = ({
   peer,
   time,
+  speaker,
   classes = {
     root:
-      'flex flex-grow h-7.5 items-center p-3 relative gap-x-4 self-center justify-center',
+      'flex flex-grow h-7.5 items-center p-2 relative gap-x-4 self-center justify-center',
     leftRoot:
       'flex md:flex-none md:self-center md:justify-center md:left-0 md:ml-2 md:absolute',
     centerRoot:
-      'flex md:flex-grow gap-x-4 md:mr-2 md:self-center md:justify-center',
+      'md:flex md:flex-grow md:mr-2 md:self-center md:justify-center hidden md:visible',
     rightRoot:
       'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-5',
   },
   leftComponents = [<LogoButton key={0} />],
-  centerComponents = [],
+  centerComponents = [<SpeakerTag name={speaker} key={0} />],
   rightComponents = [],
 }: HeaderProps) => {
   const teacher = Array<Participant>();
@@ -55,6 +56,7 @@ export const Header = ({
     <div style={{ padding: '10px 0px 0px 0px', height: '10%' }}>
       <div className={classes.root}>
         <div className={classes.leftRoot}>{leftComponents}</div>
+        <div className={classes.centerRoot}>{centerComponents}</div>
         <div className={classes.rightRoot}>{rightComponents}</div>
       </div>
     </div>

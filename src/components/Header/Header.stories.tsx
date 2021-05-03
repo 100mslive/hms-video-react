@@ -58,5 +58,6 @@ const participants = [
 Default.args = {
   peer: { id: '123', displayName: 'Siddhant' },
   time: 1865,
+  speaker: "Siddhant",
   rightComponents: [<ParticipantList participantList={participants} />],
 };
