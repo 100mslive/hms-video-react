@@ -11,11 +11,12 @@ import HMSUpdateListener, {
 import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 
 const createListener = (
+  sdk: HMSSdk,
   incomingListener: HMSUpdateListener,
   setPeers: React.Dispatch<React.SetStateAction<HMSPeer[]>>,
   setLocalPeer: React.Dispatch<React.SetStateAction<HMSPeer>>,
   receiveMessage: (message: HMSMessage) => void,
-  sdk: HMSSdk,
+  setDominantSpeaker: React.Dispatch<React.SetStateAction<HMSPeer | null>>,
 ) => {
   const myListener = {
     onJoin: (room: HMSRoom) => {
@@ -31,13 +32,22 @@ const createListener = (
     },
 
     onPeerUpdate: (type: HMSPeerUpdate, peer: HMSPeer) => {
+      const peers = sdk.getPeers();
       console.debug(
-        'HMSui-component: [onPeerUpdate] Inside listener, peers are',
-        sdk.getPeers(),
+        'HMSui-component: [onPeerUpdate] Inside listener',
+        HMSPeerUpdate[type],
+        peer,
+        { peers },
       );
 
-      setPeers(sdk.getPeers());
+      setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
+      if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {
+        setDominantSpeaker(peer);
+      }
+      if (type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER) {
+        setDominantSpeaker(null);
+      }
       incomingListener.onPeerUpdate(type, peer);
     },
 
