@@ -7,7 +7,6 @@ import createListener from './helpers/createListener';
 import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import { Silence } from '../components/Silence';
 import { useEffect } from 'react';
-import Message from '@100mslive/100ms-web-sdk/dist/sdk/models/HMSMessage';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 
 const sdk = new HMSSdk();
@@ -23,13 +22,13 @@ export const HMSRoomProvider: React.FC = props => {
 
   const [messages, setMessages] = useState<HMSMessage[]>([]);
 
-  const receiveMessage = (message: HMSMessage) => {
-    setMessages(prevMessages => [...prevMessages, message]);
-  };
-
   const [audioMuted, setAudioMuted] = useState(false);
 
   const [videoMuted, setVideoMuted] = useState(false);
+
+  const [dominantSpeaker, setDominantSpeaker] = useState<
+    HMSRoomProps['dominantSpeaker']
+  >(null);
 
   useEffect(() => {
     if (audioMuted) {
@@ -43,7 +42,14 @@ export const HMSRoomProvider: React.FC = props => {
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
     sdk.join(
       config,
-      createListener(listener, setPeers, setLocalPeer, receiveMessage, sdk),
+      createListener(
+        sdk,
+        listener,
+        setPeers,
+        setLocalPeer,
+        receiveMessage,
+        setDominantSpeaker,
+      ),
     );
   };
 
@@ -102,6 +108,11 @@ export const HMSRoomProvider: React.FC = props => {
     setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };
+
+  const receiveMessage = (message: HMSMessage) => {
+    setMessages(prevMessages => [...prevMessages, message]);
+  };
+
   const sendMessage = (message: string) => {
     const hmsMessage = sdk.sendMessage('chat', message);
     receiveMessage({ ...hmsMessage, sender: 'You' });
@@ -124,6 +135,7 @@ export const HMSRoomProvider: React.FC = props => {
         })),
         audioMuted: audioMuted,
         videoMuted: videoMuted,
+        dominantSpeaker,
         join: join,
         leave: leave,
         toggleMute: toggleMute,
