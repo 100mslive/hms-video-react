@@ -26,6 +26,10 @@ export const HMSRoomProvider: React.FC = props => {
 
   const [videoMuted, setVideoMuted] = useState(false);
 
+  const [dominantSpeaker, setDominantSpeaker] = useState<
+    HMSRoomProps['dominantSpeaker']
+  >(null);
+
   useEffect(() => {
     if (audioMuted) {
       toggleMuteInPeer('audio');
@@ -38,7 +42,14 @@ export const HMSRoomProvider: React.FC = props => {
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
     sdk.join(
       config,
-      createListener(listener, setPeers, setLocalPeer, receiveMessage, sdk),
+      createListener(
+        sdk,
+        listener,
+        setPeers,
+        setLocalPeer,
+        receiveMessage,
+        setDominantSpeaker,
+      ),
     );
   };
 
@@ -124,6 +135,7 @@ export const HMSRoomProvider: React.FC = props => {
         })),
         audioMuted: audioMuted,
         videoMuted: videoMuted,
+        dominantSpeaker,
         join: join,
         leave: leave,
         toggleMute: toggleMute,
