@@ -9,20 +9,24 @@ import {
   ChatButton,
 } from '../MediaIcons';
 import { Settings } from '../Settings/Settings';
+import { withClasses } from '../../utils/styles';
+import { combineClasses} from '../../utils';
+//@ts-ignore
+import { create } from 'twind';
 
-export interface ControlBarProps {
+export interface ControlBarClasses {
+  root?: string;
+  leftRoot?: string;
+  centerRoot?: string;
+  rightRoot?: string;
+}
+interface StyledControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   isChatOpen?: boolean;
   buttonDisplay: ButtonDisplayType;
   maxTileCount: number;
 
-  classes?: {
-    root?: string;
-    leftRoot?: string;
-    centerRoot?: string;
-    rightRoot?: string;
-  };
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
@@ -33,9 +37,22 @@ export interface ControlBarProps {
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
   rightComponents: Array<React.ReactNode>;
+  defaultClasses?: ControlBarClasses;
+  classes?: ControlBarClasses;
 }
 
-export const ControlBar = ({
+const defaultClasses:ControlBarClasses = {
+  root:
+    'flex flex-grow h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
+  leftRoot:
+    'flex md:flex-none md:self-center md:justify-center md:left-0 md:ml-2 md:absolute',
+  centerRoot:
+    'flex md:flex-grow gap-x-4 md:mr-2 md:self-center md:justify-center',
+  rightRoot:
+    'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
+}
+
+export const StyledControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
   isChatOpen = false,
@@ -47,16 +64,6 @@ export const ControlBar = ({
   chatButtonOnClick,
   screenshareButtonOnClick,
   setMaxTileCount,
-  classes = {
-    root:
-      'flex flex-grow h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
-    leftRoot:
-      'flex md:flex-none md:self-center md:justify-center md:left-0 md:ml-2 md:absolute',
-    centerRoot:
-      'flex md:flex-grow gap-x-4 md:mr-2 md:self-center md:justify-center',
-    rightRoot:
-      'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
-  },
   leftComponents = [
     <Settings
       maxTileCount={maxTileCount}
@@ -95,7 +102,11 @@ export const ControlBar = ({
       key={2}
     />,
   ],
-}: ControlBarProps) => {
+  defaultClasses,
+  classes:extraClasses,
+}: StyledControlBarProps) => {
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const leftItems = Array<React.ReactNode>();
   const centerItems = Array<React.ReactNode>();
   const rightItems = Array<React.ReactNode>();
@@ -110,10 +121,18 @@ export const ControlBar = ({
     leftItems.push(comp);
   });
   return (
-    <div className={classes.root}>
-      <div className={classes.leftRoot}>{leftItems}</div>
-      <div className={classes.centerRoot}>{centerItems}</div>
-      <div className={classes.rightRoot}>{rightItems}</div>
+    <div className={combinedClasses?.root}>
+      <div className={combinedClasses?.leftRoot}>{leftItems}</div>
+      <div className={combinedClasses?.centerRoot}>{centerItems}</div>
+      <div className={combinedClasses?.rightRoot}>{rightItems}</div>
     </div>
   );
 };
+
+export type ControlBarProps = Omit<StyledControlBarProps, 'defaultClasses'>;
+
+export const ControlBar = withClasses<ControlBarClasses | undefined>(
+  defaultClasses,
+  'header',
+  create().tw,
+)<StyledControlBarProps>(StyledControlBar);
