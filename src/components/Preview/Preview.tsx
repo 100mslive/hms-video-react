@@ -6,6 +6,8 @@ import { VideoTileControls } from './Controls';
 import { MessageModal } from '../MessageModal';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { withClasses } from '../../utils/styles';
+
+//@ts-ignore
 import { create } from 'twind';
 
 import { combineClasses } from '../../utils';

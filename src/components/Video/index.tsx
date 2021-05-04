@@ -34,7 +34,7 @@ export interface VideoClasses {
    */
   borderAudioRoot?: string;
 }
-export interface StyledVideoProps {
+interface StyledVideoProps {
   //TODO make one of audioTrack and videoTrack mandatory instead of both
   /**
    * Video Track to be displayed.
