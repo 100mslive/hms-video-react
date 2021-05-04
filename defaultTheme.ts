@@ -23,6 +23,7 @@ module.exports = {
           300: '#5E5E5E',
           400: '#8E8E8E',
           500: '#C7C7C7',
+          600: '#F2F2F2',
         },
         transparent: {
           light: 'rgba(255, 255, 255, 0.25)',

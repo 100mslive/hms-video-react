@@ -11,10 +11,15 @@ const HMSThemeContext = createContext<HMSThemeProps | null>(null);
 export const HMSThemeProvider = ({
   config,
   children,
+  appBuilder,
 }: {
   children: React.ReactNode;
   config: any;
+  appBuilder: { theme: 'light' | 'dark' };
 }) => {
+  if (appBuilder.theme === 'dark') {
+    document.documentElement.classList.add('dark');
+  }
   return (
     <HMSThemeContext.Provider
       value={{

@@ -28,7 +28,7 @@ const Template: Story<ChatProps> = args => {
   return (
     <div className="w-full h-full flex justify-center">
       <div style={{ height: '466px', width: '240px' }}>
-        <HMSThemeProvider theme={{}}>
+        <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
           <ChatBox
             messages={messages}
             onSend={onSend}

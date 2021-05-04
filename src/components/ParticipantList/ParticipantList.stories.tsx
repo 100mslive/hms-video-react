@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ParticipantList, ParticipantListProps } from './ParticipantList';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
   title: 'ParticipantList',
@@ -10,9 +11,9 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<ParticipantListProps> = args => (
-  <div>
+  <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
     <ParticipantList {...args} />
-  </div>
+  </HMSThemeProvider>
 );
 
 export const Default = Template.bind({});

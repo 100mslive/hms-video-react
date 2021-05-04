@@ -5,47 +5,56 @@ import { Participant } from '../../types';
 import { AvatarList } from '../Avatar';
 import Popover from '@material-ui/core/Popover';
 import { withClasses } from '../../utils/styles';
-import { combineClasses} from '../../utils';
+import { combineClasses } from '../../utils';
 //@ts-ignore
 import { create } from 'twind';
 
-export interface ParticipantListClasses{
+export interface ParticipantListClasses {
   root?: string;
-  buttonRoot?:string;
-  buttonOpen?:string;
-  buttonClosed?:string;
-  buttonInner?:string;
-  buttonText?:string;
-  menuRoot?:string;
-  menuInner?:string;
-  menuSection?:string;
-  menuItem?:string;
-  menuText?:string;
-  menuIconContainer?:string;
+  buttonRoot?: string;
+  buttonOpen?: string;
+  buttonClosed?: string;
+  buttonInner?: string;
+  buttonText?: string;
+  menuRoot?: string;
+  menuInner?: string;
+  menuSection?: string;
+  menuItem?: string;
+  menuText?: string;
+  menuIconContainer?: string;
 }
 
 interface StyledParticipantListProps {
   participantList: Array<Participant>;
-  defaultClasses?:ParticipantListClasses;
-  classes?:ParticipantListClasses;
+  defaultClasses?: ParticipantListClasses;
+  classes?: ParticipantListClasses;
 }
 
-const defaultClasses:ParticipantListClasses = {
-  root: 'flex flex-grow justify-content:center border-opacity-0 sm:hidden md:block',
-  buttonRoot:'text-gray-500 flex border-opacity-0 focus:outline-none w-60 pt-1.5 mb-1 rounded-tl-lg rounded-tr-lg self-center px-3',
-  buttonOpen:'bg-gray-100',
-  buttonClosed:'bg-black',
-  buttonInner:'flex flex-grow justify-center px-3 tracking-wide self-center',
-  buttonText:'pl-2 self-center',
-  menuRoot:'max-h-100 rounded-bl-xl rounded-br-xl',
-  menuInner:'w-60 py-1.5 bg-gray-100 focus:outline-none',
-  menuSection:'text-gray-500 group flex items-center px-3 py-2 text-base',
-  menuItem:'text-white group flex items-center space-x-2 px-3 py-2 text-base hover:bg-gray-200',
-  menuText:'flex justify-between',
-  menuIconContainer:'flex flex-grow justify-end right-0 absolute'
-}
+const defaultClasses: ParticipantListClasses = {
+  root:
+    'flex flex-grow justify-content:center border-opacity-0 sm:hidden md:block',
+  buttonRoot:
+    'text-gray-300 dark:text-gray-500 flex border-opacity-0 focus:outline-none w-60 pt-1.5 mb-1 rounded-tl-lg rounded-tr-lg bg-white',
+  buttonOpen: 'dark:bg-gray-100',
+  buttonClosed: 'dark:bg-black',
+  buttonInner: 'flex flex-grow justify-center px-3 tracking-wide self-center',
+  buttonText: 'pl-2 self-center',
+  menuRoot: 'max-h-100 rounded-bl-xl rounded-br-xl',
+  menuInner:
+    'w-60 max-h-100 overflow-y-auto rounded-bl-xl rounded-br-xl py-1.5 bg-white dark:bg-gray-100 focus:outline-none',
+  menuSection:
+    'text-gray-300 dark:text-gray-500 group flex items-center px-3 py-2 text-base',
+  menuItem:
+    'text-gray-100 dark:text-white group flex items-center space-x-2 px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200 hover-trigger',
+  menuText: 'flex justify-between',
+  menuIconContainer: 'flex flex-grow justify-end right-0 absolute',
+};
 
-export const StyledParticipantList = ({ participantList, defaultClasses, classes:extraClasses }: StyledParticipantListProps) => {
+export const StyledParticipantList = ({
+  participantList,
+  defaultClasses,
+  classes: extraClasses,
+}: StyledParticipantListProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -69,8 +78,9 @@ export const StyledParticipantList = ({ participantList, defaultClasses, classes
         aria-describedby={id}
         type="button"
         className={` ${combinedClasses?.buttonRoot}
-          ${open ? combinedClasses?.buttonOpen : combinedClasses?.buttonClosed
-        }`}
+          ${
+            open ? combinedClasses?.buttonOpen : combinedClasses?.buttonClosed
+          }`}
         onClick={handleClick}
       >
         <div className={`${combinedClasses?.buttonInner}`}>
@@ -136,14 +146,17 @@ export const StyledParticipantList = ({ participantList, defaultClasses, classes
   );
 };
 
-export type ParticipantListProps = Omit<StyledParticipantListProps, 'defaultClasses'>;
+export type ParticipantListProps = Omit<
+  StyledParticipantListProps,
+  'defaultClasses'
+>;
 
 //TODO replace with themeContext
 export const ParticipantList = withClasses<ParticipantListClasses | undefined>(
   defaultClasses,
   'participantList',
   create({
-    theme:{
+    theme: {
       extend: {
         transitionProperty: {
           height: 'height',
@@ -213,6 +226,6 @@ export const ParticipantList = withClasses<ParticipantListClasses | undefined>(
           0.875: '0.875rem',
         },
       },
-    }
+    },
   }).tw,
 )<StyledParticipantListProps>(StyledParticipantList);
