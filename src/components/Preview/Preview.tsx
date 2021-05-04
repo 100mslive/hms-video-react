@@ -1,12 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { closeMediaStream } from '../../utils';
+import { getLocalStreamException, getUserMedia } from '../../utils/preview';
 import { VideoTile, VideoTileProps } from '../VideoTile';
+import { VideoTileControls } from './Controls';
+import { MessageModal } from '../MessageModal';
 
-export interface PreviewProps extends VideoTileProps {
+interface MuteStatus {
+  audioMuted?: boolean;
+  videoMuted?: boolean;
+}
+export interface PreviewProps {
   name: string;
-  joinOnClick: () => void;
+  joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
   goBackOnClick: () => void;
-  videoTileProps: VideoTileProps;
+  toggleMute: (type: 'audio' | 'video') => void;
+  videoTileProps: Partial<VideoTileProps>;
 }
 
 export const Preview = ({
@@ -16,22 +24,171 @@ export const Preview = ({
   videoTileProps,
 }: PreviewProps) => {
   const [mediaStream, setMediaStream] = useState(new MediaStream());
+  const [errorState, setErrorState] = useState(false);
+  const [title, setErrorTitle] = useState(String);
+  const [message, setErrorMessage] = useState(String);
+  const [secondaryMessage, setSecondaryErrorMessage] = useState(String);
+  const [videoInput, setVideoInput] = useState(Array);
+  const [audioInput, setAudioInput] = useState(Array);
+  const [audioOutput, setAudioutput] = useState(Array);
+  const [audioMuted, setAudioMuted] = useState(false);
+  const [videoMuted, setVideoMuted] = useState(false);
 
   useEffect(() => {
-    window.navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      .then(stream => setMediaStream(stream));
+    startMediaStream();
     return () => closeMediaStream(mediaStream);
   }, []);
 
-  window.onunload = () => {
-    closeMediaStream(mediaStream);
+  const toggleMediaState = (type: string) => {
+    if (type === 'audio') {
+      if (!audioMuted) {
+        mediaStream.getAudioTracks()[0].enabled = false;
+        //TODO add handling for green light later
+        //mediaStream.getAudioTracks()[0].stop();
+      } else {
+        mediaStream.getAudioTracks()[0].enabled = true;
+        //startMediaStream();
+      }
+      setAudioMuted(prevMuted => !prevMuted);
+      //toggleMute('audio');
+    } else if (type === 'video') {
+      if (!videoMuted) {
+        mediaStream.getVideoTracks()[0].enabled = false;
+        //mediaStream.getVideoTracks()[0].stop();
+      } else {
+        mediaStream.getVideoTracks()[0].enabled = true;
+        //startMediaStream();
+      }
+      setVideoMuted(prevMuted => !prevMuted);
+      //toggleMute('video');
+    }
+  };
+  const agent = navigator.userAgent.toLowerCase();
+  const chrome = agent.indexOf('chrome') > -1;
+  const safari = agent.indexOf('safari') !== -1 && !chrome;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const sayswho = (function() {
+    var ua = navigator.userAgent,
+      tem,
+      M =
+        ua.match(
+          /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i,
+        ) || [];
+    if (/trident/i.test(M[1])) {
+      tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+      return `IE ${tem[1] || ''}`;
+    }
+    if (M[1] === 'Chrome') {
+      tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
+      if (tem != null) {
+        return tem
+          .slice(1)
+          .join(' ')
+          .replace('OPR', 'Opera');
+      }
+    }
+    M = M[2] ? [M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+    if ((tem = ua.match(/version\/(\d+)/i)) != null) {
+      M.splice(1, 1, tem[1]);
+    }
+    return M;
+  })();
+  const [allow, setAllow] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  useEffect(() => {
+    setShowModal(errorState);
+  }, [errorState]);
+
+  const startMediaStream = () => {
+    console.log('MEDIA STREAM STARTED');
+    console.log(`Version: ${sayswho}`);
+    if (chrome && isIOS) {
+      var errorMessage = getLocalStreamException('iOSChromeError', true);
+      setErrorTitle(errorMessage['title']);
+      setErrorMessage(errorMessage['message']);
+      setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+      setErrorState(true);
+      setAllow(false);
+    } else if (safari && parseInt(sayswho as string) < 14) {
+      errorMessage = getLocalStreamException('iOSSafariError', true);
+      setErrorTitle(errorMessage['title']);
+      setErrorMessage(errorMessage['message']);
+      setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+      setErrorState(true);
+      setAllow(false);
+    } else {
+      // window.navigator.mediaDevices
+      getUserMedia({ audio: true, video: true })
+        .then((stream: MediaStream) => setMediaStream(stream))
+        .catch((error: any) => {
+          console.log(error);
+          if (
+            error.name === 'NotAllowedError' ||
+            error.error === 'NotAllowedError'
+          ) {
+            var errorMessage = getLocalStreamException(error.name, safari);
+            setErrorTitle(errorMessage['title']);
+            setErrorMessage(errorMessage['message']);
+            setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+            setErrorState(true);
+          } else {
+            navigator.mediaDevices
+              .enumerateDevices()
+              .then(devices => {
+                for (let device of devices) {
+                  if (device.kind === 'videoinput') {
+                    setVideoInput(videoDevices => [...videoDevices, device]);
+                  } else if (device.kind === 'audioinput') {
+                    setAudioInput([...audioInput, device]);
+                  } else if (device.kind === 'audiooutput') {
+                    setAudioutput([...audioOutput, device]);
+                  }
+                }
+                if (videoInput.length === 0 || audioInput.length === 0) {
+                  var errorMessage = getLocalStreamException(
+                    error.name,
+                    safari,
+                  );
+                  setErrorTitle(errorMessage['title']);
+                  setErrorMessage(errorMessage['message']);
+                  setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+                  setErrorState(true);
+                } else {
+                  errorMessage = getLocalStreamException(error.name, safari);
+                  setErrorTitle(errorMessage['title']);
+                  setErrorMessage(errorMessage['message']);
+                  setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+                  setErrorState(true);
+                }
+              })
+              .catch(error => {
+                var errorMessage = getLocalStreamException(error.name, safari);
+                setErrorTitle(errorMessage['title']);
+                setErrorMessage(errorMessage['message']);
+                setSecondaryErrorMessage(errorMessage['secondaryMessage']);
+                setErrorState(true);
+              });
+          }
+        });
+    }
   };
 
+  window.onunload = () => closeMediaStream(mediaStream);
+
   return (
-    <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-auto rounded-2xl">
+    <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl">
       <div className="w-22.5 h-22.5 mt-1.875 mb-7">
+        <MessageModal
+          show={showModal}
+          setShow={setShowModal}
+          title={title}
+          message={message}
+          secondary={secondaryMessage}
+          allow={allow}
+          gobackOnClick={goBackOnClick}
+        />
         <VideoTile
+          {...videoTileProps}
           videoTrack={mediaStream.getVideoTracks()[0]}
           audioTrack={mediaStream.getAudioTracks()[0]}
           peer={{
@@ -44,16 +201,25 @@ export const Preview = ({
             width: 1,
             height: 1,
           }}
-          //@ts-ignore
-          // classes={{root: "'w-full h-full flex relative items-center justify-center rounded-lg"}}
+          controlsComponent={
+            <VideoTileControls
+              settingsButtonOnClick={() =>
+                console.log('Settings Component yet to be made')
+              }
+              audioButtonOnClick={() => toggleMediaState('audio')}
+              videoButtonOnClick={() => toggleMediaState('video')}
+              isAudioMuted={audioMuted}
+              isVideoMuted={videoMuted}
+            />
+          }
         />
       </div>
-      <div className="text-2xl font-normal mb-12">Hello, {name}</div>
+      <div className="text-2xl font-medium mb-12">Hello, {name}</div>
       <div
         className="flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 bg-blue-main rounded-xl text-lg font-semibold cursor-pointer"
         onClick={() => {
-          joinOnClick();
           closeMediaStream(mediaStream);
+          joinOnClick({ audioMuted, videoMuted });
         }}
       >
         Join
@@ -61,8 +227,8 @@ export const Preview = ({
       <div
         className="text-blue-main text-lg font-semibold cursor-pointer"
         onClick={() => {
-          goBackOnClick();
           closeMediaStream(mediaStream);
+          goBackOnClick();
         }}
       >
         Go back

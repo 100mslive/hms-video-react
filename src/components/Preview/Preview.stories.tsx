@@ -20,6 +20,7 @@ const Template: Story<PreviewProps> = args => {
 export const Default = Template.bind({});
 Default.args = {
   name: 'Aditya Gupta',
-  joinOnClick: () => alert('Join Clicked'),
+  joinOnClick: ({ audioMuted, videoMuted }) =>
+    alert(`Join Clicked, audio and video mute are ${audioMuted} ${videoMuted}`),
   goBackOnClick: () => alert('Go Back Clicked'),
 };

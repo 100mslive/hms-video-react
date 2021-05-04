@@ -19,6 +19,9 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      transitionProperty: {
+        height: 'height',
+      },
       colors: {
         blue: {
           tint: '#74AAFF',
@@ -50,26 +53,30 @@ module.exports = {
         xl: ['1.25rem', { lineHeight: '1.75rem' }],
         '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
       },
+      fontFamily: {
+        inter: ['Inter'],
+      },
       maxHeight: {
         100: '37.5rem',
         116: '29rem',
       },
-      width :{
+      width: {
         7.5: '1.875rem',
         8.75: '8.75rem',
         22.5: '22.5rem',
         37.5: '37.5rem',
-        42.5: '42.5rem'
+        42.5: '42.5rem',
+        100: '32.25rem',
       },
       height: {
         3.25: '3.25rem',
         22.5: '22.5rem',
         37.5: '37.5rem',
         400: '40rem',
-        42.5: '42.5rem'
+        42.5: '42.5rem',
       },
-      scale:{
-        '-100':'-1'
+      scale: {
+        '-100': '-1',
       },
       margin: {
         1.625: '1.625rem',
@@ -78,7 +85,7 @@ module.exports = {
       },
       padding: {
         0.875: '0.875rem',
-      }
+      },
     },
   },
   variants: {
