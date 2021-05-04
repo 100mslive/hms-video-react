@@ -5,6 +5,7 @@ import { ChatBox, ChatProps, Message } from './ChatBox';
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
 import ReactMarkdown from 'react-markdown';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 const gfm = require('remark-gfm');
 
 const meta: Meta = {
@@ -30,17 +31,19 @@ const Template: Story<ChatProps> = args => {
   return (
     <div className="w-full h-full flex justify-center">
       <div style={{ height: '466px', width: '240px' }}>
-        <ChatBox
-          messages={messages}
-          onSend={onSend}
-          willScrollToBottom={args.willScrollToBottom}
-          scrollAnimation={args.scrollAnimation}
-          onClose={() => {
-            alert('closing');
-          }}
-          messageFormatter={args.messageFormatter}
-          classes={args.classes}
-        />
+        <HMSThemeProvider theme={{}}>
+          <ChatBox
+            messages={messages}
+            onSend={onSend}
+            willScrollToBottom={args.willScrollToBottom}
+            scrollAnimation={args.scrollAnimation}
+            onClose={() => {
+              alert('closing');
+            }}
+            messageFormatter={args.messageFormatter}
+            classes={args.classes}
+          />
+        </HMSThemeProvider>
       </div>
     </div>
   );

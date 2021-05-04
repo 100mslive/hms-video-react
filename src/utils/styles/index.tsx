@@ -1,5 +1,9 @@
+import { useTheme } from '@storybook/theming';
 import React from 'react';
 import { TW } from 'twind';
+
+//@ts-ignore
+import { create } from 'twind';
 import { addGlobalCss } from '../';
 export interface WithClassesProps<P> {
   classes: P;

@@ -210,6 +210,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
 
 // By passing using the Args format for exported stories, you can control the props for a component for reuse in a test
 // https://storybook.js.org/docs/react/workflows/unit-testing
+
 export const DefaultVideoTile = Template.bind({});
 export const GoogleMeetVideoTile = MeetTemplate.bind({});
 export const CampFireVideoTile = Template.bind({});
