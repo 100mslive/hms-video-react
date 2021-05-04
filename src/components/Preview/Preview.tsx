@@ -4,25 +4,64 @@ import { getLocalStreamException, getUserMedia } from '../../utils/preview';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileControls } from './Controls';
 import { MessageModal } from '../MessageModal';
+import { VideoTileClasses } from '../VideoTile/VideoTile';
+import { withClasses } from '../../utils/styles';
+
+//@ts-ignore
+import { create } from 'twind';
+
+import { combineClasses } from '../../utils';
 
 interface MuteStatus {
   audioMuted?: boolean;
   videoMuted?: boolean;
 }
-export interface PreviewProps {
+interface PreviewClasses {
+  root?: string;
+  header?: string;
+  messageModal?: string;
+
+  helloDiv?: string;
+  joinButton?: string;
+  goBackButton?: string;
+}
+const defaultClasses: PreviewClasses = {
+  root:
+    'flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl',
+  header: 'w-22.5 h-22.5 mt-1.875 mb-7',
+  helloDiv: 'text-2xl font-medium mb-12',
+  joinButton:
+    'flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 bg-blue-main rounded-xl text-lg font-semibold cursor-pointer',
+  goBackButton: 'text-blue-main text-lg font-semibold cursor-pointer',
+};
+interface StyledPreviewProps {
   name: string;
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
   goBackOnClick: () => void;
   toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
+  videoTileClasses?: VideoTileClasses;
+  /**
+   * default classes
+   */
+  defaultClasses?: PreviewClasses;
+  /**
+   * extra classes added  by user
+   */
+  classes?: PreviewClasses;
 }
 
-export const Preview = ({
+const StyledPreview = ({
   name,
   joinOnClick,
   goBackOnClick,
   videoTileProps,
-}: PreviewProps) => {
+  classes: extraClasses,
+  defaultClasses,
+  videoTileClasses,
+}: StyledPreviewProps) => {
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [mediaStream, setMediaStream] = useState(new MediaStream());
   const [errorState, setErrorState] = useState(false);
   const [title, setErrorTitle] = useState(String);
@@ -176,8 +215,11 @@ export const Preview = ({
   window.onunload = () => closeMediaStream(mediaStream);
 
   return (
-    <div className="flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl">
-      <div className="w-22.5 h-22.5 mt-1.875 mb-7">
+    // root
+    <div className={combinedClasses?.root}>
+      {/* header */}
+      <div className={combinedClasses?.header}>
+        {/* messageModal */}
         <MessageModal
           show={showModal}
           setShow={setShowModal}
@@ -187,6 +229,7 @@ export const Preview = ({
           allow={allow}
           gobackOnClick={goBackOnClick}
         />
+        {/* videoTile */}
         <VideoTile
           {...videoTileProps}
           videoTrack={mediaStream.getVideoTracks()[0]}
@@ -201,6 +244,7 @@ export const Preview = ({
             width: 1,
             height: 1,
           }}
+          classes={videoTileClasses}
           controlsComponent={
             <VideoTileControls
               settingsButtonOnClick={() =>
@@ -214,9 +258,11 @@ export const Preview = ({
           }
         />
       </div>
-      <div className="text-2xl font-medium mb-12">Hello, {name}</div>
+      {/* helloDiv */}
+      <div className={combinedClasses?.helloDiv}>Hello, {name}</div>
+      {/* joinButton */}
       <div
-        className="flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 bg-blue-main rounded-xl text-lg font-semibold cursor-pointer"
+        className={combinedClasses?.joinButton}
         onClick={() => {
           closeMediaStream(mediaStream);
           joinOnClick({ audioMuted, videoMuted });
@@ -224,8 +270,9 @@ export const Preview = ({
       >
         Join
       </div>
+      {/* goBackButton */}
       <div
-        className="text-blue-main text-lg font-semibold cursor-pointer"
+        className={combinedClasses?.goBackButton}
         onClick={() => {
           closeMediaStream(mediaStream);
           goBackOnClick();
@@ -236,3 +283,11 @@ export const Preview = ({
     </div>
   );
 };
+
+export type PreviewProps = Omit<StyledPreviewProps, 'defaultClasses'>;
+
+export const Preview = withClasses<PreviewClasses | undefined>(
+  defaultClasses,
+  'preview',
+  create().tw,
+)<StyledPreviewProps>(StyledPreview);

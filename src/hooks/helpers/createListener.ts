@@ -28,14 +28,18 @@ const createListener = (
 
     onPeerUpdate: (type: HMSPeerUpdate, peer: HMSPeer) => {
       const peers = sdk.getPeers();
-      console.debug(
-        'HMSui-component: Listener [onPeerUpdate]',
-        peer,
-        { peers },
-      );
+      console.debug('HMSui-component: Listener [onPeerUpdate]', peer, {
+        peers,
+      });
 
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
+      // if (type === HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {
+      //   setDominantSpeaker(peer);
+      // }
+      // if (type === HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER) {
+      //   setDominantSpeaker(null);
+      // }
       incomingListener.onPeerUpdate(type, peer);
     },
 
@@ -48,12 +52,9 @@ const createListener = (
 
     onTrackUpdate: (type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) => {
       const peers = sdk.getPeers();
-      console.debug(
-        'HMSui-component: Listener [onTrackUpdate]',
-        track,
-        peer,
-        { peers },
-      );
+      console.debug('HMSui-component: Listener [onTrackUpdate]', track, peer, {
+        peers,
+      });
 
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
