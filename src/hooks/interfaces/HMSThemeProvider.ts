@@ -1,3 +1,3 @@
 export default interface HMSThemeProps {
-  theme: any;
+  tailwindConfig: any;
 }

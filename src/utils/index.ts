@@ -500,14 +500,14 @@ function addGlobalCss<Type>({
   componentName,
   tw,
 }: AddGlobalCssProps<Type>) {
-  let theme = require('../../defaultTheme').theme;
+  let tailwindConfig = require('../../defaultTheme');
   // alert(JSON.stringify(theme));
   try {
     let context = useHMSTheme();
-    theme = context.theme;
+    tailwindConfig = context.tailwindConfig;
   } catch (error) {}
 
-  let tw_merged = create({ theme }).tw;
+  let tw_merged = create({ ...tailwindConfig }).tw;
   let calculatedSeedStyleMap: Type | {} = {};
   for (const seed in seedStyleMap as Type) {
     //TODO define a generic Map TS type to define classes to remove all type related ignores

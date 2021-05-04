@@ -2,23 +2,23 @@ import React, { useState, useContext, createContext } from 'react';
 
 import HMSThemeProps from './interfaces/HMSThemeProvider';
 
-const defaulTheme = require('../../defaultTheme.ts').theme;
+const defaultTailwindConfig = require('../../defaultTheme.ts');
 
 import { merge } from 'lodash';
 
 const HMSThemeContext = createContext<HMSThemeProps | null>(null);
 
 export const HMSThemeProvider = ({
-  theme,
+  config,
   children,
 }: {
   children: React.ReactNode;
-  theme: any;
+  config: any;
 }) => {
   return (
     <HMSThemeContext.Provider
       value={{
-        theme: merge(defaulTheme, theme),
+        tailwindConfig: merge(defaultTailwindConfig, config),
       }}
     >
       {children}

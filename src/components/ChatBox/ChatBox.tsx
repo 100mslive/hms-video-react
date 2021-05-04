@@ -37,25 +37,27 @@ interface ChatBoxClasses {
 }
 
 const defaultClasses: ChatBoxClasses = {
-  root: 'w-full h-full  rounded-2xl flex flex-col',
-  header: `bg-gray-200 rounded-t-2xl p-3 text-gray-500 flex flex-col justify-center items-center`,
-  headerLine: 'w-8 h-1 rounded bg-gray-400 m-2',
+  root: 'w-full h-full  rounded-2xl flex flex-col shadow-sm',
+  header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500`,
+  headerLine: 'w-8 h-1 rounded bg-white dark:bg-gray-400 m-2',
   headerRoot: 'flex w-full justify-between',
-  headerText: 'text-gray-500 flex',
+  headerText: 'text-gray-300 dark:text-gray-500 flex',
   headerCloseButton: 'focus:outline-none',
   messageBox:
-    'bg-gray-100 w-full h-full p-3 text-gray-500 overflow-y-auto no-scrollbar flex-grow',
+    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-grow',
   messageRoot: 'py-3',
   messageInfo: 'flex justify-between',
   messageTime: 'text-xs',
-  messageText: 'text-white leading-5 max-w-full break-words',
-  noMessageRoot: 'flex justify-center items-center text-gray-400 h-full',
-  footer: 'bg-gray-200 min-h-11 rounded-b-2xl flex w-full justify-between p-3 ',
+  messageText: 'text-gray-100 dark:text-white leading-5 max-w-full break-words',
+  noMessageRoot:
+    'flex justify-center items-center text-gray-300 dark:text-gray-400 h-full',
+  footer:
+    'bg-white dark:bg-gray-200 min-h-11 rounded-b-2xl flex w-full justify-between p-3 border-t-1 border-gray-500',
   chatInput:
-    'bg-gray-200 placeholder-gray-500 text-white focus:outline-none leading-5 overflow-y-auto no-scrollbar resize-none w-5/6',
+    'bg-white dark:bg-gray-200 placeholder-gray-500 text-gray-100 dark:text-white focus:outline-none leading-5 overflow-y-auto no-scrollbar resize-none w-5/6',
   sendButton: 'focus:outline-none',
   notificationRoot: 'py-3',
-  notificationInfo: 'flex justify-between text-gray-400',
+  notificationInfo: 'flex justify-between text-gray-300 dark:text-gray-400',
   notificationTime: 'text-xs',
 };
 

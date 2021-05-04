@@ -1,6 +1,11 @@
 module.exports = {
+  darkMode: 'class',
   theme: {
     extend: {
+      boxShadow: {
+        sm: '0px 11px 26px rgba(0, 0, 0, 0.2)',
+        DEFAULT: '0px 2px 9px rgba(0, 0, 0, 0.18)',
+      },
       colors: {
         blue: {
           tint: '#74AAFF',
