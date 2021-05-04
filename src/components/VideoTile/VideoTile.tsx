@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './index.css';
 import { Peer } from '../../types';
-import { Video, StyledVideoProps, VideoClasses } from '../Video';
+import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
 import {
@@ -13,7 +13,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { withClasses } from '../../utils/styles';
 //@ts-ignore
 import { create } from 'twind';
-interface StyledVideoTileProps extends StyledVideoProps {
+interface StyledVideoTileProps extends VideoProps {
   /**
    * HMS Peer object for which the tile is shown.
    */

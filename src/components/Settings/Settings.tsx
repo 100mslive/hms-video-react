@@ -1,14 +1,7 @@
 import React, { useEffect } from 'react';
-import { Close, SettingsIconSmall, SettingsIcon } from '../../icons';
+import { SettingsIconSmall, SettingsIcon } from '../../icons';
 import { CloseButton } from '../MediaIcons';
-import { Video, VideoProps } from '../Video';
-import { VideoTile, VideoTileProps } from '../VideoTile';
-import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 

@@ -1,7 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
 import { chunkStreams } from '../../utils';
+import { withClasses } from '../../utils/styles';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
@@ -14,22 +15,77 @@ import {
   HorizontalDots,
 } from '../../icons';
 import { useResizeDetector } from 'react-resize-detector';
+import { combineClasses } from '../../utils';
+//@ts-ignore
+import { create } from 'twind';
+import { VideoTileClasses } from '../VideoTile/VideoTile';
 
-export interface VideoListProps {
+export interface VideoListClasses extends VideoTileClasses {
+  /**
+   * Styles applied to the root element
+   */
+  root?: string;
+  /**
+   * Styles applied to the slider root
+   */
+  sliderRoot?: string;
+  /**
+   * Styles applied to the slider inner container
+   */
+  sliderInner?: string;
+  /**
+   * Styles applied to the list container
+   */
+  listContainer?: string;
+  /**
+   * Styles applited to the container of all video tiles
+   */
+  videoTileContainer?: string;
+  /**
+   * Styles applied to individual video tiles
+   */
+  videoTile?: string;
+  /**
+   * Styles applied to the video
+   */
+  video?: string;
+}
+interface StyledVideoListProps {
   /**
     MediaStream to be displayed.
     */
   streams: MediaStreamWithInfo[];
-
+  /**
+   * Max tiles in a  page. Overrides maxRowCount and maxColCount
+   */
   maxTileCount?: number;
+  /**
+   * Max rows in a  page. Only applied if maxTileCount is not present
+   */
+  maxRowCount?: number;
+  /**
+   * Max columns in a  page. Only applied if maxTileCount and maxRowCount is not present
+   */
+  maxColCount?: number;
+  /**
+   * Should the next page scroll vertically, horizontally or be hidden
+   */
   overflow?: 'scroll-x' | 'scroll-y' | 'hidden';
+  /**
+   * Arrange tiles in a row or col. Similar to flex-direction
+   */
   tileArrangeDirection?: 'row' | 'col';
+  /**
+   * Dominant speakers
+   */
   dominantSpeakers?: Peer[];
-
   /**
    Indicates if Audio Status will be shown or not.
    */
   showAudioMuteStatus?: boolean;
+  /**
+   * Contain the video or cover the video in a tile
+   */
   objectFit?: 'contain' | 'cover';
   /**
    Aspect ratio in which the video tile should be shown, will only be applied if display shape is rectangle.
@@ -47,20 +103,39 @@ export interface VideoListProps {
   Sets display type of Audio Level, inline-wave, inline-circle, border, avatar-circle are types available.
    */
   audioLevelDisplayType?: AudioLevelDisplayType;
+  /**
+    Show audio level for each tile?
+   */
   showAudioLevel?: boolean;
-  classes?: {
-    root?: string;
-    videoTileParent?: string;
-    videoTile?: string;
-    video?: string;
-  };
-  maxRowCount?: number;
-  maxColCount?: number;
+  /**
+   * Show control bars on all video tiles
+   */
   videoTileControls?: React.ReactNode[];
+  /**
+   * Allow local peer to mute remote peers?
+   */
   allowRemoteMute?: boolean;
+  /**
+   * default classes
+   */
+  defaultClasses?: VideoListClasses;
+  /**
+   * extra classes added  by user
+   */
+  classes?: VideoListClasses;
 }
 
-export const VideoList = ({
+const defaultClasses: VideoListClasses = {
+  root:
+    'relative h-full w-full flex flex-wrap justify-center content-evenly justify-items-center',
+  sliderRoot: 'w-full h-full',
+  sliderInner: 'w-full h-full',
+  listContainer:
+    'relative h-full w-full flex flex-wrap justify-center items-center content-center',
+  videoTileContainer: 'flex justify-center',
+};
+
+export const StyledVideoList = ({
   streams,
   overflow = 'scroll-x',
   maxTileCount,
@@ -70,99 +145,134 @@ export const VideoList = ({
   displayShape = 'rectangle',
   audioLevelDisplayType,
   showAudioLevel,
-  classes,
   maxRowCount,
   maxColCount,
   videoTileControls,
   showAudioMuteStatus,
-}: VideoListProps) => {
+  defaultClasses,
+  classes: extraClasses,
+}: StyledVideoListProps) => {
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const { width = 0, height = 0, ref } = useResizeDetector();
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
-  const horizontalNavContainer = useRef(null);
   const horizontalDotsContainer = useRef(null);
   const leftNavContainer = useRef(null);
   const rightNavContainer = useRef(null);
 
-
-
-  var settings:Settings = {
+  var settings: Settings = {
     dots: false,
     infinite: false,
     speed: 500,
     swipeToSlide: true,
     vertical: overflow === 'scroll-y',
     nextArrow:
-      overflow === 'scroll-x' ? <SliderRightArrow container={rightNavContainer.current} /> : <SliderDownArrow />,
+      overflow === 'scroll-x' ? (
+        <SliderRightArrow container={rightNavContainer.current} />
+      ) : (
+        <SliderDownArrow />
+      ),
     prevArrow:
-      overflow === 'scroll-x' ? <SliderLeftArrow container={leftNavContainer.current}/> : <SliderUpArrow />,
-    customPaging:(index) => <HorizontalDots container={horizontalDotsContainer.current} index={index}/>
+      overflow === 'scroll-x' ? (
+        <SliderLeftArrow container={leftNavContainer.current} />
+      ) : (
+        <SliderUpArrow />
+      ),
+    customPaging: index => (
+      <HorizontalDots
+        container={horizontalDotsContainer.current}
+        index={index}
+      />
+    ),
   };
 
   //Flooring since there's a bug in react-slick where it converts widdh into a number
-  const chunkedStreams = chunkStreams({streams, parentWidth:Math.floor(width), parentHeight:Math.floor(height), maxTileCount, maxRowCount, maxColCount, aspectRatio, onlyOnePage:overflow==='hidden'});
+  const chunkedStreams = chunkStreams({
+    streams,
+    parentWidth: Math.floor(width),
+    parentHeight: Math.floor(height),
+    maxTileCount,
+    maxRowCount,
+    maxColCount,
+    aspectRatio,
+    onlyOnePage: overflow === 'hidden',
+  });
   console.log(
     `HMSui-component: [VideoList] Chunked Streams are 
-    }`, chunkedStreams
+    }`,
+    chunkedStreams,
   );
 
   return (
-    <div
-      className={`${classes?.root} relative h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
-      ref={ref}
-    >
-      <Slider {...settings} className="w-full h-full">
-        {
-          chunkedStreams.map((streams, page) => {return (
-            <div className="w-full h-full" key={page}>
-            <div
-              className={` ${
-                classes?.root
-              } h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
-                maxRowCount
-                  ? 'col'
-                  : maxColCount
-                  ? 'row'
-                  : tileArrangeDirection
-              } `}
-            >
-              {streams.map((stream, index)=>{
-                return (
-                  <div
-                  style={{ height: stream.height, width: stream.width }}
-                  key={stream.peer.id}
-                  className={`${classes?.videoTileParent} flex justify-center`}
-                >
-                  <VideoTile
-                    {...stream}
-                    objectFit={objectFit}
-                    displayShape={displayShape}
-                    audioLevelDisplayType={audioLevelDisplayType}
-                    showAudioLevel={showAudioLevel}
-                    showAudioMuteStatus={showAudioMuteStatus}
-                    aspectRatio={aspectRatio}
-                    controlsComponent={
-                      videoTileControls && videoTileControls[index]
-                    }
-                  />
-                </div>    
-                )
-              })
-
-              }
-
+    <div className={`${combinedClasses?.root}`} ref={ref}>
+      <Slider {...settings} className={`${combinedClasses?.sliderRoot}`}>
+        {chunkedStreams.map((streams, page) => {
+          return (
+            <div className={`${combinedClasses?.sliderInner}`} key={page}>
+              <div
+                className={` ${combinedClasses?.listContainer}   flex-${
+                  maxRowCount
+                    ? 'col'
+                    : maxColCount
+                    ? 'row'
+                    : tileArrangeDirection
+                } `}
+              >
+                {streams.map((stream, index) => {
+                  return (
+                    <div
+                      style={{ height: stream.height, width: stream.width }}
+                      key={stream.peer.id}
+                      className={`${combinedClasses?.videoTileContainer}`}
+                    >
+                      <VideoTile
+                        {...stream}
+                        objectFit={objectFit}
+                        displayShape={displayShape}
+                        audioLevelDisplayType={audioLevelDisplayType}
+                        showAudioLevel={showAudioLevel}
+                        showAudioMuteStatus={showAudioMuteStatus}
+                        aspectRatio={aspectRatio}
+                        classes={{
+                          root: combinedClasses?.videoTileRoot,
+                          videoContainer: combinedClasses?.videoContainer,
+                          avatarContainer: combinedClasses?.avatarContainer,
+                          videoContainerCircle:
+                            combinedClasses?.videoContainerCircle,
+                          video: combinedClasses?.video,
+                          videoCircle: combinedClasses?.videoCircle,
+                          videoLocal: combinedClasses?.videoLocal,
+                          videoCover: combinedClasses?.videoCover,
+                          videoContain: combinedClasses?.videoContain,
+                          borderAudioRoot: combinedClasses?.borderAudioRoot,
+                        }}
+                        controlsComponent={
+                          videoTileControls && videoTileControls[index]
+                        }
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-
-          )}
-          )}
+          );
+        })}
       </Slider>
 
       <div className="absolute bottom-0 w-full flex justify-center">
-        <div ref={leftNavContainer}/>
-        <div ref={horizontalDotsContainer}/>            
-        <div ref={rightNavContainer}/>        
+        <div ref={leftNavContainer} />
+        <div ref={horizontalDotsContainer} />
+        <div ref={rightNavContainer} />
       </div>
     </div>
   );
 };
+
+export type VideoListProps = Omit<StyledVideoListProps, 'defaultClasses'>;
+
+export const VideoList = withClasses<VideoListClasses | undefined>(
+  defaultClasses,
+  'videoTile',
+  create().tw,
+)<StyledVideoListProps>(StyledVideoList);
