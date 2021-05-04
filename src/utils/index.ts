@@ -1,3 +1,6 @@
+import { TW, css } from 'twind/css';
+import clsx from 'clsx';
+import { reduce } from 'lodash';
 import { CircularProgress } from '@material-ui/core';
 import {MediaStreamWithInfo} from '../types';
 
@@ -319,7 +322,7 @@ const largestRect = (
 
   let best = { area: 0, cols: 0, rows: 0, width: 0, height: 0 };
 
-  // TODO: Don't start with obviously-bad candidates.
+  // TODO: Don't start with obviously-`ba`d candidates.
   const startCols = numRects;
   const colDelta = -1;
 
@@ -398,6 +401,66 @@ const getTileContainerDimensions = ({
   return { width, height };
 };
 
+interface GenerateClassNameProps {
+  seed: string;
+  componentName: string;
+}
+
+const packageIdentifier = 'hmsui';
+
+const generateClassName = ({ seed, componentName }: GenerateClassNameProps) => {
+  return [packageIdentifier, componentName, seed].join('-');
+};
+
+interface AddGlobalCssProps<Type> {
+  seedStyleMap: Type;
+  componentName: string;
+  tw: TW;
+}
+
+function addGlobalCss<Type>({
+  seedStyleMap,
+  componentName,
+  tw,
+}: AddGlobalCssProps<Type>) {
+  let calculatedSeedStyleMap: Type | {} = {};
+  for (const seed in seedStyleMap as Type) {
+    //TODO define a generic Map TS type to define classes to remove all type related ignores
+    //@ts-ignore
+    const styles = seedStyleMap[seed] as string;
+    const className = generateClassName({ seed, componentName });
+    //TODO add this to a private stylesheet and add a check to not write this if it already exists
+    tw(
+      css`
+        @global {
+          .${className} {
+            @apply ${styles};
+          }
+        }
+      `,
+    );
+    //@ts-ignore
+    calculatedSeedStyleMap[seed] = className;
+  }
+  return calculatedSeedStyleMap;
+}
+
+function combineClasses(
+  defaultClasses: Record<string, string | undefined> | undefined,
+  extraClasses: Record<string, string | undefined> | undefined,
+) {
+  return extraClasses
+    ? reduce(
+        defaultClasses,
+        (combinedClasses, defaultClassName, seed) => {
+          combinedClasses![seed] = clsx(defaultClassName, extraClasses![seed]);
+          return combinedClasses;
+        },
+        {} as Record<string, string>,
+      )
+    : defaultClasses;
+}
+
 export {
   closeMediaStream,
   getVideoTileLabel,
@@ -406,6 +469,9 @@ export {
   getInitialsFromName,
   largestRect,
   getTileContainerDimensions,
+  generateClassName,
+  addGlobalCss,
+  combineClasses,
   chunkStreams,
   mode
 };

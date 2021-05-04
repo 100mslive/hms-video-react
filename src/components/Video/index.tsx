@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
+import { withClasses } from '../../utils/styles';
+import { combineClasses } from '../../utils';
 //@ts-ignore
-import { apply, CSSRules, tw, Directive, css } from 'twind/css';
+import { create } from 'twind';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -10,30 +12,29 @@ export interface VideoClasses {
   /** The actual video element
    *
    */
-  video?: Directive<CSSRules>;
+  video?: string;
   /**
    * Extra styles added when video is circular
    */
-  videoCircle?: Directive<CSSRules>;
+  videoCircle?: string;
   /**
    * Extra styles added when video is local stream
    */
-  videoLocal?: Directive<CSSRules>;
+  videoLocal?: string;
   /**
    * Extra styles added when objectFit is set to cover
    */
-  videoCover?: Directive<CSSRules>;
+  videoCover?: string;
   /**
    * Extra styles added when objectFit is contain
    */
-  videoContain?: Directive<CSSRules>;
+  videoContain?: string;
   /**
    * Extra styles added when to audio level border
    */
-  borderAudioRoot?: Directive<CSSRules>;
+  borderAudioRoot?: string;
 }
-
-export interface VideoProps {
+export interface StyledVideoProps {
   //TODO make one of audioTrack and videoTrack mandatory instead of both
   /**
    * Video Track to be displayed.
@@ -82,11 +83,26 @@ export interface VideoProps {
    * The color of the audio display
    */
   audioLevelDisplayColor?: string;
-
+  /**
+   * default classes
+   */
+  defaultClasses?: VideoClasses;
+  /**
+   * extra classes added  by user
+   */
   classes?: VideoClasses;
 }
 
-export const Video = ({
+const defaultClasses: VideoClasses = {
+  video: 'h-full w-full rounded-lg',
+  videoCircle: 'rounded-full',
+  videoLocal: 'transform -scale-x-100', //apply`${css({ transform: 'scaleX(-1)' })}`
+  videoCover: 'object-cover',
+  videoContain: 'object-contain',
+  borderAudioRoot: 'w-full h-full absolute left-0 top-0 rounded-lg',
+};
+
+export const StyledVideo = ({
   videoTrack,
   audioTrack,
   objectFit,
@@ -97,15 +113,11 @@ export const Video = ({
   audioLevelDisplayType,
   audioLevelDisplayColor,
   displayShape,
-  classes = {
-    video: apply`h-full w-full rounded-lg`,
-    videoCircle: apply`rounded-full`,
-    videoLocal: apply`${css({ transform: 'scaleX(-1)' })}`,
-    videoCover: apply`object-cover`,
-    videoContain: apply`object-contain`,
-    borderAudioRoot: apply`w-full h-full absolute left-0 top-0 rounded-lg`,
-  },
-}: VideoProps) => {
+  classes: extraClasses,
+  defaultClasses,
+}: StyledVideoProps) => {
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   useEffect(() => {
@@ -124,22 +136,26 @@ export const Video = ({
         muted={true}
         autoPlay
         playsInline
-        className={tw`${classes.video} 
-          ${displayShape === 'circle' ? classes.videoCircle : ''}
-          ${isLocal && videoSource === 'camera' ? classes.videoLocal : ''}
-          ${objectFit === 'contain' ? classes.videoContain : ''}
-          ${objectFit === 'cover' ? classes.videoCover : ''}
+        className={`${combinedClasses?.video} 
+          ${displayShape === 'circle' ? combinedClasses?.videoCircle : ''}
+          ${
+            isLocal && videoSource === 'camera'
+              ? combinedClasses?.videoLocal
+              : ''
+          }
+          ${objectFit === 'contain' ? combinedClasses?.videoContain : ''}
+          ${objectFit === 'cover' ? combinedClasses?.videoCover : ''}
         `}
       ></video>
-      <audio className={tw`hidden`} autoPlay playsInline ref={audioRef}></audio>
+      <audio className={'hidden'} autoPlay playsInline ref={audioRef}></audio>
       {showAudioLevel && audioLevelDisplayType === 'border' && (
         <AudioLevelIndicator
           type={'border'}
           level={audioLevel}
           displayShape={displayShape}
           classes={{
-            videoCircle: classes.videoCircle,
-            root: classes.borderAudioRoot,
+            videoCircle: combinedClasses?.videoCircle,
+            root: combinedClasses?.borderAudioRoot,
           }}
           color={audioLevelDisplayColor}
         />
@@ -147,3 +163,19 @@ export const Video = ({
     </>
   );
 };
+
+export type VideoProps = Omit<StyledVideoProps, 'defaultClasses'>;
+
+export const Video = withClasses<VideoClasses | undefined>(
+  defaultClasses,
+  'video',
+  create({
+    theme: {
+      extend: {
+        scale: {
+          '-100': '-1',
+        },
+      },
+    },
+  }).tw,
+)<StyledVideoProps>(StyledVideo);
