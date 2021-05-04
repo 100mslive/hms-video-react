@@ -156,7 +156,8 @@ export const StyledChatBox = ({
           </div>
         </div>
         {/* messageBox */}
-        <div className={combinedClasses?.messageBox}>
+        {/* TODO: move no scroll bar css logic to tailwind */}
+        <div className={combinedClasses?.messageBox + ' no-scrollbar'}>
           {messages.map(message => {
             return message.notification ? (
               /* notificationRoot */
@@ -170,7 +171,7 @@ export const StyledChatBox = ({
                       : message.message}
                   </span>
                   <span className={combinedClasses?.time}>
-                    {message.timeSent}
+                    {timeFormatter(message.time)}
                   </span>
                 </div>
               </div>
@@ -212,9 +213,10 @@ export const StyledChatBox = ({
         {/* footer */}
         <div className={combinedClasses?.footer}>
           {/* chatInput */}
+          {/* TODO: move no scrollbar logic to tailwind */}
           <TextareaAutosize
             rowsMax={3}
-            className={combinedClasses?.chatInput}
+            className={combinedClasses?.chatInput + ' no-scrollbar'}
             placeholder="Write something here"
             value={message}
             onKeyPress={event => {

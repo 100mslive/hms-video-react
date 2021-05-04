@@ -1,4 +1,6 @@
-import { TW, css, create } from 'twind/css';
+import { TW, css } from 'twind/css';
+//@ts-ignore
+import { create } from 'twind';
 import clsx from 'clsx';
 import { reduce, merge } from 'lodash';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
@@ -498,7 +500,12 @@ function addGlobalCss<Type>({
   componentName,
   tw,
 }: AddGlobalCssProps<Type>) {
-  let { theme } = useHMSTheme();
+  let theme = require('../../defaultTheme').theme;
+  // alert(JSON.stringify(theme));
+  try {
+    let context = useHMSTheme();
+    theme = context.theme;
+  } catch (error) {}
 
   let tw_merged = create({ theme }).tw;
   let calculatedSeedStyleMap: Type | {} = {};

@@ -38,12 +38,12 @@ const createListener = (
 
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
-      if (type === HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {
-        setDominantSpeaker(peer);
-      }
-      if (type === HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER) {
-        setDominantSpeaker(null);
-      }
+      // if (type === HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {
+      //   setDominantSpeaker(peer);
+      // }
+      // if (type === HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER) {
+      //   setDominantSpeaker(null);
+      // }
       incomingListener.onPeerUpdate(type, peer);
     },
 
