@@ -168,14 +168,5 @@ export type VideoProps = Omit<StyledVideoProps, 'defaultClasses'>;
 
 export const Video = withClasses<VideoClasses | undefined>(
   defaultClasses,
-  'video',
-  create({
-    theme: {
-      extend: {
-        scale: {
-          '-100': '-1',
-        },
-      },
-    },
-  }).tw,
+  'video'
 )<StyledVideoProps>(StyledVideo);

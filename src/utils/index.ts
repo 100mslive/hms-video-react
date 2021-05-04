@@ -492,13 +492,11 @@ const generateClassName = ({ seed, componentName }: GenerateClassNameProps) => {
 interface AddGlobalCssProps<Type> {
   seedStyleMap: Type;
   componentName: string;
-  tw: TW;
 }
 
 function addGlobalCss<Type>({
   seedStyleMap,
   componentName,
-  tw,
 }: AddGlobalCssProps<Type>) {
   let theme = require('../../defaultTheme').theme;
   // alert(JSON.stringify(theme));

@@ -250,6 +250,5 @@ export type ChatProps = Omit<StyledChatProps, 'defaultClasses'>;
 
 export const ChatBox = withClasses<ChatBoxClasses | undefined>(
   defaultClasses,
-  'chatBox',
-  create().tw,
+  'chatBox'
 )<StyledChatProps>(StyledChatBox);
