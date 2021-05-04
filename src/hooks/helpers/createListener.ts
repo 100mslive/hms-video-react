@@ -38,10 +38,10 @@ const createListener = (
 
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
-      if (type == HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {
+      if (type === HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {
         setDominantSpeaker(peer);
       }
-      if (type == HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER) {
+      if (type === HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER) {
         setDominantSpeaker(null);
       }
       incomingListener.onPeerUpdate(type, peer);
@@ -81,7 +81,7 @@ const createListener = (
       console.debug('HMSui-component: Listener [onMessageReceived] ', message);
       let senderPeer = sdk
         .getPeers()
-        .find(peer => peer.peerId == message.sender);
+        .find(peer => peer.peerId === message.sender);
       let localPeer = sdk.getLocalPeer();
       console.log(
         `HMSui-Component: Listener message received `,
@@ -96,7 +96,7 @@ const createListener = (
       receiveMessage({
         ...message,
         sender:
-          localPeer.peerId == message.sender
+          localPeer.peerId === message.sender
             ? 'You'
             : senderPeer
             ? senderPeer.name

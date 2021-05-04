@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ChatBox, ChatProps, Message } from './ChatBox';
-
-import Autolinker from 'autolinker';
-import ReactHtmlParser from 'react-html-parser';
 import ReactMarkdown from 'react-markdown';
 const gfm = require('remark-gfm');
 

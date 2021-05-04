@@ -236,7 +236,7 @@ DefaultList.args = {
     //videoTileRoot: 'p-1',
     video: 'rounded-lg shadow-lg',
   },
-  aspectRatio:{width:1,height:1}
+  aspectRatio: { width: 1, height: 1 },
 };
 
 export const CenterStage = Template.bind({});

@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Attachment, Close, People, Send } from '../../icons';
-import { Peer } from '../../types';
+import { Close, People, Send } from '../../icons';
 import './index.css';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
-import { CloseButton } from '../MediaIcons';
-
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
-import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 
 export interface Message {
   message: string;

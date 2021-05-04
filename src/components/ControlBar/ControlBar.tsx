@@ -1,7 +1,5 @@
 import React from 'react';
 import { ButtonDisplayType } from '../../types';
-import Chat from '../Chat';
-import { Message } from '../ChatBox/ChatBox';
 
 import {
   AudioButton,

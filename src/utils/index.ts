@@ -1,8 +1,7 @@
 import { TW, css } from 'twind/css';
 import clsx from 'clsx';
 import { reduce } from 'lodash';
-import { CircularProgress } from '@material-ui/core';
-import {MediaStreamWithInfo} from '../types';
+import { MediaStreamWithInfo } from '../types';
 
 const getVideoTileLabel = (
   peerName: string,
@@ -108,40 +107,33 @@ const rowToColTransform = (page: JSX.Element[], maxRowCount: number) => {
   return newArray;
 };
 
-const chunk = <T>(
-  elements: T[],
-  chunkSize: number,
-  onlyOnePage: boolean,
-) => {
-  return elements.reduce(
-    (resultArray: T[][], tile: T, index: number) => {
-      const chunkIndex = Math.floor(index / chunkSize);
-      if (chunkIndex > 0 && onlyOnePage) {
-        return resultArray;
-      }
-      if (!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = []; // start a new chunk
-      }
-
-      resultArray[chunkIndex].push(tile);
+const chunk = <T>(elements: T[], chunkSize: number, onlyOnePage: boolean) => {
+  return elements.reduce((resultArray: T[][], tile: T, index: number) => {
+    const chunkIndex = Math.floor(index / chunkSize);
+    if (chunkIndex > 0 && onlyOnePage) {
       return resultArray;
-    },
-    [],
-  );
+    }
+    if (!resultArray[chunkIndex]) {
+      resultArray[chunkIndex] = []; // start a new chunk
+    }
+
+    resultArray[chunkIndex].push(tile);
+    return resultArray;
+  }, []);
 };
 
-interface GetTileSizesInList{
-  streams:MediaStreamWithInfo[];
+interface GetTileSizesInList {
+  streams: MediaStreamWithInfo[];
   parentWidth: number;
-  parentHeight:number;
-  maxTileCount?:number;
-  maxRowCount?:number;
-  maxColCount?:number;
-  aspectRatio?:{
-    width:number;
-    height:number;
-  },
-  onlyOnePage:boolean;
+  parentHeight: number;
+  maxTileCount?: number;
+  maxRowCount?: number;
+  maxColCount?: number;
+  aspectRatio?: {
+    width: number;
+    height: number;
+  };
+  onlyOnePage: boolean;
 }
 
 function chunkStreams({
@@ -152,28 +144,41 @@ function chunkStreams({
   maxRowCount,
   maxColCount,
   aspectRatio,
-  onlyOnePage
-}:GetTileSizesInList) 
- {
+  onlyOnePage,
+}: GetTileSizesInList) {
   //TODO needs massive refactoring
-  const modeAspectRatio = mode(streams.filter(stream=> stream.videoTrack && stream.videoTrack.getSettings().width && stream.videoTrack.getSettings().height).map(stream=>{
-  const width = stream.videoTrack?.getSettings().width;
-  const height = stream.videoTrack?.getSettings().height;
-    //Default to 1 if there are no video tracks
-  return ((width?width:1)/(height?height:1))
-  }));
+  const modeAspectRatio = mode(
+    streams
+      .filter(
+        stream =>
+          stream.videoTrack &&
+          stream.videoTrack.getSettings().width &&
+          stream.videoTrack.getSettings().height,
+      )
+      .map(stream => {
+        const width = stream.videoTrack?.getSettings().width;
+        const height = stream.videoTrack?.getSettings().height;
+        //Default to 1 if there are no video tracks
+        return (width ? width : 1) / (height ? height : 1);
+      }),
+  );
 
-  let defaultWidth=0;
-  let defaultHeight=0;
+  let defaultWidth = 0;
+  let defaultHeight = 0;
   let lastPageWidth = 0;
   let lastPageHeight = 0;
   let isLastPageDifferentFromFirstPage = false;
   let tilesInFirstPage = 0;
   let tilesinLastPage = 0;
   //Default to 1 if there are no video tracks
-  const finalAspectRatio = aspectRatio?aspectRatio:{width:((!isNaN(modeAspectRatio) && modeAspectRatio)?modeAspectRatio:1),height:1}; 
+  const finalAspectRatio = aspectRatio
+    ? aspectRatio
+    : {
+        width: !isNaN(modeAspectRatio) && modeAspectRatio ? modeAspectRatio : 1,
+        height: 1,
+      };
   if (maxTileCount) {
-    const {width:initialWidth, height:initialHeight} = largestRect(
+    const { width: initialWidth, height: initialHeight } = largestRect(
       parentWidth,
       parentHeight,
       Math.min(streams.length, maxTileCount),
@@ -183,98 +188,139 @@ function chunkStreams({
     defaultWidth = initialWidth;
     defaultHeight = initialHeight;
     tilesInFirstPage = Math.min(streams.length, maxTileCount);
-    tilesinLastPage = streams.length%maxTileCount;
-    isLastPageDifferentFromFirstPage = (tilesinLastPage >0) && (streams.length > maxTileCount);
-    if(isLastPageDifferentFromFirstPage){
-    const {width:remWidth, height:remHeight} = largestRect(
-      parentWidth,
-      parentHeight,
-      tilesinLastPage,
-      finalAspectRatio.width,
-      finalAspectRatio.height 
-    )
-    lastPageWidth = remWidth;
-    lastPageHeight = remHeight;
+    tilesinLastPage = streams.length % maxTileCount;
+    isLastPageDifferentFromFirstPage =
+      tilesinLastPage > 0 && streams.length > maxTileCount;
+    if (isLastPageDifferentFromFirstPage) {
+      const { width: remWidth, height: remHeight } = largestRect(
+        parentWidth,
+        parentHeight,
+        tilesinLastPage,
+        finalAspectRatio.width,
+        finalAspectRatio.height,
+      );
+      lastPageWidth = remWidth;
+      lastPageHeight = remHeight;
     }
   } else if (maxRowCount) {
-    const rows = Math.min(Math.ceil(Math.sqrt(streams.length*(finalAspectRatio.width/finalAspectRatio.height)/(parentWidth/parentHeight))),maxRowCount);
-    const height = parentHeight/rows;
-    const width = height*(finalAspectRatio.width/finalAspectRatio.height);
-    const cols = Math.floor(parentWidth/width);
+    const rows = Math.min(
+      Math.ceil(
+        Math.sqrt(
+          (streams.length *
+            (finalAspectRatio.width / finalAspectRatio.height)) /
+            (parentWidth / parentHeight),
+        ),
+      ),
+      maxRowCount,
+    );
+    const height = parentHeight / rows;
+    const width = height * (finalAspectRatio.width / finalAspectRatio.height);
+    const cols = Math.floor(parentWidth / width);
     defaultWidth = width;
     defaultHeight = height;
-    tilesInFirstPage = Math.min(streams.length, rows*cols);
-    tilesinLastPage = streams.length%(rows*cols);
-    isLastPageDifferentFromFirstPage = (tilesinLastPage>0) && (streams.length > rows*cols);
-    if(isLastPageDifferentFromFirstPage){
-      const rows = Math.min(Math.ceil(Math.sqrt(tilesinLastPage*(finalAspectRatio.width/finalAspectRatio.height)/(parentWidth/parentHeight))),maxRowCount);
-      const height = parentHeight/rows;
-      const width = height*(finalAspectRatio.width/finalAspectRatio.height);
-      const cols = Math.floor(parentWidth/width); 
+    tilesInFirstPage = Math.min(streams.length, rows * cols);
+    tilesinLastPage = streams.length % (rows * cols);
+    isLastPageDifferentFromFirstPage =
+      tilesinLastPage > 0 && streams.length > rows * cols;
+    if (isLastPageDifferentFromFirstPage) {
+      const rows = Math.min(
+        Math.ceil(
+          Math.sqrt(
+            (tilesinLastPage *
+              (finalAspectRatio.width / finalAspectRatio.height)) /
+              (parentWidth / parentHeight),
+          ),
+        ),
+        maxRowCount,
+      );
+      const height = parentHeight / rows;
+      const width = height * (finalAspectRatio.width / finalAspectRatio.height);
       lastPageHeight = height;
-      lastPageWidth = width;       
+      lastPageWidth = width;
     }
   } else if (maxColCount) {
-    const cols = Math.min(Math.ceil(Math.sqrt(streams.length*(parentWidth/parentHeight)/(finalAspectRatio.width/finalAspectRatio.height))),maxColCount);
-    const width = parentWidth/cols;
-    const height = width/(finalAspectRatio.width/finalAspectRatio.height);
-    const rows = Math.floor(parentHeight/height);
+    const cols = Math.min(
+      Math.ceil(
+        Math.sqrt(
+          (streams.length * (parentWidth / parentHeight)) /
+            (finalAspectRatio.width / finalAspectRatio.height),
+        ),
+      ),
+      maxColCount,
+    );
+    const width = parentWidth / cols;
+    const height = width / (finalAspectRatio.width / finalAspectRatio.height);
+    const rows = Math.floor(parentHeight / height);
     defaultHeight = height;
     defaultWidth = width;
-    tilesInFirstPage = Math.min(streams.length, rows*cols);
-    tilesinLastPage = streams.length%(rows*cols);
-    isLastPageDifferentFromFirstPage = (tilesinLastPage>0) && (streams.length > rows*cols);
-    if(isLastPageDifferentFromFirstPage){
-      const cols = Math.min(Math.ceil(Math.sqrt(tilesinLastPage*(parentWidth/parentHeight)/(finalAspectRatio.width/finalAspectRatio.height))),maxColCount);
-      const width = parentWidth/cols;
-      const height = width/(finalAspectRatio.width/finalAspectRatio.height);
-      const rows = Math.floor(parentHeight/height);
+    tilesInFirstPage = Math.min(streams.length, rows * cols);
+    tilesinLastPage = streams.length % (rows * cols);
+    isLastPageDifferentFromFirstPage =
+      tilesinLastPage > 0 && streams.length > rows * cols;
+    if (isLastPageDifferentFromFirstPage) {
+      const cols = Math.min(
+        Math.ceil(
+          Math.sqrt(
+            (tilesinLastPage * (parentWidth / parentHeight)) /
+              (finalAspectRatio.width / finalAspectRatio.height),
+          ),
+        ),
+        maxColCount,
+      );
+      const width = parentWidth / cols;
+      const height = width / (finalAspectRatio.width / finalAspectRatio.height);
       lastPageHeight = height;
       lastPageWidth = width;
     }
   } else {
-    const {width, height} = largestRect(
+    const { width, height } = largestRect(
       parentWidth,
       parentHeight,
       streams.length,
       finalAspectRatio.width,
       finalAspectRatio.height,
     );
-    defaultWidth= width;
+    defaultWidth = width;
     defaultHeight = height;
     tilesInFirstPage = streams.length;
   }
   const chunks = chunk(streams, tilesInFirstPage, onlyOnePage);
-  return chunks.map((chunk,page)=>{
+  return chunks.map((chunk, page) => {
     return chunk.map(stream => {
-      const isLastPage = page ===chunks.length-1;
-      const width = (isLastPageDifferentFromFirstPage && isLastPage)?lastPageWidth:defaultWidth;
-      const height = (isLastPageDifferentFromFirstPage && isLastPage)?lastPageHeight:defaultHeight;
-      return {...stream, width, height}
-    })
+      const isLastPage = page === chunks.length - 1;
+      const width =
+        isLastPageDifferentFromFirstPage && isLastPage
+          ? lastPageWidth
+          : defaultWidth;
+      const height =
+        isLastPageDifferentFromFirstPage && isLastPage
+          ? lastPageHeight
+          : defaultHeight;
+      return { ...stream, width, height };
+    });
   });
-};
+}
 
-function mode(array:any[])
-{
-    if(array.length == 0)
-        return null;
-    var modeMap = {} as any;
-    var maxEl = array[0], maxCount = 1;
-    for(var i = 0; i < array.length; i++)
-    {
-        var el = array[i];
-        if(modeMap[el] == null)
-            modeMap[el] = 1;
-        else
-            modeMap[el]++;  
-        if(modeMap[el] > maxCount)
-        {
-            maxEl = el;
-            maxCount = modeMap[el];
-        }
+function mode(array: any[]) {
+  if (array.length === 0) {
+    return null;
+  }
+  var modeMap = {} as any;
+  var maxEl = array[0],
+    maxCount = 1;
+  for (var i = 0; i < array.length; i++) {
+    var el = array[i];
+    if (modeMap[el] === null) {
+      modeMap[el] = 1;
+    } else {
+      modeMap[el]++;
     }
-    return maxEl;
+    if (modeMap[el] > maxCount) {
+      maxEl = el;
+      maxCount = modeMap[el];
+    }
+  }
+  return maxEl;
 }
 
 const getInitialsFromName = (name: string | undefined) => {
@@ -316,7 +362,7 @@ const largestRect = (
     throw new Error('Number of shapes to place must be a positive integer');
   }
   const aspectRatio = width && height && width / height;
-  if (aspectRatio!==undefined && isNaN(aspectRatio)) {
+  if (aspectRatio !== undefined && isNaN(aspectRatio)) {
     throw new Error('Aspect ratio must be a number');
   }
 
@@ -328,7 +374,7 @@ const largestRect = (
 
   // For each combination of rows + cols that can fit the number of rectangles,
   // place them and see the area.
-  if(aspectRatio!==undefined){
+  if (aspectRatio !== undefined) {
     for (let cols = startCols; cols > 0; cols += colDelta) {
       const rows = Math.ceil(numRects / cols);
       const hScale = containerWidth / (cols * aspectRatio);
@@ -372,32 +418,60 @@ const getTileContainerDimensions = ({
   parentHeight,
   isSquareOrCircle,
 }: getTileContainerDimensionsProps) => {
-  console.debug("HMSui-components: [getTileContainerDimensions] all data", videoTrack, objectFit, aspectRatio, parentWidth, parentHeight);
+  console.debug(
+    'HMSui-components: [getTileContainerDimensions] all data',
+    videoTrack,
+    objectFit,
+    aspectRatio,
+    parentWidth,
+    parentHeight,
+  );
   const { width: selfWidth, height: selfHeight } = videoTrack
     ? videoTrack.getSettings()
     : { width: parentWidth, height: parentHeight };
-  console.debug("HMSui-components: [getTileContainerDimensions] selfHeight, selfWidth", selfHeight, selfWidth);
+  console.debug(
+    'HMSui-components: [getTileContainerDimensions] selfHeight, selfWidth',
+    selfHeight,
+    selfWidth,
+  );
   const containerAspectRatio =
     objectFit === 'cover'
       ? { width: parentWidth, height: parentHeight }
       : { width: selfWidth, height: selfHeight };
-  console.debug("HMSui-components: [getTileContainerDimensions] containerAspectRatio", containerAspectRatio);
+  console.debug(
+    'HMSui-components: [getTileContainerDimensions] containerAspectRatio',
+    containerAspectRatio,
+  );
   const containerAspectRatioAfterUserOverride =
     aspectRatio && objectFit === 'cover' ? aspectRatio : containerAspectRatio;
-  console.debug("HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterUserOverride", containerAspectRatioAfterUserOverride);
+  console.debug(
+    'HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterUserOverride',
+    containerAspectRatioAfterUserOverride,
+  );
   const containerAspectRatioAfterShapeOverride = {
     width: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.width,
     height: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.height,
   };
-  console.debug("HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterShapeOverride", containerAspectRatioAfterShapeOverride);
-  const {width, height} = (containerAspectRatioAfterShapeOverride.width && containerAspectRatioAfterShapeOverride.height)?largestRect(
-    parentWidth,
-    parentHeight,
-    1,
-    containerAspectRatioAfterShapeOverride.width,
-    containerAspectRatioAfterShapeOverride.height,
-  ):{width:parentWidth,height:parentHeight};
-  console.debug("HMSui-components: [getTileContainerDimensions] width, height", width, height);
+  console.debug(
+    'HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterShapeOverride',
+    containerAspectRatioAfterShapeOverride,
+  );
+  const { width, height } =
+    containerAspectRatioAfterShapeOverride.width &&
+    containerAspectRatioAfterShapeOverride.height
+      ? largestRect(
+          parentWidth,
+          parentHeight,
+          1,
+          containerAspectRatioAfterShapeOverride.width,
+          containerAspectRatioAfterShapeOverride.height,
+        )
+      : { width: parentWidth, height: parentHeight };
+  console.debug(
+    'HMSui-components: [getTileContainerDimensions] width, height',
+    width,
+    height,
+  );
   return { width, height };
 };
 
@@ -473,5 +547,5 @@ export {
   addGlobalCss,
   combineClasses,
   chunkStreams,
-  mode
+  mode,
 };

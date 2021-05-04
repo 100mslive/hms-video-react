@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Settings, SettingsProps } from './Settings';
-import { loadStream } from '../../storybook/utils';
 
 const meta: Meta = {
   title: 'Settings',

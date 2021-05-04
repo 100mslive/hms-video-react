@@ -270,16 +270,9 @@ export const ChatButton = ({
   );
 };
 
-
-export const SpeakerTag = ({
-  name,
-}: {
-  name:string;
-}) => {
+export const SpeakerTag = ({ name }: { name: string }) => {
   return (
-    <div
-      className={`self-center focus:outline-none text-lg text-white`}
-    >
+    <div className={`self-center focus:outline-none text-lg text-white`}>
       <div className="inline-block">{Volume}</div>
       {/* TODO figure out why xs:hidden is needed */}
       <div className="md:pl-2 xs:hidden md:inline-block">{name}</div>

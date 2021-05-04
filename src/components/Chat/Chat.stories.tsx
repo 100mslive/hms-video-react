@@ -1,15 +1,8 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Chat from './index';
 import './index.css';
-
-import Autolinker from 'autolinker';
-import ReactHtmlParser from 'react-html-parser';
-import ReactMarkdown from 'react-markdown';
 import { ChatProps, Message } from '../ChatBox/ChatBox';
-
-const gfm = require('remark-gfm');
 
 const meta: Meta = {
   title: 'Chat/ Button',

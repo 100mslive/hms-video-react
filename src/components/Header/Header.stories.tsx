@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Header, HeaderProps } from './index';
 import { ParticipantList } from '../ParticipantList/ParticipantList';
-import { SideBar } from '../VideoList/VideoList.stories';
-import { Settings } from '../Settings/Settings';
 
 const meta: Meta = {
   title: 'Header',
@@ -58,6 +56,6 @@ const participants = [
 Default.args = {
   peer: { id: '123', displayName: 'Siddhant' },
   time: 1865,
-  speaker: "Siddhant",
+  speaker: 'Siddhant',
   rightComponents: [<ParticipantList participantList={participants} />],
 };
