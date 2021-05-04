@@ -1,35 +1,85 @@
 import React, { useState, useContext, createContext } from 'react';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
-import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSRoomProps from './interfaces/HMSRoomProps';
 import createListener from './helpers/createListener';
+import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import { Silence } from '../components/Silence';
+import { useEffect } from 'react';
+import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 
 const sdk = new HMSSdk();
 
 const HMSContext = createContext<HMSRoomProps | null>(null);
 
 export const HMSRoomProvider: React.FC = props => {
-  const [peers, setPeers] = useState(sdk.getPeers());
+  const [peers, setPeers] = useState([] as HMSPeer[]);
 
-  const [localPeer, setLocalPeer] = useState(sdk.getLocalPeer());
+  const [localPeer, setLocalPeer] = useState({} as HMSPeer);
 
   const [isScreenShare, setIsScreenShare] = useState(false);
 
+  const [messages, setMessages] = useState<HMSMessage[]>([]);
+
+  const [audioMuted, setAudioMuted] = useState(false);
+
+  const [videoMuted, setVideoMuted] = useState(false);
+
+  const [dominantSpeaker, setDominantSpeaker] = useState<
+    HMSRoomProps['dominantSpeaker']
+  >(null);
+
+  useEffect(() => {
+    if (audioMuted) {
+      toggleMuteInPeer('audio');
+    }
+    if (videoMuted) {
+      toggleMuteInPeer('video');
+    }
+  }, [localPeer]);
+
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
-    sdk.join(config, createListener(listener, setPeers, setLocalPeer, sdk));
+    sdk.join(
+      config,
+      createListener(
+        sdk,
+        listener,
+        setPeers,
+        setLocalPeer,
+        receiveMessage,
+        setDominantSpeaker,
+      ),
+    );
   };
 
   const leave = () => {
     //TODO this is not strictly necessary since SDK should clean up, but foing it for safety
     setPeers([]);
+    setLocalPeer({} as HMSPeer);
+    setAudioMuted(false);
+    setVideoMuted(false);
     sdk.leave();
   };
 
-  const toggleMute = async (track: HMSTrack) => {
-    await track.setEnabled(!track.enabled);
+  const toggleMute = (type: 'audio' | 'video') => {
+    if (type === 'audio') {
+      setAudioMuted(prevMuted => !prevMuted);
+    } else if (type === 'video') {
+      setVideoMuted(prevMuted => !prevMuted);
+    }
+
+    toggleMuteInPeer(type);
+  };
+
+  const toggleMuteInPeer = async (type: 'audio' | 'video') => {
+    if (localPeer && localPeer.audioTrack && type === 'audio') {
+      await localPeer?.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
+    }
+    if (localPeer && localPeer.videoTrack && type === 'video') {
+      await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
+    }
+
     setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };
@@ -59,6 +109,16 @@ export const HMSRoomProvider: React.FC = props => {
     setLocalPeer(sdk.getLocalPeer());
   };
 
+  const receiveMessage = (message: HMSMessage) => {
+    setMessages(prevMessages => [...prevMessages, message]);
+  };
+
+  const sendMessage = (message: string) => {
+    const hmsMessage = sdk.sendMessage('chat', message);
+    receiveMessage({ ...hmsMessage, sender: 'You' });
+    console.debug('HMSui-component: [sendMessage] sentMessage', message);
+  };
+
   window.onunload = () => {
     leave();
   };
@@ -68,10 +128,19 @@ export const HMSRoomProvider: React.FC = props => {
       value={{
         peers: peers,
         localPeer: localPeer,
+        messages: messages.map(message => ({
+          message: message.message,
+          time: message.time,
+          sender: message.sender,
+        })),
+        audioMuted: audioMuted,
+        videoMuted: videoMuted,
+        dominantSpeaker,
         join: join,
         leave: leave,
         toggleMute: toggleMute,
         toggleScreenShare: toggleScreenShare,
+        sendMessage: sendMessage,
       }}
     >
       <Silence />

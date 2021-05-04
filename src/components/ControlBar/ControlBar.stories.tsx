@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ControlBarProps, ControlBar } from './index';
 
@@ -34,4 +34,10 @@ Default.args = {
   chatButtonOnClick: () => {
     alert('chat button clicked');
   },
+  setMaxTileCount: (count: number) => {
+    //alert(count + ' count set');
+  },
+  isAudioMuted: true,
+  isVideoMuted: true,
+  isChatOpen: true,
 };

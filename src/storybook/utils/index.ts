@@ -1,5 +1,5 @@
 import { MediaStreamWithInfo, VideoSource } from '../../types';
-
+import { getUserMedia } from '../../utils/preview';
 const loadStream = (props: {
   videoTrack: MediaStreamTrack | undefined;
   audioTrack: MediaStreamTrack | undefined;
@@ -27,13 +27,14 @@ const loadStream = (props: {
   audioTrack?.stop();
 
   if (videoSource === 'camera' && isLocal) {
-    window.navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
-      .then(function(stream) {
-        //console.log('Updating stream with camera feed', stream);
-        setVideoTrack(stream.getVideoTracks()[0]);
-        setAudioTrack(stream.getAudioTracks()[0]);
-      });
+    // window.navigator.mediaDevices
+    getUserMedia({ audio: true, video: true }).then(function(
+      stream: MediaStream,
+    ) {
+      //console.log('Updating stream with camera feed', stream);
+      setVideoTrack(stream.getVideoTracks()[0]);
+      setAudioTrack(stream.getAudioTracks()[0]);
+    });
   } else if (videoSource === 'screen' && isLocal) {
     //console.log('Updating stream with screenshare feed');
     window.navigator.mediaDevices

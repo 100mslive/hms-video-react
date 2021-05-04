@@ -10,11 +10,13 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<HeaderProps> = args => (
-  <div className="bg-black">
-    <Header {...args} />
-  </div>
-);
+const Template: Story<HeaderProps> = args => {
+  return (
+    <div className="bg-black">
+      <Header {...args} rightComponents={[]} />
+    </div>
+  );
+};
 
 export const Default = Template.bind({});
 
@@ -54,5 +56,6 @@ const participants = [
 Default.args = {
   peer: { id: '123', displayName: 'Siddhant' },
   time: 1865,
+  speaker: 'Siddhant',
   rightComponents: [<ParticipantList participantList={participants} />],
 };

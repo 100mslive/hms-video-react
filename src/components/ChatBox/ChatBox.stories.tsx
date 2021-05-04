@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ChatBox, ChatProps, Message } from './ChatBox';
-
-import Autolinker from 'autolinker';
-import ReactHtmlParser from 'react-html-parser';
 import ReactMarkdown from 'react-markdown';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 const gfm = require('remark-gfm');
@@ -22,8 +19,8 @@ const Template: Story<ChatProps> = args => {
       let messages = [...prevMessages];
       messages.push({
         message,
-        sender: { id: '123', displayName: 'You' },
-        timeSent: 'now',
+        sender: 'You',
+        time: new Date(),
       });
       return messages;
     });
@@ -54,29 +51,30 @@ Default.args = {
   messages: [
     {
       message: 'Hi guys',
-      sender: { id: '123', displayName: 'Yash' },
-      timeSent: '10 mins ago',
+      sender: 'Yash',
+      time: new Date(),
     },
     {
       message: 'Ivy L left meeting',
-
-      timeSent: '10 mins ago',
+      time: new Date(),
+      sender: 'admin',
       notification: true,
     },
     {
       message: 'Ping me at nikhil@100ms.live',
-      sender: { id: '123s', displayName: 'Nikhil' },
-      timeSent: '10 mins ago',
+      sender: 'Nikhil',
+      time: new Date(),
     },
     {
       message: 'Our twiiter handle @100mslive',
-      sender: { id: '123s', displayName: '100ms' },
-      timeSent: '10 mins ago',
+      sender: '100ms',
+      time: new Date(),
     },
     {
       message: 'Nikhil left meeting',
-      timeSent: '10 mins ago',
+      time: new Date(),
       notification: true,
+      sender: 'admin',
     },
   ],
   classes: {
@@ -90,29 +88,30 @@ MarkDownChat.args = {
   messages: [
     {
       message: 'Hi guys',
-      sender: { id: '123', displayName: 'Yash' },
-      timeSent: '10 mins ago',
+      sender: 'Yash',
+      time: new Date(),
     },
     {
       message: 'Ivy L left meeting',
-      timeSent: '10 mins ago',
+      time: new Date(),
       notification: true,
+      sender: 'admin',
     },
     {
       message: `* [ ] todo
     * [x] done`,
-      sender: { id: '123s', displayName: 'Nikhil' },
-      timeSent: '10 mins ago',
+      sender: 'Nikhil',
+      time: new Date(),
     },
     {
       message: `> A block quote with ~strikethrough~ and a URL: https://reactjs.org.`,
-      sender: { id: '123s', displayName: 'Sunita' },
-      timeSent: '10 mins ago',
+      sender: 'Sunita',
+      time: new Date(),
     },
     {
       message: `A paragraph with *emphasis* and **strong importance**`,
-      sender: { id: '123s', displayName: 'Ann' },
-      timeSent: '10 mins ago',
+      sender: 'Ann',
+      time: new Date(),
     },
   ],
 

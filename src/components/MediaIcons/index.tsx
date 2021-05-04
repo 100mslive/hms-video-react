@@ -11,9 +11,13 @@ import {
   SpotlightList,
   MuteListOn,
   SpotlightListOn,
+  MutePreview,
+  VideoPreview,
   Close,
   ChatIconBlack,
   ChatIconWhite,
+  SettingsIcon,
+  Volume,
 } from '../../icons';
 
 export const LogoButton = () => {
@@ -138,7 +142,7 @@ export const ShareScreenButton = ({
 }) => {
   return (
     <button
-      className={`inline-block p-2 rounded-${
+      className={`inline-block p-1 rounded-${
         buttonDisplay === 'square' ? 'lg' : 'full'
       } focus:outline-none hover:bg-transparent-light`}
       onClick={clickHandler}
@@ -164,8 +168,88 @@ export const SpotlightListButton = ({ isSpotlightOn = false }) => {
   );
 };
 
-export const CloseButton = () => {
-  return <button>{Close}</button>;
+export const AudioPreviewButton = ({
+  isAudioMuted = false,
+  buttonDisplay = 'square',
+  clickHandler,
+}: {
+  isAudioMuted: boolean;
+  buttonDisplay: string;
+  clickHandler: () => void;
+}) => {
+  return (
+    <button
+      className={`flex w-9 h-9 mx-1.5 justify-center items-center rounded-${
+        buttonDisplay === 'square' ? 'xl' : 'full'
+      } focus:outline-none ${
+        isAudioMuted
+          ? 'bg-white hover:bg-gray-500'
+          : 'hover:bg-transparent-light'
+      }`}
+      onClick={clickHandler}
+    >
+      {isAudioMuted ? MutePreview : MicOn}
+    </button>
+  );
+};
+
+export const VideoPreviewButton = ({
+  isVideoMuted = false,
+  buttonDisplay = 'square',
+  clickHandler,
+}: {
+  isVideoMuted: boolean;
+  buttonDisplay: string;
+  clickHandler: React.MouseEventHandler;
+}) => {
+  return (
+    <button
+      className={`flex w-9 h-9 mx-1.5 justify-center items-center rounded-${
+        buttonDisplay === 'square' ? 'xl' : 'full'
+      } focus:outline-none ${
+        isVideoMuted
+          ? 'bg-white hover:bg-gray-500'
+          : 'hover:bg-transparent-light'
+      }`}
+      onClick={clickHandler}
+    >
+      {isVideoMuted ? VideoPreview : CamOn}
+    </button>
+  );
+};
+
+export const SettingsButton = ({
+  buttonDisplay = 'square',
+  clickHandler,
+}: {
+  clickHandler: React.MouseEventHandler;
+  buttonDisplay: string;
+}) => {
+  return (
+    <button
+      className={`flex w-9 h-9 justify-center items-center rounded-${
+        buttonDisplay === 'square' ? 'xl' : 'full'
+      } focus:outline-none hover:bg-transparent-light`}
+      onClick={clickHandler}
+    >
+      {SettingsIcon}
+    </button>
+  );
+};
+
+export const CloseButton = ({
+  clickHandler,
+}: {
+  clickHandler: React.MouseEventHandler;
+}) => {
+  return (
+    <button
+      className="focus:outline-none p-1 hover:outline-none"
+      onClick={clickHandler}
+    >
+      {Close}
+    </button>
+  );
 };
 
 export const ChatButton = ({
@@ -179,9 +263,19 @@ export const ChatButton = ({
     <button
       onClick={clickHandler}
       className={`focus:outline-none rounded-lg ${isChatOpen &&
-        'bg-white'} p-3`}
+        'bg-white'} p-2 hover:bg-gray-200  m-1`}
     >
       {isChatOpen ? ChatIconBlack : ChatIconWhite}
     </button>
+  );
+};
+
+export const SpeakerTag = ({ name }: { name: string }) => {
+  return (
+    <div className={`self-center focus:outline-none text-lg text-white`}>
+      <div className="inline-block">{Volume}</div>
+      {/* TODO figure out why xs:hidden is needed */}
+      <div className="md:pl-2 xs:hidden md:inline-block">{name}</div>
+    </div>
   );
 };

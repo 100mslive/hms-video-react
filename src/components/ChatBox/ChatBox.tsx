@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Attachment, Close, People, Send } from '../../icons';
-import { Peer } from '../../types';
+import { Close, People, Send } from '../../icons';
 import './index.css';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
-import { CloseButton } from '../MediaIcons';
-
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
 import { withClasses } from '../../utils/styles';
@@ -64,8 +61,8 @@ const defaultClasses: ChatBoxClasses = {
 
 export interface Message {
   message: string;
-  sender?: Peer;
-  timeSent: string;
+  sender?: string;
+  time: Date;
   notification?: boolean;
   direction?: 'left' | 'right' | 'center';
 }
@@ -87,6 +84,7 @@ interface StyledChatProps {
    * extra classes added  by user
    */
   classes?: ChatBoxClasses;
+  timeFormatter?: (date: Date) => string;
 }
 
 export const StyledChatBox = ({
@@ -107,11 +105,15 @@ export const StyledChatBox = ({
   },
   classes: extraClasses,
   defaultClasses,
+  timeFormatter = (date: Date) => {
+    return `${date.getHours()}:${date.getMinutes()}`;
+  },
 }: StyledChatProps) => {
   //@ts-expect-error
 
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [message, setMessage] = useState('');
+
   const messagesEndRef = React.createRef<HTMLDivElement>();
   const scrollToBottom = () => {
     messagesEndRef.current!.scrollIntoView({
@@ -179,11 +181,11 @@ export const StyledChatBox = ({
                 <div className={combinedClasses?.messageInfo}>
                   {/* messageSender */}
                   <span className={combinedClasses?.messageSender}>
-                    {message.sender!.displayName}
+                    {message.sender}
                   </span>
                   {/* messageTime */}
                   <span className={combinedClasses?.messageTime}>
-                    {message.timeSent}{' '}
+                    {timeFormatter(message.time)}
                   </span>
                 </div>
                 {/* messageText */}
