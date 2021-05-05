@@ -1,5 +1,6 @@
-module.exports = {
-  darkMode: 'class',
+import { Theme, ThemeConfiguration, ThemeContainer } from 'twind';
+
+export const theme: { theme: ThemeConfiguration } = {
   theme: {
     extend: {
       fontFamily: {
@@ -35,13 +36,13 @@ module.exports = {
           disabled: 'rgba(59, 59, 59, 0.3)',
         },
       },
-      fontSize: {
-        sm: ['0.75rem', { lineHeight: '1rem' }],
-        base: ['0.875rem', { lineHeight: '1.25rem' }],
-        lg: ['1rem', { lineHeight: '1.5rem' }],
-        xl: ['1.25rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
-      },
+      // fontSize: {
+      //   sm: ['0.75rem', { lineHeight: '1rem' }],
+      //   base: ['0.875rem', { lineHeight: '1.25rem' }],
+      //   lg: ['1rem', { lineHeight: '1.5rem' }],
+      //   xl: ['1.25rem', { lineHeight: '1.75rem' }],
+      //   '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
+      // },
       maxHeight: {
         100: '37.5rem',
         116: '29rem',

@@ -5,7 +5,8 @@ import clsx from 'clsx';
 import { reduce, merge } from 'lodash';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
 import { MediaStreamWithInfo } from '../types';
-import { theme as defaultTheme } from '../defaultTheme';
+
+import { theme as defaultTailwindConfig } from '../defaultTheme';
 
 const getVideoTileLabel = (
   peerName: string,
@@ -499,14 +500,14 @@ function addGlobalCss<Type>({
   seedStyleMap,
   componentName,
 }: AddGlobalCssProps<Type>) {
-  let tailwindConfig = require('../../defaultTheme');
+  let tailwindConfig = defaultTailwindConfig;
   // alert(JSON.stringify(theme));
   try {
     let context = useHMSTheme();
     tailwindConfig = context.tailwindConfig;
   } catch (error) {}
 
-  let tw_merged = create({ ...tailwindConfig }).tw;
+  let tw_merged = create({ ...tailwindConfig, darkMode: 'class' }).tw;
   let calculatedSeedStyleMap: Type | {} = {};
   for (const seed in seedStyleMap as Type) {
     //TODO define a generic Map TS type to define classes to remove all type related ignores

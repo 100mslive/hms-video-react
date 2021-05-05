@@ -4,7 +4,7 @@ import HMSThemeProps, { appBuilder } from './interfaces/HMSThemeProvider';
 
 import { merge } from 'lodash';
 
-const defaultTailwindConfig = require('../../defaultTheme.ts');
+import { theme as defaultTailwindConfig } from '../defaultTheme';
 
 const HMSThemeContext = createContext<HMSThemeProps | null>(null);
 
