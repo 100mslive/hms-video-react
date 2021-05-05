@@ -5,9 +5,6 @@ import { AudioMuteIndicator, AudioMuteButton } from '../../MediaIcons';
 import '../index.css';
 import {combineClasses} from '../../../utils';
 import { withClasses } from '../../../utils/styles';
-//@ts-ignore
-import { create } from 'twind';
-
 export interface VideoTileControlsClasses {
   root?: string;
   labelContainer?: string;
