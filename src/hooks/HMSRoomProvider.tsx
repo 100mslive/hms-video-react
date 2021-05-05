@@ -1,5 +1,5 @@
 import React, { useState, useContext, createContext } from 'react';
-import { HMSSdk } from '@100mslive/100ms-web-sdk';
+import { HMSSdk, HMSPeerUpdate } from '@100mslive/100ms-web-sdk';
 import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSRoomProps from './interfaces/HMSRoomProps';
@@ -48,7 +48,7 @@ export const HMSRoomProvider: React.FC = props => {
         setPeers,
         setLocalPeer,
         receiveMessage,
-        setDominantSpeaker,
+        updateDominantSpeaker,
       ),
     );
   };
@@ -117,6 +117,15 @@ export const HMSRoomProvider: React.FC = props => {
     const hmsMessage = sdk.sendMessage('chat', message);
     receiveMessage({ ...hmsMessage, sender: 'You' });
     console.debug('HMSui-component: [sendMessage] sentMessage', message);
+  };
+
+  const updateDominantSpeaker = (type: HMSPeerUpdate, peer: HMSPeer | null) => {
+    if (type === HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {
+      setDominantSpeaker(peer);
+    }
+    if (type === HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER) {
+      setDominantSpeaker(null);
+    }
   };
 
   window.onunload = () => {

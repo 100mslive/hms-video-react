@@ -3,11 +3,12 @@ import HMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import HMSRoom from '@100mslive/100ms-web-sdk/dist/interfaces/room';
-import HMSUpdateListener, {
+import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
+import {
   HMSPeerUpdate,
   HMSRoomUpdate,
   HMSTrackUpdate,
-} from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
+} from '@100mslive/100ms-web-sdk';
 import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 
 const createListener = (
@@ -16,7 +17,7 @@ const createListener = (
   setPeers: React.Dispatch<React.SetStateAction<HMSPeer[]>>,
   setLocalPeer: React.Dispatch<React.SetStateAction<HMSPeer>>,
   receiveMessage: (message: HMSMessage) => void,
-  setDominantSpeaker: React.Dispatch<React.SetStateAction<HMSPeer | null>>,
+  updateDominantSpeaker: (type: HMSPeerUpdate, peer: HMSPeer | null) => void,
 ) => {
   const myListener = {
     onJoin: (room: HMSRoom) => {
@@ -27,25 +28,18 @@ const createListener = (
       incomingListener.onJoin(room);
     },
 
-    onPeerUpdate: (type: HMSPeerUpdate, peer: HMSPeer) => {
+    onPeerUpdate: (type: HMSPeerUpdate, peer: HMSPeer | null) => {
       const peers = sdk.getPeers();
       console.debug(
         'HMSui-component: Listener [onPeerUpdate]',
         HMSPeerUpdate[type],
         peer,
-        {
-          peers,
-        },
+        { peers },
       );
 
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
-      if (type === HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {
-        setDominantSpeaker(peer);
-      }
-      if (type === HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER) {
-        setDominantSpeaker(null);
-      }
+      updateDominantSpeaker(type, peer);
       incomingListener.onPeerUpdate(type, peer);
     },
 
@@ -54,7 +48,6 @@ const createListener = (
         'HMSui-component: Listener [onRoomUpdate]',
         HMSRoomUpdate[type],
         room,
-        { peers: sdk.getPeers() },
       );
       incomingListener.onRoomUpdate(type, room);
     },
