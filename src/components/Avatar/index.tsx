@@ -48,8 +48,10 @@ const StyledMaterialAvatarList = withStyles({
     width: '20px',
     height: '20px',
     fontSize: '9px',
-    backgroundColor: '#0099ff',
   },
+  colorDefault:{
+    backgroundColor:`#${Math.floor(Math.random()*16777215).toString(16)}`,
+  }
 })(MaterialAvatar);
 
 export const AvatarList = ({ image, icon, label, ...props }: AvatarProps) => {
