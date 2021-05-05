@@ -13,7 +13,12 @@ export default meta;
 const Template: Story<ControlBarProps> = args => {
   return (
     <div>
-      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+      <HMSThemeProvider
+        config={{}}
+        appBuilder={{
+          theme: 'dark',
+        }}
+      >
         <ControlBar {...args} />
       </HMSThemeProvider>
     </div>

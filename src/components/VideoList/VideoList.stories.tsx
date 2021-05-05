@@ -8,6 +8,7 @@ import { VideoTileControls } from '../VideoTile/Controls';
 import { MicOff, MicOn } from '../../icons';
 import { loadStreams } from '../../storybook/utils';
 import { getUserMedia } from '../../utils/preview';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 declare global {
   interface HTMLVideoElement {
     captureStream(frameRate?: number): MediaStream;
@@ -59,77 +60,98 @@ const Template: Story<VideoListStoryProps> = args => {
   }, [streamsWithInfo]);
 
   return (
-    <div className="flex items-center justify-center h-screen">
-      <video
-        crossOrigin="anonymous"
-        className="hidden"
-        width="400"
-        height="225"
-        ref={dummyCameraVideoRef}
-        src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618246/pexels-mart-production-7261921_XCEC2bNM_osJG_lhdtua.mp4"
-        loop
-        autoPlay
-        onPlay={() => {
-          if (dummyCameraVideoRef && dummyCameraVideoRef.current) {
-            streamsWithInfo?.forEach((streamWithInfo, index) => {
-              if (
-                !streamWithInfo.isLocal &&
-                streamWithInfo.videoSource !== 'screen' &&
-                dummyCameraVideoRef.current
-              ) {
-                let newStreamsWithInfo = [...streamsWithInfo];
-                newStreamsWithInfo[
-                  index
-                ].videoTrack = dummyCameraVideoRef.current
-                  .captureStream()
-                  .getVideoTracks()[0];
-                newStreamsWithInfo[
-                  index
-                ].audioTrack = dummyCameraVideoRef.current
-                  .captureStream()
-                  .getAudioTracks()[0];
-                setStreamsWithInfo(newStreamsWithInfo);
-              }
-            });
-          }
-        }}
-      ></video>
-      <video
-        crossOrigin="anonymous"
-        className="hidden"
-        width="400"
-        height="225"
-        ref={dummyScreenVideoRef}
-        src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618376/Screen_Recording_2021-04-17_at_5.36.24_AM_if70nz_wl31nt.mp4"
-        loop
-        autoPlay
-        onPlay={() => {
-          if (dummyScreenVideoRef && dummyScreenVideoRef.current) {
-            streamsWithInfo?.forEach((streamWithInfo, index) => {
-              if (
-                !streamWithInfo.isLocal &&
-                streamWithInfo.videoSource === 'screen' &&
-                dummyScreenVideoRef.current
-              ) {
-                let newStreamsWithInfo = [...streamsWithInfo];
-                newStreamsWithInfo[
-                  index
-                ].videoTrack = dummyScreenVideoRef.current
-                  .captureStream()
-                  .getVideoTracks()[0];
-                newStreamsWithInfo[
-                  index
-                ].audioTrack = dummyScreenVideoRef.current
-                  .captureStream()
-                  .getAudioTracks()[0];
-                setStreamsWithInfo(newStreamsWithInfo);
-              }
-            });
-          }
-        }}
-      ></video>
-      <VideoList {...args} streams={streamsWithInfo} />
-    </div>
+    <HMSThemeProvider
+      config={{
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif'],
+              body: ['Montserrat', 'sans-serif'],
+            },
+          },
+        },
+      }}
+      appBuilder={{
+        theme: 'dark',
+        videoTileAspectRatio: {
+          width: 1,
+          height: 1,
+        },
+        showAvatar: true,
+      }}
+    >
+      <div className="flex items-center justify-center h-screen">
+        <video
+          crossOrigin="anonymous"
+          className="hidden"
+          width="400"
+          height="225"
+          ref={dummyCameraVideoRef}
+          src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618246/pexels-mart-production-7261921_XCEC2bNM_osJG_lhdtua.mp4"
+          loop
+          autoPlay
+          onPlay={() => {
+            if (dummyCameraVideoRef && dummyCameraVideoRef.current) {
+              streamsWithInfo?.forEach((streamWithInfo, index) => {
+                if (
+                  !streamWithInfo.isLocal &&
+                  streamWithInfo.videoSource !== 'screen' &&
+                  dummyCameraVideoRef.current
+                ) {
+                  let newStreamsWithInfo = [...streamsWithInfo];
+                  newStreamsWithInfo[
+                    index
+                  ].videoTrack = dummyCameraVideoRef.current
+                    .captureStream()
+                    .getVideoTracks()[0];
+                  newStreamsWithInfo[
+                    index
+                  ].audioTrack = dummyCameraVideoRef.current
+                    .captureStream()
+                    .getAudioTracks()[0];
+                  setStreamsWithInfo(newStreamsWithInfo);
+                }
+              });
+            }
+          }}
+        ></video>
+        <video
+          crossOrigin="anonymous"
+          className="hidden"
+          width="400"
+          height="225"
+          ref={dummyScreenVideoRef}
+          src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618376/Screen_Recording_2021-04-17_at_5.36.24_AM_if70nz_wl31nt.mp4"
+          loop
+          autoPlay
+          onPlay={() => {
+            if (dummyScreenVideoRef && dummyScreenVideoRef.current) {
+              streamsWithInfo?.forEach((streamWithInfo, index) => {
+                if (
+                  !streamWithInfo.isLocal &&
+                  streamWithInfo.videoSource === 'screen' &&
+                  dummyScreenVideoRef.current
+                ) {
+                  let newStreamsWithInfo = [...streamsWithInfo];
+                  newStreamsWithInfo[
+                    index
+                  ].videoTrack = dummyScreenVideoRef.current
+                    .captureStream()
+                    .getVideoTracks()[0];
+                  newStreamsWithInfo[
+                    index
+                  ].audioTrack = dummyScreenVideoRef.current
+                    .captureStream()
+                    .getAudioTracks()[0];
+                  setStreamsWithInfo(newStreamsWithInfo);
+                }
+              });
+            }
+          }}
+        ></video>
+        <VideoList {...args} streams={streamsWithInfo} />
+      </div>
+    </HMSThemeProvider>
   );
 };
 
@@ -236,7 +258,6 @@ DefaultList.args = {
     //videoTileRoot: 'p-1',
     video: 'rounded-lg shadow-lg',
   },
-  aspectRatio: { width: 1, height: 1 },
 };
 
 export const CenterStage = Template.bind({});
