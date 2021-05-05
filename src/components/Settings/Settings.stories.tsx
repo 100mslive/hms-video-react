@@ -29,8 +29,3 @@ const Template: Story<SettingsProps> = (args: SettingsProps) => {
 };
 
 export const Default = Template.bind({});
-
-interface obj {
-  name: 'a' | 'b';
-}
-let abc: obj = { name: 'a' };
