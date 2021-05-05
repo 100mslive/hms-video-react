@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { MessageModal, MessageModalProps } from './index';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
   title: 'MessageModal',
@@ -11,9 +12,11 @@ export default meta;
 
 const Template: Story<MessageModalProps> = args => {
   return (
-    <div className="bg-black">
-      <MessageModal {...args} />
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div>
+        <MessageModal {...args} />
+      </div>
+    </HMSThemeProvider>
   );
 };
 

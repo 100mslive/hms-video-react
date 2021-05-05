@@ -2,9 +2,9 @@ import React, { useState, useContext, createContext } from 'react';
 
 import HMSThemeProps from './interfaces/HMSThemeProvider';
 
-const defaultTailwindConfig = require('../../defaultTheme.ts');
-
 import { merge } from 'lodash';
+
+const defaultTailwindConfig = require('../../defaultTheme.ts');
 
 const HMSThemeContext = createContext<HMSThemeProps | null>(null);
 
