@@ -196,7 +196,7 @@ const StyledVideoTile = ({
           />
           {isVideoMuted && (
             <div
-              className={`${combinedClasses?.videoContainer} ${
+              className={`${combinedClasses?.avatarContainer} ${
                 displayShape === 'circle'
                   ? combinedClasses?.avatarContainerCircle
                   : ''

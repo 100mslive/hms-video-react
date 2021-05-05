@@ -30,6 +30,9 @@ const StyledMaterialAvatar = withStyles({
     height: '100px',
     fontSize: '2rem',
   },
+  colorDefault:{
+    backgroundColor:`#${Math.floor(Math.random()*16777215).toString(16)}`,
+  }
 })(MaterialAvatar);
 
 export const Avatar = ({ image, icon, label, ...props }: AvatarProps) => {
