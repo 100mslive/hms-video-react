@@ -15,7 +15,7 @@ const InlineCircle = ({ level }: InlineCircleProps) => {
     <div className="inline-block" style={{ width: '22px', height: '32px' }}>
       <div className="flex items-center justify-center h-full w-full">
         <span
-          className="inline-block bg-blue-tint rounded-full "
+          className="inline-block bg-brand-tint rounded-full "
           style={{
             width: `${0.18 * level}px`,
             height: `${0.18 * level}px`,

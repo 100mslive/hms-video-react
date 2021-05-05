@@ -405,7 +405,7 @@ export function SliderRightArrow({ container, ...props }: IArrowProps) {
   const { style, onClick } = props;
   const RightArrow = (
     <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <button className="text-sm text-blue-main focus:outline-none">
+      <button className="text-sm text-brand-main focus:outline-none">
         <svg
           width="20"
           height="20"

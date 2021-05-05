@@ -7,7 +7,7 @@ module.exports = {
         DEFAULT: '0px 2px 9px rgba(0, 0, 0, 0.18)',
       },
       colors: {
-        blue: {
+        brand: {
           tint: '#74AAFF',
           main: '#2F80FF',
           shade: '#0B326F',

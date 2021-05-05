@@ -100,7 +100,7 @@ export const StyledChatBox = ({
     let text = Autolinker.link(message, {
       sanitizeHtml: true,
       mention: 'twitter',
-      className: 'text-blue-tint',
+      className: 'text-brand-tint',
     });
 
     return ReactHtmlParser(text);
