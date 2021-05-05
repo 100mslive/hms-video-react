@@ -133,6 +133,5 @@ export type ControlBarProps = Omit<StyledControlBarProps, 'defaultClasses'>;
 
 export const ControlBar = withClasses<ControlBarClasses | undefined>(
   defaultClasses,
-  'header',
-  create().tw,
+  'header'
 )<StyledControlBarProps>(StyledControlBar);

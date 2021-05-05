@@ -78,6 +78,5 @@ export type HeaderProps = Omit<StyledHeaderProps, 'defaultClasses'>;
 
 export const Header = withClasses<HeaderClasses | undefined>(
   defaultClasses,
-  'header',
-  create().tw,
+  'header'
 )<StyledHeaderProps>(StyledHeader);

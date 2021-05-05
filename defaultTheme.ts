@@ -20,8 +20,10 @@ module.exports = {
           500: '#C7C7C7',
         },
         transparent: {
+          lightest:'rgba(0, 0, 0, 0.37) 0%',
           light: 'rgba(255, 255, 255, 0.25)',
           dark: 'rgba(0, 0, 0, 0.75)',
+          darker:'rgba(0, 0, 0, 0) 93.75%',
           disabled: 'rgba(59, 59, 59, 0.3)',
         },
       },
@@ -35,6 +37,7 @@ module.exports = {
       maxHeight: {
         100: '37.5rem',
         116: '29rem',
+        125:'31.25rem'
       },
       width: {
         7.5: '1.875rem',
