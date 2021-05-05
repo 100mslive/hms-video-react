@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ControlBarProps, ControlBar } from './index';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
   title: 'ControlBar',
@@ -11,8 +12,10 @@ export default meta;
 
 const Template: Story<ControlBarProps> = args => {
   return (
-    <div className="bg-black ">
-      <ControlBar {...args} />
+    <div>
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+        <ControlBar {...args} />
+      </HMSThemeProvider>
     </div>
   );
 };

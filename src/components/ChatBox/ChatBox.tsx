@@ -9,9 +9,9 @@ import { withClasses } from '../../utils/styles';
 //@ts-ignore
 import { create } from 'twind';
 import { combineClasses } from '../../utils';
-const theme = require('../../../defaultTheme.ts').theme;
 
 import { merge } from 'lodash';
+const theme = require('../../../defaultTheme.ts').theme;
 
 interface ChatBoxClasses {
   root?: string;
@@ -159,7 +159,7 @@ export const StyledChatBox = ({
         </div>
         {/* messageBox */}
         {/* TODO: move no scroll bar css logic to tailwind */}
-        <div className={combinedClasses?.messageBox + ' no-scrollbar'}>
+        <div className={`${combinedClasses?.messageBox} no-scrollbar`}>
           {messages.map(message => {
             return message.notification ? (
               /* notificationRoot */
@@ -218,7 +218,7 @@ export const StyledChatBox = ({
           {/* TODO: move no scrollbar logic to tailwind */}
           <TextareaAutosize
             rowsMax={3}
-            className={combinedClasses?.chatInput + ' no-scrollbar'}
+            className={`${combinedClasses?.chatInput} no-scrollbar`}
             placeholder="Write something here"
             value={message}
             onKeyPress={event => {

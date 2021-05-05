@@ -13,7 +13,7 @@ export default meta;
 const Template: Story<PreviewProps> = args => {
   return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
-      <div className=" flex h-screen w-screen justify-center items-center">
+      <div>
         <Preview {...args} />
       </div>
     </HMSThemeProvider>
