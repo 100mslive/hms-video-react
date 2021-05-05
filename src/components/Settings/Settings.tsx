@@ -5,49 +5,51 @@ import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
-import { combineClasses} from '../../utils';
+import { combineClasses } from '../../utils';
 //@ts-ignore
 import { create } from 'twind';
 
 export interface SettingsClasses {
-  root?:string;
-  iconContainer?:string;
-  dialogRoot?:string;
-  dialogContainer?:string;
-  dialogInner?:string;
-  titleContainer?:string;
-  titleIcon?:string;
-  titleText?:string;
-  formContainer?:string;
-  formInner?:string;
-  selectLabel?:string;
-  selectContainer?:string;
-  select?:string;
-  selectInner?:string;
+  root?: string;
+  iconContainer?: string;
+  dialogRoot?: string;
+  dialogContainer?: string;
+  dialogInner?: string;
+  titleContainer?: string;
+  titleIcon?: string;
+  titleText?: string;
+  formContainer?: string;
+  formInner?: string;
+  selectLabel?: string;
+  selectContainer?: string;
+  select?: string;
+  selectInner?: string;
 }
 
 interface StyledSettingsProps {
   setMaxTileCount: (count: number) => void;
   maxTileCount: number;
-  defaultClasses?:SettingsClasses;
-  classes?:SettingsClasses;
+  defaultClasses?: SettingsClasses;
+  classes?: SettingsClasses;
 }
 
-const defaultClasses:SettingsClasses = {
+const defaultClasses: SettingsClasses = {
   iconContainer: 'focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg',
-  dialogRoot:'rounded-lg',
-  dialogContainer:'bg-gray-100 text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid',
-  dialogInner:'text-2xl mb-3 p-2 border-b-2 flex justify-between',
-  titleContainer:'flex items-center',
-  titleIcon:'pr-4',
-  titleText:'text-2xl leading-7',
-  formContainer:'flex flex-wrap text-base',
-  formInner:'w-full flex my-1.5',
-  selectLabel:'w-1/3 flex justify-end items-center',
-  selectContainer:'rounded-lg w-1/2 bg-gray-200 p-2 mx-2',
-  select:'rounded-lg w-full h-full bg-gray-200 focus:outline-none',
-  selectInner:'p-4',
-}
+  dialogRoot: 'rounded-lg',
+  dialogContainer:
+    'dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid',
+  dialogInner: 'text-2xl mb-3 p-2 border-b-2 flex justify-between',
+  titleContainer: 'flex items-center',
+  titleIcon: 'pr-4',
+  titleText: 'text-2xl leading-7',
+  formContainer: 'flex flex-wrap text-base',
+  formInner: 'w-full flex my-1.5',
+  selectLabel: 'w-1/3 flex justify-end items-center',
+  selectContainer: 'rounded-lg w-1/2 bg-gray-600 dark:bg-gray-200 p-2 mx-2',
+  select:
+    'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
+  selectInner: 'p-4',
+};
 
 //TODO figure out how to expose this outside
 const HMSSlider = withStyles({
@@ -69,7 +71,12 @@ const HMSSlider = withStyles({
 })(Slider);
 
 //TODO replace with unpkg
-const StyledSettings = ({ maxTileCount, setMaxTileCount, defaultClasses, classes:extraClasses }: StyledSettingsProps) => {
+const StyledSettings = ({
+  maxTileCount,
+  setMaxTileCount,
+  defaultClasses,
+  classes: extraClasses,
+}: StyledSettingsProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [open, setOpen] = React.useState(false);
@@ -122,7 +129,9 @@ const StyledSettings = ({ maxTileCount, setMaxTileCount, defaultClasses, classes
         <div className={`${combinedClasses?.dialogContainer}`}>
           <div className={`${combinedClasses?.dialogInner}`}>
             <span className={`${combinedClasses?.titleContainer}`}>
-              <span className={`${combinedClasses?.titleIcon}`}>{SettingsIconSmall}</span>
+              <span className={`${combinedClasses?.titleIcon}`}>
+                {SettingsIconSmall}
+              </span>
               <span className={`${combinedClasses?.titleText}`}>Settings</span>
             </span>
             <span>
@@ -145,7 +154,11 @@ const StyledSettings = ({ maxTileCount, setMaxTileCount, defaultClasses, classes
                   // }}
                 >
                   {videoInput.map((device, index) => (
-                    <option value="Teacher" className={`${combinedClasses?.selectInner}`} key={index}>
+                    <option
+                      value="Teacher"
+                      className={`${combinedClasses?.selectInner}`}
+                      key={index}
+                    >
                       {device.label}
                     </option>
                   ))}
@@ -166,7 +179,11 @@ const StyledSettings = ({ maxTileCount, setMaxTileCount, defaultClasses, classes
                   // }}
                 >
                   {audioInput.map((device, index) => (
-                    <option value="Teacher" className={`${combinedClasses?.selectInner}`}key={index}>
+                    <option
+                      value="Teacher"
+                      className={`${combinedClasses?.selectInner}`}
+                      key={index}
+                    >
                       {device.label}
                     </option>
                   ))}
@@ -187,7 +204,11 @@ const StyledSettings = ({ maxTileCount, setMaxTileCount, defaultClasses, classes
                   // }}
                 >
                   {audioOutput.map((device, index) => (
-                    <option value="Teacher" className={`${combinedClasses?.select}`} key={index}>
+                    <option
+                      value="Teacher"
+                      className={`${combinedClasses?.select}`}
+                      key={index}
+                    >
                       {device.label}
                     </option>
                   ))}
@@ -374,5 +395,5 @@ export type SettingsProps = Omit<StyledSettingsProps, 'defaultClasses'>;
 //TODO replace with theme context
 export const Settings = withClasses<SettingsClasses | undefined>(
   defaultClasses,
-  'settings'
+  'settings',
 )<StyledSettingsProps>(StyledSettings);

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Preview, PreviewProps } from './Preview';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
   title: 'Preview',
@@ -11,9 +12,11 @@ export default meta;
 
 const Template: Story<PreviewProps> = args => {
   return (
-    <div className="bg-black flex h-screen w-screen justify-center items-center">
-      <Preview {...args} />
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div>
+        <Preview {...args} />
+      </div>
+    </HMSThemeProvider>
   );
 };
 

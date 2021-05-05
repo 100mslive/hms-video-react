@@ -13,6 +13,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { withClasses } from '../../utils/styles';
 //@ts-ignore
 import { create } from 'twind';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 interface StyledVideoTileProps extends VideoProps {
   /**
    * HMS Peer object for which the tile is shown.
@@ -100,7 +101,7 @@ const StyledVideoTile = ({
   audioLevel,
   isAudioMuted = false,
   isVideoMuted = false,
-  showAudioMuteStatus = true,
+  showAudioMuteStatus,
   showAudioLevel = true,
   objectFit = 'cover',
   aspectRatio,
@@ -123,6 +124,14 @@ const StyledVideoTile = ({
     aspectRatio.width === aspectRatio.height;
   const isCircle = displayShape === 'circle';
   const isSquareOrCircle = isSquare || isCircle;
+
+  try {
+    let context = useHMSTheme();
+    if (aspectRatio === undefined)
+      aspectRatio = context.appBuilder.videoTileAspectRatio;
+    if (showAudioMuteStatus === undefined)
+      showAudioMuteStatus = context.appBuilder.showAvatar;
+  } catch (e) {}
 
   const {
     width: containerWidth,

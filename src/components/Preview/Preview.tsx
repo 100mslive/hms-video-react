@@ -18,6 +18,7 @@ interface MuteStatus {
 }
 interface PreviewClasses {
   root?: string;
+  containerRoot?: string;
   header?: string;
   messageModal?: string;
 
@@ -27,11 +28,13 @@ interface PreviewClasses {
 }
 const defaultClasses: PreviewClasses = {
   root:
-    'flex flex-col items-center w-37.5 h-400 box-border bg-gray-100 text-white overflow-hidden rounded-2xl',
+    'flex h-screen w-screen bg-gray-600 dark:bg-black justify-center items-center',
+  containerRoot:
+    'flex flex-col items-center w-37.5 h-400 box-border bg-white dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
   header: 'w-22.5 h-22.5 mt-1.875 mb-7',
   helloDiv: 'text-2xl font-medium mb-12',
   joinButton:
-    'flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 bg-blue-main rounded-xl text-lg font-semibold cursor-pointer',
+    'flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 text-white bg-blue-main rounded-xl text-lg font-semibold cursor-pointer',
   goBackButton: 'text-blue-main text-lg font-semibold cursor-pointer',
 };
 interface StyledPreviewProps {
@@ -217,68 +220,70 @@ const StyledPreview = ({
   return (
     // root
     <div className={combinedClasses?.root}>
-      {/* header */}
-      <div className={combinedClasses?.header}>
-        {/* messageModal */}
-        <MessageModal
-          show={showModal}
-          setShow={setShowModal}
-          title={title}
-          message={message}
-          secondary={secondaryMessage}
-          allow={allow}
-          gobackOnClick={goBackOnClick}
-        />
-        {/* videoTile */}
-        <VideoTile
-          {...videoTileProps}
-          videoTrack={mediaStream.getVideoTracks()[0]}
-          audioTrack={mediaStream.getAudioTracks()[0]}
-          peer={{
-            id: name,
-            displayName: name,
+      <div className={combinedClasses?.containerRoot}>
+        {/* header */}
+        <div className={combinedClasses?.header}>
+          {/* messageModal */}
+          <MessageModal
+            show={showModal}
+            setShow={setShowModal}
+            title={title}
+            message={message}
+            secondary={secondaryMessage}
+            allow={allow}
+            gobackOnClick={goBackOnClick}
+          />
+          {/* videoTile */}
+          <VideoTile
+            {...videoTileProps}
+            videoTrack={mediaStream.getVideoTracks()[0]}
+            audioTrack={mediaStream.getAudioTracks()[0]}
+            peer={{
+              id: name,
+              displayName: name,
+            }}
+            objectFit="cover"
+            isLocal={true}
+            aspectRatio={{
+              width: 1,
+              height: 1,
+            }}
+            classes={videoTileClasses}
+            controlsComponent={
+              <VideoTileControls
+                settingsButtonOnClick={() =>
+                  console.log('Settings Component yet to be made')
+                }
+                audioButtonOnClick={() => toggleMediaState('audio')}
+                videoButtonOnClick={() => toggleMediaState('video')}
+                isAudioMuted={audioMuted}
+                isVideoMuted={videoMuted}
+              />
+            }
+          />
+        </div>
+        {/* helloDiv */}
+        <div className={combinedClasses?.helloDiv}>Hello, {name}</div>
+        {/* joinButton */}
+        <div
+          className={combinedClasses?.joinButton}
+          onClick={() => {
+            closeMediaStream(mediaStream);
+            joinOnClick({ audioMuted, videoMuted });
           }}
-          objectFit="cover"
-          isLocal={true}
-          aspectRatio={{
-            width: 1,
-            height: 1,
+        >
+          Join
+        </div>
+        {/* goBackButton */}
+        <div
+          className={combinedClasses?.goBackButton}
+          onClick={() => {
+            closeMediaStream(mediaStream);
+            goBackOnClick();
           }}
-          classes={videoTileClasses}
-          controlsComponent={
-            <VideoTileControls
-              settingsButtonOnClick={() =>
-                console.log('Settings Component yet to be made')
-              }
-              audioButtonOnClick={() => toggleMediaState('audio')}
-              videoButtonOnClick={() => toggleMediaState('video')}
-              isAudioMuted={audioMuted}
-              isVideoMuted={videoMuted}
-            />
-          }
-        />
-      </div>
-      {/* helloDiv */}
-      <div className={combinedClasses?.helloDiv}>Hello, {name}</div>
-      {/* joinButton */}
-      <div
-        className={combinedClasses?.joinButton}
-        onClick={() => {
-          closeMediaStream(mediaStream);
-          joinOnClick({ audioMuted, videoMuted });
-        }}
-      >
-        Join
-      </div>
-      {/* goBackButton */}
-      <div
-        className={combinedClasses?.goBackButton}
-        onClick={() => {
-          closeMediaStream(mediaStream);
-          goBackOnClick();
-        }}
-      >
-        Go back
+        >
+          Go back
+        </div>
       </div>
     </div>
   );

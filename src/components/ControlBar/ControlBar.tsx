@@ -10,9 +10,10 @@ import {
 } from '../MediaIcons';
 import { Settings } from '../Settings/Settings';
 import { withClasses } from '../../utils/styles';
-import { combineClasses} from '../../utils';
+import { combineClasses } from '../../utils';
 //@ts-ignore
 import { create } from 'twind';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export interface ControlBarClasses {
   root?: string;
@@ -41,16 +42,16 @@ interface StyledControlBarProps {
   classes?: ControlBarClasses;
 }
 
-const defaultClasses:ControlBarClasses = {
+const defaultClasses: ControlBarClasses = {
   root:
-    'flex flex-grow h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
+    'flex flex-grow bg-white dark:bg-black h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
   leftRoot:
     'flex md:flex-none md:self-center md:justify-center md:left-0 md:ml-2 md:absolute',
   centerRoot:
     'flex md:flex-grow gap-x-4 md:mr-2 md:self-center md:justify-center',
   rightRoot:
     'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
-}
+};
 
 export const StyledControlBar = ({
   isAudioMuted = false,
@@ -103,7 +104,7 @@ export const StyledControlBar = ({
     />,
   ],
   defaultClasses,
-  classes:extraClasses,
+  classes: extraClasses,
 }: StyledControlBarProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
@@ -117,9 +118,26 @@ export const StyledControlBar = ({
   rightComponents.forEach(comp => {
     rightItems.push(comp);
   });
-  leftComponents.forEach(comp => {
-    leftItems.push(comp);
-  });
+
+  try {
+    let context = useHMSTheme();
+    leftItems.push(leftComponents[0]);
+
+    if (
+      context.appBuilder.enableScreenShare === undefined ||
+      context.appBuilder.enableScreenShare
+    )
+      leftItems.push(leftComponents[1]);
+    if (
+      context.appBuilder.enableChat === undefined ||
+      Boolean(context.appBuilder.enableChat)
+    )
+      leftItems.push(leftComponents[2]);
+  } catch (e) {
+    leftComponents.forEach(comp => {
+      leftItems.push(comp);
+    });
+  }
   return (
     <div className={combinedClasses?.root}>
       <div className={combinedClasses?.leftRoot}>{leftItems}</div>
@@ -133,5 +151,5 @@ export type ControlBarProps = Omit<StyledControlBarProps, 'defaultClasses'>;
 
 export const ControlBar = withClasses<ControlBarClasses | undefined>(
   defaultClasses,
-  'header'
+  'header',
 )<StyledControlBarProps>(StyledControlBar);

@@ -2,6 +2,7 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Header, HeaderProps } from './index';
 import { ParticipantList } from '../ParticipantList/ParticipantList';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
   title: 'Header',
@@ -12,8 +13,17 @@ export default meta;
 
 const Template: Story<HeaderProps> = args => {
   return (
-    <div className="bg-black">
-      <Header {...args} rightComponents={[]} />
+    <div className="w-full h-screen">
+      <HMSThemeProvider
+        config={{}}
+        appBuilder={{
+          theme: 'dark',
+          // logo:
+          //   'https://image.shutterstock.com/image-illustration/gold-stack-overflow-icon-on-260nw-1113780074.jpg',
+        }}
+      >
+        <Header {...args} rightComponents={[]} />
+      </HMSThemeProvider>
     </div>
   );
 };
