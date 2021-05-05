@@ -36,7 +36,7 @@ export const MessageModal = ({
   // const { isModalOpen, toggleModal} = useContext(AppContext);
   return (
     <div
-      className="fixed z-50 relative overflow-y-auto"
+      className="z-50 relative overflow-y-auto"
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"

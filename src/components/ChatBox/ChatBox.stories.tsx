@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ChatBox, ChatProps, Message } from './ChatBox';
 import ReactMarkdown from 'react-markdown';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 const gfm = require('remark-gfm');
 
 const meta: Meta = {
@@ -27,16 +28,19 @@ const Template: Story<ChatProps> = args => {
   return (
     <div className="w-full h-full flex justify-center">
       <div style={{ height: '466px', width: '240px' }}>
-        <ChatBox
-          messages={messages}
-          onSend={onSend}
-          willScrollToBottom={args.willScrollToBottom}
-          scrollAnimation={args.scrollAnimation}
-          onClose={() => {
-            alert('closing');
-          }}
-          messageFormatter={args.messageFormatter}
-        />
+        <HMSThemeProvider theme={{}}>
+          <ChatBox
+            messages={messages}
+            onSend={onSend}
+            willScrollToBottom={args.willScrollToBottom}
+            scrollAnimation={args.scrollAnimation}
+            onClose={() => {
+              alert('closing');
+            }}
+            messageFormatter={args.messageFormatter}
+            classes={args.classes}
+          />
+        </HMSThemeProvider>
       </div>
     </div>
   );
@@ -73,7 +77,9 @@ Default.args = {
       sender: 'admin',
     },
   ],
-
+  classes: {
+    header: 'bg-red-500',
+  },
   willScrollToBottom: true,
 };
 

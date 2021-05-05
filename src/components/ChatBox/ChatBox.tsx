@@ -4,6 +4,56 @@ import './index.css';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
+import { withClasses } from '../../utils/styles';
+
+//@ts-ignore
+import { create } from 'twind';
+import { combineClasses } from '../../utils';
+interface ChatBoxClasses {
+  root?: string;
+  header?: string;
+  headerLine?: string;
+  headerRoot?: string;
+  headerText?: string;
+  headerCloseButton?: string;
+  messageBox?: string;
+  messageRoot?: string;
+  messageInfo?: string;
+  messageSender?: string;
+  messageTime?: string;
+  messageText?: string;
+  notificationRoot?: string;
+  notificationInfo?: string;
+  notificationText?: string;
+  notificationTime?: string;
+  noMessageRoot?: string;
+  footer?: string;
+  chatInput?: string;
+  sendButton?: string;
+}
+
+const defaultClasses: ChatBoxClasses = {
+  root: 'w-full h-full  rounded-2xl flex flex-col',
+  header: `bg-gray-200 rounded-t-2xl p-3 text-gray-500 flex flex-col justify-center items-center`,
+  headerLine: 'w-8 h-1 rounded bg-gray-400 m-2',
+  headerRoot: 'flex w-full justify-between',
+  headerText: 'text-gray-500 flex',
+  headerCloseButton: 'focus:outline-none',
+  messageBox:
+    'bg-gray-100 w-full h-full p-3 text-gray-500 overflow-y-auto no-scrollbar flex-grow',
+  messageRoot: 'py-3',
+  messageInfo: 'flex justify-between',
+  messageTime: 'text-xs',
+  messageText: 'text-white leading-5 max-w-full break-words',
+  noMessageRoot: 'flex justify-center items-center text-gray-400 h-full',
+  footer: 'bg-gray-200 min-h-11 rounded-b-2xl flex w-full justify-between p-3 ',
+  chatInput:
+    'bg-gray-200 placeholder-gray-500 text-white focus:outline-none leading-5 overflow-y-auto no-scrollbar resize-none w-5/6',
+  sendButton: 'focus:outline-none',
+  notificationRoot: 'py-3',
+  notificationInfo: 'flex justify-between text-gray-400',
+  notificationTime: 'text-xs',
+};
 
 export interface Message {
   message: string;
@@ -12,7 +62,7 @@ export interface Message {
   notification?: boolean;
   direction?: 'left' | 'right' | 'center';
 }
-export interface ChatProps {
+interface StyledChatProps {
   messages: Message[];
   onSend: (message: string) => void;
   onClose?: () => void;
@@ -20,10 +70,20 @@ export interface ChatProps {
   willScrollToBottom?: boolean;
   scrollAnimation?: 'smooth' | 'auto';
   messageFormatter?: (message: string) => React.ReactNode;
+
+  /**
+   * default classes
+   */
+  defaultClasses?: ChatBoxClasses;
+
+  /**
+   * extra classes added  by user
+   */
+  classes?: ChatBoxClasses;
   timeFormatter?: (date: Date) => string;
 }
 
-export const ChatBox = ({
+export const StyledChatBox = ({
   messages,
   onSend,
   onClose,
@@ -39,15 +99,22 @@ export const ChatBox = ({
 
     return ReactHtmlParser(text);
   },
+  classes: extraClasses,
+  defaultClasses,
   timeFormatter = (date: Date) => {
     return `${date.getHours()}:${date.getMinutes()}`;
   },
-}: ChatProps) => {
+}: StyledChatProps) => {
+  //@ts-expect-error
+
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [message, setMessage] = useState('');
 
   const messagesEndRef = React.createRef<HTMLDivElement>();
   const scrollToBottom = () => {
-    messagesEndRef.current!.scrollIntoView({ behavior: scrollAnimation });
+    messagesEndRef.current!.scrollIntoView({
+      behavior: scrollAnimation,
+    });
   };
   useEffect(() => {
     if (willScrollToBottom) {
@@ -57,45 +124,69 @@ export const ChatBox = ({
 
   return (
     <React.Fragment>
-      <div className="w-full h-full  rounded-2xl flex flex-col">
-        <div className="bg-gray-200 rounded-t-2xl p-3 text-gray-500 flex flex-col justify-center items-center">
-          <div className="w-8 h-1 rounded bg-gray-400 m-2"></div>
-          <div className=" flex w-full justify-between">
-            <div className="text-gray-500 flex">
+      {/* root */}
+      <div className={combinedClasses?.root}>
+        {/* header */}
+        <div className={combinedClasses?.header}>
+          {/* header-line */}
+          <div className={combinedClasses?.headerLine}></div>
+          {/* header-root */}
+          <div className={combinedClasses?.headerRoot}>
+            {/* header-text */}
+            <div className={combinedClasses?.headerText}>
               <span>{People}</span> Everyone
             </div>
             <div>
+              {/* headerCloseButton */}
               <button
                 onClick={() => {
                   if (onClose) {
                     onClose();
                   }
                 }}
-                className="focus:outline-none"
+                className={combinedClasses?.headerCloseButton}
               >
                 {Close}
               </button>
             </div>
           </div>
         </div>
-        <div className="bg-gray-100 w-full h-full p-3 text-gray-500 overflow-y-auto no-scrollbar flex-grow">
+        {/* messageBox */}
+        {/* TODO: move no scroll bar css logic to tailwind */}
+        <div className={combinedClasses?.messageBox + ' no-scrollbar'}>
           {messages.map(message => {
             return message.notification ? (
-              <div className="py-3">
-                <div className="flex justify-between text-gray-400">
-                  <span>{message.message}</span>
-                  <span className="text-xs">{timeFormatter(message.time)}</span>
+              /* notificationRoot */
+              <div className={combinedClasses?.notificationRoot}>
+                {/* notificationInfo*/}
+                <div className={combinedClasses?.notificationInfo}>
+                  {/*notificationText*/}
+                  <span className={combinedClasses?.notificationText}>
+                    {messageFormatter
+                      ? messageFormatter(message.message)
+                      : message.message}
+                  </span>
+                  <span className={combinedClasses?.time}>
+                    {timeFormatter(message.time)}
+                  </span>
                 </div>
               </div>
             ) : (
-              <div className="py-3">
-                <div className="flex justify-between">
-                  <span>{message.sender}</span>
-                  <span className="text-xs">
-                    {timeFormatter(message.time)}{' '}
+              /* messageRoot */
+              <div className={combinedClasses?.messageRoot}>
+                {/* messageInfo */}
+                <div className={combinedClasses?.messageInfo}>
+                  {/* messageSender */}
+                  <span className={combinedClasses?.messageSender}>
+                    {message.sender}
+                  </span>
+                  {/* messageTime */}
+                  <span className={combinedClasses?.messageTime}>
+                    {timeFormatter(message.time)}
                   </span>
                 </div>
-                <div className=" text-white leading-5 max-w-full break-words">
+                {/* messageText */}
+                <div className={combinedClasses?.messageText}>
                   {/* {ReactHtmlParser(
                       Autolinker.link(message.message, { sanitizeHtml: true }),
                     )} */}
@@ -108,16 +199,20 @@ export const ChatBox = ({
             );
           })}
           {messages.length === 0 && (
-            <div className="flex justify-center items-center text-gray-400 h-full">
+            /* NoMessageRoot */
+            <div className={combinedClasses?.noMessageRoot}>
               There are no messages here.
             </div>
           )}
           <div ref={messagesEndRef} />
         </div>
-        <div className="bg-gray-200 min-h-11 rounded-b-2xl flex w-full justify-between p-3 ">
+        {/* footer */}
+        <div className={combinedClasses?.footer}>
+          {/* chatInput */}
+          {/* TODO: move no scrollbar logic to tailwind */}
           <TextareaAutosize
             rowsMax={3}
-            className="bg-gray-200 placeholder-gray-500 text-white focus:outline-none leading-5 overflow-y-auto no-scrollbar resize-none w-5/6"
+            className={combinedClasses?.chatInput + ' no-scrollbar'}
             placeholder="Write something here"
             value={message}
             onKeyPress={event => {
@@ -131,8 +226,9 @@ export const ChatBox = ({
               setMessage(event.target.value);
             }}
           />
+          {/* sendButton */}
           <button
-            className="focus:outline-none"
+            className={combinedClasses?.sendButton}
             onClick={() => {
               onSend(message);
               setMessage('');
@@ -145,3 +241,10 @@ export const ChatBox = ({
     </React.Fragment>
   );
 };
+
+export type ChatProps = Omit<StyledChatProps, 'defaultClasses'>;
+
+export const ChatBox = withClasses<ChatBoxClasses | undefined>(
+  defaultClasses,
+  'chatBox'
+)<StyledChatProps>(StyledChatBox);

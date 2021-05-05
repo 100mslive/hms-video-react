@@ -4,7 +4,52 @@ import { CloseButton } from '../MediaIcons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
+import { withClasses } from '../../utils/styles';
+import { combineClasses} from '../../utils';
+//@ts-ignore
+import { create } from 'twind';
 
+export interface SettingsClasses {
+  root?:string;
+  iconContainer?:string;
+  dialogRoot?:string;
+  dialogContainer?:string;
+  dialogInner?:string;
+  titleContainer?:string;
+  titleIcon?:string;
+  titleText?:string;
+  formContainer?:string;
+  formInner?:string;
+  selectLabel?:string;
+  selectContainer?:string;
+  select?:string;
+  selectInner?:string;
+}
+
+interface StyledSettingsProps {
+  setMaxTileCount: (count: number) => void;
+  maxTileCount: number;
+  defaultClasses?:SettingsClasses;
+  classes?:SettingsClasses;
+}
+
+const defaultClasses:SettingsClasses = {
+  iconContainer: 'focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg',
+  dialogRoot:'rounded-lg',
+  dialogContainer:'bg-gray-100 text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid',
+  dialogInner:'text-2xl mb-3 p-2 border-b-2 flex justify-between',
+  titleContainer:'flex items-center',
+  titleIcon:'pr-4',
+  titleText:'text-2xl leading-7',
+  formContainer:'flex flex-wrap text-base',
+  formInner:'w-full flex my-1.5',
+  selectLabel:'w-1/3 flex justify-end items-center',
+  selectContainer:'rounded-lg w-1/2 bg-gray-200 p-2 mx-2',
+  select:'rounded-lg w-full h-full bg-gray-200 focus:outline-none',
+  selectInner:'p-4',
+}
+
+//TODO figure out how to expose this outside
 const HMSSlider = withStyles({
   root: {
     color: 'white',
@@ -23,13 +68,10 @@ const HMSSlider = withStyles({
   },
 })(Slider);
 
-export interface SettingsProps {
-  setMaxTileCount: (count: number) => void;
-  maxTileCount: number;
-}
-
 //TODO replace with unpkg
-export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
+const StyledSettings = ({ maxTileCount, setMaxTileCount, defaultClasses, classes:extraClasses }: StyledSettingsProps) => {
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [open, setOpen] = React.useState(false);
   const [audioInput, setAudioInput] = React.useState<MediaDeviceInfo[]>([]);
   const [audioOutput, setAudioOutput] = React.useState<MediaDeviceInfo[]>([]);
@@ -65,7 +107,7 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
     <>
       <button
         onClick={handleClickOpen}
-        className="focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg"
+        className={`${combinedClasses?.iconContainer}`}
       >
         {SettingsIcon}
       </button>
@@ -74,78 +116,78 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        className=" rounded-lg "
+        className={`${combinedClasses?.dialogRoot}`}
         maxWidth="sm"
       >
-        <div className="bg-gray-100 text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid">
-          <div className="text-2xl mb-3 p-2 border-b-2 flex justify-between">
-            <span className="flex items-center">
-              <span className="pr-4">{SettingsIconSmall}</span>
-              <span className="text-2xl leading-7">Settings</span>
+        <div className={`${combinedClasses?.dialogContainer}`}>
+          <div className={`${combinedClasses?.dialogInner}`}>
+            <span className={`${combinedClasses?.titleContainer}`}>
+              <span className={`${combinedClasses?.titleIcon}`}>{SettingsIconSmall}</span>
+              <span className={`${combinedClasses?.titleText}`}>Settings</span>
             </span>
             <span>
               <CloseButton clickHandler={handleClose} />
             </span>
           </div>
 
-          <div className="flex flex-wrap text-base">
-            <div className="w-full flex my-1.5">
-              <div className="w-1/3 flex justify-end items-center ">
+          <div className={`${combinedClasses?.formContainer}`}>
+            <div className={`${combinedClasses?.formInner}`}>
+              <div className={`${combinedClasses?.selectLabel}`}>
                 <span>Camera:</span>
               </div>
-              <div className="rounded-lg w-1/2 bg-gray-200 p-2 mx-2">
+              <div className={`${combinedClasses?.selectContainer}`}>
                 <select
-                  name="role"
-                  className="rounded-lg w-full h-full bg-gray-200 focus:outline-none"
+                  name="camera"
+                  className={`${combinedClasses?.select}`}
                   // value={role}
                   // onChange={event => {
                   //   setRole(event.target.value);
                   // }}
                 >
                   {videoInput.map((device, index) => (
-                    <option value="Teacher" className="p-4" key={index}>
+                    <option value="Teacher" className={`${combinedClasses?.selectInner}`} key={index}>
                       {device.label}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
-            <div className="w-full flex my-1.5">
-              <div className="w-1/3 flex justify-end items-center ">
+            <div className={`${combinedClasses?.formInner}`}>
+              <div className={`${combinedClasses?.selectLabel}`}>
                 <span>Microphone:</span>
               </div>
-              <div className="rounded-lg w-1/2 bg-gray-200 p-2 mx-2">
+              <div className={`${combinedClasses?.selectContainer}`}>
                 <select
-                  name="role"
-                  className="rounded-lg w-full h-full bg-gray-200 focus:outline-none"
+                  name="microphone"
+                  className={`${combinedClasses?.select}`}
                   // value={role}
                   // onChange={event => {
                   //   setRole(event.target.value);
                   // }}
                 >
                   {audioInput.map((device, index) => (
-                    <option value="Teacher" className="p-4" key={index}>
+                    <option value="Teacher" className={`${combinedClasses?.selectInner}`}key={index}>
                       {device.label}
                     </option>
                   ))}
                 </select>
               </div>
             </div>
-            <div className="w-full flex my-1.5">
-              <div className="w-1/3 flex justify-end items-center ">
+            <div className={`${combinedClasses?.formInner}`}>
+              <div className={`${combinedClasses?.selectLabel}`}>
                 <span>Audio Output:</span>
               </div>
-              <div className="rounded-lg w-1/2 bg-gray-200 p-2 mx-2">
+              <div className={`${combinedClasses?.selectContainer}`}>
                 <select
-                  name="role"
-                  className="rounded-lg w-full h-full bg-gray-200 focus:outline-none"
+                  name="audio-output"
+                  className={`${combinedClasses?.select}`}
                   // value={role}
                   // onChange={event => {
                   //   setRole(event.target.value);
                   // }}
                 >
                   {audioOutput.map((device, index) => (
-                    <option value="Teacher" className="p-4" key={index}>
+                    <option value="Teacher" className={`${combinedClasses?.select}`} key={index}>
                       {device.label}
                     </option>
                   ))}
@@ -326,3 +368,11 @@ export const Settings = ({ maxTileCount, setMaxTileCount }: SettingsProps) => {
     </>
   );
 };
+
+export type SettingsProps = Omit<StyledSettingsProps, 'defaultClasses'>;
+
+//TODO replace with theme context
+export const Settings = withClasses<SettingsClasses | undefined>(
+  defaultClasses,
+  'settings'
+)<StyledSettingsProps>(StyledSettings);

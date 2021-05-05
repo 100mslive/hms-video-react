@@ -1,7 +1,11 @@
 import { TW, css } from 'twind/css';
+//@ts-ignore
+import { create } from 'twind';
 import clsx from 'clsx';
-import { reduce } from 'lodash';
+import { reduce, merge } from 'lodash';
+import { useHMSTheme } from '../hooks/HMSThemeProvider';
 import { MediaStreamWithInfo } from '../types';
+import {theme as defaultTheme} from '../defaultTheme'
 
 const getVideoTileLabel = (
   peerName: string,
@@ -489,14 +493,20 @@ const generateClassName = ({ seed, componentName }: GenerateClassNameProps) => {
 interface AddGlobalCssProps<Type> {
   seedStyleMap: Type;
   componentName: string;
-  tw: TW;
 }
 
 function addGlobalCss<Type>({
   seedStyleMap,
   componentName,
-  tw,
 }: AddGlobalCssProps<Type>) {
+  let theme = defaultTheme();
+  // alert(JSON.stringify(theme));
+  try {
+    let context = useHMSTheme();
+    theme = context.theme;
+  } catch (error) {}
+
+  let tw_merged = create({ theme }).tw;
   let calculatedSeedStyleMap: Type | {} = {};
   for (const seed in seedStyleMap as Type) {
     //TODO define a generic Map TS type to define classes to remove all type related ignores
@@ -504,7 +514,7 @@ function addGlobalCss<Type>({
     const styles = seedStyleMap[seed] as string;
     const className = generateClassName({ seed, componentName });
     //TODO add this to a private stylesheet and add a check to not write this if it already exists
-    tw(
+    tw_merged(
       css`
         @global {
           .${className} {
