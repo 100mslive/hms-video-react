@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { reduce, merge } from 'lodash';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
 import { MediaStreamWithInfo } from '../types';
+import { theme as defaultTheme } from '../defaultTheme';
 
 const getVideoTileLabel = (
   peerName: string,
@@ -492,13 +493,11 @@ const generateClassName = ({ seed, componentName }: GenerateClassNameProps) => {
 interface AddGlobalCssProps<Type> {
   seedStyleMap: Type;
   componentName: string;
-  tw: TW;
 }
 
 function addGlobalCss<Type>({
   seedStyleMap,
   componentName,
-  tw,
 }: AddGlobalCssProps<Type>) {
   let tailwindConfig = require('../../defaultTheme');
   // alert(JSON.stringify(theme));

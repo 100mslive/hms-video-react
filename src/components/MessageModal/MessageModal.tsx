@@ -124,5 +124,4 @@ export type MessageModalProps = Omit<StyledMessageModalProps, 'defaultClasses'>;
 export const MessageModal = withClasses<MessageModalClasses | undefined>(
   defaultClasses,
   'MessageModal',
-  create().tw,
 )<StyledMessageModalProps>(StyledMessageModal);

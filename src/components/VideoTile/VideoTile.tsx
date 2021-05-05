@@ -85,7 +85,7 @@ export interface VideoTileClasses extends VideoClasses {
 }
 
 const defaultClasses: VideoTileClasses = {
-  root: 'w-full h-full flex relative items-center justify-center rounded-lg',
+  root: 'group w-full h-full flex relative items-center justify-center rounded-lg',
   videoContainer: 'relative rounded-lg shadow-lg z-10',
   avatarContainer:
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
@@ -205,7 +205,7 @@ const StyledVideoTile = ({
           />
           {isVideoMuted && (
             <div
-              className={`${combinedClasses?.videoContainer} ${
+              className={`${combinedClasses?.avatarContainer} ${
                 displayShape === 'circle'
                   ? combinedClasses?.avatarContainerCircle
                   : ''
@@ -240,6 +240,5 @@ export type VideoTileProps = Omit<StyledVideoTileProps, 'defaultClasses'>;
 
 export const VideoTile = withClasses<VideoTileClasses | undefined>(
   defaultClasses,
-  'videoTile',
-  create().tw,
+  'videoTile'
 )<StyledVideoTileProps>(StyledVideoTile);
