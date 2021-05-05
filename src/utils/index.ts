@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { reduce, merge } from 'lodash';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
 import { MediaStreamWithInfo } from '../types';
+import {theme as defaultTheme} from '../defaultTheme'
 
 const getVideoTileLabel = (
   peerName: string,
@@ -498,7 +499,7 @@ function addGlobalCss<Type>({
   seedStyleMap,
   componentName,
 }: AddGlobalCssProps<Type>) {
-  let theme = require('../../defaultTheme').theme;
+  let theme = defaultTheme();
   // alert(JSON.stringify(theme));
   try {
     let context = useHMSTheme();

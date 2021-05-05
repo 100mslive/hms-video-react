@@ -2,7 +2,7 @@ import React, { useState, useContext, createContext } from 'react';
 
 import HMSThemeProps from './interfaces/HMSThemeProvider';
 
-const defaulTheme = require('../../defaultTheme.ts').theme;
+import {theme as defaultTheme} from '../defaultTheme'
 
 import { merge } from 'lodash';
 
@@ -18,7 +18,7 @@ export const HMSThemeProvider = ({
   return (
     <HMSThemeContext.Provider
       value={{
-        theme: merge(defaulTheme, theme),
+        theme: merge(defaultTheme(), theme),
       }}
     >
       {children}

@@ -273,6 +273,5 @@ export type VideoListProps = Omit<StyledVideoListProps, 'defaultClasses'>;
 
 export const VideoList = withClasses<VideoListClasses | undefined>(
   defaultClasses,
-  'videoList',
-  create().tw,
+  'videoList'
 )<StyledVideoListProps>(StyledVideoList);

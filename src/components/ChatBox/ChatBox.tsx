@@ -9,10 +9,6 @@ import { withClasses } from '../../utils/styles';
 //@ts-ignore
 import { create } from 'twind';
 import { combineClasses } from '../../utils';
-const theme = require('../../../defaultTheme.ts').theme;
-
-import { merge } from 'lodash';
-
 interface ChatBoxClasses {
   root?: string;
   header?: string;
