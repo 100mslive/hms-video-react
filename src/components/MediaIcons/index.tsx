@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import {
   MicOff,
   MicOn,
@@ -21,8 +22,24 @@ import {
 } from '../../icons';
 
 export const LogoButton = () => {
+  let logo;
+  try {
+    const { appBuilder } = useHMSTheme();
+    logo = appBuilder.logo;
+  } catch (e) {}
   return (
-    <button className="inline-block p-2 focus:outline-none">{Logo}</button>
+    <button className=" p-2 focus:outline-none">
+      {logo ? (
+        <img
+          src={logo}
+          alt="brand_logo"
+          // className=" md:object-contain object-scale-down md:h-full"
+          className="object-contain flex justify-center h-6 "
+        />
+      ) : (
+        Logo
+      )}
+    </button>
   );
 };
 

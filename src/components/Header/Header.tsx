@@ -5,6 +5,7 @@ import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 //@ts-ignore
 import { create } from 'twind';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export interface HeaderClasses {
   root?: string;
@@ -25,7 +26,7 @@ export interface StyledHeaderProps {
 
 const defaultClasses: HeaderClasses = {
   root:
-    'flex flex-grow bg-white dark:bg-black h-7.5 items-center p-2 relative gap-x-4 self-center justify-center',
+    'flex flex-grow bg-white dark:bg-black h-7.5 items-center p-2 relative gap-x-4 self-center justify-center ',
   leftRoot:
     'flex md:flex-none md:self-center md:justify-center md:left-0 md:ml-2 md:absolute',
   centerRoot:
@@ -46,6 +47,7 @@ export const StyledHeader = ({
 }: StyledHeaderProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
+
   const teacher = Array<Participant>();
   const student = Array<Participant>();
   teacher.push({
@@ -64,7 +66,7 @@ export const StyledHeader = ({
     isStarMarked: false,
   });
   return (
-    <div style={{ padding: '10px 0px 0px 0px', height: '10%' }}>
+    <div style={{ padding: '10px 0px 0px 0px', maxHeight: '10%' }}>
       <div className={combinedClasses?.root}>
         <div className={combinedClasses?.leftRoot}>{leftComponents}</div>
         <div className={combinedClasses?.centerRoot}>{centerComponents}</div>

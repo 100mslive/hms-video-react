@@ -13,8 +13,15 @@ export default meta;
 
 const Template: Story<HeaderProps> = args => {
   return (
-    <div>
-      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+    <div className="w-full h-screen">
+      <HMSThemeProvider
+        config={{}}
+        appBuilder={{
+          theme: 'dark',
+          logo:
+            'https://image.shutterstock.com/image-illustration/gold-stack-overflow-icon-on-260nw-1113780074.jpg',
+        }}
+      >
         <Header {...args} rightComponents={[]} />
       </HMSThemeProvider>
     </div>

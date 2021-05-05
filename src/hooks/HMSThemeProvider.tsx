@@ -1,6 +1,6 @@
 import React, { useState, useContext, createContext } from 'react';
 
-import HMSThemeProps from './interfaces/HMSThemeProvider';
+import HMSThemeProps, { appBuilder } from './interfaces/HMSThemeProvider';
 
 import { merge } from 'lodash';
 
@@ -15,7 +15,7 @@ export const HMSThemeProvider = ({
 }: {
   children: React.ReactNode;
   config: any;
-  appBuilder: { theme: 'light' | 'dark' };
+  appBuilder: appBuilder;
 }) => {
   if (appBuilder.theme === 'dark') {
     document.documentElement.classList.add('dark');
@@ -24,6 +24,7 @@ export const HMSThemeProvider = ({
     <HMSThemeContext.Provider
       value={{
         tailwindConfig: merge(defaultTailwindConfig, config),
+        appBuilder,
       }}
     >
       {children}
