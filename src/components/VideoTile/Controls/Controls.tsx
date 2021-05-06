@@ -3,8 +3,18 @@ import { AudioLevelDisplayType } from '../../../types';
 import { AudioLevelIndicator } from '../../AudioLevelIndicators/index';
 import { AudioMuteIndicator, AudioMuteButton } from '../../MediaIcons';
 import '../index.css';
-
-export interface VideoTileControlsProps {
+import {combineClasses} from '../../../utils';
+import { withClasses } from '../../../utils/styles';
+export interface VideoTileControlsClasses {
+  root?: string;
+  labelContainer?: string;
+  controls?: string;
+  rootGradient?:string;
+  controlsStatus?:string;
+  hoverHide?:string;
+  label?:string;
+}
+interface StyledVideoTileControlsProps {
   label?: string;
   isAudioMuted?: boolean;
   showGradient?: boolean;
@@ -13,14 +23,22 @@ export interface VideoTileControlsProps {
   showAudioLevel?: boolean;
   audioLevelDisplayType?: AudioLevelDisplayType;
   audioLevel?: number;
-  classes?: {
-    root?: string;
-    labelContainer?: string;
-    controls?: string;
-  };
+  defaultClasses?:VideoTileControlsClasses,
+  classes?: VideoTileControlsClasses;
 }
 
-export const VideoTileControls = ({
+//TODO group hover is not working
+const defaultClasses:VideoTileControlsClasses = {
+  root: 'absolute bottom-0 w-full pb-2 text-white px-2 text-center rounded-lg z-20',
+  labelContainer:'transition-all',
+  controls:'bottom-controls max-h-0 transition-all invisible text-center mt-1 group-hover:visible group-hover:max-h-125', 
+  rootGradient:'bg-gradient-to-t from-transparent-lightest to-transparent-darker',
+  controlsStatus:'transition-all opacity-1 mx-1',
+  hoverHide:'group-hover:opacity-0',
+  label:'mt-1 mx-1',
+}
+
+export const StyledVideoTileControls = ({
   label = '',
   isAudioMuted = false,
   showGradient = true,
@@ -29,11 +47,13 @@ export const VideoTileControls = ({
   showAudioLevel = false,
   audioLevelDisplayType = 'inline-wave',
   audioLevel,
-  classes = {
-    root: 'text-center rounded-lg z-20',
-  },
-}: VideoTileControlsProps) => {
-  // Map [showAudioMuteStatus, showAudioLevel, isAudioMuted] to audio status - actual element to render.
+  defaultClasses,
+  classes:extraClasses,
+}: StyledVideoTileControlsProps) => {
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+
+  //Map [showAudioMuteStatus, showAudioLevel, isAudioMuted] to audio status - actual element to render.
   const audioStatusMap = new Map<string, React.ReactNode>([
     [
       [true, true, true].toString(),
@@ -61,24 +81,23 @@ export const VideoTileControls = ({
 
   return (
     <div
-      className={`bottom-controls-container absolute bottom-0 w-full pb-2 text-white px-2 ${classes?.root}`}
-      style={!showGradient ? { background: 'none' } : {}}
+      className={`${combinedClasses?.root} ${showGradient ? combinedClasses?.rootGradient : ''}`}
     >
-      <div className={`${classes.labelContainer}`}>
+      <div className={`${combinedClasses?.labelContainer}`}>
         <div
-          className={`bottom-controls-status mx-1 ${
-            allowRemoteMute ? 'hover-hide' : ''
+          className={` ${
+            allowRemoteMute ? combinedClasses?.hoverHide : ''
           }`}
         >
           {audioStatusMap.get(
             [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString(),
           )}
         </div>
-        <div className={`mt-1 mx-1`}>{label}</div>
+        <div className={`${combinedClasses?.label}`}>{label}</div>
       </div>
       {allowRemoteMute && (
         <div
-          className={`bottom-controls text-center mt-1 ${classes?.controls}`}
+          className={`${combinedClasses?.controls}`}
         >
           <AudioMuteButton isAudioMuted={isAudioMuted} />
         </div>
@@ -86,3 +105,10 @@ export const VideoTileControls = ({
     </div>
   );
 };
+
+export type VideoTileControlsProps = Omit<StyledVideoTileControlsProps, 'defaultClasses'>;
+
+export const VideoTileControls = withClasses<VideoTileControlsClasses | undefined>(
+  defaultClasses,
+  'videoTileControls'
+)<StyledVideoTileControlsProps>(StyledVideoTileControls);

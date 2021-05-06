@@ -19,6 +19,7 @@ import { combineClasses } from '../../utils';
 //@ts-ignore
 import { create } from 'twind';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export interface VideoListClasses extends VideoTileClasses {
   /**
@@ -155,6 +156,13 @@ export const StyledVideoList = ({
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const { width = 0, height = 0, ref } = useResizeDetector();
+  try {
+    let context = useHMSTheme();
+    if (aspectRatio === undefined)
+      aspectRatio = context.appBuilder.videoTileAspectRatio;
+    if (showAudioMuteStatus === undefined)
+      showAudioMuteStatus = context.appBuilder.showAvatar;
+  } catch (e) {}
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
   const horizontalDotsContainer = useRef(null);
@@ -273,6 +281,5 @@ export type VideoListProps = Omit<StyledVideoListProps, 'defaultClasses'>;
 
 export const VideoList = withClasses<VideoListClasses | undefined>(
   defaultClasses,
-  'videoList',
-  create().tw,
+  'videoList'
 )<StyledVideoListProps>(StyledVideoList);

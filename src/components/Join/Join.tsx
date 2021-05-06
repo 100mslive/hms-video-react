@@ -127,5 +127,4 @@ export type JoinProps = Omit<StyledJoinProps, 'defaultClasses'>;
 export const Join = withClasses<JoinClasses | undefined>(
   defaultClasses,
   'join',
-  create().tw,
 )<StyledJoinProps>(StyledJoin);

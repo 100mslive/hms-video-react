@@ -13,6 +13,7 @@ import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 //@ts-ignore
 import { create } from 'twind';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export interface ControlBarClasses {
   root?: string;
@@ -117,9 +118,26 @@ export const StyledControlBar = ({
   rightComponents.forEach(comp => {
     rightItems.push(comp);
   });
-  leftComponents.forEach(comp => {
-    leftItems.push(comp);
-  });
+
+  try {
+    let context = useHMSTheme();
+    leftItems.push(leftComponents[0]);
+
+    if (
+      context.appBuilder.enableScreenShare === undefined ||
+      context.appBuilder.enableScreenShare
+    )
+      leftItems.push(leftComponents[1]);
+    if (
+      context.appBuilder.enableChat === undefined ||
+      Boolean(context.appBuilder.enableChat)
+    )
+      leftItems.push(leftComponents[2]);
+  } catch (e) {
+    leftComponents.forEach(comp => {
+      leftItems.push(comp);
+    });
+  }
   return (
     <div className={combinedClasses?.root}>
       <div className={combinedClasses?.leftRoot}>{leftItems}</div>
@@ -134,5 +152,4 @@ export type ControlBarProps = Omit<StyledControlBarProps, 'defaultClasses'>;
 export const ControlBar = withClasses<ControlBarClasses | undefined>(
   defaultClasses,
   'header',
-  create().tw,
 )<StyledControlBarProps>(StyledControlBar);

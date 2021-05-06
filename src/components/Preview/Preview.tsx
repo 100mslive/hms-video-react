@@ -293,6 +293,5 @@ export type PreviewProps = Omit<StyledPreviewProps, 'defaultClasses'>;
 
 export const Preview = withClasses<PreviewClasses | undefined>(
   defaultClasses,
-  'preview',
-  create().tw,
+  'preview'
 )<StyledPreviewProps>(StyledPreview);

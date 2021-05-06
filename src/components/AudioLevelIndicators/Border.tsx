@@ -50,6 +50,5 @@ export const AudioLevelBorder = withClasses<
   AudioLevelBorderClasses | undefined
 >(
   defaultClasses,
-  'audioLevelBorder',
-  create().tw,
+  'audioLevelBorder'
 )<StyledAudioLevelBorderProps>(StyledAudioLevelBorder);

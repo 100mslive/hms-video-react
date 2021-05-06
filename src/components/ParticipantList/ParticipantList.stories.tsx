@@ -11,7 +11,19 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<ParticipantListProps> = args => (
-  <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+  <HMSThemeProvider
+    config={{
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+            body: ['Montserrat', 'sans-serif'],
+          },
+        },
+      },
+    }}
+    appBuilder={{ theme: 'dark' }}
+  >
     <ParticipantList {...args} />
   </HMSThemeProvider>
 );

@@ -9,10 +9,6 @@ import { withClasses } from '../../utils/styles';
 //@ts-ignore
 import { create } from 'twind';
 import { combineClasses } from '../../utils';
-
-import { merge } from 'lodash';
-const theme = require('../../../defaultTheme.ts').theme;
-
 interface ChatBoxClasses {
   root?: string;
   header?: string;
@@ -253,5 +249,4 @@ export type ChatProps = Omit<StyledChatProps, 'defaultClasses'>;
 export const ChatBox = withClasses<ChatBoxClasses | undefined>(
   defaultClasses,
   'chatBox',
-  create().tw,
 )<StyledChatProps>(StyledChatBox);
