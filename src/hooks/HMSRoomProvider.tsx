@@ -8,6 +8,7 @@ import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import { Silence } from '../components/Silence';
 import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
+import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 
 const sdk = new HMSSdk();
 
@@ -25,6 +26,8 @@ export const HMSRoomProvider: React.FC = props => {
   const [audioMuted, setAudioMuted] = useState(false);
 
   const [videoMuted, setVideoMuted] = useState(false);
+
+  const [speakers, setSpeakers] = useState<HMSSpeaker[]>([]);
 
   const [dominantSpeaker, setDominantSpeaker] = useState<
     HMSRoomProps['dominantSpeaker']
@@ -51,6 +54,11 @@ export const HMSRoomProvider: React.FC = props => {
         updateDominantSpeaker,
       ),
     );
+    sdk.addAudioListener({
+      onAudioLevelUpdate: speakers => {
+        setSpeakers(speakers);
+      },
+    });
   };
 
   const leave = () => {
@@ -135,6 +143,7 @@ export const HMSRoomProvider: React.FC = props => {
   return (
     <HMSContext.Provider
       value={{
+        sdk,
         peers: peers,
         localPeer: localPeer,
         messages: messages.map(message => ({
@@ -150,6 +159,7 @@ export const HMSRoomProvider: React.FC = props => {
         toggleMute: toggleMute,
         toggleScreenShare: toggleScreenShare,
         sendMessage: sendMessage,
+        speakers,
       }}
     >
       <Silence />
