@@ -1,8 +1,8 @@
-import { TW, css } from 'twind/css';
+import { css } from 'twind/css';
 //@ts-ignore
 import { create } from 'twind';
 import clsx from 'clsx';
-import { reduce, merge } from 'lodash';
+import { reduce } from 'lodash';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
 import { MediaStreamWithInfo } from '../types';
 

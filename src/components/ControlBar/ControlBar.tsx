@@ -11,8 +11,6 @@ import {
 import { Settings } from '../Settings/Settings';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export interface ControlBarClasses {
@@ -126,13 +124,15 @@ export const StyledControlBar = ({
     if (
       context.appBuilder.enableScreenShare === undefined ||
       context.appBuilder.enableScreenShare
-    )
+    ) {
       leftItems.push(leftComponents[1]);
+    }
     if (
       context.appBuilder.enableChat === undefined ||
       Boolean(context.appBuilder.enableChat)
-    )
+    ) {
       leftItems.push(leftComponents[2]);
+    }
   } catch (e) {
     leftComponents.forEach(comp => {
       leftItems.push(comp);

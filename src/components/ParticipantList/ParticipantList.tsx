@@ -1,14 +1,11 @@
 import React from 'react';
 import { MuteListButton, SpotlightListButton } from '../MediaIcons';
-import { DownCarret, UpCarret } from '../../icons';
+import { DownCaratIcon, UpCaratIcon } from '../../icons';
 import { Participant } from '../../types';
 import { AvatarList } from '../Avatar';
 import Popover from '@material-ui/core/Popover';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
-
 export interface ParticipantListClasses {
   root?: string;
   buttonRoot?: string;
@@ -86,7 +83,7 @@ export const StyledParticipantList = ({
         <div className={`${combinedClasses?.buttonInner}`}>
           {participantList.length} in room
           <span className={`${combinedClasses?.buttonText}`}>
-            {open ? UpCarret : DownCarret}
+            {open ? <UpCaratIcon /> : <DownCaratIcon />}
           </span>
         </div>
       </button>

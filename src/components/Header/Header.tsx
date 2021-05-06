@@ -3,10 +3,6 @@ import { LogoButton, SpeakerTag } from '../MediaIcons';
 import { Participant, Peer } from '../../types';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-
 export interface HeaderClasses {
   root?: string;
   leftRoot?: string;

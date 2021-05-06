@@ -4,21 +4,20 @@ export interface WithClassesProps<P> {
   classes: P;
 }
 
-function withClasses<C>(
-  defaultClassesWithoutNames: C,
-  componentName: string
-) {
+function withClasses<C>(defaultClassesWithoutNames: C, componentName: string) {
   return function<T extends { defaultClasses?: C }>(
     Component: React.ComponentType<T>,
   ) {
-    return function(props: Omit<T, 'owner'>): JSX.Element {
+    return function(props: Omit<T, 'defaultClasses'>): JSX.Element {
       const [defaultClasses, setDefaultClasses] = useState<C | null | {}>(null);
-      useEffect(()=>{
-        setDefaultClasses(addGlobalCss({
-          seedStyleMap: defaultClassesWithoutNames,
-          componentName
-        }));
-      },[])
+      useEffect(() => {
+        setDefaultClasses(
+          addGlobalCss({
+            seedStyleMap: defaultClassesWithoutNames,
+            componentName,
+          }),
+        );
+      }, []);
       const newProps = { ...props, defaultClasses } as T;
       return <Component {...newProps} />;
     };

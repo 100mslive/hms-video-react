@@ -6,10 +6,6 @@ import { VideoTileControls } from './Controls';
 import { MessageModal } from '../MessageModal';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { withClasses } from '../../utils/styles';
-
-//@ts-ignore
-import { create } from 'twind';
-
 import { combineClasses } from '../../utils';
 
 interface MuteStatus {
@@ -34,7 +30,7 @@ const defaultClasses: PreviewClasses = {
   header: 'w-22.5 h-22.5 mt-1.875 mb-7',
   helloDiv: 'text-2xl font-medium mb-12',
   joinButton:
-    'flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-0.875 px-5 text-white bg-blue-main rounded-xl text-lg font-semibold cursor-pointer',
+    'flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-3.5 px-5 text-white bg-blue-main rounded-xl text-lg font-semibold cursor-pointer',
   goBackButton: 'text-blue-main text-lg font-semibold cursor-pointer',
 };
 interface StyledPreviewProps {
@@ -293,5 +289,5 @@ export type PreviewProps = Omit<StyledPreviewProps, 'defaultClasses'>;
 
 export const Preview = withClasses<PreviewClasses | undefined>(
   defaultClasses,
-  'preview'
+  'preview',
 )<StyledPreviewProps>(StyledPreview);

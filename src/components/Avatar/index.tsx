@@ -30,9 +30,9 @@ const StyledMaterialAvatar = withStyles({
     height: '100px',
     fontSize: '2rem',
   },
-  colorDefault:{
-    backgroundColor:`#${Math.floor(Math.random()*16777215).toString(16)}`,
-  }
+  colorDefault: {
+    backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+  },
 })(MaterialAvatar);
 
 export const Avatar = ({ image, icon, label, ...props }: AvatarProps) => {
@@ -49,9 +49,9 @@ const StyledMaterialAvatarList = withStyles({
     height: '20px',
     fontSize: '9px',
   },
-  colorDefault:{
-    backgroundColor:`#${Math.floor(Math.random()*16777215).toString(16)}`,
-  }
+  colorDefault: {
+    backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
+  },
 })(MaterialAvatar);
 
 export const AvatarList = ({ image, icon, label, ...props }: AvatarProps) => {

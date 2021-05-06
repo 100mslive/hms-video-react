@@ -3,8 +3,6 @@ import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -168,5 +166,5 @@ export type VideoProps = Omit<StyledVideoProps, 'defaultClasses'>;
 
 export const Video = withClasses<VideoClasses | undefined>(
   defaultClasses,
-  'video'
+  'video',
 )<StyledVideoProps>(StyledVideo);

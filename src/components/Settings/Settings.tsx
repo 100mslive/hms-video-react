@@ -1,14 +1,11 @@
 import React, { useEffect } from 'react';
-import { SettingsIconSmall, SettingsIcon } from '../../icons';
+import { SettingsIcon } from '../../icons';
 import { CloseButton } from '../MediaIcons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
-
 export interface SettingsClasses {
   root?: string;
   iconContainer?: string;
@@ -116,7 +113,7 @@ const StyledSettings = ({
         onClick={handleClickOpen}
         className={`${combinedClasses?.iconContainer}`}
       >
-        {SettingsIcon}
+        <SettingsIcon />
       </button>
       <Dialog
         open={open}
@@ -130,7 +127,7 @@ const StyledSettings = ({
           <div className={`${combinedClasses?.dialogInner}`}>
             <span className={`${combinedClasses?.titleContainer}`}>
               <span className={`${combinedClasses?.titleIcon}`}>
-                {SettingsIconSmall}
+                <SettingsIcon className="w-2 h-2" />
               </span>
               <span className={`${combinedClasses?.titleText}`}>Settings</span>
             </span>

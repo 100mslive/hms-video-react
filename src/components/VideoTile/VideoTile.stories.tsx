@@ -5,7 +5,7 @@ import VideoTileDocs from './VideoTile.mdx';
 import { getVideoTileLabel } from '../../utils';
 import { loadStream } from '../../storybook/utils';
 import { VideoTileControls } from './Controls';
-import { MicOff, MicOn } from '../../icons';
+import { MicOffIcon, MicOnIcon } from '../../icons';
 
 declare global {
   interface HTMLVideoElement {
@@ -178,7 +178,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                 {args.allowRemoteMute && (
                   <div className="inset-center">
                     <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
-                      {args.isAudioMuted ? MicOff : MicOn}
+                      {args.isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
                     </div>
                   </div>
                 )}

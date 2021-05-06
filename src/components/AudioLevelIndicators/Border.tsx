@@ -2,8 +2,6 @@ import React from 'react';
 import { StyledAudioLevelIndicatorProps, AudioLevelIndicatorClasses } from '.';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
 
 type StyledAudioLevelBorderProps = Omit<StyledAudioLevelIndicatorProps, 'type'>;
 type AudioLevelBorderClasses = AudioLevelIndicatorClasses;
@@ -50,5 +48,5 @@ export const AudioLevelBorder = withClasses<
   AudioLevelBorderClasses | undefined
 >(
   defaultClasses,
-  'audioLevelBorder'
+  'audioLevelBorder',
 )<StyledAudioLevelBorderProps>(StyledAudioLevelBorder);

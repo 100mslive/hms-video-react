@@ -11,8 +11,6 @@ import {
 } from '../../utils';
 import { useResizeDetector } from 'react-resize-detector';
 import { withClasses } from '../../utils/styles';
-//@ts-ignore
-import { create } from 'twind';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 interface StyledVideoTileProps extends VideoProps {
   /**
@@ -85,7 +83,8 @@ export interface VideoTileClasses extends VideoClasses {
 }
 
 const defaultClasses: VideoTileClasses = {
-  root: 'group w-full h-full flex relative items-center justify-center rounded-lg',
+  root:
+    'group w-full h-full flex relative items-center justify-center rounded-lg',
   videoContainer: 'relative rounded-lg shadow-lg z-10',
   avatarContainer:
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
@@ -127,10 +126,12 @@ const StyledVideoTile = ({
 
   try {
     let context = useHMSTheme();
-    if (aspectRatio === undefined)
+    if (aspectRatio === undefined) {
       aspectRatio = context.appBuilder.videoTileAspectRatio;
-    if (showAudioMuteStatus === undefined)
+    }
+    if (showAudioMuteStatus === undefined) {
       showAudioMuteStatus = context.appBuilder.showAvatar;
+    }
   } catch (e) {}
 
   const {
@@ -240,5 +241,5 @@ export type VideoTileProps = Omit<StyledVideoTileProps, 'defaultClasses'>;
 
 export const VideoTile = withClasses<VideoTileClasses | undefined>(
   defaultClasses,
-  'videoTile'
+  'videoTile',
 )<StyledVideoTileProps>(StyledVideoTile);

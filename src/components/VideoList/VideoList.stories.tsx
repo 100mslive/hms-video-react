@@ -5,7 +5,7 @@ import { VideoList, VideoListProps } from '.';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
 import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
 import { VideoTileControls } from '../VideoTile/Controls';
-import { MicOff, MicOn } from '../../icons';
+import { MicOffIcon, MicOnIcon } from '../../icons';
 import { loadStreams } from '../../storybook/utils';
 import { getUserMedia } from '../../utils/preview';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
@@ -327,7 +327,7 @@ const GoogleMeetControls = ({
       {allowRemoteMute && (
         <div className="inset-center">
           <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
-            {isAudioMuted ? MicOff : MicOn}
+            {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
           </div>
         </div>
       )}
