@@ -19,7 +19,7 @@ export interface MediaStreamWithInfo {
 }
 export type AudioLevelDisplayType = 'inline-wave' | 'inline-circle' | 'border';
 
-export type ButtonDisplayType = 'rounded' | 'square';
+export type ButtonDisplayType = 'circle' | 'rectangle';
 
 export interface Participant {
   peer: Peer;

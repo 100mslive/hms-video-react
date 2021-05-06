@@ -12,7 +12,7 @@ export default meta;
 
 const Template: Story<MessageModalProps> = args => {
   return (
-    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
       <div>
         <MessageModal {...args} />
       </div>

@@ -1,4 +1,4 @@
-import { ThemeConfiguration  } from 'twind';
+import { ThemeConfiguration } from 'twind';
 
 export const theme: { theme: ThemeConfiguration } = {
   theme: {
@@ -31,14 +31,14 @@ export const theme: { theme: ThemeConfiguration } = {
           600: '#F2F2F2',
         },
         transparent: {
-          100:'rgba(0, 0, 0, 0.37)',
-          200:'rgba(196,196,196, 0.21) ',
+          100: 'rgba(0, 0, 0, 0.37)',
+          200: 'rgba(196,196,196, 0.21) ',
           300: 'rgba(255, 255, 255, 0.25)',
           400: 'rgba(0, 0, 0, 0.75)',
-          500:'rgba(0, 0, 0, 0.9375)',
+          500: 'rgba(0, 0, 0, 0.9375)',
           600: 'rgba(59, 59, 59, 0.3)',
-          700:'rgba(0,0,0,0.22)',
-          800:'rgba(59,59,59,0.13)',
+          700: 'rgba(0,0,0,0.22)',
+          800: 'rgba(59,59,59,0.13)',
         },
       },
       fontSize: {

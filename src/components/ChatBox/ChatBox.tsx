@@ -6,6 +6,8 @@ import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
+import { Button } from '../Button';
+
 interface ChatBoxClasses {
   root?: string;
   header?: string;
@@ -140,7 +142,19 @@ export const StyledChatBox = ({
             </div>
             <div>
               {/* headerCloseButton */}
-              <button
+              {/* @ts-ignore */}
+              <Button
+                variant={'no-fill'}
+                size={'md'}
+                onClick={() => {
+                  if (onClose) {
+                    onClose();
+                  }
+                }}
+              >
+                <CloseIcon className="w-1 h-1" />
+              </Button>
+              {/* <button
                 onClick={() => {
                   if (onClose) {
                     onClose();
@@ -149,7 +163,7 @@ export const StyledChatBox = ({
                 className={combinedClasses?.headerCloseButton}
               >
                 <CloseIcon />
-              </button>
+              </button> */}
             </div>
           </div>
         </div>
@@ -229,15 +243,18 @@ export const StyledChatBox = ({
             }}
           />
           {/* sendButton */}
-          <button
-            className={combinedClasses?.sendButton}
+          {/* @ts-ignore */}
+          <Button
+            variant={'no-fill'}
+            size={'md'}
+            // className={combinedClasses?.sendButton}
             onClick={() => {
               onSend(message);
               setMessage('');
             }}
           >
-            <SendIcon className="text-white" />
-          </button>
+            <SendIcon className="text-white p-0 m-0" />
+          </Button>
         </div>
       </div>
     </React.Fragment>

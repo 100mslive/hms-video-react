@@ -1,8 +1,11 @@
 import React from 'react';
-import { LogoButton, SpeakerTag } from '../MediaIcons';
+// import { LogoButton, SpeakerTag } from '../MediaIcons';
 import { Participant, Peer } from '../../types';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
+import { Button } from '../Button';
+import { VolumeIcon, Logo } from '../../icons';
+
 export interface HeaderClasses {
   root?: string;
   leftRoot?: string;
@@ -35,8 +38,19 @@ export const StyledHeader = ({
   peer,
   time,
   speaker,
-  leftComponents = [<LogoButton key={0} />],
-  centerComponents = [<SpeakerTag name={speaker} key={0} />],
+  leftComponents = [
+    //@ts-ignore
+    <Button variant={'no-fill'} size={'lg'}>
+      <Logo />{' '}
+    </Button>,
+  ],
+  centerComponents = [
+    //@ts-ignore
+    <Button variant={'no-fill'}>
+      <VolumeIcon className="mr-2" />
+      {speaker}
+    </Button>,
+  ],
   rightComponents = [],
   defaultClasses,
   classes: extraClasses,

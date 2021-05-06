@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import { withClasses } from '../../utils/styles';
-// @ts-ignore
-import {Button} from '../Button'
-
-//@ts-ignore
-import { create } from 'twind';
+import { Button } from '../Button';
 
 import { combineClasses } from '../../utils';
-// import { Button } from '@material-ui/core';
 
 interface User {
   username: String;
@@ -113,15 +108,18 @@ const StyledJoin = ({
           </div>
           <div className={combinedClasses?.joinRoot}>
             {/* @ts-ignore */}
-            <Button variant={'emphasized'} onClick={() => submitOnClick({ username, roomId, role })}> 
-            Join </Button>
+            <Button
+              variant={'emphasized'}
+              onClick={() => submitOnClick({ username, roomId, role })}
+            >
+              Join{' '}
+            </Button>
           </div>
         </div>
       </div>
     </div>
   );
 };
-
 
 export type JoinProps = Omit<StyledJoinProps, 'defaultClasses'>;
 
