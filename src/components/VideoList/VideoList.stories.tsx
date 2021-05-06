@@ -327,7 +327,7 @@ const GoogleMeetControls = ({
       {allowRemoteMute && (
         <div className="inset-center">
           <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
-            {isAudioMuted ? <MicOffIcon/> : <MicOnIcon/>}
+            {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
           </div>
         </div>
       )}

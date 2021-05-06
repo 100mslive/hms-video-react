@@ -6,8 +6,10 @@ const NotAllowedMessage = () => {
     <ol className="flex flex-col">
       <li className="inline-block flex">
         Click the camera blocked icon
-        <div className="space-x-4 ml-2 mr-2"><CamOffIcon/></div> in your browser's
-        address bar.
+        <div className="space-x-4 ml-2 mr-2">
+          <CamOffIcon />
+        </div>{' '}
+        in your browser's address bar.
       </li>
       <li className="flex "> Allow access and refresh the page.</li>
     </ol>

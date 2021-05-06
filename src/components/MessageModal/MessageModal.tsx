@@ -4,8 +4,6 @@ import Backdrop from '@material-ui/core/Backdrop';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -102,7 +100,7 @@ export const StyledMessageModal = ({
                         !allow && gobackOnClick();
                       }}
                     >
-                      <CloseIcon/>
+                      <CloseIcon />
                     </button>
                   </div>
                 </div>

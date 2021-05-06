@@ -1,6 +1,6 @@
 import React from 'react';
 import Popover from '@material-ui/core/Popover';
-import { ChatIcon} from '../../icons';
+import { ChatIcon } from '../../icons';
 import { ChatBox, ChatProps } from '../ChatBox/ChatBox';
 
 //TODO: Expose Popover material-ui props
@@ -27,7 +27,11 @@ export default function Chat(args: ChatProps) {
         onClick={handleClick}
         className={`focus:outline-none rounded-lg ${open && 'bg-white'} p-3`}
       >
-        {open ? <ChatIcon className="text-gray-700"/> : <ChatIcon className="text-white"/>}
+        {open ? (
+          <ChatIcon className="text-gray-700" />
+        ) : (
+          <ChatIcon className="text-white" />
+        )}
       </button>
       <Popover
         id={id}

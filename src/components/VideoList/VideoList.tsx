@@ -12,7 +12,7 @@ import {
   RightCaratIcon,
   DownCaratIcon,
   UpCaratIcon,
-  DotIcon
+  DotIcon,
 } from '../../icons';
 import { createPortal } from 'react-dom';
 import { CustomArrowProps } from 'react-slick';
@@ -145,7 +145,7 @@ export function SliderRightArrow({ container, ...props }: IArrowProps) {
   const RightArrow = (
     <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
       <button className="text-sm text-blue-main focus:outline-none">
-        <RightCaratIcon/>
+        <RightCaratIcon />
       </button>
     </div>
   );
@@ -158,9 +158,16 @@ interface IDots {
 }
 
 const HorizontalDots = ({ container, index }: IDots) =>
-  container
-    ? createPortal(<a className="inline-block"><DotIcon/></a>, container)
-    : <DotIcon/>;
+  container ? (
+    createPortal(
+      <a className="inline-block">
+        <DotIcon />
+      </a>,
+      container,
+    )
+  ) : (
+    <DotIcon />
+  );
 
 function SliderDownArrow(props: CustomArrowProps) {
   const { style, onClick } = props;
@@ -171,7 +178,7 @@ function SliderDownArrow(props: CustomArrowProps) {
       onClick={onClick}
     >
       <button className="text-2xl rounded-sm focus:outline-none">
-        <DownCaratIcon/>
+        <DownCaratIcon />
       </button>
     </div>
   );
@@ -186,7 +193,7 @@ function SliderUpArrow(props: CustomArrowProps) {
       onClick={onClick}
     >
       <button className="text-2xl  rounded-sm focus:outline-none">
-        <UpCaratIcon/>
+        <UpCaratIcon />
       </button>
     </div>
   );
@@ -197,7 +204,7 @@ function SliderLeftArrow({ container, ...props }: IArrowProps) {
   const LeftArrow = (
     <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
       <button className="text-sm rounded-sm focus:outline-none">
-        <LeftCaratIcon/>
+        <LeftCaratIcon />
       </button>
     </div>
   );
@@ -226,10 +233,12 @@ export const StyledVideoList = ({
   const { width = 0, height = 0, ref } = useResizeDetector();
   try {
     let context = useHMSTheme();
-    if (aspectRatio === undefined)
+    if (aspectRatio === undefined) {
       aspectRatio = context.appBuilder.videoTileAspectRatio;
-    if (showAudioMuteStatus === undefined)
+    }
+    if (showAudioMuteStatus === undefined) {
       showAudioMuteStatus = context.appBuilder.showAvatar;
+    }
   } catch (e) {}
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
@@ -349,5 +358,5 @@ export type VideoListProps = Omit<StyledVideoListProps, 'defaultClasses'>;
 
 export const VideoList = withClasses<VideoListClasses | undefined>(
   defaultClasses,
-  'videoList'
+  'videoList',
 )<StyledVideoListProps>(StyledVideoList);

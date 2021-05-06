@@ -116,7 +116,7 @@ const StyledSettings = ({
         onClick={handleClickOpen}
         className={`${combinedClasses?.iconContainer}`}
       >
-        <SettingsIcon/>
+        <SettingsIcon />
       </button>
       <Dialog
         open={open}
@@ -130,7 +130,7 @@ const StyledSettings = ({
           <div className={`${combinedClasses?.dialogInner}`}>
             <span className={`${combinedClasses?.titleContainer}`}>
               <span className={`${combinedClasses?.titleIcon}`}>
-                <SettingsIcon className="w-2 h-2"/>
+                <SettingsIcon className="w-2 h-2" />
               </span>
               <span className={`${combinedClasses?.titleText}`}>Settings</span>
             </span>

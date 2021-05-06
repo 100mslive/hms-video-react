@@ -6,9 +6,6 @@ import { AvatarList } from '../Avatar';
 import Popover from '@material-ui/core/Popover';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
-
 export interface ParticipantListClasses {
   root?: string;
   buttonRoot?: string;
@@ -86,7 +83,7 @@ export const StyledParticipantList = ({
         <div className={`${combinedClasses?.buttonInner}`}>
           {participantList.length} in room
           <span className={`${combinedClasses?.buttonText}`}>
-            {open ? <UpCaratIcon/> : <DownCaratIcon/>}
+            {open ? <UpCaratIcon /> : <DownCaratIcon />}
           </span>
         </div>
       </button>

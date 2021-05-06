@@ -45,10 +45,10 @@ export const AudioMuteButton = ({ isAudioMuted = false }) => {
       className={`inline-block p-2 rounded-lg focus:outline-none ${
         isAudioMuted
           ? 'bg-red-main hover:bg-red-tint'
-          : 'hover:bg-transparent-light'
+          : 'hover:bg-transparent-300'
       }`}
     >
-      {isAudioMuted ? <MicOffIcon/> : <MicOnIcon/>}
+      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </button>
   );
 };
@@ -69,11 +69,11 @@ export const AudioButton = ({
       } focus:outline-none ${
         isAudioMuted
           ? 'bg-red-main hover:bg-red-tint'
-          : 'hover:bg-transparent-light'
+          : 'hover:bg-transparent-300'
       }`}
       onClick={clickHandler}
     >
-      {isAudioMuted ? <MicOffIcon/> : <MicOnIcon/>}
+      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </button>
   );
 };
@@ -94,11 +94,11 @@ export const VideoButton = ({
       } focus:outline-none ${
         isVideoMuted
           ? 'bg-red-main hover:bg-red-tint'
-          : 'hover:bg-transparent-light'
+          : 'hover:bg-transparent-300'
       }`}
       onClick={clickHandler}
     >
-      {isVideoMuted ? <CamOffIcon/> : <CamOnIcon/>}
+      {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
     </button>
   );
 };
@@ -124,7 +124,9 @@ export const LeaveButton = ({
       } `}
       onClick={clickHandler}
     >
-      <div className="inline-block"><HangUpIcon/></div>
+      <div className="inline-block">
+        <HangUpIcon />
+      </div>
       {/* TODO figure out why xs:hidden is needed */}
       <div className="md:pl-2 xs:hidden md:inline-block">Leave Room</div>
     </button>
@@ -141,7 +143,7 @@ export const AudioMuteIndicator = ({
         isAudioMuted ? 'bg-red-main' : ''
       } ${className}`}
     >
-      {isAudioMuted ? <MicOffIcon/> : <MicOnIcon/>}
+      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </span>
   );
 };
@@ -157,10 +159,10 @@ export const ShareScreenButton = ({
     <button
       className={`inline-block p-1 rounded-${
         buttonDisplay === 'square' ? 'lg' : 'full'
-      } focus:outline-none hover:bg-transparent-light`}
+      } focus:outline-none hover:bg-transparent-300`}
       onClick={clickHandler}
     >
-      <ShareScreenIcon/>
+      <ShareScreenIcon />
     </button>
   );
 };
@@ -168,7 +170,7 @@ export const ShareScreenButton = ({
 export const MuteListButton = ({ isMuteOn = false }) => {
   return (
     <button className="inline-block p-1 opacity-0 hover:opacity-100 focus:outline-none">
-      {isMuteOn ? <MicOffIcon/> : <MicOnIcon/>}
+      {isMuteOn ? <MicOffIcon /> : <MicOnIcon />}
     </button>
   );
 };
@@ -176,7 +178,7 @@ export const MuteListButton = ({ isMuteOn = false }) => {
 export const SpotlightListButton = ({ isSpotlightOn = false }) => {
   return (
     <button className="inline-block p-1 opacity-0 hover:opacity-100 focus:outline-none ">
-      {isSpotlightOn ? <StarIcon/> : <StarFillIcon/>}
+      {isSpotlightOn ? <StarIcon /> : <StarFillIcon />}
     </button>
   );
 };
@@ -195,13 +197,11 @@ export const AudioPreviewButton = ({
       className={`flex w-9 h-9 mx-1.5 justify-center items-center rounded-${
         buttonDisplay === 'square' ? 'xl' : 'full'
       } focus:outline-none ${
-        isAudioMuted
-          ? 'bg-white hover:bg-gray-500'
-          : 'hover:bg-transparent-light'
+        isAudioMuted ? 'bg-white hover:bg-gray-500' : 'hover:bg-transparent-300'
       }`}
       onClick={clickHandler}
     >
-      {isAudioMuted ? <MicOffIcon/> : <MicOnIcon/>}
+      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </button>
   );
 };
@@ -220,13 +220,11 @@ export const VideoPreviewButton = ({
       className={`flex w-9 h-9 mx-1.5 justify-center items-center rounded-${
         buttonDisplay === 'square' ? 'xl' : 'full'
       } focus:outline-none ${
-        isVideoMuted
-          ? 'bg-white hover:bg-gray-500'
-          : 'hover:bg-transparent-light'
+        isVideoMuted ? 'bg-white hover:bg-gray-500' : 'hover:bg-transparent-300'
       }`}
       onClick={clickHandler}
     >
-      {isVideoMuted ? <CamOffIcon/> : <CamOnIcon/>}
+      {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
     </button>
   );
 };
@@ -242,10 +240,10 @@ export const SettingsButton = ({
     <button
       className={`flex w-9 h-9 justify-center items-center rounded-${
         buttonDisplay === 'square' ? 'xl' : 'full'
-      } focus:outline-none hover:bg-transparent-light`}
+      } focus:outline-none hover:bg-transparent-300`}
       onClick={clickHandler}
     >
-      <SettingsIcon/>
+      <SettingsIcon />
     </button>
   );
 };
@@ -260,7 +258,7 @@ export const CloseButton = ({
       className="focus:outline-none p-1 hover:outline-none"
       onClick={clickHandler}
     >
-      <CloseIcon/>
+      <CloseIcon />
     </button>
   );
 };
@@ -278,7 +276,7 @@ export const ChatButton = ({
       className={`focus:outline-none rounded-lg ${isChatOpen &&
         'bg-white'} p-2 hover:bg-gray-200  m-1`}
     >
-      {isChatOpen ? <ChatIcon/> : <ChatIcon/>}
+      {isChatOpen ? <ChatIcon /> : <ChatIcon />}
     </button>
   );
 };
@@ -286,7 +284,9 @@ export const ChatButton = ({
 export const SpeakerTag = ({ name }: { name: string }) => {
   return name ? (
     <div className={`self-center focus:outline-none text-lg text-white`}>
-      <div className="inline-block"><VolumeIcon/></div>
+      <div className="inline-block">
+        <VolumeIcon />
+      </div>
       {/* TODO figure out why xs:hidden is needed */}
       <div className="md:pl-2 xs:hidden md:inline-block">{name}</div>
     </div>

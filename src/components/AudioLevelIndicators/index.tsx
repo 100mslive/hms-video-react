@@ -71,5 +71,5 @@ export const AudioLevelIndicator = withClasses<
   AudioLevelIndicatorClasses | undefined
 >(
   defaultClasses,
-  'audioLevelIndicator'
+  'audioLevelIndicator',
 )<StyledAudioLevelIndicatorProps>(StyledAudioLevelIndicator);

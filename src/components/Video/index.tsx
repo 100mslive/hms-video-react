@@ -168,5 +168,5 @@ export type VideoProps = Omit<StyledVideoProps, 'defaultClasses'>;
 
 export const Video = withClasses<VideoClasses | undefined>(
   defaultClasses,
-  'video'
+  'video',
 )<StyledVideoProps>(StyledVideo);

@@ -178,7 +178,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                 {args.allowRemoteMute && (
                   <div className="inset-center">
                     <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
-                      {args.isAudioMuted ? <MicOffIcon/> : <MicOnIcon/>}
+                      {args.isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
                     </div>
                   </div>
                 )}
