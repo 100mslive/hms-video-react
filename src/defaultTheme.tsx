@@ -42,11 +42,16 @@ export const theme: { theme: ThemeConfiguration } = {
         },
       },
       fontSize: {
-        sm: ['0.75rem', { lineHeight: '1rem' }],
-        base: ['0.875rem', { lineHeight: '1.25rem' }],
-        lg: ['1rem', { lineHeight: '1.5rem' }],
-        xl: ['1.25rem', { lineHeight: '1.75rem' }],
-        '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
+      //@ts-ignore
+      sm: ['0.75rem', { lineHeight: '1rem' }],
+      //@ts-ignore
+      base: ['0.875rem', { lineHeight: '1.25rem' }],
+      //@ts-ignore
+      lg: ['1rem', { lineHeight: '1.5rem' }],
+      //@ts-ignore
+      xl: ['1.25rem', { lineHeight: '1.75rem' }],
+      //@ts-ignore
+      '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
       },
       maxHeight: {
         100: '37.5rem',
