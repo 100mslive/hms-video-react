@@ -1,10 +1,12 @@
 import React from 'react';
 import { AudioLevelDisplayType } from '../../../types';
 import { AudioLevelIndicator } from '../../AudioLevelIndicators/index';
-import { AudioMuteIndicator, AudioMuteButton } from '../../MediaIcons';
 import '../index.css';
 import { combineClasses } from '../../../utils';
 import { withClasses } from '../../../utils/styles';
+import { MicOffIcon, MicOnIcon} from '../../../icons';
+import { Button } from '../../Button';
+
 export interface VideoTileControlsClasses {
   root?: string;
   labelContainer?: string;
@@ -31,7 +33,7 @@ interface StyledVideoTileControlsProps {
 const defaultClasses: VideoTileControlsClasses = {
   root:
     'absolute bottom-0 w-full pb-2 text-white px-2 text-center rounded-lg z-20',
-  labelContainer: 'transition-all',
+  labelContainer: 'transition-all inline-block',
   controls:
     'bottom-controls max-h-0 transition-all invisible text-center mt-1 group-hover:visible group-hover:max-h-125',
   rootGradient: 'bg-gradient-to-t from-transparent-100 to-transparent-500',
@@ -59,11 +61,19 @@ export const StyledVideoTileControls = ({
   const audioStatusMap = new Map<string, React.ReactNode>([
     [
       [true, true, true].toString(),
-      <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
+      //@ts-ignore
+      <Button  variant={"icon-only"} active={isAudioMuted} size={'md'} classes={{ root: 'to-be-overridden' }} >
+        {isAudioMuted && <MicOffIcon />}
+      </Button>
+      // <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
     ],
     [
       [true, false, true].toString(),
-      <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
+        //@ts-ignore
+        <Button  variant={"icon-only"} active={isAudioMuted} size={'md'} classes={{ root: 'to-be-overridden' }} >
+          {isAudioMuted && <MicOffIcon/>}
+        </Button>
+      // <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
     ],
     [
       [true, true, false].toString(),
@@ -99,7 +109,12 @@ export const StyledVideoTileControls = ({
       </div>
       {allowRemoteMute && (
         <div className={`${combinedClasses?.controls}`}>
-          <AudioMuteButton isAudioMuted={isAudioMuted} />
+          {/* @ts-ignore */}
+      <Button  variant={"icon-only"} active={isAudioMuted} size={'md'} classes={{ root: 'to-be-overridden' }}>
+        {isAudioMuted&& <MicOffIcon />}
+      </Button>
+      
+          {/* <AudioMuteButton isAudioMuted={isAudioMuted} /> */}
         </div>
       )}
     </div>

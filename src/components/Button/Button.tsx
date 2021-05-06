@@ -66,8 +66,8 @@ const defaultClasses = {
   rootStandard:
     'text-gray-100 dark:text-white bg-gray-600 dark:bg-gray-200 hover:gray-500 dark:hovergray-300 focus:gray-600  dark:focus:gray-200',
   rootDanger: 'text-gray-100 dark:text-white bg-red-main hover:bg-red-tint text-white',
-  rootEmphasized: 'text-gray-100 dark:text-white bg-blue-main hover:bg-brand-tint text-white',
-  rootNoFill: 'light:text-blue-main light:hover:text-brand-tint dark:text-white',
+  rootEmphasized: 'text-gray-100 dark:text-white bg-brand-main hover:bg-brand-tint text-white',
+  rootNoFill: 'light:text-brand-main light:hover:text-brand-tint dark:text-white',
   rootIconOnly: 'text-gray-100 dark:text-white hover:bg-transparent-300 focus:bg-none',
   iconOnlyActive: 'bg-gray-200 text-white dark:bg-white dark:text-black',
   rootDisabled:

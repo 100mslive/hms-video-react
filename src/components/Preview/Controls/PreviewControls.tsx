@@ -1,11 +1,8 @@
 import React from 'react';
-import {
-  AudioPreviewButton,
-  VideoPreviewButton,
-  SettingsButton,
-} from '../../MediaIcons';
 import '../index.css';
 import { ButtonDisplayType } from '../../../types';
+import { SettingsIcon, MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon} from '../../../icons'
+import { Button } from '../../Button';
 
 export interface VideoTileControlsProps {
   isAudioMuted?: boolean;
@@ -25,7 +22,7 @@ export interface VideoTileControlsProps {
 export const VideoTileControls = ({
   isAudioMuted = false,
   isVideoMuted = false,
-  buttonDisplay = 'square',
+  buttonDisplay = 'rectangle',
   audioButtonOnClick,
   videoButtonOnClick,
   settingsButtonOnClick,
@@ -33,7 +30,7 @@ export const VideoTileControls = ({
     root:
       'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-50 rounded-lg focus:outline-none',
     controls:
-      'flex flex-grow self-center justify-center inline-block hover-hide',
+      'flex flex-grow self-center justify-center inline-block hover-hide space-x-1',
     rightcontrols:
       'flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide',
   },
@@ -41,22 +38,28 @@ export const VideoTileControls = ({
   return (
     <div className={`${classes.root}`}>
       <div className={`${classes.controls}`}>
-        <AudioPreviewButton
+        {/* @ts-ignore */}
+        <Button variant={"icon-only"} active={isAudioMuted} shape={buttonDisplay} onClick={audioButtonOnClick}>{isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}</Button>
+        {/* <AudioPreviewButton
           clickHandler={audioButtonOnClick}
           buttonDisplay={buttonDisplay}
           isAudioMuted={isAudioMuted}
-        />
-        <VideoPreviewButton
+        /> */}
+        {/* @ts-ignore */}
+        <Button variant={"icon-only"} active={isVideoMuted} shape={buttonDisplay} onClick={videoButtonOnClick}>{isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}</Button>
+        {/* <VideoPreviewButton
           clickHandler={videoButtonOnClick}
           buttonDisplay={buttonDisplay}
           isVideoMuted={isVideoMuted}
-        />
+        /> */}
       </div>
       <div className={`${classes.rightcontrols}`}>
-        <SettingsButton
+        {/* @ts-ignore */}
+        <Button variant={"icon-only"} shape={buttonDisplay} onClick={settingsButtonOnClick}><SettingsIcon/></Button>
+        {/* <SettingsButton
           clickHandler={settingsButtonOnClick}
           buttonDisplay={buttonDisplay}
-        />
+        /> */}
       </div>
     </div>
   );

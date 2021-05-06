@@ -2,6 +2,7 @@ import React from 'react';
 import Popover from '@material-ui/core/Popover';
 import { ChatIcon } from '../../icons';
 import { ChatBox, ChatProps } from '../ChatBox/ChatBox';
+import { Button } from '../Button';
 
 //TODO: Expose Popover material-ui props
 //TODO: Allow developer some way to control width and height of chatbox
@@ -23,16 +24,12 @@ export default function Chat(args: ChatProps) {
 
   return (
     <div>
-      <button
-        onClick={handleClick}
-        className={`focus:outline-none rounded-lg ${open && 'bg-white'} p-3`}
-      >
-        {open ? (
+      {/* @ts-ignore */}
+      <Button onClick={handleClick}>{open ? (
           <ChatIcon className="text-gray-700" />
         ) : (
           <ChatIcon className="text-white" />
-        )}
-      </button>
+        )}</Button>
       <Popover
         id={id}
         open={open}
