@@ -9,5 +9,6 @@ export * from './components/Preview';
 export * from './components/ParticipantList';
 export * from './components/ChatBox/ChatBox';
 export * from './components/Settings/Settings';
+export * from './components/Join';
 export { HMSRoomProvider, useHMSRoom } from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';

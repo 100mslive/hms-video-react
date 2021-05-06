@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import { withClasses } from '../../utils/styles';
-// @ts-ignore
 import { Button } from '../Button';
 
 import { combineClasses } from '../../utils';
-// import { Button } from '@material-ui/core';
 
 interface User {
   username: String;
