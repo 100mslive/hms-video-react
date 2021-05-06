@@ -1,4 +1,4 @@
-import {css } from 'twind/css';
+import { css } from 'twind/css';
 //@ts-ignore
 import { create } from 'twind';
 import clsx from 'clsx';

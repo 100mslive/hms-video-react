@@ -6,9 +6,6 @@ import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
-
 export interface SettingsClasses {
   root?: string;
   iconContainer?: string;

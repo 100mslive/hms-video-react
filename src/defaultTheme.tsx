@@ -1,4 +1,4 @@
-import { Theme, ThemeConfiguration, ThemeContainer } from 'twind';
+import { ThemeConfiguration  } from 'twind';
 
 export const theme: { theme: ThemeConfiguration } = {
   theme: {

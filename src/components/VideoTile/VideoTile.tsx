@@ -11,8 +11,6 @@ import {
 } from '../../utils';
 import { useResizeDetector } from 'react-resize-detector';
 import { withClasses } from '../../utils/styles';
-//@ts-ignore
-import { create } from 'twind';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 interface StyledVideoTileProps extends VideoProps {
   /**
