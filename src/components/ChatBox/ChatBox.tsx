@@ -91,7 +91,7 @@ export const StyledChatBox = ({
   onClose,
 
   willScrollToBottom = true,
-  scrollAnimation = 'smooth',
+  scrollAnimation = 'auto',
   messageFormatter = (message: string) => {
     let text = Autolinker.link(message, {
       sanitizeHtml: true,
@@ -219,7 +219,9 @@ export const StyledChatBox = ({
             value={message}
             onKeyPress={event => {
               if (event.key === 'Enter' && !event.shiftKey) {
-                onSend(message);
+                if (message.trim().length!==0){
+                  onSend(message);
+                }
                 setMessage('');
                 event.preventDefault();
               }
@@ -232,7 +234,9 @@ export const StyledChatBox = ({
           <button
             className={combinedClasses?.sendButton}
             onClick={() => {
-              onSend(message);
+              if (message.trim().length!==0){
+                onSend(message);
+              }
               setMessage('');
             }}
           >
