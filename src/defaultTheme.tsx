@@ -12,7 +12,7 @@ export const theme: { theme: ThemeConfiguration } = {
         DEFAULT: '0px 2px 9px rgba(0, 0, 0, 0.18)',
       },
       colors: {
-        blue: {
+        brand: {
           tint: '#74AAFF',
           main: '#2F80FF',
           shade: '#0B326F',
@@ -42,10 +42,15 @@ export const theme: { theme: ThemeConfiguration } = {
         },
       },
       fontSize: {
+        //@ts-ignore
         sm: ['0.75rem', { lineHeight: '1rem' }],
+        //@ts-ignore
         base: ['0.875rem', { lineHeight: '1.25rem' }],
+        //@ts-ignore
         lg: ['1rem', { lineHeight: '1.5rem' }],
+        //@ts-ignore
         xl: ['1.25rem', { lineHeight: '1.75rem' }],
+        //@ts-ignore
         '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
       },
       maxHeight: {

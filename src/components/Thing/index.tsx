@@ -12,7 +12,7 @@ export interface Props {
  */
 export const Thing = ({ children }: Props) => {
   return (
-    <div className="p-3 text-center text-blue-main bg-gray-500 shadow-xl rounded-2xl">
+    <div className="p-3 text-center text-brand-main bg-gray-500 shadow-xl rounded-2xl">
       {children || `the snozzberries taste like snozzberries`}
     </div>
   );

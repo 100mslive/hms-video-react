@@ -62,17 +62,17 @@ export interface ButtonClasses {
 
 const defaultClasses = {
   root:
-    'box-border focus:outline-none focus:border-blue-tint overflow-hidden flex flex-row items-center overflow-hidden rounded-lg',
+    'box-border focus:outline-none focus:border-brand-tint overflow-hidden flex flex-row items-center overflow-hidden rounded-lg',
   rootStandard:
     'text-gray-100 dark:text-white bg-gray-600 dark:bg-gray-200 hover:gray-500 dark:hovergray-300 focus:gray-600  dark:focus:gray-200',
   rootDanger: 'text-gray-100 dark:text-white bg-red-main hover:bg-red-tint text-white',
-  rootEmphasized: 'text-gray-100 dark:text-white bg-blue-main hover:bg-blue-tint text-white',
-  rootNoFill: 'light:text-blue-main light:hover:text-blue-tint dark:text-white',
+  rootEmphasized: 'text-gray-100 dark:text-white bg-blue-main hover:bg-brand-tint text-white',
+  rootNoFill: 'light:text-blue-main light:hover:text-brand-tint dark:text-white',
   rootIconOnly: 'text-gray-100 dark:text-white hover:bg-transparent-300 focus:bg-none',
   iconOnlyActive: 'bg-gray-200 text-white dark:bg-white dark:text-black',
   rootDisabled:
     'text-transaprent-700 bg-transparent-800 dark:text-transparent-300 dark:bg-transparent-200',
-  noFillDisabled: 'text-blue-shade dark:text-transparent-300',
+  noFillDisabled: 'text-brand-shade dark:text-transparent-300',
   iconOnlySm: 'px-0.5 py-0.5',
   iconOnlyMd: 'px-1.5 py-1.5',
   iconOnlyLg: 'px-2 py-2',
@@ -188,6 +188,7 @@ export const StyledButton: React.FC<StyledButtonProps> = ({
   );
 };
 
+//@ts-ignore
 export type ButtonProps = Omit<StyledButtonProps, 'defaultClasses'>;
 
 export const Button = withClasses<ButtonClasses | undefined>(
