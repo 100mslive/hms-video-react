@@ -1,11 +1,20 @@
 import React from 'react';
-import { MuteListButton, SpotlightListButton } from '../MediaIcons';
-import { DownCaratIcon, UpCaratIcon } from '../../icons';
+// import { MuteListButton, SpotlightListButton } from '../MediaIcons';
+import {
+  DownCaratIcon,
+  UpCaratIcon,
+  MicOffIcon,
+  MicOnIcon,
+  StarFillIcon,
+  StarIcon,
+} from '../../icons';
 import { Participant } from '../../types';
 import { AvatarList } from '../Avatar';
 import Popover from '@material-ui/core/Popover';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
+import { Button } from '../Button';
+
 export interface ParticipantListClasses {
   root?: string;
   buttonRoot?: string;
@@ -36,15 +45,15 @@ const defaultClasses: ParticipantListClasses = {
   buttonClosed: 'dark:bg-black',
   buttonInner: 'flex flex-grow justify-center px-3 tracking-wide self-center',
   buttonText: 'pl-2 self-center',
-  menuRoot: 'max-h-100 rounded-bl-xl rounded-br-xl',
+  menuRoot: 'max-h-100 rounded-bl-xl rounded-br-xl mt-6',
   menuInner:
     'w-60 max-h-100 overflow-y-auto rounded-bl-xl rounded-br-xl py-1.5 bg-white dark:bg-gray-100 focus:outline-none',
   menuSection:
     'text-gray-300 dark:text-gray-500 group flex items-center px-3 py-2 text-base',
   menuItem:
-    'text-gray-100 dark:text-white group flex items-center space-x-2 px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200 hover-trigger',
+    'text-gray-100 dark:text-white group flex items-center space-x-2 px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
   menuText: 'flex justify-between',
-  menuIconContainer: 'flex flex-grow justify-end right-0 absolute',
+  menuIconContainer: 'flex flex-grow justify-end absolute space-x-1',
 };
 
 export const StyledParticipantList = ({
@@ -83,7 +92,11 @@ export const StyledParticipantList = ({
         <div className={`${combinedClasses?.buttonInner}`}>
           {participantList.length} in room
           <span className={`${combinedClasses?.buttonText}`}>
-            {open ? <UpCaratIcon /> : <DownCaratIcon />}
+            {open ? (
+              <UpCaratIcon className="w-4 h-4" />
+            ) : (
+              <DownCaratIcon className="w-4 h-4 " />
+            )}
           </span>
         </div>
       </button>
@@ -126,10 +139,43 @@ export const StyledParticipantList = ({
                         {participant.peer.displayName}
                       </div>
                       <div className={`${combinedClasses?.menuIconContainer}`}>
-                        <MuteListButton isMuteOn={participant.isAudioMuted} />
-                        <SpotlightListButton
+                        {/* @ts-ignore */}
+                        <Button
+                          variant={'icon-only'}
+                          shape={'circle'}
+                          size={'sm'}
+                          classes={{
+                            iconOnlySm: 'opacity-0 hover:opacity-100',
+                            root: 'to-be-overridden',
+                          }}
+                          active={participant.isAudioMuted}
+                        >
+                          {participant.isAudioMuted ? (
+                            <MicOffIcon />
+                          ) : (
+                            <MicOnIcon />
+                          )}
+                        </Button>
+                        {/* <MuteListButton isMuteOn={participant.isAudioMuted} /> */}
+                        {/* @ts-ignore */}
+                        <Button
+                          variant={'icon-only'}
+                          shape={'circle'}
+                          size={'sm'}
+                          classes={{
+                            iconOnlySm: 'opacity-0 hover:opacity-100',
+                          }}
+                          active={participant.isStarMarked}
+                        >
+                          {participant.isStarMarked ? (
+                            <StarIcon />
+                          ) : (
+                            <StarFillIcon />
+                          )}
+                        </Button>
+                        {/* <SpotlightListButton
                           isSpotlightOn={participant.isStarMarked}
-                        />
+                        /> */}
                       </div>
                     </a>
                   ))}

@@ -1,4 +1,4 @@
-import { ThemeConfiguration  } from 'twind';
+import { ThemeConfiguration } from 'twind';
 
 export const theme: { theme: ThemeConfiguration } = {
   theme: {
@@ -12,7 +12,7 @@ export const theme: { theme: ThemeConfiguration } = {
         DEFAULT: '0px 2px 9px rgba(0, 0, 0, 0.18)',
       },
       colors: {
-        blue: {
+        brand: {
           tint: '#74AAFF',
           main: '#2F80FF',
           shade: '#0B326F',
@@ -31,27 +31,27 @@ export const theme: { theme: ThemeConfiguration } = {
           600: '#F2F2F2',
         },
         transparent: {
-          100:'rgba(0, 0, 0, 0.37)',
-          200:'rgba(196,196,196, 0.21) ',
+          100: 'rgba(0, 0, 0, 0.37)',
+          200: 'rgba(196,196,196, 0.21) ',
           300: 'rgba(255, 255, 255, 0.25)',
           400: 'rgba(0, 0, 0, 0.75)',
-          500:'rgba(0, 0, 0, 0.9375)',
+          500: 'rgba(0, 0, 0, 0.9375)',
           600: 'rgba(59, 59, 59, 0.3)',
-          700:'rgba(0,0,0,0.22)',
-          800:'rgba(59,59,59,0.13)',
+          700: 'rgba(0,0,0,0.22)',
+          800: 'rgba(59,59,59,0.13)',
         },
       },
       fontSize: {
-      //@ts-ignore
-      sm: ['0.75rem', { lineHeight: '1rem' }],
-      //@ts-ignore
-      base: ['0.875rem', { lineHeight: '1.25rem' }],
-      //@ts-ignore
-      lg: ['1rem', { lineHeight: '1.5rem' }],
-      //@ts-ignore
-      xl: ['1.25rem', { lineHeight: '1.75rem' }],
-      //@ts-ignore
-      '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
+        //@ts-ignore
+        sm: ['0.75rem', { lineHeight: '1rem' }],
+        //@ts-ignore
+        base: ['0.875rem', { lineHeight: '1.25rem' }],
+        //@ts-ignore
+        lg: ['1rem', { lineHeight: '1.5rem' }],
+        //@ts-ignore
+        xl: ['1.25rem', { lineHeight: '1.75rem' }],
+        //@ts-ignore
+        '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
       },
       maxHeight: {
         100: '37.5rem',
