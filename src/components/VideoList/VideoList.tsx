@@ -8,16 +8,16 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
 import './index.css';
 import {
-  SliderRightArrow,
-  SliderDownArrow,
-  SliderLeftArrow,
-  SliderUpArrow,
-  HorizontalDots,
+  LeftCaratIcon,
+  RightCaratIcon,
+  DownCaratIcon,
+  UpCaratIcon,
+  DotIcon
 } from '../../icons';
+import { createPortal } from 'react-dom';
+import { CustomArrowProps } from 'react-slick';
 import { useResizeDetector } from 'react-resize-detector';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
@@ -135,6 +135,74 @@ const defaultClasses: VideoListClasses = {
     'relative h-full w-full flex flex-wrap justify-center items-center content-center',
   videoTileContainer: 'flex justify-center',
 };
+
+interface IArrowProps extends CustomArrowProps {
+  container: HTMLElement | null;
+}
+
+export function SliderRightArrow({ container, ...props }: IArrowProps) {
+  const { style, onClick } = props;
+  const RightArrow = (
+    <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
+      <button className="text-sm text-blue-main focus:outline-none">
+        <RightCaratIcon/>
+      </button>
+    </div>
+  );
+  return container ? createPortal(RightArrow, container) : RightArrow;
+}
+
+interface IDots {
+  container: HTMLElement | null;
+  index: number;
+}
+
+const HorizontalDots = ({ container, index }: IDots) =>
+  container
+    ? createPortal(<a className="inline-block"><DotIcon/></a>, container)
+    : <DotIcon/>;
+
+function SliderDownArrow(props: CustomArrowProps) {
+  const { style, onClick } = props;
+  return (
+    <div
+      className="slick-arrow absolute left-1/2 bottom-0 z-10"
+      style={{ ...style, display: 'block' }}
+      onClick={onClick}
+    >
+      <button className="text-2xl rounded-sm focus:outline-none">
+        <DownCaratIcon/>
+      </button>
+    </div>
+  );
+}
+
+function SliderUpArrow(props: CustomArrowProps) {
+  const { style, onClick } = props;
+  return (
+    <div
+      className="slick-arrow left-1/2 top-0 z-10 absolute"
+      style={{ ...style, display: 'block' }}
+      onClick={onClick}
+    >
+      <button className="text-2xl  rounded-sm focus:outline-none">
+        <UpCaratIcon/>
+      </button>
+    </div>
+  );
+}
+
+function SliderLeftArrow({ container, ...props }: IArrowProps) {
+  const { style, onClick } = props;
+  const LeftArrow = (
+    <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
+      <button className="text-sm rounded-sm focus:outline-none">
+        <LeftCaratIcon/>
+      </button>
+    </div>
+  );
+  return container ? createPortal(LeftArrow, container) : LeftArrow;
+}
 
 export const StyledVideoList = ({
   streams,

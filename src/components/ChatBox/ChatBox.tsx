@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Close, People, Send } from '../../icons';
+import { CloseIcon, PeopleIcon, SendIcon } from '../../icons';
 import './index.css';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Autolinker from 'autolinker';
@@ -136,7 +136,7 @@ export const StyledChatBox = ({
           <div className={combinedClasses?.headerRoot}>
             {/* header-text */}
             <div className={combinedClasses?.headerText}>
-              <span>{People}</span> Everyone
+              <span><PeopleIcon/></span> Everyone
             </div>
             <div>
               {/* headerCloseButton */}
@@ -148,7 +148,7 @@ export const StyledChatBox = ({
                 }}
                 className={combinedClasses?.headerCloseButton}
               >
-                {Close}
+                <CloseIcon/>
               </button>
             </div>
           </div>
@@ -236,7 +236,7 @@ export const StyledChatBox = ({
               setMessage('');
             }}
           >
-            {Send}
+            <SendIcon className="text-white"/>
           </button>
         </div>
       </div>
