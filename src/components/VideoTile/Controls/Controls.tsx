@@ -4,7 +4,7 @@ import { AudioLevelIndicator } from '../../AudioLevelIndicators/index';
 import '../index.css';
 import { combineClasses } from '../../../utils';
 import { withClasses } from '../../../utils/styles';
-import { MicOffIcon, MicOnIcon} from '../../../icons';
+import { MicOffIcon } from '../../../icons';
 import { Button } from '../../Button';
 
 export interface VideoTileControlsClasses {
@@ -62,17 +62,27 @@ export const StyledVideoTileControls = ({
     [
       [true, true, true].toString(),
       //@ts-ignore
-      <Button  variant={"icon-only"} active={isAudioMuted} size={'md'} classes={{ root: 'to-be-overridden' }} >
+      <Button
+        variant={'icon-only'}
+        active={isAudioMuted}
+        size={'md'}
+        classes={{ root: 'to-be-overridden' }}
+      >
         {isAudioMuted && <MicOffIcon />}
-      </Button>
+      </Button>,
       // <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
     ],
     [
       [true, false, true].toString(),
-        //@ts-ignore
-        <Button  variant={"icon-only"} active={isAudioMuted} size={'md'} classes={{ root: 'to-be-overridden' }} >
-          {isAudioMuted && <MicOffIcon/>}
-        </Button>
+      //@ts-ignore
+      <Button
+        variant={'icon-only'}
+        active={isAudioMuted}
+        size={'md'}
+        classes={{ root: 'to-be-overridden' }}
+      >
+        {isAudioMuted && <MicOffIcon />}
+      </Button>,
       // <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
     ],
     [
@@ -110,10 +120,15 @@ export const StyledVideoTileControls = ({
       {allowRemoteMute && (
         <div className={`${combinedClasses?.controls}`}>
           {/* @ts-ignore */}
-      <Button  variant={"icon-only"} active={isAudioMuted} size={'md'} classes={{ root: 'to-be-overridden' }}>
-        {isAudioMuted&& <MicOffIcon />}
-      </Button>
-      
+          <Button
+            variant={'icon-only'}
+            active={isAudioMuted}
+            size={'md'}
+            classes={{ root: 'to-be-overridden' }}
+          >
+            {isAudioMuted && <MicOffIcon />}
+          </Button>
+
           {/* <AudioMuteButton isAudioMuted={isAudioMuted} /> */}
         </div>
       )}

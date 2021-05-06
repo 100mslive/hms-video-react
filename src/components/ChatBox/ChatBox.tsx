@@ -143,11 +143,17 @@ export const StyledChatBox = ({
             <div>
               {/* headerCloseButton */}
               {/* @ts-ignore */}
-              <Button variant={'no-fill'} size={'md'} onClick={() => {
+              <Button
+                variant={'no-fill'}
+                size={'md'}
+                onClick={() => {
                   if (onClose) {
                     onClose();
                   }
-                }}><CloseIcon className="w-1 h-1"/></Button>
+                }}
+              >
+                <CloseIcon className="w-1 h-1" />
+              </Button>
               {/* <button
                 onClick={() => {
                   if (onClose) {
@@ -239,7 +245,8 @@ export const StyledChatBox = ({
           {/* sendButton */}
           {/* @ts-ignore */}
           <Button
-          variant={'no-fill'} size={'md'}
+            variant={'no-fill'}
+            size={'md'}
             // className={combinedClasses?.sendButton}
             onClick={() => {
               onSend(message);

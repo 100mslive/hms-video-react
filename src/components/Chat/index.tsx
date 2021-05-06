@@ -25,11 +25,13 @@ export default function Chat(args: ChatProps) {
   return (
     <div>
       {/* @ts-ignore */}
-      <Button onClick={handleClick}>{open ? (
+      <Button onClick={handleClick}>
+        {open ? (
           <ChatIcon className="text-gray-700" />
         ) : (
           <ChatIcon className="text-white" />
-        )}</Button>
+        )}
+      </Button>
       <Popover
         id={id}
         open={open}

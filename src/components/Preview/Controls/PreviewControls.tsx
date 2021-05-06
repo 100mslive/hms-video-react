@@ -1,7 +1,13 @@
 import React from 'react';
 import '../index.css';
 import { ButtonDisplayType } from '../../../types';
-import { SettingsIcon, MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon} from '../../../icons'
+import {
+  SettingsIcon,
+  MicOffIcon,
+  MicOnIcon,
+  CamOnIcon,
+  CamOffIcon,
+} from '../../../icons';
 import { Button } from '../../Button';
 
 export interface VideoTileControlsProps {
@@ -39,14 +45,29 @@ export const VideoTileControls = ({
     <div className={`${classes.root}`}>
       <div className={`${classes.controls}`}>
         {/* @ts-ignore */}
-        <Button variant={"icon-only"} active={isAudioMuted} shape={buttonDisplay} onClick={audioButtonOnClick}>{isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}</Button>
+        <Button
+          variant={'icon-only'}
+          active={isAudioMuted}
+          shape={buttonDisplay}
+          onClick={audioButtonOnClick}
+        >
+          {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+        </Button>
         {/* <AudioPreviewButton
           clickHandler={audioButtonOnClick}
           buttonDisplay={buttonDisplay}
           isAudioMuted={isAudioMuted}
         /> */}
         {/* @ts-ignore */}
-        <Button variant={"icon-only"} active={isVideoMuted} shape={buttonDisplay} onClick={videoButtonOnClick}>{isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}</Button>
+        <Button
+          variant={'icon-only'}
+          active={isVideoMuted}
+          shape={buttonDisplay}
+          {/* @ts-ignore */}
+          onClick={videoButtonOnClick}
+        >
+          {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+        </Button>
         {/* <VideoPreviewButton
           clickHandler={videoButtonOnClick}
           buttonDisplay={buttonDisplay}
@@ -55,7 +76,14 @@ export const VideoTileControls = ({
       </div>
       <div className={`${classes.rightcontrols}`}>
         {/* @ts-ignore */}
-        <Button variant={"icon-only"} shape={buttonDisplay} onClick={settingsButtonOnClick}><SettingsIcon/></Button>
+        <Button
+          variant={'icon-only'}
+          shape={buttonDisplay}
+          {/* @ts-ignore */}
+          onClick={settingsButtonOnClick}
+        >
+          <SettingsIcon />
+        </Button>
         {/* <SettingsButton
           clickHandler={settingsButtonOnClick}
           buttonDisplay={buttonDisplay}

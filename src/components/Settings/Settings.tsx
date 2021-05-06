@@ -112,10 +112,7 @@ const StyledSettings = ({
   return (
     <>
       {/* @ts-ignore */}
-      <Button
-        onClick={handleClickOpen}
-        variant={"icon-only"}
-      >
+      <Button onClick={handleClickOpen} variant={'icon-only'}>
         <SettingsIcon />
       </Button>
       <Dialog
@@ -136,7 +133,10 @@ const StyledSettings = ({
             </span>
             <span>
               {/* @ts-ignore */}
-              <Button variant={'icon-only'} onClick={handleClose}>  <CloseIcon/> </Button>
+              <Button variant={'icon-only'} onClick={handleClose}>
+                {' '}
+                <CloseIcon />{' '}
+              </Button>
             </span>
           </div>
 

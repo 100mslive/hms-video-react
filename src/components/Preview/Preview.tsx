@@ -263,9 +263,16 @@ const StyledPreview = ({
         <div className={combinedClasses?.helloDiv}>Hello, {name}</div>
         {/* joinButton */}
         {/* @ts-ignore */}
-        <Button variant={'emphasized'} size={'lg'} onClick={() => {closeMediaStream(mediaStream);
-            joinOnClick({ audioMuted, videoMuted });}}> 
-            Join </Button>
+        <Button
+          variant={'emphasized'}
+          size={'lg'}
+          onClick={() => {
+            closeMediaStream(mediaStream);
+            joinOnClick({ audioMuted, videoMuted });
+          }}
+        >
+          Join{' '}
+        </Button>
         {/* <div
           className={combinedClasses?.joinButton}
           onClick={() => {
@@ -277,9 +284,16 @@ const StyledPreview = ({
         </div> */}
         {/* goBackButton */}
         {/* @ts-ignore */}
-        <Button variant={'no-fill'} size={'lg'} onClick={() => {closeMediaStream(mediaStream);
-            goBackOnClick();}}> 
-            Go back </Button>
+        <Button
+          variant={'no-fill'}
+          size={'lg'}
+          onClick={() => {
+            closeMediaStream(mediaStream);
+            goBackOnClick();
+          }}
+        >
+          Go back{' '}
+        </Button>
         {/* <div
           className={combinedClasses?.goBackButton}
           onClick={() => {

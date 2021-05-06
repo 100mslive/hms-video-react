@@ -4,7 +4,7 @@ import { Participant, Peer } from '../../types';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../Button';
-import { VolumeIcon, Logo} from '../../icons'
+import { VolumeIcon, Logo } from '../../icons';
 
 export interface HeaderClasses {
   root?: string;
@@ -39,14 +39,18 @@ export const StyledHeader = ({
   time,
   speaker,
   leftComponents = [
-  //@ts-ignore
-  <Button variant={'no-fill'} size={'lg'}><Logo/> </Button>],
+    //@ts-ignore
+    <Button variant={'no-fill'} size={'lg'}>
+      <Logo />{' '}
+    </Button>,
+  ],
   centerComponents = [
     //@ts-ignore
     <Button variant={'no-fill'}>
-    <VolumeIcon className="mr-2" />
-    {speaker}
-  </Button>],
+      <VolumeIcon className="mr-2" />
+      {speaker}
+    </Button>,
+  ],
   rightComponents = [],
   defaultClasses,
   classes: extraClasses,

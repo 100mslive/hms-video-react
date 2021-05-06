@@ -1,7 +1,15 @@
 import React from 'react';
 import { ButtonDisplayType } from '../../types';
-import {HangUpIcon, MicOffIcon, MicOnIcon, CamOffIcon, CamOnIcon, ChatIcon, ShareScreenIcon} from '../../icons';
-import {Button} from '../Button';
+import {
+  HangUpIcon,
+  MicOffIcon,
+  MicOnIcon,
+  CamOffIcon,
+  CamOnIcon,
+  ChatIcon,
+  ShareScreenIcon,
+} from '../../icons';
+import { Button } from '../Button';
 import { Settings } from '../Settings/Settings';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
@@ -63,28 +71,62 @@ export const StyledControlBar = ({
       setMaxTileCount={setMaxTileCount}
       key={0}
     />,
+    <Button
+      variant={'icon-only'}
+      shape={buttonDisplay}
+      //@ts-ignore
+      onClick={screenshareButtonOnClick}
+      key={1}
+    >
+      <ShareScreenIcon />
+    </Button>,
     //@ts-ignore
-    <Button variant={"icon-only"} shape={buttonDisplay} onClick={screenshareButtonOnClick} key={1}><ShareScreenIcon/></Button>,
-    //@ts-ignore
-    <Button variant={"icon-only"} shape={buttonDisplay} onClick={chatButtonOnClick} active={isChatOpen} key={2}><ChatIcon/></Button>,
+    <Button
+      variant={'icon-only'}
+      shape={buttonDisplay}
+      //@ts-ignore
+      onClick={chatButtonOnClick}
+      active={isChatOpen}
+      key={2}
+    >
+      <ChatIcon />
+    </Button>,
   ],
   centerComponents = [
     //@ts-ignore
-    <Button  variant={"icon-only"} shape={buttonDisplay} active={isVideoMuted} onClick={videoButtonOnClick} classes={{ root: 'to-be-overridden' }}>
-        {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
-      </Button>,
+    <Button
+      variant={'icon-only'}
+      shape={buttonDisplay}
+      active={isVideoMuted}
+      //@ts-ignore
+      onClick={videoButtonOnClick}
+      classes={{ root: 'to-be-overridden' }}
+    >
+      {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+    </Button>,
     //@ts-ignore
-    <Button  variant={"icon-only"} shape={buttonDisplay} active={isAudioMuted} onClick={audioButtonOnClick} classes={{ root: 'to-be-overridden' }}>
-        {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
-      </Button>,
+    <Button
+      variant={'icon-only'}
+      shape={buttonDisplay}
+      active={isAudioMuted}
+      //@ts-ignore
+      onClick={audioButtonOnClick}
+      classes={{ root: 'to-be-overridden' }}
+    >
+      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+    </Button>,
   ],
   rightComponents = [
-    //@ts-ignore
-    <Button shape={buttonDisplay} variant={"danger"} onClick={leaveButtonOnClick}>
-        <HangUpIcon className="mr-2" />
-        Leave room
+    <Button
+      shape={buttonDisplay}
+      variant={'danger'}
+      //@ts-ignore
+      onClick={leaveButtonOnClick}
+    >
+      <HangUpIcon className="mr-2" />
+      Leave room
       {/* @ts-ignore */}
-      </Button>,
+    </Button>,
   ],
   defaultClasses,
   classes: extraClasses,
@@ -94,7 +136,6 @@ export const StyledControlBar = ({
   const leftItems = Array<React.ReactNode>();
   const centerItems = Array<React.ReactNode>();
   const rightItems = Array<React.ReactNode>();
-  
 
   centerComponents.forEach(comp => {
     centerItems.push(comp);
