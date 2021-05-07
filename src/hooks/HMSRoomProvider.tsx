@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 import { initAudioSink } from './helpers/audioManager';
+import HMSLogger from '../utils/ui-logger';
 
 const sdk = new HMSSdk();
 
@@ -99,21 +100,15 @@ export const HMSRoomProvider: React.FC = props => {
 
   const toggleScreenShare = async () => {
     if (!isScreenShare) {
-      console.debug(
-        'HMSui-component: [toggleScreenshare] Starting screenshare',
-      );
+      HMSLogger.d('[toggleScreenshare]', 'Starting Screenshare');
       setIsScreenShare(true);
       await sdk.startScreenShare(() => {
-        console.debug(
-          'HMSui-component: [toggleScreenshare] Inside the onstop of screenshare',
-        );
         setIsScreenShare(false);
-        //await sdk.stopScreenShare();
         setPeers(sdk.getPeers());
         setLocalPeer(sdk.getLocalPeer());
       });
     } else {
-      console.debug('HMSui-component: [toggleScreenshare] Stopping screnshare');
+      HMSLogger.d('[toggleScreenshare]', 'Stopping Screenshare');
       setIsScreenShare(false);
       await sdk.stopScreenShare();
     }
@@ -129,7 +124,7 @@ export const HMSRoomProvider: React.FC = props => {
   const sendMessage = (message: string) => {
     const hmsMessage = sdk.sendMessage('chat', message);
     receiveMessage({ ...hmsMessage, sender: 'You' });
-    console.debug('HMSui-component: [sendMessage] sentMessage', message);
+    HMSLogger.d('[sendMessage]', message);
   };
 
   const updateDominantSpeaker = (type: HMSPeerUpdate, peer: HMSPeer | null) => {

@@ -90,7 +90,6 @@ const StyledSettings = ({
     setOpen(false);
   };
   const handleChange = (event: any, newValue: number | number[]) => {
-    console.log(newValue);
     setMaxTileCount(newValue as number);
   };
 

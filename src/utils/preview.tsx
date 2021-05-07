@@ -1,10 +1,11 @@
 import React from 'react';
 import { CamOffIcon } from '../components/Icons';
+import HMSLogger from './ui-logger';
 
 const NotAllowedMessage = () => {
   return (
     <ol className="flex flex-col">
-      <li className="inline-block flex">
+      <li className="inline-block">
         Click the camera blocked icon
         <div className="space-x-4 ml-2 mr-2">
           <CamOffIcon />
@@ -83,7 +84,7 @@ const getLocalStreamException = (errorName: any, browser: boolean) => {
       message: 'Please switch your device and try again.',
     };
   }
-  console.log('LocalStream error: ', { error: errorName, ...errorMessage });
+  HMSLogger.e('LocalStream error: ', { error: errorName, ...errorMessage });
   return errorMessage;
 };
 

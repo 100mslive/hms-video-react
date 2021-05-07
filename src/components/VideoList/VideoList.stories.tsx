@@ -387,7 +387,6 @@ const MeetTemplate: Story<VideoListStoryProps> = (
       getUserMedia({ audio: true, video: true }).then(function(
         stream: MediaStream | undefined,
       ) {
-        //console.log(stream);
         setCameraStream(stream);
       });
     }
@@ -395,7 +394,6 @@ const MeetTemplate: Story<VideoListStoryProps> = (
       window.navigator.mediaDevices
         .getDisplayMedia({ video: true })
         .then(function(stream: MediaStream | undefined) {
-          //console.log(stream);
           setScreenStream(stream);
         });
     }
