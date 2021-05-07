@@ -74,6 +74,7 @@ export const StyledControlBar = ({
     <Button
       variant={'icon-only'}
       shape={buttonDisplay}
+      size="lg"
       onClick={screenshareButtonOnClick}
       key={1}
     >
@@ -85,6 +86,7 @@ export const StyledControlBar = ({
       onClick={chatButtonOnClick}
       active={isChatOpen}
       key={2}
+      size="lg"
     >
       <ChatIcon />
     </Button>,
@@ -95,6 +97,7 @@ export const StyledControlBar = ({
       shape={buttonDisplay}
       active={isVideoMuted}
       onClick={videoButtonOnClick}
+      size="lg"
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
     </Button>,
@@ -103,6 +106,7 @@ export const StyledControlBar = ({
       shape={buttonDisplay}
       active={isAudioMuted}
       onClick={audioButtonOnClick}
+      size="lg"
     >
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </Button>,
@@ -112,6 +116,7 @@ export const StyledControlBar = ({
       shape={buttonDisplay}
       variant={'danger'}
       onClick={leaveButtonOnClick}
+      size="lg"
     >
       <HangUpIcon className="mr-2" />
       Leave room

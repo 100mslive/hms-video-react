@@ -32,6 +32,7 @@ interface StyledVideoTileControlsProps {
 //TODO group hover is not working
 const defaultClasses: VideoTileControlsClasses = {
   root: 'absolute bottom-0 w-full z-20 rounded-none h-24 overflow-hidden',
+  // TODO solve for smaller tiles
   controlsInner:
     'absolute bottom-0 w-full h-full z-20 pb-2 text-white px-2 text-center flex flex-col justify-end items-center',
   controls: 'invisible max-h-0 transition-all text-center mt-1',
