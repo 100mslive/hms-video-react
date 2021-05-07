@@ -29,6 +29,10 @@ interface StyledTextProps {
    * HTML Tag to Render
    */
   tag?: TextTags;
+  /**
+   * classNames string
+   */
+  className?: string;
 }
 
 const defaultClasses = {
@@ -56,6 +60,7 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
   variant,
   size,
   children,
+  className,
   ...props
 }) => {
   const TagName = tag || 'p';
@@ -70,7 +75,10 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
       ? defaultClasses[tempVariant][tempSize]
       : defaultClasses['button'];
   };
-  const tempClassName = `${resolveClasses(variant, size)} ${defaultClassNames}`;
+  const tempClassName = `${resolveClasses(
+    variant,
+    size,
+  )} ${defaultClassNames} ${className || ''}`;
   return (
     <TagName className={tempClassName} {...props}>
       {children}

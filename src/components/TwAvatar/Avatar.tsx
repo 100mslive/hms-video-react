@@ -22,6 +22,10 @@ interface StyledAvatarProps {
    * Size of the Avatar
    */
   size?: 'sm' | 'md' | 'lg';
+  /**
+   * className string
+   */
+  className?: string;
 }
 
 type NativeAttrs = Omit<
@@ -51,6 +55,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   icon,
   image,
   shape,
+  className,
   ...props
 }) => {
   const resolveClasses = (
@@ -65,7 +70,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   const defaultClassNames = `${resolveClasses(
     size,
     shape,
-  )} inline object-cover`;
+  )} inline object-cover ${className || ''}`;
   return (
     <>
       {image ? (
