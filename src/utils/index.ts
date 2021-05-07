@@ -16,7 +16,7 @@ const getVideoTileLabel = (
   // Map [isLocal, videoSource] to the label to be displayed.
   const labelMap = new Map<string, string>([
     [[true, 'screen'].toString(), 'Your Screen'],
-    [[true, 'camera'].toString(), 'You'],
+    [[true, 'camera'].toString(), `You (${peerName})`],
     [[false, 'screen'].toString(), `${peerName}'s Screen`],
     [[false, 'camera'].toString(), peerName],
     [[false, undefined].toString(), peerName],
@@ -30,7 +30,7 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
     return;
   }
 
-  console.log('MEDIA STREAM ENDED ', stream);
+  // console.log('MEDIA STREAM ENDED ', stream);
 
   const tracks = stream.getTracks();
   tracks.forEach(track => track.stop());
@@ -40,7 +40,6 @@ const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
   let cols = maxColCount;
   let rows = Math.ceil(page.length / cols);
   let remLastRowElem = page.length % cols;
-  //console.log(remLastRowElem, 'number to be skipped');
   let grid: JSX.Element[][] = [];
   let newArray: JSX.Element[] = [];
 
@@ -49,7 +48,6 @@ const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
     for (let j = 0; j < rows && last < page.length; j++) {
       if (j === rows - 1 && page.length % cols !== 0) {
         if (remLastRowElem === 0) {
-          //console.log('skipped', last, remLastRowElem);
           continue;
         }
         remLastRowElem--;
@@ -57,7 +55,6 @@ const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
       if (!grid[j]) {
         grid[j] = [];
       }
-      //console.log(`${last}inserted at ${j}`, i);
       grid[j][i] = page[last];
       last++;
     }
@@ -70,7 +67,6 @@ const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
       }
     }
   }
-  //console.log(grid, cols, rows);
   return newArray;
 };
 
@@ -86,7 +82,6 @@ const rowToColTransform = (page: JSX.Element[], maxRowCount: number) => {
     for (let j = 0; j < cols && last < page.length; j++) {
       if (j === cols - 1 && page.length % rows !== 0) {
         if (remLastColElem === 0) {
-          //console.log('skipped', last, remLastColElem);
           continue;
         }
         remLastColElem--;
@@ -94,7 +89,6 @@ const rowToColTransform = (page: JSX.Element[], maxRowCount: number) => {
       if (!grid[i]) {
         grid[i] = [];
       }
-      //console.log(`${last}inserted at ${i}`, j);
       grid[i][j] = page[last];
       last++;
     }
@@ -108,7 +102,6 @@ const rowToColTransform = (page: JSX.Element[], maxRowCount: number) => {
     }
   }
 
-  //console.log(grid);
   return newArray;
 };
 
@@ -329,7 +322,7 @@ function mode(array: any[]) {
 }
 
 const getInitialsFromName = (name: string | undefined) => {
-  console.debug('HMSui-component: Getting initials of', name);
+  // console.debug('HMSui-component: Getting initials of', name);
   if (!name) {
     return undefined;
   } else {
@@ -423,44 +416,44 @@ const getTileContainerDimensions = ({
   parentHeight,
   isSquareOrCircle,
 }: getTileContainerDimensionsProps) => {
-  console.debug(
-    'HMSui-components: [getTileContainerDimensions] all data',
-    videoTrack,
-    objectFit,
-    aspectRatio,
-    parentWidth,
-    parentHeight,
-  );
+  // console.debug(
+  //   'HMSui-components: [getTileContainerDimensions] all data',
+  //   videoTrack,
+  //   objectFit,
+  //   aspectRatio,
+  //   parentWidth,
+  //   parentHeight,
+  // );
   const { width: selfWidth, height: selfHeight } = videoTrack
     ? videoTrack.getSettings()
     : { width: parentWidth, height: parentHeight };
-  console.debug(
-    'HMSui-components: [getTileContainerDimensions] selfHeight, selfWidth',
-    selfHeight,
-    selfWidth,
-  );
+  // console.debug(
+  //   'HMSui-components: [getTileContainerDimensions] selfHeight, selfWidth',
+  //   selfHeight,
+  //   selfWidth,
+  // );
   const containerAspectRatio =
     objectFit === 'cover'
       ? { width: parentWidth, height: parentHeight }
       : { width: selfWidth, height: selfHeight };
-  console.debug(
-    'HMSui-components: [getTileContainerDimensions] containerAspectRatio',
-    containerAspectRatio,
-  );
+  // console.debug(
+  //   'HMSui-components: [getTileContainerDimensions] containerAspectRatio',
+  //   containerAspectRatio,
+  // );
   const containerAspectRatioAfterUserOverride =
     aspectRatio && objectFit === 'cover' ? aspectRatio : containerAspectRatio;
-  console.debug(
-    'HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterUserOverride',
-    containerAspectRatioAfterUserOverride,
-  );
+  // console.debug(
+  //   'HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterUserOverride',
+  //   containerAspectRatioAfterUserOverride,
+  // );
   const containerAspectRatioAfterShapeOverride = {
     width: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.width,
     height: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.height,
   };
-  console.debug(
-    'HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterShapeOverride',
-    containerAspectRatioAfterShapeOverride,
-  );
+  // console.debug(
+  //   'HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterShapeOverride',
+  //   containerAspectRatioAfterShapeOverride,
+  // );
   const { width, height } =
     containerAspectRatioAfterShapeOverride.width &&
     containerAspectRatioAfterShapeOverride.height
@@ -472,11 +465,11 @@ const getTileContainerDimensions = ({
           containerAspectRatioAfterShapeOverride.height,
         )
       : { width: parentWidth, height: parentHeight };
-  console.debug(
-    'HMSui-components: [getTileContainerDimensions] width, height',
-    width,
-    height,
-  );
+  // console.debug(
+  //   'HMSui-components: [getTileContainerDimensions] width, height',
+  //   width,
+  //   height,
+  // );
   return { width, height };
 };
 
@@ -507,11 +500,11 @@ function addGlobalCss<Type>({
     tailwindConfig = context.tailwindConfig;
   } catch (error) {}
 
-  let tw_merged = create({ ...tailwindConfig, darkMode: 'class' }).tw;
+  let tw_merged = create({ ...tailwindConfig, darkMode: 'class' , mode:'silent'}).tw;
   let calculatedSeedStyleMap: Type | {} = {};
   for (const seed in seedStyleMap as Type) {
     //TODO define a generic Map TS type to define classes to remove all type related ignores
-    //@ts-ignore
+    //@ts-expect-error
     const styles = seedStyleMap[seed] as string;
     const className = generateClassName({ seed, componentName });
     //TODO add this to a private stylesheet and add a check to not write this if it already exists
@@ -524,7 +517,7 @@ function addGlobalCss<Type>({
         }
       `,
     );
-    //@ts-ignore
+    //@ts-expect-error
     calculatedSeedStyleMap[seed] = className;
   }
   return calculatedSeedStyleMap;

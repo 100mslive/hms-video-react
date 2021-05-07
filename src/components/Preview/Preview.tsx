@@ -7,6 +7,7 @@ import { MessageModal } from '../MessageModal';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
+import { Button } from '../Button';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -75,6 +76,7 @@ const StyledPreview = ({
   useEffect(() => {
     startMediaStream();
     return () => closeMediaStream(mediaStream);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleMediaState = (type: string) => {
@@ -261,7 +263,17 @@ const StyledPreview = ({
         {/* helloDiv */}
         <div className={combinedClasses?.helloDiv}>Hello, {name}</div>
         {/* joinButton */}
-        <div
+        <Button
+          variant={'emphasized'}
+          size={'lg'}
+          onClick={() => {
+            closeMediaStream(mediaStream);
+            joinOnClick({ audioMuted, videoMuted });
+          }}
+        >
+          Join{' '}
+        </Button>
+        {/* <div
           className={combinedClasses?.joinButton}
           onClick={() => {
             closeMediaStream(mediaStream);
@@ -269,9 +281,19 @@ const StyledPreview = ({
           }}
         >
           Join
-        </div>
+        </div> */}
         {/* goBackButton */}
-        <div
+        <Button
+          variant={'no-fill'}
+          size={'lg'}
+          onClick={() => {
+            closeMediaStream(mediaStream);
+            goBackOnClick();
+          }}
+        >
+          Go back{' '}
+        </Button>
+        {/* <div
           className={combinedClasses?.goBackButton}
           onClick={() => {
             closeMediaStream(mediaStream);
@@ -279,7 +301,7 @@ const StyledPreview = ({
           }}
         >
           Go back
-        </div>
+        </div> */}
       </div>
     </div>
   );

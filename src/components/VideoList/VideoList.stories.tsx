@@ -5,7 +5,7 @@ import { VideoList, VideoListProps } from '.';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
 import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
 import { VideoTileControls } from '../VideoTile/Controls';
-import { MicOffIcon, MicOnIcon } from '../../icons';
+import { MicOffIcon, MicOnIcon } from '../Icons';
 import { loadStreams } from '../../storybook/utils';
 import { getUserMedia } from '../../utils/preview';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
@@ -249,7 +249,7 @@ const streams = [
 export const DefaultList = Template.bind({});
 DefaultList.args = {
   //Figure out how to initiate empty tracks to remote the typeerror
-  //@ts-ignore
+  //@ts-expect-error
   streams: streams,
   maxTileCount: 3,
   height: '98vh',
@@ -262,7 +262,7 @@ DefaultList.args = {
 
 export const CenterStage = Template.bind({});
 CenterStage.args = {
-  //@ts-ignore
+  //@ts-expect-error
   streams: streams,
   maxTileCount: 2,
   overflow: 'hidden',
@@ -277,7 +277,7 @@ CenterStage.args = {
 
 export const Campfire = Template.bind({});
 Campfire.args = {
-  //@ts-ignore
+  //@ts-expect-error
   streams: streams,
   maxTileCount: 5,
   showAudioLevel: false,
@@ -295,7 +295,7 @@ Campfire.args = {
 export const SideBar = Template.bind({});
 SideBar.args = {
   //TODO use decorator to constuct correct div
-  //@ts-ignore
+  //@ts-expect-error
   streams: streams.slice(0, 4),
   showAudioLevel: false,
   classes: {
@@ -344,9 +344,6 @@ const GoogleMeetControls = ({
         showAudioLevel={showAudioLevel}
         audioLevelDisplayType="inline-wave"
         audioLevel={audioLevel}
-        classes={{
-          labelContainer: 'flex justify-around items-center w-min',
-        }}
       />
       ;
     </>
@@ -453,7 +450,7 @@ const MeetTemplate: Story<VideoListStoryProps> = (
 
 export const GoogleMeet = MeetTemplate.bind({});
 GoogleMeet.args = {
-  //@ts-ignore
+  //@ts-expect-error
   streams: streams,
   maxTileCount: 6,
   overflow: 'hidden',

@@ -117,15 +117,11 @@ export const StyledVideo = ({
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
   useEffect(() => {
     if (videoRef && videoRef.current && videoTrack) {
       videoRef.current.srcObject = new MediaStream([videoTrack]);
     }
-    if (audioRef && audioRef.current && audioTrack && !isLocal) {
-      audioRef.current.srcObject = new MediaStream([audioTrack]);
-    }
-  }, [audioRef, videoRef, videoTrack, audioTrack, isLocal]);
+  }, [videoRef, videoTrack, audioTrack, isLocal]);
 
   return (
     <>
@@ -145,7 +141,6 @@ export const StyledVideo = ({
           ${objectFit === 'cover' ? combinedClasses?.videoCover : ''}
         `}
       ></video>
-      <audio className={'hidden'} autoPlay playsInline ref={audioRef}></audio>
       {showAudioLevel && audioLevelDisplayType === 'border' && (
         <AudioLevelIndicator
           type={'border'}

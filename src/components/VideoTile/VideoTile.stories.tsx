@@ -5,7 +5,7 @@ import VideoTileDocs from './VideoTile.mdx';
 import { getVideoTileLabel } from '../../utils';
 import { loadStream } from '../../storybook/utils';
 import { VideoTileControls } from './Controls';
-import { MicOffIcon, MicOnIcon } from '../../icons';
+import { MicOffIcon, MicOnIcon } from '../Icons';
 
 declare global {
   interface HTMLVideoElement {
@@ -195,9 +195,6 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                   showAudioLevel={args.showAudioLevel}
                   audioLevelDisplayType="inline-wave"
                   audioLevel={args.audioLevel}
-                  classes={{
-                    labelContainer: 'flex justify-around items-center w-min',
-                  }}
                 />
               </>
             }

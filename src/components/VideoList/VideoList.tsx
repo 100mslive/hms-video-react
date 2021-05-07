@@ -13,7 +13,7 @@ import {
   DownCaratIcon,
   UpCaratIcon,
   DotIcon,
-} from '../../icons';
+} from '../Icons';
 import { createPortal } from 'react-dom';
 import { CustomArrowProps } from 'react-slick';
 import { useResizeDetector } from 'react-resize-detector';
@@ -144,7 +144,7 @@ export function SliderRightArrow({ container, ...props }: IArrowProps) {
   const { style, onClick } = props;
   const RightArrow = (
     <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <button className="text-sm text-brand-main focus:outline-none">
+      <button className="text-sm text-white focus:outline-none">
         <RightCaratIcon />
       </button>
     </div>
@@ -160,7 +160,8 @@ interface IDots {
 const HorizontalDots = ({ container, index }: IDots) =>
   container ? (
     createPortal(
-      <a className="inline-block">
+    //eslint-disable-next-line jsx-a11y/anchor-is-valid
+    <a className="inline-block">
         <DotIcon />
       </a>,
       container,
@@ -169,6 +170,7 @@ const HorizontalDots = ({ container, index }: IDots) =>
     <DotIcon />
   );
 
+//TODO replace with button
 function SliderDownArrow(props: CustomArrowProps) {
   const { style, onClick } = props;
   return (
@@ -184,6 +186,7 @@ function SliderDownArrow(props: CustomArrowProps) {
   );
 }
 
+//TODO replace with button
 function SliderUpArrow(props: CustomArrowProps) {
   const { style, onClick } = props;
   return (
@@ -203,7 +206,7 @@ function SliderLeftArrow({ container, ...props }: IArrowProps) {
   const { style, onClick } = props;
   const LeftArrow = (
     <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <button className="text-sm rounded-sm focus:outline-none">
+      <button className="text-sm rounded-sm focus:outline-none text-white">
         <LeftCaratIcon />
       </button>
     </div>
@@ -283,15 +286,16 @@ export const StyledVideoList = ({
     aspectRatio,
     onlyOnePage: overflow === 'hidden',
   });
-  console.log(
-    `HMSui-component: [VideoList] Chunked Streams are 
-    }`,
-    chunkedStreams,
-  );
+  // console.log(
+  //   `HMSui-component: [VideoList] Chunked Streams are 
+  //   }`,
+  //   chunkedStreams,
+  // );
 
   return (
     <div className={`${combinedClasses?.root}`} ref={ref}>
-      <Slider {...settings} className={`${combinedClasses?.sliderRoot}`}>
+      {chunkedStreams && chunkedStreams.length>0 && 
+      (<Slider {...settings} className={`${combinedClasses?.sliderRoot}`}>
         {chunkedStreams.map((streams, page) => {
           return (
             <div className={`${combinedClasses?.sliderInner}`} key={page}>
@@ -343,7 +347,7 @@ export const StyledVideoList = ({
             </div>
           );
         })}
-      </Slider>
+      </Slider>)}
 
       <div className="absolute bottom-0 w-full flex justify-center">
         <div ref={leftNavContainer} />

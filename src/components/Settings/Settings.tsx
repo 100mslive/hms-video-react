@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { SettingsIcon } from '../../icons';
-import { CloseButton } from '../MediaIcons';
+import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
+import { Button } from '../Button';
+
 export interface SettingsClasses {
   root?: string;
   iconContainer?: string;
@@ -34,7 +35,7 @@ const defaultClasses: SettingsClasses = {
   iconContainer: 'focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg',
   dialogRoot: 'rounded-lg',
   dialogContainer:
-    'dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid',
+    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid',
   dialogInner: 'text-2xl mb-3 p-2 border-b-2 flex justify-between',
   titleContainer: 'flex items-center',
   titleIcon: 'pr-4',
@@ -109,12 +110,9 @@ const StyledSettings = ({
 
   return (
     <>
-      <button
-        onClick={handleClickOpen}
-        className={`${combinedClasses?.iconContainer}`}
-      >
+      <Button onClick={handleClickOpen} variant={'icon-only'}>
         <SettingsIcon />
-      </button>
+      </Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -127,12 +125,15 @@ const StyledSettings = ({
           <div className={`${combinedClasses?.dialogInner}`}>
             <span className={`${combinedClasses?.titleContainer}`}>
               <span className={`${combinedClasses?.titleIcon}`}>
-                <SettingsIcon className="w-2 h-2" />
+                <SettingsIcon className="w-7 h-7" />
               </span>
               <span className={`${combinedClasses?.titleText}`}>Settings</span>
             </span>
             <span>
-              <CloseButton clickHandler={handleClose} />
+              <Button variant={'icon-only'} onClick={handleClose}>
+                {' '}
+                <CloseIcon />{' '}
+              </Button>
             </span>
           </div>
 
