@@ -107,7 +107,6 @@ const StyledJoin = ({
             </select>
           </div>
           <div className={combinedClasses?.joinRoot}>
-            {/* @ts-ignore */}
             <Button
               variant={'emphasized'}
               onClick={() => submitOnClick({ username, roomId, role })}

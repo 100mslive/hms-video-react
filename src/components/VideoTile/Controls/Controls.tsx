@@ -4,14 +4,14 @@ import { AudioLevelIndicator } from '../../AudioLevelIndicators/index';
 import '../index.css';
 import { combineClasses } from '../../../utils';
 import { withClasses } from '../../../utils/styles';
-import { MicOffIcon } from '../../../icons';
+import { MicOffIcon, MicOnIcon } from '../../../icons';
 import { Button } from '../../Button';
 
 export interface VideoTileControlsClasses {
   root?: string;
-  labelContainer?: string;
+  controlsInner?: string;
   controls?: string;
-  rootGradient?: string;
+  gradient?: string;
   controlsStatus?: string;
   hoverHide?: string;
   label?: string;
@@ -31,14 +31,13 @@ interface StyledVideoTileControlsProps {
 
 //TODO group hover is not working
 const defaultClasses: VideoTileControlsClasses = {
-  root:
-    'absolute bottom-0 w-full pb-2 text-white px-2 text-center rounded-lg z-20',
-  labelContainer: 'transition-all inline-block',
-  controls:
-    'bottom-controls max-h-0 transition-all invisible text-center mt-1 group-hover:visible group-hover:max-h-125',
-  rootGradient: 'bg-gradient-to-t from-transparent-100 to-transparent-500',
+  root: 'absolute bottom-0 w-full z-20 rounded-none h-24 overflow-hidden',
+  controlsInner:
+    'absolute bottom-0 w-full h-full z-20 pb-2 text-white px-2 text-center flex flex-col justify-end items-center',
+  controls: 'invisible max-h-0 transition-all text-center mt-1',
+  gradient:
+    'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
   controlsStatus: 'transition-all opacity-1 mx-1',
-  hoverHide: 'group-hover:opacity-0',
   label: 'mt-1 mx-1',
 };
 
@@ -56,82 +55,36 @@ export const StyledVideoTileControls = ({
 }: StyledVideoTileControlsProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
-
-  //Map [showAudioMuteStatus, showAudioLevel, isAudioMuted] to audio status - actual element to render.
-  const audioStatusMap = new Map<string, React.ReactNode>([
-    [
-      [true, true, true].toString(),
-      //@ts-ignore
-      <Button
-        variant={'icon-only'}
-        active={isAudioMuted}
-        size={'md'}
-        classes={{ root: 'to-be-overridden' }}
-      >
-        {isAudioMuted && <MicOffIcon />}
-      </Button>,
-      // <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
-    ],
-    [
-      [true, false, true].toString(),
-      //@ts-ignore
-      <Button
-        variant={'icon-only'}
-        active={isAudioMuted}
-        size={'md'}
-        classes={{ root: 'to-be-overridden' }}
-      >
-        {isAudioMuted && <MicOffIcon />}
-      </Button>,
-      // <AudioMuteIndicator isAudioMuted={isAudioMuted} />,
-    ],
-    [
-      [true, true, false].toString(),
-      <AudioLevelIndicator
-        type={audioLevelDisplayType}
-        level={audioLevel as number}
-      />,
-    ],
-    [
-      [false, true, false].toString(),
-      <AudioLevelIndicator
-        type={audioLevelDisplayType}
-        level={audioLevel as number}
-      />,
-    ],
-  ]);
-
+  
   return (
-    <div
-      className={`${combinedClasses?.root} ${
-        showGradient ? combinedClasses?.rootGradient : ''
-      }`}
-    >
-      <div className={`${combinedClasses?.labelContainer}`}>
-        <div
-          className={` ${allowRemoteMute ? combinedClasses?.hoverHide : ''}`}
-        >
-          {audioStatusMap.get(
-            [showAudioMuteStatus, showAudioLevel, isAudioMuted].toString(),
+    <div className={`${combinedClasses?.root}`}>
+      <div className={`${showGradient ? combinedClasses?.gradient : ''}`} />
+      <div className={`${combinedClasses?.controlsInner}`}>
+        <div className="flex justify-center">
+          {showAudioMuteStatus && isAudioMuted && !allowRemoteMute && (
+            <MicOffIcon />
+          )}
+          {isAudioMuted && allowRemoteMute && (
+            <Button
+              variant={'icon-only'}
+              active={true}
+              size={'md'}
+              shape="circle"
+              classes={{ root: 'to-be-overridden' }}
+            >
+              <MicOffIcon />
+            </Button>
           )}
         </div>
         <div className={`${combinedClasses?.label}`}>{label}</div>
-      </div>
-      {allowRemoteMute && (
         <div className={`${combinedClasses?.controls}`}>
-          {/* @ts-ignore */}
-          <Button
-            variant={'icon-only'}
-            active={isAudioMuted}
-            size={'md'}
-            classes={{ root: 'to-be-overridden' }}
-          >
-            {isAudioMuted && <MicOffIcon />}
-          </Button>
-
-          {/* <AudioMuteButton isAudioMuted={isAudioMuted} /> */}
+          {!isAudioMuted && allowRemoteMute && (
+            <Button variant={'icon-only'} size={'md'}>
+              <MicOffIcon />
+            </Button>
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 };

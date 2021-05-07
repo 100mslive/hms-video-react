@@ -31,9 +31,9 @@ export const HMSRoomProvider: React.FC = props => {
     HMSRoomProps['dominantSpeaker']
   >(null);
 
-  useEffect(()=>{
+  useEffect(() => {
     initAudioSink();
-  },[])
+  }, []);
 
   useEffect(() => {
     if (audioMuted) {

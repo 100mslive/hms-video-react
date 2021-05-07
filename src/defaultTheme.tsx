@@ -31,6 +31,7 @@ export const theme: { theme: ThemeConfiguration } = {
           600: '#F2F2F2',
         },
         transparent: {
+          0: 'rgba(0,0,0,0)',
           100: 'rgba(0, 0, 0, 0.37)',
           200: 'rgba(196,196,196, 0.21) ',
           300: 'rgba(255, 255, 255, 0.25)',

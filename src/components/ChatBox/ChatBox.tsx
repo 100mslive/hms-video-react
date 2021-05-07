@@ -142,7 +142,6 @@ export const StyledChatBox = ({
             </div>
             <div>
               {/* headerCloseButton */}
-              {/* @ts-ignore */}
               <Button
                 variant={'no-fill'}
                 size={'md'}
@@ -243,7 +242,6 @@ export const StyledChatBox = ({
             }}
           />
           {/* sendButton */}
-          {/* @ts-ignore */}
           <Button
             variant={'no-fill'}
             size={'md'}

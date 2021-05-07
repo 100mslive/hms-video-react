@@ -10,7 +10,7 @@ import {
   HMSTrackUpdate,
 } from '@100mslive/100ms-web-sdk';
 import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
-import {addAudioTrack, removeAudioTrack} from './audioManager'
+import { addAudioTrack, removeAudioTrack } from './audioManager';
 
 const createListener = (
   sdk: HMSSdk,
@@ -63,9 +63,15 @@ const createListener = (
         { peers },
       );
       //@ts-expect-error
-      type===HMSTrackUpdate.TRACK_ADDED && track.type===HMSTrackType.AUDIO && !peer.isLocal && addAudioTrack({track:track.nativeTrack});
+      type === HMSTrackUpdate.TRACK_ADDED &&
+        track.type === HMSTrackType.AUDIO &&
+        !peer.isLocal &&
+        addAudioTrack({ track: track.nativeTrack });
       //@ts-expect-error
-      type===HMSTrackUpdate.TRACK_REMOVED && track.type===HMSTrackType.AUDIO && !peer.isLocal && removeAudioTrack({track:track.nativeTrack});
+      type === HMSTrackUpdate.TRACK_REMOVED &&
+        track.type === HMSTrackType.AUDIO &&
+        !peer.isLocal &&
+        removeAudioTrack({ track: track.nativeTrack });
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
       incomingListener.onTrackUpdate(type, track, peer);

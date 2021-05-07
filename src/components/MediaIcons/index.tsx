@@ -17,12 +17,8 @@ import {
 } from '../../icons';
 
 export const LogoButton = () => {
-  //TODO check this code
-  let logo;
-  try {
-    const { appBuilder } = useHMSTheme();
-    logo = appBuilder.logo;
-  } catch (e) {}
+  const { appBuilder } = useHMSTheme();
+  const logo = appBuilder?.logo;
   return (
     <button className=" p-2 focus:outline-none">
       {logo ? (

@@ -6,9 +6,6 @@ import InlineWave from './InlineWave';
 import { AudioLevelBorder } from './Border';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-//@ts-ignore
-import { create } from 'twind';
-
 export interface AudioLevelIndicatorClasses {
   /**
    * Style attached to avatar

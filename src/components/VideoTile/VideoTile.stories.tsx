@@ -195,9 +195,6 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                   showAudioLevel={args.showAudioLevel}
                   audioLevelDisplayType="inline-wave"
                   audioLevel={args.audioLevel}
-                  classes={{
-                    labelContainer: 'flex justify-around items-center w-min',
-                  }}
                 />
               </>
             }

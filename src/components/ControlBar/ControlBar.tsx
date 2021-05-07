@@ -74,17 +74,14 @@ export const StyledControlBar = ({
     <Button
       variant={'icon-only'}
       shape={buttonDisplay}
-      //@ts-ignore
       onClick={screenshareButtonOnClick}
       key={1}
     >
       <ShareScreenIcon />
     </Button>,
-    //@ts-ignore
     <Button
       variant={'icon-only'}
       shape={buttonDisplay}
-      //@ts-ignore
       onClick={chatButtonOnClick}
       active={isChatOpen}
       key={2}
@@ -93,25 +90,19 @@ export const StyledControlBar = ({
     </Button>,
   ],
   centerComponents = [
-    //@ts-ignore
     <Button
       variant={'icon-only'}
       shape={buttonDisplay}
       active={isVideoMuted}
-      //@ts-ignore
       onClick={videoButtonOnClick}
-      classes={{ root: 'to-be-overridden' }}
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
     </Button>,
-    //@ts-ignore
     <Button
       variant={'icon-only'}
       shape={buttonDisplay}
       active={isAudioMuted}
-      //@ts-ignore
       onClick={audioButtonOnClick}
-      classes={{ root: 'to-be-overridden' }}
     >
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </Button>,
@@ -120,12 +111,10 @@ export const StyledControlBar = ({
     <Button
       shape={buttonDisplay}
       variant={'danger'}
-      //@ts-ignore
       onClick={leaveButtonOnClick}
     >
       <HangUpIcon className="mr-2" />
       Leave room
-      {/* @ts-ignore */}
     </Button>,
   ],
   defaultClasses,

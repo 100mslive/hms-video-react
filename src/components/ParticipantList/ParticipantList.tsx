@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 // import { MuteListButton, SpotlightListButton } from '../MediaIcons';
 import {
   DownCaratIcon,
@@ -14,6 +14,7 @@ import Popover from '@material-ui/core/Popover';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../Button';
+import {groupBy} from 'lodash';
 
 export interface ParticipantListClasses {
   root?: string;
@@ -56,6 +57,8 @@ const defaultClasses: ParticipantListClasses = {
   menuIconContainer: 'flex flex-grow justify-end absolute space-x-1',
 };
 
+type RoleMap = Map<string, Participant[]>;
+
 export const StyledParticipantList = ({
   participantList,
   defaultClasses,
@@ -64,19 +67,19 @@ export const StyledParticipantList = ({
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [rolesMap, setRolesMap] = useState<RoleMap | {}>({});
+  const [roles, setRoles] = useState<keyof RoleMap[] | []>([]);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
-  const roles = new Map<string, Participant[]>();
-  participantList.forEach(participant => {
-    let role = participant.peer.role || 'Audience';
-    let list = roles.get(role) || [];
-    list.push(participant);
-    roles.set(role, list);
-  });
+  useEffect(()=>{
+    const map = groupBy(participantList, participant => participant.peer.role);
+    setRolesMap(map);
+    setRoles(Object.keys(map) as unknown as keyof RoleMap[]);
+  },[participantList])
 
   return (
     <div className={`${combinedClasses?.root}`}>
@@ -93,9 +96,9 @@ export const StyledParticipantList = ({
           {participantList.length} in room
           <span className={`${combinedClasses?.buttonText}`}>
             {open ? (
-              <UpCaratIcon className="w-4 h-4" />
+              <UpCaratIcon className="w-3 h-3" />
             ) : (
-              <DownCaratIcon className="w-4 h-4 " />
+              <DownCaratIcon className="w-3 h-3 " />
             )}
           </span>
         </div>
@@ -114,75 +117,76 @@ export const StyledParticipantList = ({
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          {Array.from(roles.keys()).map((role, index) => {
-            let list = roles.get(role) || [];
-            return (
+          {/* @ts-expect-error */}
+          {roles && roles.map((role, index) => (
               <div key={index}>
-                <div role="none" key={role}>
-                  <a
+                <div>
+                  <span
                     className={`${combinedClasses?.menuSection}`}
                     role="menuitem"
-                    tabIndex={-1}
-                  >
-                    {role} ({roles.get(role)?.length})
-                  </a>
-                </div>
-                <div role="none">
-                  {list.map((participant, index) => (
-                    <a
-                      className={`${combinedClasses?.menuItem}`}
-                      role="menuitem"
-                      key={index}
                     >
-                      <AvatarList label={participant.peer.displayName} />
-                      <div className={`${combinedClasses?.menuItem}`}>
-                        {participant.peer.displayName}
-                      </div>
-                      <div className={`${combinedClasses?.menuIconContainer}`}>
-                        {/* @ts-ignore */}
-                        <Button
-                          variant={'icon-only'}
-                          shape={'circle'}
-                          size={'sm'}
-                          classes={{
-                            iconOnlySm: 'opacity-0 hover:opacity-100',
-                            root: 'to-be-overridden',
-                          }}
-                          active={participant.isAudioMuted}
-                        >
-                          {participant.isAudioMuted ? (
-                            <MicOffIcon />
-                          ) : (
-                            <MicOnIcon />
-                          )}
-                        </Button>
-                        {/* <MuteListButton isMuteOn={participant.isAudioMuted} /> */}
-                        {/* @ts-ignore */}
-                        <Button
-                          variant={'icon-only'}
-                          shape={'circle'}
-                          size={'sm'}
-                          classes={{
-                            iconOnlySm: 'opacity-0 hover:opacity-100',
-                          }}
-                          active={participant.isStarMarked}
-                        >
-                          {participant.isStarMarked ? (
-                            <StarIcon />
-                          ) : (
-                            <StarFillIcon />
-                          )}
-                        </Button>
-                        {/* <SpotlightListButton
-                          isSpotlightOn={participant.isStarMarked}
-                        /> */}
-                      </div>
-                    </a>
-                  ))}
-                </div>
+                    {/* @ts-expect-error */}
+                    {role} {rolesMap[role].length}
+                  </span>
+                 </div>
+                <div>
+                  {/* @ts-expect-error */}
+                {rolesMap[role] && rolesMap[role].map(
+                  // @ts-expect-error
+                  (participant, index) => (
+                  <a
+                    className={`${combinedClasses?.menuItem}`}
+                    role="menuitem"
+                    key={index}
+                  >
+                    <AvatarList label={participant.peer.displayName} />
+                    <div className={`${combinedClasses?.menuItem}`}>
+                      {participant.peer.displayName}
+                    </div>
+                    <div className={`${combinedClasses?.menuIconContainer}`}>
+                      <Button
+                        variant={'icon-only'}
+                        shape={'circle'}
+                        size={'sm'}
+                        classes={{
+                          iconOnlySm: 'opacity-0 hover:opacity-100',
+                          root: 'to-be-overridden',
+                        }}
+                        active={participant.isAudioMuted}
+                      >
+                        {participant.isAudioMuted ? (
+                          <MicOffIcon />
+                        ) : (
+                          <MicOnIcon />
+                        )}
+                      </Button>
+                      {/* <MuteListButton isMuteOn={participant.isAudioMuted} /> */}
+                      <Button
+                        variant={'icon-only'}
+                        shape={'circle'}
+                        size={'sm'}
+                        classes={{
+                          iconOnlySm: 'opacity-0 hover:opacity-100',
+                        }}
+                        active={participant.isStarMarked}
+                      >
+                        {participant.isStarMarked ? (
+                          <StarIcon />
+                        ) : (
+                          <StarFillIcon />
+                        )}
+                      </Button>
+                      {/* <SpotlightListButton
+                        isSpotlightOn={participant.isStarMarked}
+                      /> */}
+                    </div>
+                  </a>
+                ))}
               </div>
-            );
-          })}
+            </div>
+        )
+
+          )}
         </div>
       </Popover>
     </div>

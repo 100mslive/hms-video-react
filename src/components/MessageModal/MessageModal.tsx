@@ -93,7 +93,6 @@ export const StyledMessageModal = ({
                 <div className={combinedClasses?.header}>
                   <div className={combinedClasses?.title}>{title}</div>
                   <div className={combinedClasses?.closeRoot}>
-                    {/* @ts-ignore */}
                     <Button
                       variant={'no-fill'}
                       onClick={() => {
