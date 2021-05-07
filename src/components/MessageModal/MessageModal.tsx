@@ -4,6 +4,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
+import { Button } from '../Button';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -92,16 +93,15 @@ export const StyledMessageModal = ({
                 <div className={combinedClasses?.header}>
                   <div className={combinedClasses?.title}>{title}</div>
                   <div className={combinedClasses?.closeRoot}>
-                    <button
-                      type="button"
-                      className={combinedClasses?.closeButton}
+                    <Button
+                      variant={'no-fill'}
                       onClick={() => {
                         setShow(false);
                         !allow && gobackOnClick();
                       }}
                     >
                       <CloseIcon />
-                    </button>
+                    </Button>
                   </div>
                 </div>
                 <div className={combinedClasses?.message}>

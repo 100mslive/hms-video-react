@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import { combineClasses } from '../../utils';
 import { withClasses } from '../../utils/styles';
-import './Button.css'
+import './Button.css';
 // TODO add a way to send styles
 interface StyledButtonProps {
   /**
@@ -27,7 +27,7 @@ interface StyledButtonProps {
   /**
    * Method to call on click
    */
-  onClick?: () => any;
+  onClick?: MouseEventHandler;
   /**
    * Default class names
    */
@@ -36,6 +36,10 @@ interface StyledButtonProps {
    * Extra class names
    */
   classes?: ButtonClasses;
+  /**
+   *
+   */
+  children?: (JSX.Element | string)[] | JSX.Element | string | boolean | number;
 }
 
 export interface ButtonClasses {
@@ -65,10 +69,14 @@ const defaultClasses = {
     'box-border focus:outline-none focus:border-brand-tint overflow-hidden flex flex-row items-center overflow-hidden rounded-lg',
   rootStandard:
     'text-gray-100 dark:text-white bg-gray-600 dark:bg-gray-200 hover:gray-500 dark:hovergray-300 focus:gray-600  dark:focus:gray-200',
-  rootDanger: 'text-gray-100 dark:text-white bg-red-main hover:bg-red-tint text-white',
-  rootEmphasized: 'text-gray-100 dark:text-white bg-blue-main hover:bg-brand-tint text-white',
-  rootNoFill: 'light:text-blue-main light:hover:text-brand-tint dark:text-white',
-  rootIconOnly: 'text-gray-100 dark:text-white hover:bg-transparent-300 focus:bg-none',
+  rootDanger:
+    'text-gray-100 dark:text-white bg-red-main hover:bg-red-tint text-white',
+  rootEmphasized:
+    'text-gray-100 dark:text-white bg-brand-main hover:bg-brand-tint text-white',
+  rootNoFill:
+    'light:text-brand-main light:hover:text-brand-tint dark:text-white',
+  rootIconOnly:
+    'text-gray-100 dark:text-white hover:bg-transparent-300 focus:bg-none',
   iconOnlyActive: 'bg-gray-200 text-white dark:bg-white dark:text-black',
   rootDisabled:
     'text-transaprent-700 bg-transparent-800 dark:text-transparent-300 dark:bg-transparent-200',
@@ -76,13 +84,14 @@ const defaultClasses = {
   iconOnlySm: 'px-0.5 py-0.5',
   iconOnlyMd: 'px-1.5 py-1.5',
   iconOnlyLg: 'px-2 py-2',
-  rootSm: 'px-2 py-0.5 focus:border-2 text-sm',
-  rootMd: 'px-3.5 py-1 focus:border-2 text-md',
-  rootLg: 'px-5 py-2.5 focus:border-3 text-lg',
+  // TODO add back focus for keyboard users
+  rootSm: 'px-2 py-0.5 text-sm',
+  rootMd: 'px-3.5 py-1 text-md',
+  rootLg: 'px-5 py-2.5 text-lg',
   rootCircle: 'rounded-full',
 };
 
-export const StyledButton: React.FC<StyledButtonProps> = ({
+export const StyledButton = ({
   variant = 'standard',
   size = 'lg',
   shape = 'rectangle',
@@ -92,7 +101,7 @@ export const StyledButton: React.FC<StyledButtonProps> = ({
   defaultClasses,
   classes: extraClasses,
   children,
-}) => {
+}: StyledButtonProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
 
@@ -121,7 +130,7 @@ export const StyledButton: React.FC<StyledButtonProps> = ({
                                     : ''
                                 }                                                            
                                 ${
-                                  (variant === 'icon-only' && !active)
+                                  variant === 'icon-only' && !active
                                     ? `${combinedClasses?.rootIconOnly}`
                                     : ''
                                 }                                                            
@@ -188,7 +197,6 @@ export const StyledButton: React.FC<StyledButtonProps> = ({
   );
 };
 
-//@ts-ignore
 export type ButtonProps = Omit<StyledButtonProps, 'defaultClasses'>;
 
 export const Button = withClasses<ButtonClasses | undefined>(
