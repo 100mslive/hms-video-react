@@ -1,7 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import Text from './index';
-import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
+import { Text, TextProps } from './index';
 
 const meta: Meta = {
   title: 'Typography',
@@ -10,10 +9,10 @@ const meta: Meta = {
 
 export default meta;
 
-const Basic: Story = args => {
+const Basic: Story<TextProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Text {...args}>Leave room</Text>
+      <Text {...args}>Hello World</Text>
     </div>
   );
 };

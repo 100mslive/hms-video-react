@@ -31,8 +31,6 @@ interface StyledTextProps {
   tag?: TextTags;
 }
 
-export interface TextClasses {}
-
 const defaultClasses = {
   heading: {
     lg: 'text-5xl font-semibold leading-7',
@@ -44,7 +42,7 @@ const defaultClasses = {
     md: 'text-sm leading-4',
     sm: 'text-xs leading-3',
   },
-  button: 'text-3xl font-semibold leading-6',
+  button: 'text-lg font-semibold leading-6',
 };
 
 type NativeAttrs = Omit<
@@ -53,7 +51,7 @@ type NativeAttrs = Omit<
 >;
 export type TextProps = StyledTextProps & NativeAttrs;
 
-const Text: React.FC<PropsWithChildren<TextProps>> = ({
+export const Text: React.FC<PropsWithChildren<TextProps>> = ({
   tag,
   variant,
   size,
@@ -79,5 +77,3 @@ const Text: React.FC<PropsWithChildren<TextProps>> = ({
     </TagName>
   );
 };
-
-export default Text;
