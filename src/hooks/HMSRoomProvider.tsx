@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 import { initAudioSink } from './helpers/audioManager';
-import HMSLogger from '../utils/logger';
+import HMSLogger from '../utils/ui-logger';
 
 const sdk = new HMSSdk();
 

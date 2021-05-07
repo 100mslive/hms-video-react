@@ -1,6 +1,6 @@
 import React from 'react';
 import { CamOffIcon } from '../components/Icons';
-import HMSLogger from './logger';
+import HMSLogger from './ui-logger';
 
 const NotAllowedMessage = () => {
   return (

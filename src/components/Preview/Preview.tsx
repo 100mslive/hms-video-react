@@ -8,7 +8,7 @@ import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../Button';
-import HMSLogger from '../../utils/logger';
+import HMSLogger from '../../utils/ui-logger';
 
 interface MuteStatus {
   audioMuted?: boolean;

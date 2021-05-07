@@ -11,7 +11,7 @@ import {
 } from '@100mslive/100ms-web-sdk';
 import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import { addAudioTrack, removeAudioTrack } from './audioManager';
-import HMSLogger from '../../utils/logger';
+import HMSLogger from '../../utils/ui-logger';
 
 const createListener = (
   sdk: HMSSdk,
