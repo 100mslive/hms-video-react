@@ -28,7 +28,7 @@ const tempUrl = `https://vercel.com/api/www/avatar/?u=evilrabbit&s=180`;
 const Basic: Story<AvatarProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Avatar image={tempUrl} icon={<TempIcon />} {...args} />
+      <Avatar label="Deepankar Bhade" {...args} />
     </div>
   );
 };

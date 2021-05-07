@@ -1,4 +1,5 @@
 import React, { PropsWithChildren } from 'react';
+import { getInitialsFromName } from '../../utils';
 
 interface StyledAvatarProps {
   /**
@@ -39,6 +40,9 @@ const defaultClasses = {
     circle: 'rounded-full',
     square: 'rounded-lg',
   },
+  type: {
+    initial: 'flex text-center items-center justify-center',
+  },
 };
 
 export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
@@ -57,16 +61,33 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     const tempShape = shape || 'circle';
     return `${defaultClasses['size'][tempSize]} ${defaultClasses['shape'][tempShape]}`;
   };
+  const tempDisplay = image || getInitialsFromName(label);
   const defaultClassNames = `${resolveClasses(
     size,
     shape,
   )} inline object-cover`;
   return (
-    <img
-      {...props}
-      className={defaultClassNames}
-      src={image}
-      alt="Profile image"
-    />
+    <>
+      {image ? (
+        <img
+          {...props}
+          className={defaultClassNames}
+          src={image}
+          alt="Profile image"
+        />
+      ) : (
+        <div
+          {...props}
+          className={`${defaultClassNames} ${defaultClasses['type']['initial']}`}
+          style={{
+            backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(
+              16,
+            )}`,
+          }}
+        >
+          {tempDisplay}
+        </div>
+      )}
+    </>
   );
 };
