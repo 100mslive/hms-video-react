@@ -28,10 +28,21 @@ const tempUrl = `https://vercel.com/api/www/avatar/?u=evilrabbit&s=180`;
 const Basic: Story<AvatarProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Avatar label="Deepankar Bhade" {...args} />
+      <Avatar image={tempUrl} {...args} />
+    </div>
+  );
+};
+
+const LabelAvatar: Story<AvatarProps> = args => {
+  return (
+    <div className="w-full h-1/2 flex justify-center bg-white py-4">
+      <Avatar label="Hello World" {...args} />
     </div>
   );
 };
 
 export const Default = Basic.bind({});
+Basic.args = {};
+
+export const LabelledAvatar = LabelAvatar.bind({});
 Basic.args = {};
