@@ -17,6 +17,10 @@ interface StyledAvatarProps {
    * Name/Label of the person. Initials are used if no image/icon is present
    */
   label?: string;
+  /**
+   * Size of the Avatar
+   */
+  size?: 'sm' | 'md' | 'lg';
 }
 
 type NativeAttrs = Omit<
@@ -25,11 +29,43 @@ type NativeAttrs = Omit<
 >;
 export type AvatarProps = StyledAvatarProps & NativeAttrs;
 
-export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = () => {
+const defaultClasses = {
+  size: {
+    sm: 'w-8 h-8 ',
+    md: 'w-12 h-12',
+    lg: 'w-16 h-16',
+  },
+  shape: {
+    circle: 'rounded-full',
+    square: 'rounded-lg',
+  },
+};
+
+export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
+  size,
+  label,
+  icon,
+  image,
+  shape,
+  ...props
+}) => {
+  const resolveClasses = (
+    size: StyledAvatarProps['size'],
+    shape: StyledAvatarProps['shape'],
+  ) => {
+    const tempSize = size || 'sm';
+    const tempShape = shape || 'circle';
+    return `${defaultClasses['size'][tempSize]} ${defaultClasses['shape'][tempShape]}`;
+  };
+  const defaultClassNames = `${resolveClasses(
+    size,
+    shape,
+  )} inline object-cover`;
   return (
     <img
-      className="inline object-cover w-16 h-16 mr-2 rounded-full"
-      src="https://vercel.com/api/www/avatar/?u=evilrabbit&s=180"
+      {...props}
+      className={defaultClassNames}
+      src={image}
       alt="Profile image"
     />
   );
