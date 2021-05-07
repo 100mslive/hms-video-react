@@ -33,7 +33,19 @@ interface StyledTextProps {
 
 export interface TextClasses {}
 
-const defaultClasses = {};
+const defaultClasses = {
+  heading: {
+    lg: 'text-5xl font-semibold leading-7',
+    md: 'text-4xl font-medium leading-6',
+    sm: 'text-3xl font-medium leading-6',
+  },
+  body: {
+    lg: 'text-base leading-5', // default
+    md: 'text-sm leading-4',
+    sm: 'text-xs leading-3',
+  },
+  button: 'text-3xl font-semibold leading-6',
+};
 
 type NativeAttrs = Omit<
   React.DetailsHTMLAttributes<any>,
@@ -46,9 +58,26 @@ const Text: React.FC<PropsWithChildren<TextProps>> = ({
   variant,
   size,
   children,
+  ...props
 }) => {
   const TagName = tag || 'p';
-  return <TagName>{children}</TagName>;
+  const defaultClassNames = 'tracking-normal';
+  const resolveClasses = (
+    v: StyledTextProps['variant'],
+    s: StyledTextProps['size'],
+  ) => {
+    const tempVariant = v || 'body';
+    const tempSize = s || 'lg';
+    return tempVariant !== 'button'
+      ? defaultClasses[tempVariant][tempSize]
+      : defaultClasses['button'];
+  };
+  const tempClassName = `${resolveClasses(variant, size)} ${defaultClassNames}`;
+  return (
+    <TagName className={tempClassName} {...props}>
+      {children}
+    </TagName>
+  );
 };
 
 export default Text;
