@@ -144,7 +144,7 @@ export function SliderRightArrow({ container, ...props }: IArrowProps) {
   const { style, onClick } = props;
   const RightArrow = (
     <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <button className="text-sm text-brand-main focus:outline-none">
+      <button className="text-sm text-white focus:outline-none">
         <RightCaratIcon />
       </button>
     </div>
@@ -170,6 +170,7 @@ const HorizontalDots = ({ container, index }: IDots) =>
     <DotIcon />
   );
 
+//TODO replace with button
 function SliderDownArrow(props: CustomArrowProps) {
   const { style, onClick } = props;
   return (
@@ -185,6 +186,7 @@ function SliderDownArrow(props: CustomArrowProps) {
   );
 }
 
+//TODO replace with button
 function SliderUpArrow(props: CustomArrowProps) {
   const { style, onClick } = props;
   return (
@@ -204,7 +206,7 @@ function SliderLeftArrow({ container, ...props }: IArrowProps) {
   const { style, onClick } = props;
   const LeftArrow = (
     <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <button className="text-sm rounded-sm focus:outline-none">
+      <button className="text-sm rounded-sm focus:outline-none text-white">
         <LeftCaratIcon />
       </button>
     </div>
