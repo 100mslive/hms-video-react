@@ -13,7 +13,7 @@ import {
   DownCaratIcon,
   UpCaratIcon,
   DotIcon,
-} from '../../icons';
+} from '../Icons';
 import { createPortal } from 'react-dom';
 import { CustomArrowProps } from 'react-slick';
 import { useResizeDetector } from 'react-resize-detector';

@@ -7,7 +7,7 @@ import {
   MicOnIcon,
   CamOnIcon,
   CamOffIcon,
-} from '../../../icons';
+} from '../../Icons';
 import { Button } from '../../Button';
 
 export interface VideoTileControlsProps {
