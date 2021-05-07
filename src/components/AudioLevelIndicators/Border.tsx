@@ -21,20 +21,19 @@ const StyledAudioLevelBorder = ({
   //TODO this is overlapping a lot with the previous component. Combine
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const borderStyle = {
+    transition: 'box-shadow 0.4s ease-in-out',
+    boxShadow: level
+      ? `0px 0px ${0.12 * level}px ${color}, 0px 0px ${0.8 * level}px ${color}`
+      : '',
+  };
   return (
     <div
       className={`${combinedClasses?.root} ${
         displayShape === 'circle' ? combinedClasses?.videoCircle : ''
       }
         `}
-      style={
-        level
-          ? {
-              boxShadow: `0px 0px ${0.12 * level}px ${color}, 0px 0px ${0.8 *
-                level}px ${color}`,
-            }
-          : {}
-      }
+      style={borderStyle}
     ></div>
   );
 };

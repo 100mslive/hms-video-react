@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@100mslive/100ms-web-sdk@0.0.12-17":
-  "integrity" "sha512-2gOcaKkvHWtmSsbV5iQrLPXxjwGjApZ4bgelXsS2147UfE10FCComaKGM4GkuhWMVFLIkqu7gmMr1nAnjGk31w=="
-  "resolved" "https://registry.npmjs.org/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.12-17.tgz"
-  "version" "0.0.12-17"
+"@100mslive/100ms-web-sdk@0.0.12-19":
+  "integrity" "sha512-b36nbM3BJdOQhPQ7sJTEzbOkTiW2T0V8a4tpV/C7ikBUn7K0/lqrmn3aR7anEewCMwWdTCZs8XphVbkGc3KfVg=="
+  "resolved" "https://registry.npmjs.org/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.12-19.tgz"
+  "version" "0.0.12-19"
   dependencies:
     "uuid" "^8.3.2"
 
