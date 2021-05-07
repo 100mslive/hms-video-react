@@ -1,4 +1,3 @@
-import './tailwind.css';
 export { Silence } from './components/Silence';
 export { VideoTile, VideoTileProps } from './components/VideoTile/index';
 export { Avatar } from './components/Avatar/index';

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-// import { MuteListButton, SpotlightListButton } from '../MediaIcons';
 import {
   DownCaratIcon,
   UpCaratIcon,

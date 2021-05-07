@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { SettingsIcon, CloseIcon } from '../Icons';
-// import { CloseButton } from '../MediaIcons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
