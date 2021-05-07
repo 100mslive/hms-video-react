@@ -1,5 +1,5 @@
 import React from 'react';
-import { CamOffIcon } from '../icons';
+import { CamOffIcon } from '../components/Icons';
 
 const NotAllowedMessage = () => {
   return (

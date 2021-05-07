@@ -8,7 +8,7 @@ import {
   CamOnIcon,
   ChatIcon,
   ShareScreenIcon,
-} from '../../icons';
+} from '../Icons';
 import { Button } from '../Button';
 import { Settings } from '../Settings/Settings';
 import { withClasses } from '../../utils/styles';

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HangUpIcon, MicOnIcon, MicOffIcon, CloseIcon } from '../../icons';
+import { HangUpIcon, MicOnIcon, MicOffIcon, CloseIcon } from '../Icons';
 import { Meta, Story } from '@storybook/react';
 import { Button, ButtonProps } from './index';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';

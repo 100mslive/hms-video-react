@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { CloseIcon, PeopleIcon, SendIcon } from '../../icons';
+import { CloseIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Autolinker from 'autolinker';
@@ -151,7 +151,7 @@ export const StyledChatBox = ({
                   }
                 }}
               >
-                <CloseIcon className="w-1 h-1" />
+                <CloseIcon/>
               </Button>
               {/* <button
                 onClick={() => {
