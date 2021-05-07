@@ -11,6 +11,7 @@ import {
 } from '@100mslive/100ms-web-sdk';
 import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import { addAudioTrack, removeAudioTrack } from './audioManager';
+import HMSLogger from '../../utils/logger';
 
 const createListener = (
   sdk: HMSSdk,
@@ -23,7 +24,7 @@ const createListener = (
   const myListener = {
     onJoin: (room: HMSRoom) => {
       const peers = sdk.getPeers();
-      console.debug('HMSui-component: Listener [onJoin]', peers);
+      HMSLogger.d('Listener [onJoin]', peers);
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
       incomingListener.onJoin(room);
@@ -31,12 +32,9 @@ const createListener = (
 
     onPeerUpdate: (type: HMSPeerUpdate, peer: HMSPeer | null) => {
       const peers = sdk.getPeers();
-      console.debug(
-        'HMSui-component: Listener [onPeerUpdate]',
-        HMSPeerUpdate[type],
-        peer,
-        { peers },
-      );
+      HMSLogger.d('Listener [onPeerUpdate]', HMSPeerUpdate[type], peer, {
+        peers,
+      });
 
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
@@ -45,18 +43,14 @@ const createListener = (
     },
 
     onRoomUpdate: (type: HMSRoomUpdate, room: HMSRoom) => {
-      console.debug(
-        'HMSui-component: Listener [onRoomUpdate]',
-        HMSRoomUpdate[type],
-        room,
-      );
+      HMSLogger.d('Listener [onRoomUpdate]', HMSRoomUpdate[type], room);
       incomingListener.onRoomUpdate(type, room);
     },
 
     onTrackUpdate: (type: HMSTrackUpdate, track: HMSTrack, peer: HMSPeer) => {
       const peers = sdk.getPeers();
-      console.debug(
-        'HMSui-component: Listener [onTrackUpdate]',
+      HMSLogger.d(
+        'Listener [onTrackUpdate]',
         HMSTrackUpdate[type],
         track,
         peer,
@@ -65,25 +59,25 @@ const createListener = (
       type === HMSTrackUpdate.TRACK_ADDED &&
         track.type === HMSTrackType.AUDIO &&
         !peer.isLocal &&
-      //@ts-expect-error
-      addAudioTrack({ track: track.nativeTrack });
+        //@ts-expect-error
+        addAudioTrack({ track: track.nativeTrack });
       type === HMSTrackUpdate.TRACK_REMOVED &&
         track.type === HMSTrackType.AUDIO &&
         !peer.isLocal &&
-      //@ts-expect-error
-      removeAudioTrack({ track: track.nativeTrack });
+        //@ts-expect-error
+        removeAudioTrack({ track: track.nativeTrack });
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
       incomingListener.onTrackUpdate(type, track, peer);
     },
 
     onError: (exception: HMSException) => {
-      console.debug('HMSui-component: Listener [onError]', exception);
+      HMSLogger.d('Listener [onError]', exception);
       incomingListener.onError(exception);
     },
 
     onMessageReceived: (message: HMSMessage) => {
-      console.debug('HMSui-component: Listener [onMessageReceived] ', message);
+      HMSLogger.d('Listener [onMessageReceived] ', message);
       let senderPeer = sdk
         .getPeers()
         .find(peer => peer.peerId === message.sender);

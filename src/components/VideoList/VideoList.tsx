@@ -160,8 +160,8 @@ interface IDots {
 const HorizontalDots = ({ container, index }: IDots) =>
   container ? (
     createPortal(
-    //eslint-disable-next-line jsx-a11y/anchor-is-valid
-    <a className="inline-block">
+      //eslint-disable-next-line jsx-a11y/anchor-is-valid
+      <a className="inline-block">
         <DotIcon />
       </a>,
       container,
@@ -286,68 +286,64 @@ export const StyledVideoList = ({
     aspectRatio,
     onlyOnePage: overflow === 'hidden',
   });
-  // console.log(
-  //   `HMSui-component: [VideoList] Chunked Streams are 
-  //   }`,
-  //   chunkedStreams,
-  // );
 
   return (
     <div className={`${combinedClasses?.root}`} ref={ref}>
-      {chunkedStreams && chunkedStreams.length>0 && 
-      (<Slider {...settings} className={`${combinedClasses?.sliderRoot}`}>
-        {chunkedStreams.map((streams, page) => {
-          return (
-            <div className={`${combinedClasses?.sliderInner}`} key={page}>
-              <div
-                className={` ${combinedClasses?.listContainer}   flex-${
-                  maxRowCount
-                    ? 'col'
-                    : maxColCount
-                    ? 'row'
-                    : tileArrangeDirection
-                } `}
-              >
-                {streams.map((stream, index) => {
-                  return (
-                    <div
-                      style={{ height: stream.height, width: stream.width }}
-                      key={stream.peer.id}
-                      className={`${combinedClasses?.videoTileContainer}`}
-                    >
-                      <VideoTile
-                        {...stream}
-                        objectFit={objectFit}
-                        displayShape={displayShape}
-                        audioLevelDisplayType={audioLevelDisplayType}
-                        showAudioLevel={showAudioLevel}
-                        showAudioMuteStatus={showAudioMuteStatus}
-                        aspectRatio={aspectRatio}
-                        classes={{
-                          root: combinedClasses?.videoTileRoot,
-                          videoContainer: combinedClasses?.videoContainer,
-                          avatarContainer: combinedClasses?.avatarContainer,
-                          videoContainerCircle:
-                            combinedClasses?.videoContainerCircle,
-                          video: combinedClasses?.video,
-                          videoCircle: combinedClasses?.videoCircle,
-                          videoLocal: combinedClasses?.videoLocal,
-                          videoCover: combinedClasses?.videoCover,
-                          videoContain: combinedClasses?.videoContain,
-                          borderAudioRoot: combinedClasses?.borderAudioRoot,
-                        }}
-                        controlsComponent={
-                          videoTileControls && videoTileControls[index]
-                        }
-                      />
-                    </div>
-                  );
-                })}
+      {chunkedStreams && chunkedStreams.length > 0 && (
+        <Slider {...settings} className={`${combinedClasses?.sliderRoot}`}>
+          {chunkedStreams.map((streams, page) => {
+            return (
+              <div className={`${combinedClasses?.sliderInner}`} key={page}>
+                <div
+                  className={` ${combinedClasses?.listContainer}   flex-${
+                    maxRowCount
+                      ? 'col'
+                      : maxColCount
+                      ? 'row'
+                      : tileArrangeDirection
+                  } `}
+                >
+                  {streams.map((stream, index) => {
+                    return (
+                      <div
+                        style={{ height: stream.height, width: stream.width }}
+                        key={stream.peer.id}
+                        className={`${combinedClasses?.videoTileContainer}`}
+                      >
+                        <VideoTile
+                          {...stream}
+                          objectFit={objectFit}
+                          displayShape={displayShape}
+                          audioLevelDisplayType={audioLevelDisplayType}
+                          showAudioLevel={showAudioLevel}
+                          showAudioMuteStatus={showAudioMuteStatus}
+                          aspectRatio={aspectRatio}
+                          classes={{
+                            root: combinedClasses?.videoTileRoot,
+                            videoContainer: combinedClasses?.videoContainer,
+                            avatarContainer: combinedClasses?.avatarContainer,
+                            videoContainerCircle:
+                              combinedClasses?.videoContainerCircle,
+                            video: combinedClasses?.video,
+                            videoCircle: combinedClasses?.videoCircle,
+                            videoLocal: combinedClasses?.videoLocal,
+                            videoCover: combinedClasses?.videoCover,
+                            videoContain: combinedClasses?.videoContain,
+                            borderAudioRoot: combinedClasses?.borderAudioRoot,
+                          }}
+                          controlsComponent={
+                            videoTileControls && videoTileControls[index]
+                          }
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </Slider>)}
+            );
+          })}
+        </Slider>
+      )}
 
       <div className="absolute bottom-0 w-full flex justify-center">
         <div ref={leftNavContainer} />

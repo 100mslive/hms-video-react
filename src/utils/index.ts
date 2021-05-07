@@ -30,8 +30,6 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
     return;
   }
 
-  // console.log('MEDIA STREAM ENDED ', stream);
-
   const tracks = stream.getTracks();
   tracks.forEach(track => track.stop());
 };
@@ -322,7 +320,6 @@ function mode(array: any[]) {
 }
 
 const getInitialsFromName = (name: string | undefined) => {
-  // console.debug('HMSui-component: Getting initials of', name);
   if (!name) {
     return undefined;
   } else {
@@ -416,44 +413,23 @@ const getTileContainerDimensions = ({
   parentHeight,
   isSquareOrCircle,
 }: getTileContainerDimensionsProps) => {
-  // console.debug(
-  //   'HMSui-components: [getTileContainerDimensions] all data',
-  //   videoTrack,
-  //   objectFit,
-  //   aspectRatio,
-  //   parentWidth,
-  //   parentHeight,
-  // );
   const { width: selfWidth, height: selfHeight } = videoTrack
     ? videoTrack.getSettings()
     : { width: parentWidth, height: parentHeight };
-  // console.debug(
-  //   'HMSui-components: [getTileContainerDimensions] selfHeight, selfWidth',
-  //   selfHeight,
-  //   selfWidth,
-  // );
+
   const containerAspectRatio =
     objectFit === 'cover'
       ? { width: parentWidth, height: parentHeight }
       : { width: selfWidth, height: selfHeight };
-  // console.debug(
-  //   'HMSui-components: [getTileContainerDimensions] containerAspectRatio',
-  //   containerAspectRatio,
-  // );
+
   const containerAspectRatioAfterUserOverride =
     aspectRatio && objectFit === 'cover' ? aspectRatio : containerAspectRatio;
-  // console.debug(
-  //   'HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterUserOverride',
-  //   containerAspectRatioAfterUserOverride,
-  // );
+
   const containerAspectRatioAfterShapeOverride = {
     width: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.width,
     height: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.height,
   };
-  // console.debug(
-  //   'HMSui-components: [getTileContainerDimensions] containerAspectRatioAfterShapeOverride',
-  //   containerAspectRatioAfterShapeOverride,
-  // );
+
   const { width, height } =
     containerAspectRatioAfterShapeOverride.width &&
     containerAspectRatioAfterShapeOverride.height
@@ -465,11 +441,7 @@ const getTileContainerDimensions = ({
           containerAspectRatioAfterShapeOverride.height,
         )
       : { width: parentWidth, height: parentHeight };
-  // console.debug(
-  //   'HMSui-components: [getTileContainerDimensions] width, height',
-  //   width,
-  //   height,
-  // );
+
   return { width, height };
 };
 
@@ -500,7 +472,11 @@ function addGlobalCss<Type>({
     tailwindConfig = context.tailwindConfig;
   } catch (error) {}
 
-  let tw_merged = create({ ...tailwindConfig, darkMode: 'class' , mode:'silent'}).tw;
+  let tw_merged = create({
+    ...tailwindConfig,
+    darkMode: 'class',
+    mode: 'silent',
+  }).tw;
   let calculatedSeedStyleMap: Type | {} = {};
   for (const seed in seedStyleMap as Type) {
     //TODO define a generic Map TS type to define classes to remove all type related ignores

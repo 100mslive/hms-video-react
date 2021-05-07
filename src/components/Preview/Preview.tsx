@@ -8,6 +8,7 @@ import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../Button';
+import HMSLogger from '../../utils/logger';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -140,8 +141,6 @@ const StyledPreview = ({
   }, [errorState]);
 
   const startMediaStream = () => {
-    console.log('MEDIA STREAM STARTED');
-    console.log(`Version: ${sayswho}`);
     if (chrome && isIOS) {
       var errorMessage = getLocalStreamException('iOSChromeError', true);
       setErrorTitle(errorMessage['title']);
@@ -161,7 +160,7 @@ const StyledPreview = ({
       getUserMedia({ audio: true, video: true })
         .then((stream: MediaStream) => setMediaStream(stream))
         .catch((error: any) => {
-          console.log(error);
+          HMSLogger.e('[Preview]', error);
           if (
             error.name === 'NotAllowedError' ||
             error.error === 'NotAllowedError'
@@ -250,7 +249,7 @@ const StyledPreview = ({
             controlsComponent={
               <VideoTileControls
                 settingsButtonOnClick={() =>
-                  console.log('Settings Component yet to be made')
+                  HMSLogger.w('[Settings]', 'Settings Component yet to be made')
                 }
                 audioButtonOnClick={() => toggleMediaState('audio')}
                 videoButtonOnClick={() => toggleMediaState('video')}
