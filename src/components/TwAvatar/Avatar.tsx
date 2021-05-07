@@ -21,7 +21,7 @@ interface StyledAvatarProps {
   /**
    * Size of the Avatar
    */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   /**
    * className string
    */
@@ -38,7 +38,8 @@ const defaultClasses = {
   size: {
     sm: 'w-8 h-8 ',
     md: 'w-12 h-12',
-    lg: 'w-16 h-16',
+    lg: 'w-16 h-16 text-xl',
+    xl: 'w-28 h-28 text-4xl',
   },
   shape: {
     circle: 'rounded-full',
