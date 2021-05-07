@@ -5,7 +5,7 @@ import { VideoList, VideoListProps } from '.';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
 import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
 import { VideoTileControls } from '../VideoTile/Controls';
-import { MicOffIcon, MicOnIcon } from '../../icons';
+import { MicOffIcon, MicOnIcon } from '../Icons';
 import { loadStreams } from '../../storybook/utils';
 import { getUserMedia } from '../../utils/preview';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';

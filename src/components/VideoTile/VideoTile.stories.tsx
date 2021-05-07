@@ -5,7 +5,7 @@ import VideoTileDocs from './VideoTile.mdx';
 import { getVideoTileLabel } from '../../utils';
 import { loadStream } from '../../storybook/utils';
 import { VideoTileControls } from './Controls';
-import { MicOffIcon, MicOnIcon } from '../../icons';
+import { MicOffIcon, MicOnIcon } from '../Icons';
 
 declare global {
   interface HTMLVideoElement {

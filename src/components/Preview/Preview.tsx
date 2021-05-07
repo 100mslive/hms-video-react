@@ -76,6 +76,7 @@ const StyledPreview = ({
   useEffect(() => {
     startMediaStream();
     return () => closeMediaStream(mediaStream);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleMediaState = (type: string) => {

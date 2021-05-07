@@ -1,1 +1,1 @@
-export * from './ParticipantList';
+export {ParticipantList, ParticipantListProps} from './ParticipantList';

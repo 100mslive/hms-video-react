@@ -1,5 +1,5 @@
 import React from 'react';
-import { CloseIcon } from '../../icons';
+import { CloseIcon } from '../Icons';
 import Backdrop from '@material-ui/core/Backdrop';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';

@@ -1,10 +1,9 @@
 import React from 'react';
-// import { LogoButton, SpeakerTag } from '../MediaIcons';
 import { Participant, Peer } from '../../types';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../Button';
-import { VolumeIcon, Logo } from '../../icons';
+import { VolumeIcon, Logo } from '../Icons';
 
 export interface HeaderClasses {
   root?: string;

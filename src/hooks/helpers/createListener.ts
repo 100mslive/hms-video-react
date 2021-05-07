@@ -62,16 +62,16 @@ const createListener = (
         peer,
         { peers },
       );
-      //@ts-expect-error
       type === HMSTrackUpdate.TRACK_ADDED &&
         track.type === HMSTrackType.AUDIO &&
         !peer.isLocal &&
-        addAudioTrack({ track: track.nativeTrack });
       //@ts-expect-error
+      addAudioTrack({ track: track.nativeTrack });
       type === HMSTrackUpdate.TRACK_REMOVED &&
         track.type === HMSTrackType.AUDIO &&
         !peer.isLocal &&
-        removeAudioTrack({ track: track.nativeTrack });
+      //@ts-expect-error
+      removeAudioTrack({ track: track.nativeTrack });
       setPeers(peers);
       setLocalPeer(sdk.getLocalPeer());
       incomingListener.onTrackUpdate(type, track, peer);

@@ -7,7 +7,7 @@ import {
   MicOnIcon,
   StarFillIcon,
   StarIcon,
-} from '../../icons';
+} from '../Icons';
 import { Participant } from '../../types';
 import { AvatarList } from '../Avatar';
 import Popover from '@material-ui/core/Popover';
@@ -198,7 +198,6 @@ export type ParticipantListProps = Omit<
   'defaultClasses'
 >;
 
-//TODO replace with themeContext
 export const ParticipantList = withClasses<ParticipantListClasses | undefined>(
   defaultClasses,
   'participantList',

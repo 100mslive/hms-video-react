@@ -1,6 +1,6 @@
 import React from 'react';
 import Popover from '@material-ui/core/Popover';
-import { ChatIcon } from '../../icons';
+import { ChatIcon } from '../Icons';
 import { ChatBox, ChatProps } from '../ChatBox/ChatBox';
 import { Button } from '../Button';
 

@@ -4,7 +4,7 @@ import { AudioLevelIndicator } from '../../AudioLevelIndicators/index';
 import '../index.css';
 import { combineClasses } from '../../../utils';
 import { withClasses } from '../../../utils/styles';
-import { MicOffIcon, MicOnIcon } from '../../../icons';
+import { MicOffIcon, MicOnIcon } from '../../Icons';
 import { Button } from '../../Button';
 
 export interface VideoTileControlsClasses {
