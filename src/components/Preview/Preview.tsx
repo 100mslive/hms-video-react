@@ -262,7 +262,6 @@ const StyledPreview = ({
         {/* helloDiv */}
         <div className={combinedClasses?.helloDiv}>Hello, {name}</div>
         {/* joinButton */}
-        {/* @ts-ignore */}
         <Button
           variant={'emphasized'}
           size={'lg'}
@@ -283,7 +282,6 @@ const StyledPreview = ({
           Join
         </div> */}
         {/* goBackButton */}
-        {/* @ts-ignore */}
         <Button
           variant={'no-fill'}
           size={'lg'}

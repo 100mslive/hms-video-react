@@ -28,7 +28,6 @@ const MicWithDangerActive: Story<ButtonProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
       <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
-        {/* @ts-expect-error */}
         <Button {...argsWithoutClasses} classes={{ root: 'to-be-overridden' }}>
           {args.active ? <MicOffIcon /> : <MicOnIcon />}
         </Button>
@@ -38,7 +37,6 @@ const MicWithDangerActive: Story<ButtonProps> = args => {
 };
 
 const DarkMic: Story<ButtonProps> = args => {
-  const { classes, ...argsWithoutClasses } = args;
   return (
     <div className="w-full h-1/2 flex justify-center py-4">
       <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
@@ -51,7 +49,6 @@ const DarkMic: Story<ButtonProps> = args => {
 };
 
 const LightMic: Story<ButtonProps> = args => {
-  const { classes, ...argsWithoutClasses } = args;
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
       <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>

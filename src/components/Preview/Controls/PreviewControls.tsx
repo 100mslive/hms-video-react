@@ -44,7 +44,6 @@ export const VideoTileControls = ({
   return (
     <div className={`${classes.root}`}>
       <div className={`${classes.controls}`}>
-        {/* @ts-ignore */}
         <Button
           variant={'icon-only'}
           active={isAudioMuted}
@@ -58,12 +57,10 @@ export const VideoTileControls = ({
           buttonDisplay={buttonDisplay}
           isAudioMuted={isAudioMuted}
         /> */}
-        {/* @ts-ignore */}
         <Button
           variant={'icon-only'}
           active={isVideoMuted}
           shape={buttonDisplay}
-          {/* @ts-ignore */}
           onClick={videoButtonOnClick}
         >
           {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
@@ -75,11 +72,9 @@ export const VideoTileControls = ({
         /> */}
       </div>
       <div className={`${classes.rightcontrols}`}>
-        {/* @ts-ignore */}
         <Button
           variant={'icon-only'}
           shape={buttonDisplay}
-          {/* @ts-ignore */}
           onClick={settingsButtonOnClick}
         >
           <SettingsIcon />

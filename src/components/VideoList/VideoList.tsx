@@ -160,7 +160,8 @@ interface IDots {
 const HorizontalDots = ({ container, index }: IDots) =>
   container ? (
     createPortal(
-      <a className="inline-block">
+    //eslint-disable-next-line jsx-a11y/anchor-is-valid
+    <a className="inline-block">
         <DotIcon />
       </a>,
       container,

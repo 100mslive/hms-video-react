@@ -24,7 +24,6 @@ export default function Chat(args: ChatProps) {
 
   return (
     <div>
-      {/* @ts-ignore */}
       <Button onClick={handleClick}>
         {open ? (
           <ChatIcon className="text-gray-700" />

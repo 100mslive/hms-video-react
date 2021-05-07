@@ -39,13 +39,11 @@ export const StyledHeader = ({
   time,
   speaker,
   leftComponents = [
-    //@ts-ignore
     <Button variant={'no-fill'} size={'lg'}>
       <Logo />{' '}
     </Button>,
   ],
   centerComponents = [
-    //@ts-ignore
     <Button variant={'no-fill'}>
       <VolumeIcon className="mr-2" />
       {speaker}
