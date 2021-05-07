@@ -286,15 +286,16 @@ export const StyledVideoList = ({
     aspectRatio,
     onlyOnePage: overflow === 'hidden',
   });
-  console.log(
-    `HMSui-component: [VideoList] Chunked Streams are 
-    }`,
-    chunkedStreams,
-  );
+  // console.log(
+  //   `HMSui-component: [VideoList] Chunked Streams are 
+  //   }`,
+  //   chunkedStreams,
+  // );
 
   return (
     <div className={`${combinedClasses?.root}`} ref={ref}>
-      <Slider {...settings} className={`${combinedClasses?.sliderRoot}`}>
+      {chunkedStreams && chunkedStreams.length>0 && 
+      (<Slider {...settings} className={`${combinedClasses?.sliderRoot}`}>
         {chunkedStreams.map((streams, page) => {
           return (
             <div className={`${combinedClasses?.sliderInner}`} key={page}>
@@ -346,7 +347,7 @@ export const StyledVideoList = ({
             </div>
           );
         })}
-      </Slider>
+      </Slider>)}
 
       <div className="absolute bottom-0 w-full flex justify-center">
         <div ref={leftNavContainer} />

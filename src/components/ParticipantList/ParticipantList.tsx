@@ -47,13 +47,13 @@ const defaultClasses: ParticipantListClasses = {
   buttonText: 'pl-2 self-center',
   menuRoot: 'max-h-100 rounded-bl-xl rounded-br-xl mt-6',
   menuInner:
-    'w-60 max-h-100 overflow-y-auto rounded-bl-xl rounded-br-xl py-1.5 bg-white dark:bg-gray-100 focus:outline-none',
+    'w-60 max-h-100 overflow-y-auto rounded-bl-none rounded-br-none bg-white dark:bg-gray-100 focus:outline-none',
   menuSection:
     'text-gray-300 dark:text-gray-500 group flex items-center px-3 py-2 text-base',
   menuItem:
-    'text-gray-100 dark:text-white group flex items-center space-x-2 px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
-  menuText: 'flex justify-between',
-  menuIconContainer: 'flex flex-grow justify-end absolute space-x-1',
+    'text-gray-100 dark:text-white group flex items-center flex-nowrap px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
+  menuText: 'max-w-xs mx-2 overflow-ellipsis',
+  menuIconContainer: 'flex flex-grow justify-self-end justify-end',
 };
 
 type RoleMap = Map<string, Participant[]>;
@@ -125,7 +125,7 @@ export const StyledParticipantList = ({
                     role="menuitem"
                     >
                     {/* @ts-expect-error */}
-                    {role} {rolesMap[role].length}
+                    {role==="undefined"?'Unknown':role}{rolesMap[role].length>1?'s':''} {rolesMap[role].length}
                   </span>
                  </div>
                 <div>
@@ -139,7 +139,7 @@ export const StyledParticipantList = ({
                     key={index}
                   >
                     <AvatarList label={participant.peer.displayName} />
-                    <div className={`${combinedClasses?.menuItem}`}>
+                    <div className={`${combinedClasses?.menuText}`}>
                       {participant.peer.displayName}
                     </div>
                     <div className={`${combinedClasses?.menuIconContainer}`}>

@@ -141,12 +141,12 @@ const StyledVideoTile = ({
   } = useResizeDetector();
 
   useEffect(() => {
-    console.info(
-      'HMSui-component: [Videotile] Video track and container dimensions are',
-      videoTrack,
-      containerHeight,
-      containerWidth,
-    );
+    // console.info(
+    //   'HMSui-component: [Videotile] Video track and container dimensions are',
+    //   videoTrack,
+    //   containerHeight,
+    //   containerWidth,
+    // );
     if (containerWidth && containerHeight) {
       /*
        * If aspect ratio is defined, container width is the largest rectangle fitting into parent
@@ -174,11 +174,11 @@ const StyledVideoTile = ({
   ]);
 
   useEffect(() => {
-    console.info(
-      'HMSui-component: [Videotile] Video and Audio Track is',
-      videoTrack,
-      audioTrack,
-    );
+    // console.info(
+    //   'HMSui-component: [Videotile] Video and Audio Track is',
+    //   videoTrack,
+    //   audioTrack,
+    // );
   }, [videoTrack, audioTrack]);
 
   return (
