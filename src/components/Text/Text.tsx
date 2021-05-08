@@ -1,4 +1,6 @@
 import React, { PropsWithChildren } from 'react';
+import { withClasses } from '../../utils/styles';
+import { combineClasses } from '../../utils';
 
 type TextTags =
   | 'h1'
@@ -30,58 +32,85 @@ interface StyledTextProps {
    */
   tag?: TextTags;
   /**
-   * classNames string
+   * Default class names
    */
-  className?: string;
+  defaultClasses?: TextClasses;
+  /**
+   * Extra class names
+   */
+  classes?: TextClasses;
 }
 
-const defaultClasses = {
-  heading: {
-    lg: 'text-5xl font-semibold leading-7',
-    md: 'text-4xl font-medium leading-6',
-    sm: 'text-3xl font-medium leading-6',
-  },
-  body: {
-    lg: 'text-base leading-5', // default
-    md: 'text-sm leading-4',
-    sm: 'text-xs leading-3',
-  },
-  button: 'text-lg font-semibold leading-6',
+export interface TextClasses {
+  root: string;
+  rootHeadingLg: string;
+  rootHeadingMd: string;
+  rootHeadingSm: string;
+  rootBodyLg: string;
+  rootBodyMd: string;
+  rootBodySm: string;
+  rootButton: string;
+}
+
+const defaultClasses: TextClasses = {
+  root: 'tracking-normal',
+  rootHeadingLg: 'text-5xl font-semibold leading-7',
+  rootHeadingMd: 'text-4xl font-medium leading-6',
+  rootHeadingSm: 'text-3xl font-medium leading-6',
+  rootBodyLg: 'text-base leading-5', // default
+  rootBodyMd: 'text-sm leading-4',
+  rootBodySm: 'text-xs leading-3',
+  rootButton: 'text-lg font-semibold leading-6',
+};
+
+export const StyledText: React.FC<PropsWithChildren<StyledTextProps>> = ({
+  tag,
+  variant = 'body',
+  size = 'lg',
+  children,
+  defaultClasses,
+  classes: extraClasses,
+  ...props
+}) => {
+  const TagName = tag || 'p';
+  //@ts-expect-error
+  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const classList: string[] = [`${combinedClasses?.root}`];
+  if (variant === 'body') {
+    if (size === 'sm') {
+      classList.push(`${combinedClasses?.rootBodySm}`);
+    } else if (size === 'md') {
+      classList.push(`${combinedClasses?.rootBodyMd}`);
+    } else if (size === 'lg') {
+      classList.push(`${combinedClasses?.rootBodyLg}`);
+    }
+  } else if (variant === 'heading') {
+    if (size === 'sm') {
+      classList.push(`${combinedClasses?.rootHeadingSm}`);
+    } else if (size === 'md') {
+      classList.push(`${combinedClasses?.rootHeadingMd}`);
+    } else if (size === 'lg') {
+      classList.push(`${combinedClasses?.rootHeadingLg}`);
+    }
+  } else if (variant === 'button') {
+    classList.push(`${combinedClasses?.rootButton}`);
+  }
+
+  return (
+    <TagName className={`${classList.join(' ')}`} {...props}>
+      {children}
+    </TagName>
+  );
 };
 
 type NativeAttrs = Omit<
   React.DetailsHTMLAttributes<any>,
   keyof StyledTextProps
 >;
-export type TextProps = StyledTextProps & NativeAttrs;
 
-export const Text: React.FC<PropsWithChildren<TextProps>> = ({
-  tag,
-  variant,
-  size,
-  children,
-  className,
-  ...props
-}) => {
-  const TagName = tag || 'p';
-  const defaultClassNames = 'tracking-normal';
-  const resolveClasses = (
-    v: StyledTextProps['variant'],
-    s: StyledTextProps['size'],
-  ) => {
-    const tempVariant = v || 'body';
-    const tempSize = s || 'lg';
-    return tempVariant !== 'button'
-      ? defaultClasses[tempVariant][tempSize]
-      : defaultClasses['button'];
-  };
-  const tempClassName = `${resolveClasses(
-    variant,
-    size,
-  )} ${defaultClassNames} ${className || ''}`;
-  return (
-    <TagName className={tempClassName} {...props}>
-      {children}
-    </TagName>
-  );
-};
+export type TextProps = Omit<StyledTextProps, 'defaultClasses'> & NativeAttrs;
+
+export const Text = withClasses<TextClasses | undefined>(
+  defaultClasses,
+  'text',
+)<StyledTextProps>(StyledText);
