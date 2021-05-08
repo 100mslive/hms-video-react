@@ -9,7 +9,6 @@ import { Silence } from '../components/Silence';
 import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
-import { initAudioSink } from './helpers/audioManager';
 import HMSLogger from '../utils/ui-logger';
 
 const sdk = new HMSSdk();
@@ -34,10 +33,6 @@ export const HMSRoomProvider: React.FC = props => {
   const [dominantSpeaker, setDominantSpeaker] = useState<
     HMSRoomProps['dominantSpeaker']
   >(null);
-
-  useEffect(() => {
-    initAudioSink();
-  }, []);
 
   useEffect(() => {
     if (audioMuted) {
