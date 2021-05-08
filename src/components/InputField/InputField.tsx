@@ -13,13 +13,19 @@ interface StyledInputField {
    * Placeholder Text
    */
   placeHolder?: string;
+  /**
+   * className string
+   */
+  className?: string;
 }
 
 type NativeAttrs = Omit<
   React.DetailsHTMLAttributes<any>,
   keyof StyledInputField
 >;
-export type InputFieldProps = StyledInputField & NativeAttrs;
+export type InputFieldProps = StyledInputField &
+  NativeAttrs &
+  JSX.IntrinsicElements['input'];
 
 const defaultClasses = {
   common: `placeholder-blueGray-300 relative bg-gray-200 text-white text-lg rounded-lg border-0 shadow outline-none focus:outline-none focus:ring w-full`,
@@ -30,6 +36,7 @@ export const InputField: React.FC<InputFieldProps> = ({
   compact,
   validation,
   placeHolder,
+  className,
   ...props
 }) => {
   return (
@@ -39,7 +46,7 @@ export const InputField: React.FC<InputFieldProps> = ({
         placeholder={placeHolder}
         className={`${defaultClasses['common']} ${
           validation ? 'ring-red-main' : 'ring-blue-300'
-        } ${compact ? 'py-2 px-1' : 'p-3'}`}
+        } ${compact ? 'py-1 px-2' : 'p-3'} ${className}`}
         {...props}
       />
       {validation && (
