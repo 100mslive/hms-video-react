@@ -56,7 +56,9 @@ const SetStateInputField: Story<InputFieldProps> = args => {
           }
           placeHolder={placeHolder}
           value={input}
-          onChange={e => setInput((e.target as HTMLInputElement).value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setInput((e.target as HTMLInputElement).value)
+          }
           {...args}
         />
       </div>
