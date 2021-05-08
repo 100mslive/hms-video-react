@@ -22,6 +22,6 @@ const Template: Story<JoinProps> = args => {
 
 export const Default = Template.bind({});
 Default.args = {
-  submitOnClick: ({ username, roomId, role }) =>
-    alert(`Join Clicked, ${username} ${roomId} ${role}`),
+  submitOnClick: params =>
+    alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`),
 };
