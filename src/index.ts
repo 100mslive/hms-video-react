@@ -14,5 +14,6 @@ export * from './components/ChatBox/ChatBox';
 export * from './components/Settings/Settings';
 export * from './components/Join';
 export * from './components/Icons';
+export * from './components/Button';
 export { HMSRoomProvider, useHMSRoom } from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';
