@@ -1,6 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
+import { tw, style } from 'twind/style';
 
 type TextTags =
   | 'h1'
@@ -32,85 +31,81 @@ interface StyledTextProps {
    */
   tag?: TextTags;
   /**
-   * Default class names
+   * className string
    */
-  defaultClasses?: TextClasses;
+  className?: string;
   /**
-   * Extra class names
+   * css styles declaration
    */
-  classes?: TextClasses;
+  styles?: any;
 }
-
-export interface TextClasses {
-  root: string;
-  rootHeadingLg: string;
-  rootHeadingMd: string;
-  rootHeadingSm: string;
-  rootBodyLg: string;
-  rootBodyMd: string;
-  rootBodySm: string;
-  rootButton: string;
-}
-
-const defaultClasses: TextClasses = {
-  root: 'tracking-normal',
-  rootHeadingLg: 'text-5xl font-semibold leading-7',
-  rootHeadingMd: 'text-4xl font-medium leading-6',
-  rootHeadingSm: 'text-3xl font-medium leading-6',
-  rootBodyLg: 'text-base leading-5', // default
-  rootBodyMd: 'text-sm leading-4',
-  rootBodySm: 'text-xs leading-3',
-  rootButton: 'text-lg font-semibold leading-6',
-};
-
-export const StyledText: React.FC<PropsWithChildren<StyledTextProps>> = ({
-  tag,
-  variant = 'body',
-  size = 'lg',
-  children,
-  defaultClasses,
-  classes: extraClasses,
-  ...props
-}) => {
-  const TagName = tag || 'p';
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  const classList: string[] = [`${combinedClasses?.root}`];
-  if (variant === 'body') {
-    if (size === 'sm') {
-      classList.push(`${combinedClasses?.rootBodySm}`);
-    } else if (size === 'md') {
-      classList.push(`${combinedClasses?.rootBodyMd}`);
-    } else if (size === 'lg') {
-      classList.push(`${combinedClasses?.rootBodyLg}`);
-    }
-  } else if (variant === 'heading') {
-    if (size === 'sm') {
-      classList.push(`${combinedClasses?.rootHeadingSm}`);
-    } else if (size === 'md') {
-      classList.push(`${combinedClasses?.rootHeadingMd}`);
-    } else if (size === 'lg') {
-      classList.push(`${combinedClasses?.rootHeadingLg}`);
-    }
-  } else if (variant === 'button') {
-    classList.push(`${combinedClasses?.rootButton}`);
-  }
-
-  return (
-    <TagName className={`${classList.join(' ')}`} {...props}>
-      {children}
-    </TagName>
-  );
-};
 
 type NativeAttrs = Omit<
   React.DetailsHTMLAttributes<any>,
   keyof StyledTextProps
 >;
 
-export type TextProps = Omit<StyledTextProps, 'defaultClasses'> & NativeAttrs;
+export type TextProps = StyledTextProps & NativeAttrs;
 
-export const Text = withClasses<TextClasses | undefined>(
-  defaultClasses,
-  'text',
-)<StyledTextProps>(StyledText);
+export const Text: React.FC<PropsWithChildren<TextProps>> = ({
+  tag,
+  variant = 'body',
+  size = 'lg',
+  children,
+  className,
+  styles,
+  ...props
+}) => {
+  const rootClass = `hmsui-typography-root`;
+  const TagName = tag || 'p';
+  const typography = style({
+    // base
+    base: `tracking-normal`,
+    matches: [
+      {
+        variant: 'heading',
+        size: 'lg',
+        use: 'text-5xl font-semibold leading-7',
+      },
+      {
+        variant: 'heading',
+        size: 'md',
+        use: 'text-4xl font-medium leading-6',
+      },
+      {
+        variant: 'heading',
+        size: 'sm',
+        use: 'text-3xl font-medium leading-6',
+      },
+      {
+        variant: 'body',
+        size: 'lg',
+        use: 'text-base leading-5',
+      },
+      {
+        variant: 'body',
+        size: 'md',
+        use: 'text-sm leading-4',
+      },
+      {
+        variant: 'body',
+        size: 'sm',
+        use: 'text-xs leading-3',
+      },
+      {
+        variant: 'button',
+        size: 'sm',
+        use: 'text-lg font-semibold leading-6',
+      },
+    ],
+  });
+  let twClasses = className
+    ? tw(`${rootClass}`, typography({ size, variant }), className)
+    : tw(`${rootClass}`, typography({ size, variant }));
+  twClasses = styles ? tw(twClasses, styles) : twClasses;
+  return (
+    <TagName className={twClasses} {...props}>
+      {children}
+    </TagName>
+  );
+};
