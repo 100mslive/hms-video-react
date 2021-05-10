@@ -22,6 +22,12 @@ export interface SettingsClasses {
   selectContainer?: string;
   select?: string;
   selectInner?: string;
+  divider?:string;
+  sliderContainer?:string;
+  sliderInner?:string;
+  sliderLabelContainer?:string;
+  sliderLabel?:string;
+  slider?:string;
 }
 
 interface StyledSettingsProps {
@@ -47,6 +53,12 @@ const defaultClasses: SettingsClasses = {
   select:
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   selectInner: 'p-4',
+  divider:'bg-gray-200 h-px w-full my-4',
+  sliderContainer:'w-full my-1.5',
+  sliderInner:'w-full flex',
+  sliderLabelContainer:'w-1/3 flex justify-end items-center ',
+  sliderLabel:'text-right',
+  slider:'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
 };
 
 //TODO figure out how to expose this outside
@@ -310,13 +322,13 @@ const StyledSettings = ({
                 </div>
               </div>
             </div> */}
-            <div className="bg-gray-200 h-px w-full my-4"></div>
-            <div className="w-full my-1.5">
-              <div className="w-full flex  ">
-                <div className="w-1/3 flex justify-end items-center ">
-                  <span className="text-right">Participants in view:</span>
+            <div className={combinedClasses?.divider}></div>
+            <div className={combinedClasses?.sliderContainer}>
+              <div className={combinedClasses?.sliderInner}>
+                <div className={combinedClasses?.sliderLabelContainer}>
+                  <span className={combinedClasses?.sliderLabel}>Participants in view:</span>
                 </div>
-                <div className="rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ">
+                <div className={combinedClasses?.slider}>
                   <HMSSlider
                     defaultValue={8}
                     value={maxTileCount}
