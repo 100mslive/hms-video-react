@@ -64,7 +64,7 @@ const StyledJoin = ({
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [username, setUserName] = useState(initialValues?.username || '');
-  const [role, setRole] = useState(initialValues?.role || 'Teacher');
+  const [role, setRole] = useState(initialValues?.role || 'Student');
   const [roomId, setRoomId] = useState(
     initialValues?.roomId || '607d781cdcee704ca43cafb9',
   );
