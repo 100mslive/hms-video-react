@@ -28,7 +28,6 @@ interface ChatBoxClasses {
   noMessageRoot?: string;
   footer?: string;
   chatInput?: string;
-  sendButton?: string;
 }
 
 const defaultClasses: ChatBoxClasses = {
@@ -36,7 +35,7 @@ const defaultClasses: ChatBoxClasses = {
   header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500`,
   headerLine: 'w-8 h-1 rounded bg-white dark:bg-gray-400 m-2',
   headerRoot: 'flex w-full justify-between',
-  headerText: 'text-gray-300 dark:text-gray-500 flex',
+  headerText: 'text-gray-300 dark:text-gray-500 flex items-center',
   headerCloseButton: 'focus:outline-none',
   messageBox:
     'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-grow',
@@ -50,7 +49,6 @@ const defaultClasses: ChatBoxClasses = {
     'bg-white dark:bg-gray-200 min-h-11 rounded-b-2xl flex w-full justify-between p-3 border-t-1 border-gray-500',
   chatInput:
     'bg-white dark:bg-gray-200 placeholder-gray-500 text-gray-100 dark:text-white focus:outline-none leading-5 overflow-y-auto no-scrollbar resize-none w-5/6',
-  sendButton: 'focus:outline-none',
   notificationRoot: 'py-3',
   notificationInfo: 'flex justify-between text-gray-300 dark:text-gray-400',
   notificationTime: 'text-xs',
@@ -103,7 +101,9 @@ export const StyledChatBox = ({
   classes: extraClasses,
   defaultClasses,
   timeFormatter = (date: Date) => {
-    return `${date.getHours()}:${date.getMinutes()}`;
+    const min = date.getMinutes();
+    const minString = min<10?`0${min}`:min;
+    return `${date.getHours()}:${minString}`;
   },
 }: StyledChatProps) => {
   //@ts-expect-error
@@ -137,14 +137,15 @@ export const StyledChatBox = ({
             <div className={combinedClasses?.headerText}>
               <span>
                 <PeopleIcon />
-              </span>{' '}
-              Everyone
+              </span>
+              <span>{' '}
+              Everyone</span>
             </div>
             <div>
               {/* headerCloseButton */}
               <Button
-                variant={'no-fill'}
-                size={'md'}
+                variant={'icon-only'}
+                size={'sm'}
                 onClick={() => {
                   if (onClose) {
                     onClose();
@@ -243,15 +244,14 @@ export const StyledChatBox = ({
           />
           {/* sendButton */}
           <Button
-            variant={'no-fill'}
-            size={'md'}
-            // className={combinedClasses?.sendButton}
+            variant={'icon-only'}
+            size={'sm'}
             onClick={() => {
               onSend(message);
               setMessage('');
             }}
           >
-            <SendIcon className="text-white p-0 m-0" />
+            <SendIcon/>
           </Button>
         </div>
       </div>

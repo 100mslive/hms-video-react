@@ -118,7 +118,8 @@ export const StyledControlBar = ({
       onClick={leaveButtonOnClick}
       size="lg"
     >
-      <HangUpIcon className="mr-2" />
+      <HangUpIcon/>
+      {' '}
       Leave room
     </Button>,
   ],

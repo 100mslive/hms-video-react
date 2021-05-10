@@ -1,7 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Avatar, AvatarProps } from './index';
-import { VideoButton } from '../MediaIcons';
 
 const meta: Meta = {
   title: 'Avatar',
