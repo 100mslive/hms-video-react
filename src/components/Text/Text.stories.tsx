@@ -19,10 +19,13 @@ const Basic: Story<TextProps> = args => {
 };
 
 const Class: Story<TextProps> = args => {
+  const userClasses = {
+    rootBodyLg: 'font-bold text-red-800 text-7xl',
+  };
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Text className="font-bold text-red-800 text-7xl" {...args}>
-        Override By ClassName
+      <Text classes={userClasses} {...args}>
+        Override By Classes
       </Text>
     </div>
   );
