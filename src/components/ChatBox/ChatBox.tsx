@@ -90,13 +90,14 @@ export const StyledChatBox = ({
   willScrollToBottom = true,
   scrollAnimation = 'smooth',
   messageFormatter = (message: string) => {
+    console.log(message);
     let text = Autolinker.link(message, {
       sanitizeHtml: true,
       mention: 'twitter',
       className: 'text-brand-tint',
     });
 
-    return ReactHtmlParser(text);
+    return <div className="whitespace-pre-wrap">{ReactHtmlParser(text.trim())}</div>;
   },
   classes: extraClasses,
   defaultClasses,
@@ -232,10 +233,14 @@ export const StyledChatBox = ({
             placeholder="Write something here"
             value={message}
             onKeyPress={event => {
-              if (event.key === 'Enter' && !event.shiftKey) {
-                onSend(message);
-                setMessage('');
-                event.preventDefault();
+              if (event.key === 'Enter') {
+                if(!event.shiftKey){
+                  event.preventDefault();                  
+                  if(message.trim()!==''){
+                    onSend(message);
+                    setMessage('');                      
+                  }
+                }
               }
             }}
             onChange={event => {
