@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CloseIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
@@ -7,6 +7,7 @@ import ReactHtmlParser from 'react-html-parser';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../Button';
+import { useInView } from 'react-intersection-observer';
 
 interface ChatBoxClasses {
   root?: string;
@@ -28,6 +29,8 @@ interface ChatBoxClasses {
   noMessageRoot?: string;
   footer?: string;
   chatInput?: string;
+  unreadMessagesContainer?:string;
+  unreadMessagesInner?:string;
 }
 
 const defaultClasses: ChatBoxClasses = {
@@ -46,12 +49,14 @@ const defaultClasses: ChatBoxClasses = {
   noMessageRoot:
     'flex justify-center items-center text-gray-300 dark:text-gray-400 h-full',
   footer:
-    'bg-white dark:bg-gray-200 min-h-11 rounded-b-2xl flex w-full justify-between p-3 border-t-1 border-gray-500',
+    'bg-white dark:bg-gray-200 min-h-11 rounded-b-2xl flex w-full justify-between p-3 border-t-1 border-gray-500 relative',
   chatInput:
     'bg-white dark:bg-gray-200 placeholder-gray-500 text-gray-100 dark:text-white focus:outline-none leading-5 overflow-y-auto no-scrollbar resize-none w-5/6',
   notificationRoot: 'py-3',
   notificationInfo: 'flex justify-between text-gray-300 dark:text-gray-400',
   notificationTime: 'text-xs',
+  unreadMessagesContainer:'absolute left-0 p-1 w-full bottom-full flex justify-center',
+  unreadMessagesInner:'rounded-md px-2 py-1 bg-gray-500 text-gray-100 dark:bg-gray-300 dark:text-white flex justify-center'  
 };
 
 export interface Message {
@@ -65,9 +70,8 @@ interface StyledChatProps {
   messages: Message[];
   onSend: (message: string) => void;
   onClose?: () => void;
-
   willScrollToBottom?: boolean;
-  scrollAnimation?: 'smooth' | 'auto';
+  scrollAnimation?: ScrollBehavior;
   messageFormatter?: (message: string) => React.ReactNode;
 
   /**
@@ -86,11 +90,9 @@ export const StyledChatBox = ({
   messages,
   onSend,
   onClose,
-
   willScrollToBottom = true,
   scrollAnimation = 'smooth',
   messageFormatter = (message: string) => {
-    console.log(message);
     let text = Autolinker.link(message, {
       sanitizeHtml: true,
       mention: 'twitter',
@@ -108,21 +110,47 @@ export const StyledChatBox = ({
   },
 }: StyledChatProps) => {
   //@ts-expect-error
-
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [message, setMessage] = useState('');
-
-  const messagesEndRef = React.createRef<HTMLDivElement>();
-  const scrollToBottom = () => {
-    messagesEndRef.current!.scrollIntoView({
-      behavior: scrollAnimation,
+  const [localMessages, setLocalMessages] = useState<Message[]>([]);
+  const [toScroll, setToScroll] = useState<ScrollBehavior | 'none'>('none');
+  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+  const { ref:messagesEndRef, inView, entry } = useInView();
+  const messagesRef = useRef<HTMLDivElement>(null);
+  const scrollToBottom = ({behavior='auto'}:{behavior:ScrollBehavior}) => {
+    messagesRef.current!.scrollTo({
+      top:messagesRef.current!.scrollHeight,
+      behavior: behavior,
     });
   };
   useEffect(() => {
-    if (willScrollToBottom) {
-      scrollToBottom();
+      if(localMessages.length>0){
+        // TODO there should be instant chat sending locally. Chat hooks should go here
+        if (willScrollToBottom && (messagesRef.current!.scrollTop === (messagesRef.current!.scrollHeight - messagesRef.current!.clientHeight) || messages[messages.length-1].sender==='You')) {
+          setToScroll(scrollAnimation);
+        }
+        else{
+          setUnreadMessagesCount(unreadMessagesCount=>unreadMessagesCount+1);
+        }
     }
-  }, [message]);
+    else{
+      setToScroll('auto')
+    }
+    setLocalMessages(messages);
+  }, [messages]);
+
+
+  useEffect(()=>{
+    if(toScroll!=='none'){
+      scrollToBottom({behavior:scrollAnimation});
+      setToScroll('none');
+      setUnreadMessagesCount(0);
+    }
+  },[localMessages, toScroll]);
+
+  useEffect(()=>{
+    setUnreadMessagesCount(0);
+  },[inView])
 
   return (
     <React.Fragment>
@@ -170,8 +198,8 @@ export const StyledChatBox = ({
         </div>
         {/* messageBox */}
         {/* TODO: move no scroll bar css logic to tailwind */}
-        <div className={`${combinedClasses?.messageBox} no-scrollbar`}>
-          {messages.map(message => {
+        <div className={`${combinedClasses?.messageBox} no-scrollbar`} ref={messagesRef}>
+          {localMessages.map(message => {
             return message.notification ? (
               /* notificationRoot */
               <div className={combinedClasses?.notificationRoot}>
@@ -215,7 +243,7 @@ export const StyledChatBox = ({
               </div>
             );
           })}
-          {messages.length === 0 && (
+          {localMessages.length === 0 && (
             /* NoMessageRoot */
             <div className={combinedClasses?.noMessageRoot}>
               There are no messages here.
@@ -225,6 +253,11 @@ export const StyledChatBox = ({
         </div>
         {/* footer */}
         <div className={combinedClasses?.footer}>
+        {unreadMessagesCount!==0 && (<div className={combinedClasses?.unreadMessagesContainer}>
+            <div className={combinedClasses?.unreadMessagesInner}>
+              {`${unreadMessagesCount} new message${unreadMessagesCount>1?'s':''}`}
+            </div>
+          </div>)}
           {/* chatInput */}
           {/* TODO: move no scrollbar logic to tailwind */}
           <TextareaAutosize
@@ -238,7 +271,7 @@ export const StyledChatBox = ({
                   event.preventDefault();                  
                   if(message.trim()!==''){
                     onSend(message);
-                    setMessage('');                      
+                    setMessage('');
                   }
                 }
               }
