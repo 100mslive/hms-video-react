@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 import { tw, style } from 'twind/style';
 import { setup } from 'twind';
+import { camelize, resolveClasses } from '../../utils/classes/resolveClasses';
 
 const colors = {
   blue: {
@@ -100,7 +101,6 @@ export interface ButtonClasses {
   rootNoFill: string;
   rootCircle: string;
   rootRectangle: string;
-  rootIcon: string;
   rootSizeSm: string;
   rootSizeMd: string;
   rootSizeLg: string;
@@ -117,7 +117,6 @@ const defaultClasses: ButtonClasses = {
   rootNoFill: 'text-gray-200 shadow-none',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
-  rootIcon: 'space-between',
   rootSizeSm: 'px-2.5 py-1.5',
   rootSizeMd: 'px-4 py-2',
   rootSizeLg: 'px-6 py-3',
@@ -130,41 +129,44 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   disabled = false,
   focus = true,
   icon,
+  classes,
   size = 'md',
   iconRight,
   children,
   ...props
 }) => {
+  const finalClasses: ButtonClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
+  console.log(finalClasses);
   const button = style({
-    base: `${defaultClasses.root}`,
+    base: `${finalClasses.root}`,
     variants: {
       variant: {
-        standard: `${defaultClasses.rootStandard}`,
-        danger: `${defaultClasses.rootDanger}`,
-        emphasized: `${defaultClasses.rootEmphasized}`,
-        'no-fill': `${defaultClasses.rootNoFill}`,
+        standard: `${finalClasses.rootStandard}`,
+        danger: `${finalClasses.rootDanger}`,
+        emphasized: `${finalClasses.rootEmphasized}`,
+        'no-fill': `${finalClasses.rootNoFill}`,
       },
       disabled: {
-        true: `${defaultClasses.rootDisabled}`,
+        true: `${finalClasses.rootDisabled}`,
       },
       focus: {
-        true: `${defaultClasses.rootFocus}`,
-      },
-      icon: {
-        true: `${defaultClasses.rootIcon}`,
+        true: `${finalClasses.rootFocus}`,
       },
       shape: {
-        rectangle: `${defaultClasses.rootRectangle}`,
-        circle: `${defaultClasses.rootCircle}`,
+        rectangle: `${finalClasses.rootRectangle}`,
+        circle: `${finalClasses.rootCircle}`,
       },
       size: {
-        sm: `${defaultClasses.rootSizeSm}`,
-        md: `${defaultClasses.rootSizeMd}`,
-        lg: `${defaultClasses.rootSizeLg}`,
+        sm: `${finalClasses.rootSizeSm}`,
+        md: `${finalClasses.rootSizeMd}`,
+        lg: `${finalClasses.rootSizeLg}`,
       },
     },
   });
-  const className = tw(
+  const twClasses = tw(
     button({
       variant: variant,
       disabled: disabled,
@@ -173,6 +175,8 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
       size: size,
     }),
   );
+  const propClass = 'hmsui ' + camelize(`root ${variant} ${size}`);
+  const className = tw(propClass, twClasses);
   return (
     <button type="button" className={className} {...props}>
       {icon && !iconRight && <span className="mr-2">{icon}</span>}
