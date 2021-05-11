@@ -38,11 +38,7 @@ const Style: Story<TextProps> = args => {
   `;
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Text
-        styles={styles}
-        className="font-bold text-red-800 text-5xl"
-        {...args}
-      >
+      <Text styles={styles} {...args}>
         Override By Styles Props
       </Text>
     </div>

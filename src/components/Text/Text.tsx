@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { tw, style, apply } from 'twind/style';
+import { camelize, resolveClasses } from '../../utils/classes/resolveClasses';
 
 type TextTags =
   | 'h1'
@@ -55,7 +56,7 @@ export interface TextClasses {
   rootBodyLg: string;
   rootBodyMd: string;
   rootBodySm: string;
-  rootButton: string;
+  rootButtonLg: string;
 }
 
 const defaultClasses: TextClasses = {
@@ -66,28 +67,7 @@ const defaultClasses: TextClasses = {
   rootBodyLg: 'text-base leading-5',
   rootBodyMd: 'text-sm leading-4',
   rootBodySm: 'text-xs leading-3',
-  rootButton: 'text-lg font-semibold leading-6',
-};
-
-type Rec = { [key: string]: string } | TextClasses;
-const resolveClasses = (user: Rec, def: Rec) => {
-  const hash: any = {};
-  Object.keys(def).map(k => {
-    if (user.hasOwnProperty(k)) {
-      hash[k] = `${(def as any)[k]} ${(user as any)[k]}`;
-    } else {
-      hash[k] = (def as any)[k];
-    }
-  });
-  return hash;
-};
-
-const camelize = (str: string): string => {
-  return str
-    .replace(/(?:^\w|[A-Z]|\b\w)/g, function(word, index) {
-      return index === 0 ? word.toLowerCase() : word.toUpperCase();
-    })
-    .replace(/\s+/g, '');
+  rootButtonLg: 'text-lg font-semibold leading-6',
 };
 
 export const Text: React.FC<PropsWithChildren<TextProps>> = ({
@@ -103,7 +83,6 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
     classes || {},
     defaultClasses,
   );
-  const rootClass = `hmsui-typography`;
   const TagName = tag || 'p';
   const typography = style({
     // base
@@ -142,14 +121,15 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
       {
         variant: 'button',
         size: 'sm',
-        use: `${finalClasses.rootButton}`,
+        use: `${finalClasses.rootButtonLg}`,
       },
     ],
   });
   const twClasses = typography({ size, variant });
   const propClass = 'hmsui ' + camelize(`root ${variant} ${size}`);
+  const className = tw(propClass, twClasses);
   return (
-    <TagName className={tw(propClass, twClasses)} {...props}>
+    <TagName className={className} {...props}>
       {children}
     </TagName>
   );
