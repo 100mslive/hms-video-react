@@ -53,6 +53,14 @@ interface StyledButtonProps {
    */
   size?: 'sm' | 'md' | 'lg';
   /**
+   * Only Case
+   */
+  iconOnly?: boolean;
+  /**
+   * Icon Size
+   */
+  iconSize?: 'sm' | 'md' | 'lg';
+  /**
    * Shape
    */
   shape?: 'circle' | 'rectangle';
@@ -106,6 +114,9 @@ export interface ButtonClasses {
   rootSizeSm: string;
   rootSizeMd: string;
   rootSizeLg: string;
+  rootIconSizeSm: string;
+  rootIconSizeMd: string;
+  rootIconSizeLg: string;
 }
 
 const defaultClasses: ButtonClasses = {
@@ -122,6 +133,9 @@ const defaultClasses: ButtonClasses = {
   rootSizeSm: 'px-2.5 py-1.5',
   rootSizeMd: 'px-4 py-2',
   rootSizeLg: 'px-6 py-3',
+  rootIconSizeSm: 'p-2',
+  rootIconSizeMd: 'p-3',
+  rootIconSizeLg: 'p-4',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
@@ -133,6 +147,8 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   icon,
   classes,
   size = 'md',
+  iconSize = 'md',
+  iconOnly,
   iconRight,
   children,
   ...props
@@ -165,17 +181,32 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
         md: `${finalClasses.rootSizeMd}`,
         lg: `${finalClasses.rootSizeLg}`,
       },
+      iconSize: {
+        sm: `${finalClasses.rootIconSizeSm}`,
+        md: `${finalClasses.rootIconSizeMd}`,
+        lg: `${finalClasses.rootIconSizeLg}`,
+      },
     },
   });
-  const twClasses = tw(
-    button({
-      variant: variant,
-      disabled: disabled,
-      focus: focus,
-      shape: shape,
-      size: size,
-    }),
-  );
+  const twClasses = !iconOnly
+    ? tw(
+        button({
+          variant: variant,
+          disabled: disabled,
+          focus: focus,
+          shape: shape,
+          size: size,
+        }),
+      )
+    : tw(
+        button({
+          variant: variant,
+          disabled: disabled,
+          focus: focus,
+          shape: shape,
+          iconSize: iconSize,
+        }),
+      );
   // TODO: chaining descriptive classNames so that user knows which to override
   const propClass = 'hmsui-button';
   const className = tw(propClass, twClasses);

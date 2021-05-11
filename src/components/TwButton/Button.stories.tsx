@@ -65,6 +65,18 @@ const Classes: Story<ButtonProps> = args => {
   );
 };
 
+const IconOnly: Story<ButtonProps> = args => {
+  return (
+    <div className="w-full h-1/2 flex justify-center bg-white py-4">
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+        <Button iconOnly iconSize="sm" {...args}>
+          <MicOffIcon />
+        </Button>
+      </HMSThemeProvider>
+    </div>
+  );
+};
+
 export const Default = Basic.bind({});
 Basic.args = {};
 
@@ -75,4 +87,7 @@ export const IconRightButton = IconRight.bind({});
 Basic.args = {};
 
 export const ButtonClasses = Classes.bind({});
+Basic.args = {};
+
+export const IconOnlyButton = IconOnly.bind({});
 Basic.args = {};
