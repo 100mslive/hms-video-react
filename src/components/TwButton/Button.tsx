@@ -101,11 +101,14 @@ export interface ButtonClasses {
   rootCircle: string;
   rootRectangle: string;
   rootIcon: string;
+  rootSizeSm: string;
+  rootSizeMd: string;
+  rootSizeLg: string;
 }
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex items-center px-4 py-2 text-base font-medium shadow-sm focus:outline-none',
+    'inline-flex items-center text-base font-medium shadow-sm focus:outline-none',
   rootFocus: 'focus:ring focus:ring-blue-tint',
   rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
   rootStandard: 'text-gray-700 bg-gray-200 hover:bg-gray-300',
@@ -115,6 +118,9 @@ const defaultClasses: ButtonClasses = {
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootIcon: 'space-between',
+  rootSizeSm: 'px-2.5 py-1.5',
+  rootSizeMd: 'px-4 py-2',
+  rootSizeLg: 'px-6 py-3',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
@@ -124,7 +130,7 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   disabled = false,
   focus = true,
   icon,
-  size,
+  size = 'md',
   iconRight,
   children,
   ...props
@@ -151,6 +157,11 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
         rectangle: `${defaultClasses.rootRectangle}`,
         circle: `${defaultClasses.rootCircle}`,
       },
+      size: {
+        sm: `${defaultClasses.rootSizeSm}`,
+        md: `${defaultClasses.rootSizeMd}`,
+        lg: `${defaultClasses.rootSizeLg}`,
+      },
     },
   });
   const className = tw(
@@ -159,9 +170,9 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
       disabled: disabled,
       focus: focus,
       shape: shape,
+      size: size,
     }),
   );
-  console.log(iconRight);
   return (
     <button type="button" className={className} {...props}>
       {icon && !iconRight && <span className="mr-2">{icon}</span>}
