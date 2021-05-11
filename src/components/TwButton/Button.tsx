@@ -1,8 +1,10 @@
 import React, { PropsWithChildren } from 'react';
 import { tw, style } from 'twind/style';
 import { setup } from 'twind';
-import { camelize, resolveClasses } from '../../utils/classes/resolveClasses';
+import { resolveClasses } from '../../utils/classes/resolveClasses';
 
+// TODO: create a Global `tw` instance and hook
+// TODO: for using tailwind config throughout
 const colors = {
   blue: {
     tint: '#74AAFF',
@@ -139,7 +141,6 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
     classes || {},
     defaultClasses,
   );
-  console.log(finalClasses);
   const button = style({
     base: `${finalClasses.root}`,
     variants: {
@@ -175,7 +176,8 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
       size: size,
     }),
   );
-  const propClass = 'hmsui ' + camelize(`root ${variant} ${size}`);
+  // TODO: chaining descriptive classNames so that user knows which to override
+  const propClass = 'hmsui-button';
   const className = tw(propClass, twClasses);
   return (
     <button type="button" className={className} {...props}>
