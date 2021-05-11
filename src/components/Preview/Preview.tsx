@@ -9,6 +9,7 @@ import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../Button';
 import HMSLogger from '../../utils/ui-logger';
+import DeviceIds from '../Settings/DeviceIds'
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -38,6 +39,7 @@ const defaultClasses: PreviewClasses = {
 interface StyledPreviewProps {
   name: string;
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
+  getDevices: ({selectedVideoInput, selectedAudioInput, selectedAudioOutput}: DeviceIds) => void;
   goBackOnClick: () => void;
   toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
@@ -56,6 +58,7 @@ const StyledPreview = ({
   name,
   joinOnClick,
   goBackOnClick,
+  getDevices,
   videoTileProps,
   classes: extraClasses,
   defaultClasses,
@@ -253,6 +256,7 @@ const StyledPreview = ({
                 }
                 audioButtonOnClick={() => toggleMediaState('audio')}
                 videoButtonOnClick={() => toggleMediaState('video')}
+                getDevices={getDevices}
                 isAudioMuted={audioMuted}
                 isVideoMuted={videoMuted}
               />
