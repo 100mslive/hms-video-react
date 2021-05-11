@@ -66,6 +66,14 @@ interface StyledButtonProps {
    */
   disabled?: boolean;
   /**
+   * If Button has Icon
+   */
+  icon?: JSX.Element;
+  /**
+   * if Icon be to the Right
+   */
+  iconRight?: boolean;
+  /**
    * className string
    */
   classes?: { [key: string]: string } | ButtonClasses;
@@ -90,26 +98,34 @@ export interface ButtonClasses {
   rootDanger: string;
   rootEmphasized: string;
   rootNoFill: string;
+  rootCircle: string;
+  rootRectangle: string;
+  rootIcon: string;
 }
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex items-center px-4 py-2 text-base font-medium rounded-lg shadow-sm focus:outline-none',
+    'inline-flex items-center px-4 py-2 text-base font-medium shadow-sm focus:outline-none',
   rootFocus: 'focus:ring focus:ring-blue-tint',
   rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
   rootStandard: 'text-gray-700 bg-gray-200 hover:bg-gray-300',
   rootDanger: 'text-gray-700 bg-red-main hover:bg-red-tint',
   rootEmphasized: 'text-gray-700 bg-blue-main hover:bg-brand-tint',
   rootNoFill: 'text-gray-200 shadow-none',
+  rootCircle: 'rounded-full',
+  rootRectangle: 'rounded-lg',
+  rootIcon: 'space-between',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   variant = 'standard',
-  shape,
+  shape = 'rectangle',
   active = false,
   disabled = false,
   focus = true,
+  icon,
   size,
+  iconRight,
   children,
   ...props
 }) => {
@@ -128,16 +144,29 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
       focus: {
         true: `${defaultClasses.rootFocus}`,
       },
+      icon: {
+        true: `${defaultClasses.rootIcon}`,
+      },
+      shape: {
+        rectangle: `${defaultClasses.rootRectangle}`,
+        circle: `${defaultClasses.rootCircle}`,
+      },
     },
   });
-  console.log(variant);
-  // TODO: Fix boolean props not changing in storybook
   const className = tw(
-    button({ variant: variant, disabled: disabled, focus: focus }),
+    button({
+      variant: variant,
+      disabled: disabled,
+      focus: focus,
+      shape: shape,
+    }),
   );
+  console.log(iconRight);
   return (
     <button type="button" className={className} {...props}>
+      {icon && !iconRight && <span className="mr-2">{icon}</span>}
       {children}
+      {iconRight && <span className="ml-2">{icon}</span>}
     </button>
   );
 };
