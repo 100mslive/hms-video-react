@@ -9,12 +9,12 @@ import {
   ChatIcon,
   ShareScreenIcon,
 } from '../Icons';
-import { Button } from '../Button';
+import { Button as TwButton } from '../TwButton';
 import { Settings } from '../Settings/Settings';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import DeviceIds from '../Settings/DeviceIds'
+import DeviceIds from '../Settings/DeviceIds';
 
 export interface ControlBarClasses {
   root?: string;
@@ -54,9 +54,11 @@ const defaultClasses: ControlBarClasses = {
     'flex md:flex-none gap-x-4 md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
 };
 
-const getDevices = ({selectedVideoInput, selectedAudioInput, selectedAudioOutput}: DeviceIds) =>{
-
-}
+const getDevices = ({
+  selectedVideoInput,
+  selectedAudioInput,
+  selectedAudioOutput,
+}: DeviceIds) => {};
 export const StyledControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
@@ -76,57 +78,60 @@ export const StyledControlBar = ({
       setMaxTileCount={setMaxTileCount}
       key={0}
     />,
-    <Button
-      variant={'icon-only'}
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
       shape={buttonDisplay}
-      size="lg"
       onClick={screenshareButtonOnClick}
       key={1}
     >
       <ShareScreenIcon />
-    </Button>,
-    <Button
-      variant={'icon-only'}
+    </TwButton>,
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
       shape={buttonDisplay}
       onClick={chatButtonOnClick}
       active={isChatOpen}
       key={2}
-      size="lg"
     >
       <ChatIcon />
-    </Button>,
+    </TwButton>,
   ],
   centerComponents = [
-    <Button
-      variant={'icon-only'}
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
       shape={buttonDisplay}
       active={isVideoMuted}
       onClick={videoButtonOnClick}
-      size="lg"
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
-    </Button>,
-    <Button
-      variant={'icon-only'}
+    </TwButton>,
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
       shape={buttonDisplay}
       active={isAudioMuted}
       onClick={audioButtonOnClick}
       size="lg"
     >
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
-    </Button>,
+    </TwButton>,
   ],
   rightComponents = [
-    <Button
+    <TwButton
       shape={buttonDisplay}
       variant={'danger'}
       onClick={leaveButtonOnClick}
-      size="lg"
+      icon={<HangUpIcon />}
     >
-      <HangUpIcon/>
-      {' '}
       Leave room
-    </Button>,
+    </TwButton>,
   ],
   defaultClasses,
   classes: extraClasses,
