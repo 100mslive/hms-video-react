@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Logo = ({ className }: { className?: string }) => (
+export const Logo = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="106"
     height="30"
@@ -8,6 +8,7 @@ export const Logo = ({ className }: { className?: string }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
+    {...props}
   >
     <rect
       x="9.87842"
@@ -249,14 +250,14 @@ export const Logo = ({ className }: { className?: string }) => (
     </defs>
   </svg>
 );
-export const MicOffIcon = ({ className }: { className?: string }) => (
+export const MicOffIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     viewBox="0 0 24 24"
     width="24"
     height="24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -267,14 +268,14 @@ export const MicOffIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const MicOnIcon = ({ className }: { className?: string }) => (
+export const MicOnIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 36 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -285,14 +286,14 @@ export const MicOnIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const CamOnIcon = ({ className }: { className?: string }) => (
+export const CamOnIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 36 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -303,14 +304,14 @@ export const CamOnIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const CamOffIcon = ({ className }: { className?: string }) => (
+export const CamOffIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -321,14 +322,14 @@ export const CamOffIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const HangUpIcon = ({ className }: { className?: string }) => (
+export const HangUpIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 22 10"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -339,14 +340,14 @@ export const HangUpIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const RightCaratIcon = ({ className }: { className?: string }) => (
+export const RightCaratIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       d="M14.6182 10C14.6108 10.2563 14.5156 10.4907 14.3105 10.6812L8.61231 16.2476C8.45117 16.4087 8.24609 16.4966 8.0044 16.4966C7.521 16.4966 7.13281 16.1157 7.13281 15.6323C7.13281 15.3979 7.22803 15.1709 7.39648 15.0024L12.5308 10.0073L7.39648 4.99756C7.23535 4.8291 7.13281 4.60938 7.13281 4.36768C7.13281 3.88428 7.521 3.50342 8.00439 3.50342C8.24609 3.50342 8.45117 3.59131 8.6123 3.75244L14.3105 9.32617C14.5156 9.52393 14.6182 9.74365 14.6182 10Z"
@@ -355,14 +356,14 @@ export const RightCaratIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const DownCaratIcon = ({ className }: { className?: string }) => (
+export const DownCaratIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 16 10"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       d="M8 9.31971C8.30762 9.31092 8.58887 9.19667 8.81738 8.95057L15.4971 2.11268C15.6904 1.91932 15.7959 1.67323 15.7959 1.38319C15.7959 0.803112 15.3389 0.337292 14.7588 0.337292C14.4775 0.337292 14.2051 0.45155 14.0029 0.653698L8.00879 6.81483L1.99707 0.653698C1.79492 0.460339 1.53125 0.337292 1.24121 0.337292C0.661133 0.337292 0.204102 0.803112 0.204102 1.38319C0.204102 1.67323 0.30957 1.91932 0.50293 2.11268L7.19141 8.95057C7.42871 9.19667 7.69238 9.31971 8 9.31971Z"
@@ -371,14 +372,14 @@ export const DownCaratIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const UpCaratIcon = ({ className }: { className?: string }) => (
+export const UpCaratIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 16 10"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       d="M8 0.780922C7.69238 0.789711 7.41113 0.903969 7.18262 1.15006L0.50293 7.98795C0.30957 8.18131 0.204102 8.42741 0.204102 8.71745C0.204102 9.29752 0.661133 9.76334 1.24121 9.76334C1.52246 9.76334 1.79492 9.64909 1.99707 9.44694L7.99121 3.2858L14.0029 9.44694C14.2051 9.6403 14.4688 9.76334 14.7588 9.76334C15.3389 9.76334 15.7959 9.29752 15.7959 8.71745C15.7959 8.42741 15.6904 8.18131 15.4971 7.98795L8.80859 1.15006C8.57129 0.903969 8.30762 0.780922 8 0.780922Z"
@@ -387,14 +388,14 @@ export const UpCaratIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const LeftCaratIcon = ({ className }: { className?: string }) => (
+export const LeftCaratIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       d="M5.36621 10C5.37354 10.2563 5.46875 10.4907 5.67383 10.6812L11.3721 16.2476C11.5332 16.4087 11.7383 16.4966 11.98 16.4966C12.4634 16.4966 12.8516 16.1157 12.8516 15.6323C12.8516 15.3979 12.7563 15.1709 12.5879 15.0024L7.45361 10.0073L12.5879 4.99756C12.749 4.8291 12.8516 4.60938 12.8516 4.36768C12.8516 3.88428 12.4634 3.50342 11.98 3.50342C11.7383 3.50342 11.5332 3.59131 11.3721 3.75244L5.67383 9.32617C5.46875 9.52393 5.36621 9.74365 5.36621 10Z"
@@ -403,14 +404,14 @@ export const LeftCaratIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const VolumeIcon = ({ className }: { className?: string }) => (
+export const VolumeIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 21 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -421,14 +422,14 @@ export const VolumeIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const ClockIcon = ({ className }: { className?: string }) => (
+export const ClockIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -439,13 +440,14 @@ export const ClockIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const ShareScreenIcon = ({ className }: { className?: string }) => (
+export const ShareScreenIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 36 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    {...props}
   >
     <path
       d="M32.3691 24.6284L32.3691 10.834C32.3691 9.17713 31.026 7.83398 29.3691 7.83398L6.63095 7.83398C4.97409 7.83398 3.63095 9.17713 3.63095 10.834L3.63095 24.6284C3.63095 26.2852 4.97409 27.6284 6.63095 27.6284L12.2608 27.6284L24.3769 27.6284L29.3691 27.6284C31.026 27.6284 32.3691 26.2852 32.3691 24.6284Z"
@@ -466,14 +468,14 @@ export const ShareScreenIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const StarIcon = ({ className }: { className?: string }) => (
+export const StarIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -484,14 +486,14 @@ export const StarIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const StarFillIcon = ({ className }: { className?: string }) => (
+export const StarFillIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -502,14 +504,14 @@ export const StarFillIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const CloseIcon = ({ className }: { className?: string }) => (
+export const CloseIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       d="M5.28236 17.4727C4.91322 17.8418 4.89564 18.501 5.29115 18.8877C5.67787 19.2744 6.33705 19.2656 6.70619 18.8965L12.0851 13.5088L17.4728 18.8965C17.8507 19.2744 18.5011 19.2744 18.8878 18.8877C19.2658 18.4922 19.2745 17.8506 18.8878 17.4727L13.5089 12.085L18.8878 6.70606C19.2745 6.32813 19.2745 5.67774 18.8878 5.29103C18.4923 4.9131 17.8507 4.90431 17.4728 5.28224L12.0851 10.6699L6.70619 5.28224C6.33705 4.9131 5.66908 4.89552 5.29115 5.29103C4.90443 5.67774 4.91322 6.33692 5.28236 6.70606L10.6701 12.085L5.28236 17.4727Z"
@@ -518,14 +520,14 @@ export const CloseIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const SettingsIcon = ({ className }: { className?: string }) => (
+export const SettingsIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 36 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -536,14 +538,14 @@ export const SettingsIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const AttachmentIcon = ({ className }: { className?: string }) => (
+export const AttachmentIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 16 15"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -554,14 +556,14 @@ export const AttachmentIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const PeopleIcon = ({ className }: { className?: string }) => (
+export const PeopleIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -571,14 +573,14 @@ export const PeopleIcon = ({ className }: { className?: string }) => (
     />
   </svg>
 );
-export const SendIcon = ({ className }: { className?: string }) => (
+export const SendIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 20 20"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -589,14 +591,13 @@ export const SendIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const ChatIcon = ({ className }: { className?: string }) => (
+export const ChatIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 28 28"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       fillRule="evenodd"
@@ -607,14 +608,14 @@ export const ChatIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export const DotIcon = ({ className }: { className?: string }) => (
+export const DotIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
     viewBox="0 0 8 8"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    className={className}
+    {...props}
   >
     <path
       d="M0 4C0 1.79086 1.79086 0 4 0C6.20914 0 8 1.79086 8 4C8 6.20914 6.20914 8 4 8C1.79086 8 0 6.20914 0 4Z"
