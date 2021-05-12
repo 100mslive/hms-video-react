@@ -14,6 +14,7 @@ import { Settings } from '../Settings/Settings';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import DeviceIds from '../Settings/DeviceIds'
 
 export interface ControlBarClasses {
   root?: string;
@@ -53,6 +54,9 @@ const defaultClasses: ControlBarClasses = {
     'flex md:flex-none gap-x-4 md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
 };
 
+const getDevices = ({selectedVideoInput, selectedAudioInput, selectedAudioOutput}: DeviceIds) =>{
+
+}
 export const StyledControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
@@ -67,6 +71,7 @@ export const StyledControlBar = ({
   setMaxTileCount,
   leftComponents = [
     <Settings
+      getDevices={getDevices}
       maxTileCount={maxTileCount}
       setMaxTileCount={setMaxTileCount}
       key={0}
@@ -118,7 +123,8 @@ export const StyledControlBar = ({
       onClick={leaveButtonOnClick}
       size="lg"
     >
-      <HangUpIcon className="mr-2" />
+      <HangUpIcon/>
+      {' '}
       Leave room
     </Button>,
   ],

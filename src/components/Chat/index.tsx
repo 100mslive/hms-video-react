@@ -24,12 +24,8 @@ export default function Chat(args: ChatProps) {
 
   return (
     <div>
-      <Button onClick={handleClick}>
-        {open ? (
-          <ChatIcon className="text-gray-700" />
-        ) : (
-          <ChatIcon className="text-white" />
-        )}
+      <Button onClick={handleClick} active={open}>
+          <ChatIcon />
       </Button>
       <Popover
         id={id}
@@ -49,7 +45,7 @@ export default function Chat(args: ChatProps) {
           horizontal: 'center',
         }}
       >
-        <div style={{ height: '466px', width: '240px' }} className="flex">
+        <div style={{ height: '466px', width: '240px' }}>
           <ChatBox
             {...args}
             onClose={() => {

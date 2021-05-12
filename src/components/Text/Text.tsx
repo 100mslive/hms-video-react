@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
+import { tw, style, apply } from 'twind/style';
+import { camelize, resolveClasses } from '../../utils/classes/resolveClasses';
 
 type TextTags =
   | 'h1'
@@ -32,14 +32,21 @@ interface StyledTextProps {
    */
   tag?: TextTags;
   /**
-   * Default class names
+   * className string
    */
-  defaultClasses?: TextClasses;
+  classes?: { [key: string]: string } | TextClasses;
   /**
-   * Extra class names
+   * css styles declaration
    */
-  classes?: TextClasses;
+  styles?: any;
 }
+
+type NativeAttrs = Omit<
+  React.DetailsHTMLAttributes<any>,
+  keyof StyledTextProps
+>;
+
+export type TextProps = StyledTextProps & NativeAttrs;
 
 export interface TextClasses {
   root: string;
@@ -49,7 +56,7 @@ export interface TextClasses {
   rootBodyLg: string;
   rootBodyMd: string;
   rootBodySm: string;
-  rootButton: string;
+  rootButtonLg: string;
 }
 
 const defaultClasses: TextClasses = {
@@ -57,60 +64,73 @@ const defaultClasses: TextClasses = {
   rootHeadingLg: 'text-5xl font-semibold leading-7',
   rootHeadingMd: 'text-4xl font-medium leading-6',
   rootHeadingSm: 'text-3xl font-medium leading-6',
-  rootBodyLg: 'text-base leading-5', // default
+  rootBodyLg: 'text-base leading-5',
   rootBodyMd: 'text-sm leading-4',
   rootBodySm: 'text-xs leading-3',
-  rootButton: 'text-lg font-semibold leading-6',
+  rootButtonLg: 'text-lg font-semibold leading-6',
 };
 
-export const StyledText: React.FC<PropsWithChildren<StyledTextProps>> = ({
+export const Text: React.FC<PropsWithChildren<TextProps>> = ({
   tag,
   variant = 'body',
   size = 'lg',
   children,
-  defaultClasses,
-  classes: extraClasses,
+  classes,
+  styles,
   ...props
 }) => {
+  const finalClasses: TextClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
   const TagName = tag || 'p';
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  const classList: string[] = [`${combinedClasses?.root}`];
-  if (variant === 'body') {
-    if (size === 'sm') {
-      classList.push(`${combinedClasses?.rootBodySm}`);
-    } else if (size === 'md') {
-      classList.push(`${combinedClasses?.rootBodyMd}`);
-    } else if (size === 'lg') {
-      classList.push(`${combinedClasses?.rootBodyLg}`);
-    }
-  } else if (variant === 'heading') {
-    if (size === 'sm') {
-      classList.push(`${combinedClasses?.rootHeadingSm}`);
-    } else if (size === 'md') {
-      classList.push(`${combinedClasses?.rootHeadingMd}`);
-    } else if (size === 'lg') {
-      classList.push(`${combinedClasses?.rootHeadingLg}`);
-    }
-  } else if (variant === 'button') {
-    classList.push(`${combinedClasses?.rootButton}`);
-  }
-
+  const typography = style({
+    // base
+    base: `${finalClasses.root}`,
+    matches: [
+      {
+        variant: 'heading',
+        size: 'lg',
+        use: `${finalClasses.rootHeadingLg}`,
+      },
+      {
+        variant: 'heading',
+        size: 'md',
+        use: `${finalClasses.rootHeadingMd}`,
+      },
+      {
+        variant: 'heading',
+        size: 'sm',
+        use: `${finalClasses.rootHeadingSm}`,
+      },
+      {
+        variant: 'body',
+        size: 'lg',
+        use: `${finalClasses.rootBodyLg}`,
+      },
+      {
+        variant: 'body',
+        size: 'md',
+        use: `${finalClasses.rootBodyMd}`,
+      },
+      {
+        variant: 'body',
+        size: 'sm',
+        use: `${finalClasses.rootBodySm}`,
+      },
+      {
+        variant: 'button',
+        size: 'sm',
+        use: `${finalClasses.rootButtonLg}`,
+      },
+    ],
+  });
+  const twClasses = typography({ size, variant });
+  const propClass = 'hmsui ' + camelize(`root ${variant} ${size}`);
+  const className = tw(propClass, twClasses);
   return (
-    <TagName className={`${classList.join(' ')}`} {...props}>
+    <TagName className={className} {...props}>
       {children}
     </TagName>
   );
 };
-
-type NativeAttrs = Omit<
-  React.DetailsHTMLAttributes<any>,
-  keyof StyledTextProps
->;
-
-export type TextProps = Omit<StyledTextProps, 'defaultClasses'> & NativeAttrs;
-
-export const Text = withClasses<TextClasses | undefined>(
-  defaultClasses,
-  'text',
-)<StyledTextProps>(StyledText);

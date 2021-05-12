@@ -9,7 +9,6 @@ import { Silence } from '../components/Silence';
 import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
-import { initAudioSink } from './helpers/audioManager';
 import HMSLogger from '../utils/ui-logger';
 
 const sdk = new HMSSdk();
@@ -36,10 +35,6 @@ export const HMSRoomProvider: React.FC = props => {
   >(null);
 
   useEffect(() => {
-    initAudioSink();
-  }, []);
-
-  useEffect(() => {
     if (audioMuted) {
       toggleMuteInPeer('audio');
     }
@@ -51,6 +46,12 @@ export const HMSRoomProvider: React.FC = props => {
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
     sdk.join(
       config,
+      {
+        isAudioMuted: false,
+        isVideoMuted: false,
+        audioDeviceID: 'default',
+        videoDeviceID: 'default',
+      },
       createListener(
         sdk,
         listener,

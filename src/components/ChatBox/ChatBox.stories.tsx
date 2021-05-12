@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ChatBox, ChatProps, Message } from './ChatBox';
 import ReactMarkdown from 'react-markdown';
@@ -25,6 +25,19 @@ const Template: Story<ChatProps> = args => {
       return messages;
     });
   };
+  useEffect(()=>{
+    setInterval(()=>{
+      setMesaages(prevMessages => {
+        let messages = [...prevMessages];
+        messages.push({
+          message:"Ghost message",
+          sender:"Ghost",
+          time:new Date(),
+        })
+        return messages;
+      })
+    },8000)
+  },[])
   return (
     <div className="w-full h-full flex justify-center">
       <div style={{ height: '466px', width: '240px' }}>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import '../index.css';
 import { ButtonDisplayType } from '../../../types';
 import {
@@ -9,11 +9,14 @@ import {
   CamOffIcon,
 } from '../../Icons';
 import { Button } from '../../Button';
+import { Settings } from '../../Settings/Settings';
+import DeviceIds from '../../Settings/DeviceIds'
 
 export interface VideoTileControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   showGradient?: boolean;
+  getDevices: ({selectedVideoInput, selectedAudioInput, selectedAudioOutput}: DeviceIds) => void;
   classes?: {
     root?: string;
     controls?: string;
@@ -29,6 +32,7 @@ export const VideoTileControls = ({
   isAudioMuted = false,
   isVideoMuted = false,
   buttonDisplay = 'rectangle',
+  getDevices,
   audioButtonOnClick,
   videoButtonOnClick,
   settingsButtonOnClick,
@@ -41,6 +45,9 @@ export const VideoTileControls = ({
       'flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide',
   },
 }: VideoTileControlsProps) => {
+  const [maxTileCount, setMaxTileCount] = useState(16);
+
+
   return (
     <div className={`${classes.root}`}>
       <div className={`${classes.controls}`}>
@@ -72,13 +79,12 @@ export const VideoTileControls = ({
         /> */}
       </div>
       <div className={`${classes.rightcontrols}`}>
-        <Button
-          variant={'icon-only'}
-          shape={buttonDisplay}
-          onClick={settingsButtonOnClick}
-        >
-          <SettingsIcon />
-        </Button>
+        <Settings
+              maxTileCount={maxTileCount}
+              setMaxTileCount={setMaxTileCount}
+              getDevices={getDevices}
+              key={0}
+              />
         {/* <SettingsButton
           clickHandler={settingsButtonOnClick}
           buttonDisplay={buttonDisplay}

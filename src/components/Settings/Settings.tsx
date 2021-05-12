@@ -6,6 +6,9 @@ import { withStyles } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../Button';
+import HMSLogger from '../../utils/ui-logger';
+import DeviceIds from './DeviceIds'
+
 
 export interface SettingsClasses {
   root?: string;
@@ -22,11 +25,18 @@ export interface SettingsClasses {
   selectContainer?: string;
   select?: string;
   selectInner?: string;
+  divider?:string;
+  sliderContainer?:string;
+  sliderInner?:string;
+  sliderLabelContainer?:string;
+  sliderLabel?:string;
+  slider?:string;
 }
 
 interface StyledSettingsProps {
   setMaxTileCount: (count: number) => void;
   maxTileCount: number;
+  getDevices: ({selectedVideoInput, selectedAudioInput, selectedAudioOutput}: DeviceIds) => void;
   defaultClasses?: SettingsClasses;
   classes?: SettingsClasses;
 }
@@ -47,6 +57,12 @@ const defaultClasses: SettingsClasses = {
   select:
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   selectInner: 'p-4',
+  divider:'bg-gray-200 h-px w-full my-4',
+  sliderContainer:'w-full my-1.5',
+  sliderInner:'w-full flex',
+  sliderLabelContainer:'w-1/3 flex justify-end items-center ',
+  sliderLabel:'text-right',
+  slider:'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
 };
 
 //TODO figure out how to expose this outside
@@ -72,6 +88,7 @@ const HMSSlider = withStyles({
 const StyledSettings = ({
   maxTileCount,
   setMaxTileCount,
+  getDevices,
   defaultClasses,
   classes: extraClasses,
 }: StyledSettingsProps) => {
@@ -82,12 +99,17 @@ const StyledSettings = ({
   const [audioOutput, setAudioOutput] = React.useState<MediaDeviceInfo[]>([]);
   const [videoInput, setVideoInput] = React.useState<MediaDeviceInfo[]>([]);
 
+  const [selectedAudioInput, setSelectedAudioInput] = React.useState('default');
+  const [selectedVideoInput, setSelectedVideoInput] = React.useState('default');
+  const [selectedAudioOutput, setSelectedAudioOutput] = React.useState('default');
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    getDevices({selectedVideoInput, selectedAudioInput, selectedAudioOutput});
   };
   const handleChange = (event: any, newValue: number | number[]) => {
     setMaxTileCount(newValue as number);
@@ -96,6 +118,7 @@ const StyledSettings = ({
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
       for (let device of devices) {
+        HMSLogger.w('Device:', device);
         if (device.kind === 'videoinput') {
           setVideoInput(videoDevices => [...videoDevices, device]);
         } else if (device.kind === 'audioinput') {
@@ -145,6 +168,11 @@ const StyledSettings = ({
                 <select
                   name="camera"
                   className={`${combinedClasses?.select}`}
+                  onChange={
+                    event=> {
+                      setSelectedVideoInput(event.target.value)
+                    }
+                  }
                   // value={role}
                   // onChange={event => {
                   //   setRole(event.target.value);
@@ -152,7 +180,7 @@ const StyledSettings = ({
                 >
                   {videoInput.map((device, index) => (
                     <option
-                      value="Teacher"
+                      value={device.deviceId}
                       className={`${combinedClasses?.selectInner}`}
                       key={index}
                     >
@@ -170,6 +198,12 @@ const StyledSettings = ({
                 <select
                   name="microphone"
                   className={`${combinedClasses?.select}`}
+                  onChange={
+                    event=> {
+                      setSelectedAudioInput(event.target.value)
+                    }
+                  }
+                  
                   // value={role}
                   // onChange={event => {
                   //   setRole(event.target.value);
@@ -177,7 +211,7 @@ const StyledSettings = ({
                 >
                   {audioInput.map((device, index) => (
                     <option
-                      value="Teacher"
+                      value={device.deviceId}
                       className={`${combinedClasses?.selectInner}`}
                       key={index}
                     >
@@ -195,6 +229,11 @@ const StyledSettings = ({
                 <select
                   name="audio-output"
                   className={`${combinedClasses?.select}`}
+                  onChange={
+                    event=> {
+                      setSelectedAudioOutput(event.target.value)
+                    }
+                  }
                   // value={role}
                   // onChange={event => {
                   //   setRole(event.target.value);
@@ -202,7 +241,7 @@ const StyledSettings = ({
                 >
                   {audioOutput.map((device, index) => (
                     <option
-                      value="Teacher"
+                      value={device.deviceId}
                       className={`${combinedClasses?.select}`}
                       key={index}
                     >
@@ -310,13 +349,13 @@ const StyledSettings = ({
                 </div>
               </div>
             </div> */}
-            <div className="bg-gray-200 h-px w-full my-4"></div>
-            <div className="w-full my-1.5">
-              <div className="w-full flex  ">
-                <div className="w-1/3 flex justify-end items-center ">
-                  <span className="text-right">Participants in view:</span>
+            <div className={combinedClasses?.divider}></div>
+            <div className={combinedClasses?.sliderContainer}>
+              <div className={combinedClasses?.sliderInner}>
+                <div className={combinedClasses?.sliderLabelContainer}>
+                  <span className={combinedClasses?.sliderLabel}>Participants in view:</span>
                 </div>
-                <div className="rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ">
+                <div className={combinedClasses?.slider}>
                   <HMSSlider
                     defaultValue={8}
                     value={maxTileCount}
