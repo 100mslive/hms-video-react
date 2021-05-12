@@ -141,13 +141,16 @@ export const StyledVideo = ({
 
   useEffect(() => {
     (async () => {
-      inView
-        ? // @ts-ignore
-          await hmsVideoTrack?.addSink(videoRef.current)
-        : // @ts-ignore
-          await hmsVideoTrack?.removeSink(videoRef.current);
+      if (videoRef.current) {
+        HMSLogger.d('Video InView', videoTrack, inView);
+        inView
+          ? // @ts-ignore
+            await hmsVideoTrack?.addSink(videoRef.current)
+          : // @ts-ignore
+            await hmsVideoTrack?.removeSink(videoRef.current);
+      }
     })();
-  }, [inView, videoTrack, hmsVideoTrack]);
+  }, [inView, videoRef, videoTrack, hmsVideoTrack]);
 
   useEffect(() => {
     if (videoRef && videoRef.current && videoTrack && !hmsVideoTrack) {
