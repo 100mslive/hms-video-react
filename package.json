@@ -1,5 +1,5 @@
 {
-  "version": "0.2.16-347",
+  "version": "0.2.16-358",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -89,6 +89,7 @@
     "postcss": "^7.0.35",
     "react-container-dimensions": "^1.4.1",
     "react-html-parser": "^2.0.2",
+    "react-intersection-observer": "^8.31.1",
     "react-markdown": "^6.0.0",
     "react-resize-detector": "^6.6.5",
     "react-slick": "^0.28.1",

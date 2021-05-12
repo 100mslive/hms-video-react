@@ -22,6 +22,7 @@ export interface ParticipantListClasses {
   buttonClosed?: string;
   buttonInner?: string;
   buttonText?: string;
+  carat?:string;
   menuRoot?: string;
   menuInner?: string;
   menuSection?: string;
@@ -45,6 +46,7 @@ const defaultClasses: ParticipantListClasses = {
   buttonClosed: 'dark:bg-black',
   buttonInner: 'flex flex-grow justify-center px-3 tracking-wide self-center',
   buttonText: 'pl-2 self-center',
+  carat:"w-3 h-3",
   menuRoot: 'max-h-100 rounded-bl-xl rounded-br-xl mt-6',
   menuInner:
     'w-60 max-h-100 overflow-y-auto rounded-bl-none rounded-br-none bg-white dark:bg-gray-100 focus:outline-none',
@@ -95,9 +97,9 @@ export const StyledParticipantList = ({
           {participantList.length} in room
           <span className={`${combinedClasses?.buttonText}`}>
             {open ? (
-              <UpCaratIcon className="w-3 h-3" />
+              <UpCaratIcon className={combinedClasses?.carat} />
             ) : (
-              <DownCaratIcon className="w-3 h-3 " />
+              <DownCaratIcon className={combinedClasses?.carat} />
             )}
           </span>
         </div>

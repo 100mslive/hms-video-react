@@ -6,6 +6,7 @@ import { withClasses } from '../../utils/styles';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
+import {Button} from '../Button';
 import './index.css';
 import {
   LeftCaratIcon,
@@ -144,9 +145,9 @@ export function SliderRightArrow({ container, ...props }: IArrowProps) {
   const { style, onClick } = props;
   const RightArrow = (
     <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <button className="text-sm text-white focus:outline-none">
+      <Button variant="icon-only" size="sm">
         <RightCaratIcon />
-      </button>
+      </Button>
     </div>
   );
   return container ? createPortal(RightArrow, container) : RightArrow;
@@ -206,9 +207,9 @@ function SliderLeftArrow({ container, ...props }: IArrowProps) {
   const { style, onClick } = props;
   const LeftArrow = (
     <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <button className="text-sm rounded-sm focus:outline-none text-white">
+      <Button variant="icon-only" size="sm">
         <LeftCaratIcon />
-      </button>
+      </Button>
     </div>
   );
   return container ? createPortal(LeftArrow, container) : LeftArrow;
