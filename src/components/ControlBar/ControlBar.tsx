@@ -47,7 +47,7 @@ const defaultClasses: ControlBarClasses = {
   root:
     'flex flex-grow bg-white dark:bg-black h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
   leftRoot:
-    'flex md:flex-none md:self-center md:justify-center gap-x-4 md:left-0 md:ml-2 md:absolute',
+    'flex md:flex-none md:self-center md:justify-center gap-x-4 md:left-0 md:ml-2 md:absolute items-center',
   centerRoot:
     'flex md:flex-grow gap-x-4 md:mr-2 md:self-center md:justify-center',
   rightRoot:
@@ -118,13 +118,13 @@ export const StyledControlBar = ({
       shape={buttonDisplay}
       active={isAudioMuted}
       onClick={audioButtonOnClick}
-      size="lg"
     >
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </TwButton>,
   ],
   rightComponents = [
     <TwButton
+      size="md"
       shape={buttonDisplay}
       variant={'danger'}
       onClick={leaveButtonOnClick}
