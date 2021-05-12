@@ -1,5 +1,7 @@
 import React, { PropsWithChildren } from 'react';
+// @ts-ignore
 import { tw, style } from 'twind/style';
+// @ts-ignore
 import { setup } from 'twind';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
 
