@@ -93,6 +93,7 @@ const defaultClasses: VideoTileClasses = {
 
 const StyledVideoTile = ({
   videoTrack,
+  hmsVideoTrack,
   audioTrack,
   peer,
   isLocal = false,
@@ -180,6 +181,7 @@ const StyledVideoTile = ({
         >
           <Video
             videoTrack={videoTrack}
+            hmsVideoTrack={hmsVideoTrack}
             audioTrack={audioTrack}
             objectFit={objectFit}
             isLocal={isLocal}

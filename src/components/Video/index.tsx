@@ -1,8 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
+import { useInView } from 'react-intersection-observer';
+import HMSVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSVideoTrack';
+import HMSLogger from '../../utils/ui-logger';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -38,6 +41,10 @@ interface StyledVideoProps {
    * Video Track to be displayed.
    */
   videoTrack: MediaStreamTrack;
+  /**
+   * 100ms's wrapper over MediaStreamTrack with additional methods.
+   */
+  hmsVideoTrack?: HMSVideoTrack;
   /**
    * Audio Track to be displayed.
    */
@@ -102,7 +109,7 @@ const defaultClasses: VideoClasses = {
 
 export const StyledVideo = ({
   videoTrack,
-  audioTrack,
+  hmsVideoTrack,
   objectFit,
   isLocal,
   videoSource,
@@ -116,17 +123,42 @@ export const StyledVideo = ({
 }: StyledVideoProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  const { ref: inViewRef, inView } = useInView({ threshold: 0.5 });
+
+  /**
+   * Callback to assign multiple refs(containerRef, inViewRef) to a single component.
+   * Refer: [https://github.com/thebuilder/react-intersection-observer#how-can-i-assign-multiple-refs-to-a-component]
+   */
+  const setRefs = useCallback(
+    node => {
+      videoRef.current = node;
+      inViewRef(node);
+    },
+    [inViewRef],
+  );
+
   useEffect(() => {
-    if (videoRef && videoRef.current && videoTrack) {
+    (async () => {
+      inView
+        ? // @ts-ignore
+          await hmsVideoTrack?.addSink(videoRef.current)
+        : // @ts-ignore
+          await hmsVideoTrack?.removeSink(videoRef.current);
+    })();
+  }, [inView, videoTrack, hmsVideoTrack]);
+
+  useEffect(() => {
+    if (videoRef && videoRef.current && videoTrack && !hmsVideoTrack) {
       videoRef.current.srcObject = new MediaStream([videoTrack]);
     }
-  }, [videoRef, videoTrack, audioTrack, isLocal]);
+  }, [videoRef, videoTrack, isLocal]);
 
   return (
     <>
       <video
-        ref={videoRef}
+        ref={setRefs}
         muted={true}
         autoPlay
         playsInline
