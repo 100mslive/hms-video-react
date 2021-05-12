@@ -87,7 +87,6 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "postcss": "^7.0.35",
-    "react-container-dimensions": "^1.4.1",
     "react-html-parser": "^2.0.2",
     "react-intersection-observer": "^8.31.1",
     "react-markdown": "^6.0.0",

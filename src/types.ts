@@ -1,3 +1,5 @@
+import HMSVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSVideoTrack';
+
 export interface Peer {
   id: string;
   displayName: string;
@@ -9,6 +11,7 @@ export type VideoSource = 'screen' | 'camera' | 'canvas';
 //TODO match with HMSPeer interface
 export interface MediaStreamWithInfo {
   videoTrack: MediaStreamTrack;
+  hmsVideoTrack?: HMSVideoTrack;
   audioTrack: MediaStreamTrack;
   peer: Peer;
   audioLevel?: number;
