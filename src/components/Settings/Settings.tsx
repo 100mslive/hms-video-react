@@ -163,12 +163,13 @@ const StyledSettings = ({
             </span>
 
             <TwButton
-              icon={<CloseIcon />}
               iconOnly
               variant={'no-fill'}
               iconSize="md"
               onClick={handleClose}
-            />
+            >
+              <CloseIcon />
+            </TwButton>
           </div>
 
           <div className={`${combinedClasses?.formContainer}`}>
