@@ -46,12 +46,6 @@ export const HMSRoomProvider: React.FC = props => {
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
     sdk.join(
       config,
-      {
-        isAudioMuted: false,
-        isVideoMuted: false,
-        audioDeviceID: 'default',
-        videoDeviceID: 'default',
-      },
       createListener(
         sdk,
         listener,
