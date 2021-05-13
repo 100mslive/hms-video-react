@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button } from '../TwButton';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
+import { withClasses } from '../../utils/styles';
+import { Button } from '../TwButton';
+import { combineClasses } from '../../utils';
 
 interface Fields {
   username: string;
