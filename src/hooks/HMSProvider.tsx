@@ -3,6 +3,7 @@ import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
 import React, { createContext } from 'react';
 import sdkEventEmitter from './helpers/event-emitter';
+import { SpeakerProvider } from './SpeakerProvider';
 
 interface HMSProviderProps {
   sdk: HMSSdk;
@@ -63,7 +64,7 @@ export const HMSProvider: React.FC = props => {
         leave: leave,
       }}
     >
-      {props.children}
+      <SpeakerProvider>{props.children}</SpeakerProvider>
     </HMSContext.Provider>
   );
 };

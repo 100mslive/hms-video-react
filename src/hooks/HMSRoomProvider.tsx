@@ -100,15 +100,6 @@ export const HMSRoomProvider: React.FC = props => {
     HMSLogger.d('[sendMessage]', message);
   };
 
-  const updateDominantSpeaker = (type: HMSPeerUpdate, peer: HMSPeer | null) => {
-    if (type === HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {
-      setDominantSpeaker(peer);
-    }
-    if (type === HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER) {
-      setDominantSpeaker(null);
-    }
-  };
-
   window.onunload = () => {
     leave();
   };
