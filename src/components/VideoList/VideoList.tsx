@@ -6,7 +6,7 @@ import { withClasses } from '../../utils/styles';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider, { Settings } from 'react-slick';
-import {Button} from '../Button';
+import { Button } from '../Button';
 import './index.css';
 import {
   LeftCaratIcon,

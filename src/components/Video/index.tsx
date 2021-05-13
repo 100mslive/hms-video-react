@@ -99,7 +99,7 @@ interface StyledVideoProps {
 }
 
 const defaultClasses: VideoClasses = {
-  video: 'h-full w-full rounded-lg',
+  video: 'h-full w-full rounded-lg absolute left-0 top-0',
   videoCircle: 'rounded-full',
   videoLocal: 'transform -scale-x-100', //apply`${css({ transform: 'scaleX(-1)' })}`
   videoCover: 'object-cover',

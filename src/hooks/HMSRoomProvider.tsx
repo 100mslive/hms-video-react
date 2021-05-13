@@ -10,7 +10,7 @@ import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 import HMSLogger from '../utils/ui-logger';
-import {areSpeakersApproxEqual} from "./helpers/audioUtils";
+import { areSpeakersApproxEqual } from './helpers/audioUtils';
 
 const sdk = new HMSSdk();
 
@@ -68,7 +68,6 @@ export const HMSRoomProvider: React.FC = props => {
     }
     setLocalPeer(sdk.getLocalPeer());
     setPeers(sdk.getPeers());
-
   };
 
   const toggleScreenShare = async () => {

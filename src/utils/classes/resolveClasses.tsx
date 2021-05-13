@@ -1,4 +1,3 @@
-
 export const resolveClasses = (user: any, def: any) => {
   const hash: any = {};
   Object.keys(def).map(k => {
