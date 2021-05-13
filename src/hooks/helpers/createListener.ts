@@ -1,14 +1,14 @@
-import { HMSSdk, HMSTrackType } from '@100mslive/100ms-web-sdk';
+import {
+  HMSPeerUpdate,
+  HMSRoomUpdate,
+  HMSSdk,
+  HMSTrackUpdate,
+} from '@100mslive/100ms-web-sdk';
 import HMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import HMSRoom from '@100mslive/100ms-web-sdk/dist/interfaces/room';
 import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
-import {
-  HMSPeerUpdate,
-  HMSRoomUpdate,
-  HMSTrackUpdate,
-} from '@100mslive/100ms-web-sdk';
 import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import HMSLogger from '../../utils/ui-logger';
 
@@ -35,9 +35,17 @@ const createListener = (
         peers,
       });
 
-      setPeers(peers);
-      setLocalPeer(sdk.getLocalPeer());
-      updateDominantSpeaker(type, peer);
+      if (
+        [
+          HMSPeerUpdate.BECAME_DOMINANT_SPEAKER,
+          HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER,
+        ].includes(type)
+      ) {
+        updateDominantSpeaker(type, peer);
+      } else {
+        setPeers(peers);
+        setLocalPeer(sdk.getLocalPeer());
+      }
       incomingListener.onPeerUpdate(type, peer);
     },
 

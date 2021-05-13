@@ -12,7 +12,6 @@ export default interface HMSRoomProps {
   audioMuted: boolean;
   videoMuted: boolean;
   dominantSpeaker: HMSPeer | null;
-  speakers: any;
   join: (config: HMSConfig, listener: HMSUpdateListener) => void;
   leave: () => void;
   toggleMute: (type: 'audio' | 'video') => void;

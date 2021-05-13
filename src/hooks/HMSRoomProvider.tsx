@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 import HMSLogger from '../utils/ui-logger';
+import sdkEventEmitter from './helpers/event-emitter';
 
 const sdk = new HMSSdk();
 
@@ -28,8 +29,6 @@ export const HMSRoomProvider: React.FC = props => {
 
   const [videoMuted, setVideoMuted] = useState(false);
 
-  const [speakers, setSpeakers] = useState<HMSSpeaker[]>([]);
-
   const [dominantSpeaker, setDominantSpeaker] = useState<
     HMSRoomProps['dominantSpeaker']
   >(null);
@@ -44,32 +43,35 @@ export const HMSRoomProvider: React.FC = props => {
   }, [localPeer]);
 
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
-    sdk.join(
-      config,
-      createListener(
-        sdk,
-        listener,
-        setPeers,
-        setLocalPeer,
-        receiveMessage,
-        updateDominantSpeaker,
-      ),
-    );
-    sdk.addAudioListener({
-      onAudioLevelUpdate: speakers => {
-        setSpeakers(speakers);
+    sdk.join(config, {
+      onJoin: room => {
+        sdkEventEmitter.emit('join', room);
+        listener.onJoin(room);
+      },
+      onRoomUpdate: (type, room) => {
+        sdkEventEmitter.emit('room-update', type, room);
+        listener.onRoomUpdate(type, room);
+      },
+      onPeerUpdate: (type, peer) => {
+        sdkEventEmitter.emit('peer-update', type, peer);
+        listener.onPeerUpdate(type, peer);
+      },
+      onTrackUpdate: (type, track, peer) => {
+        sdkEventEmitter.emit('track-update', type, track, peer);
+        listener.onTrackUpdate(type, track, peer);
+      },
+      onMessageReceived: message => {
+        sdkEventEmitter.emit('message-received', message);
+        listener.onMessageReceived(message);
+      },
+      onError: exception => {
+        sdkEventEmitter.emit('error', exception);
+        listener.onError(exception);
       },
     });
   };
 
-  const leave = () => {
-    //TODO this is not strictly necessary since SDK should clean up, but foing it for safety
-    setPeers([]);
-    setLocalPeer({} as HMSPeer);
-    setAudioMuted(false);
-    setVideoMuted(false);
-    sdk.leave();
-  };
+  const leave = () => sdk.leave();
 
   const toggleMute = (type: 'audio' | 'video') => {
     if (type === 'audio') {
@@ -154,7 +156,6 @@ export const HMSRoomProvider: React.FC = props => {
         toggleMute: toggleMute,
         toggleScreenShare: toggleScreenShare,
         sendMessage: sendMessage,
-        speakers,
       }}
     >
       <Silence />

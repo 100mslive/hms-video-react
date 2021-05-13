@@ -15,6 +15,6 @@ export * from './components/Settings/Settings';
 export * from './components/Join';
 export * from './components/Icons';
 export * from './components/Button';
-export {Button as TwButton} from './components/TwButton'
+export { Button as TwButton } from './components/TwButton';
 export { HMSRoomProvider, useHMSRoom } from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';
