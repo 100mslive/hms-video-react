@@ -1,11 +1,10 @@
-import { HMSSdk } from '@100mslive/100ms-web-sdk';
+import { HMSSdk, HMSPeerUpdate } from '@100mslive/100ms-web-sdk';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
-import HMSUpdateListener, {
-  HMSPeerUpdate,
-} from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
+import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
 import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import React, { createContext, useContext, useState } from 'react';
+import HMSLogger from '../utils/ui-logger';
 import sdkEventEmitter from './helpers/event-emitter';
 import { MessageProvider } from './MessageProvider';
 import { SpeakerProvider } from './SpeakerProvider';
@@ -48,15 +47,18 @@ export const HMSRoomProvider: React.FC = props => {
         listener.onRoomUpdate(type, room);
       },
       onPeerUpdate: (type, peer) => {
+        HMSLogger.d('Listener [onPeerUpdate]: ', type, peer);
         handlePeerUpdate(type, peer);
         sdkEventEmitter.emit('peer-update', type, peer);
         listener.onPeerUpdate(type, peer);
       },
       onTrackUpdate: (type, track, peer) => {
+        HMSLogger.d('Listener [onTrackUpdate]: ', type, track, peer);
         setLocalPeerAndPeers();
         listener.onTrackUpdate(type, track, peer);
       },
       onMessageReceived: message => {
+        HMSLogger.d('Listener [onMessageReceived]: ', message);
         sdkEventEmitter.emit('message-received', message);
         listener.onMessageReceived(message);
       },
@@ -66,8 +68,10 @@ export const HMSRoomProvider: React.FC = props => {
     });
 
     sdk.addAudioListener({
-      onAudioLevelUpdate: speakers =>
-        sdkEventEmitter.emit('audio-level-update', speakers),
+      onAudioLevelUpdate: speakers => {
+        HMSLogger.d('Listener [onAudioLevelUpdate]: ', speakers);
+        sdkEventEmitter.emit('audio-level-update', speakers);
+      },
     });
   };
 
@@ -78,10 +82,10 @@ export const HMSRoomProvider: React.FC = props => {
 
   const handlePeerUpdate = (type: HMSPeerUpdate, _peer: HMSPeer | null) => {
     if (
-      ![
-        HMSPeerUpdate.BECAME_DOMINANT_SPEAKER,
-        HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER,
-      ].includes(type)
+      !(
+        type === HMSPeerUpdate.BECAME_DOMINANT_SPEAKER ||
+        type === HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER
+      )
     ) {
       setLocalPeerAndPeers();
     }
@@ -106,11 +110,17 @@ export const HMSRoomProvider: React.FC = props => {
 
   const toggleMute = async (type: 'audio' | 'video') => {
     if (localPeer && localPeer.audioTrack && type === 'audio') {
+      HMSLogger.d('toggleMute: before', localPeer.audioTrack.enabled);
       await localPeer.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
+      HMSLogger.d('toggleMute: after', localPeer.audioTrack.enabled);
     }
     if (localPeer && localPeer.videoTrack && type === 'video') {
+      HMSLogger.d('toggleMute: before', localPeer.videoTrack.enabled);
       await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
+      HMSLogger.d('toggleMute: after', localPeer.videoTrack.enabled);
     }
+
+    setLocalPeer(localPeer);
   };
 
   const hasPeerScreenShared = (peer: HMSPeer | undefined | null) => {
