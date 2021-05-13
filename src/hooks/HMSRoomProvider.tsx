@@ -25,22 +25,9 @@ export const HMSRoomProvider: React.FC = props => {
 
   const [messages, setMessages] = useState<HMSMessage[]>([]);
 
-  const [audioMuted, setAudioMuted] = useState(false);
-
-  const [videoMuted, setVideoMuted] = useState(false);
-
   const [dominantSpeaker, setDominantSpeaker] = useState<
     HMSRoomProps['dominantSpeaker']
   >(null);
-
-  useEffect(() => {
-    if (audioMuted) {
-      toggleMuteInPeer('audio');
-    }
-    if (videoMuted) {
-      toggleMuteInPeer('video');
-    }
-  }, [localPeer]);
 
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
     sdk.join(config, {
@@ -73,26 +60,15 @@ export const HMSRoomProvider: React.FC = props => {
 
   const leave = () => sdk.leave();
 
-  const toggleMute = (type: 'audio' | 'video') => {
-    if (type === 'audio') {
-      setAudioMuted(prevMuted => !prevMuted);
-    } else if (type === 'video') {
-      setVideoMuted(prevMuted => !prevMuted);
-    }
-
-    toggleMuteInPeer(type);
-  };
-
-  const toggleMuteInPeer = async (type: 'audio' | 'video') => {
+  const toggleMute = async (type: 'audio' | 'video') => {
     if (localPeer && localPeer.audioTrack && type === 'audio') {
-      await localPeer?.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
+      await localPeer.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
     }
     if (localPeer && localPeer.videoTrack && type === 'video') {
       await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
     }
-
-    setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
+    setPeers(sdk.getPeers());
   };
 
   const toggleScreenShare = async () => {
@@ -148,8 +124,8 @@ export const HMSRoomProvider: React.FC = props => {
           time: message.time,
           sender: message.sender,
         })),
-        audioMuted: audioMuted,
-        videoMuted: videoMuted,
+        audioMuted: localPeer.audioTrack?.enabled as boolean,
+        videoMuted: localPeer.videoTrack?.enabled as boolean,
         dominantSpeaker,
         join: join,
         leave: leave,

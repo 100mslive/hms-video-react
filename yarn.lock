@@ -2637,6 +2637,11 @@
     reduce-css-calc "^2.1.8"
     resolve "^1.20.0"
 
+"@twind/aspect-ratio@^0.1.4":
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/@twind/aspect-ratio/-/aspect-ratio-0.1.4.tgz#4a294e3e44f636a0a4c326f2efec5dc4387f93cf"
+  integrity sha512-R8kHG8l3NV5dIcBn7LpP4a/qFNAb9+3wFk+OPucHJyygffiM31vji/udSTSaXthbvVXuj1n4sDNGuZv0wxwKHg==
+
 "@types/anymatch@*":
   version "1.3.1"
   resolved "https://registry.npmjs.org/@types/anymatch/-/anymatch-1.3.1.tgz"
