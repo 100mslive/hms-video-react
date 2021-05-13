@@ -1,50 +1,59 @@
-import React, { useState, useContext, createContext } from 'react';
-import { HMSSdk, HMSPeerUpdate } from '@100mslive/100ms-web-sdk';
-import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
+import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
-import HMSRoomProps from './interfaces/HMSRoomProps';
-import createListener from './helpers/createListener';
-import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
-import { Silence } from '../components/Silence';
-import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
-import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
-import HMSLogger from '../utils/ui-logger';
+import HMSUpdateListener, {
+  HMSPeerUpdate,
+} from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
+import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
+import React, { createContext, useContext, useState } from 'react';
 import sdkEventEmitter from './helpers/event-emitter';
+import { MessageProvider } from './MessageProvider';
+import { SpeakerProvider } from './SpeakerProvider';
+
+interface ScreenShareStatus {
+  isScreenShared: boolean;
+  peer: HMSPeer | null;
+  track: HMSTrack | null;
+}
+
+interface HMSRoomProviderProps {
+  sdk: HMSSdk;
+  peers: HMSPeer[];
+  localPeer: HMSPeer | null;
+  audioMuted: boolean;
+  videoMuted: boolean;
+  join: (config: HMSConfig, listener: HMSUpdateListener) => void;
+  leave: () => void;
+  isPeerMuted: (type: 'audio' | 'video', peer?: HMSPeer) => boolean;
+  toggleMute: (type: 'audio' | 'video') => void;
+  toggleScreenShare: () => void;
+  getScreenShareStatus: () => ScreenShareStatus;
+}
 
 const sdk = new HMSSdk();
 
-const HMSContext = createContext<HMSRoomProps | null>(null);
+const HMSContext = createContext<HMSRoomProviderProps | null>(null);
 
 export const HMSRoomProvider: React.FC = props => {
-  const [peers, setPeers] = useState([] as HMSPeer[]);
-
-  const [localPeer, setLocalPeer] = useState({} as HMSPeer);
-
-  const [isScreenShare, setIsScreenShare] = useState(false);
-
-  const [messages, setMessages] = useState<HMSMessage[]>([]);
-
-  const [dominantSpeaker, setDominantSpeaker] = useState<
-    HMSRoomProps['dominantSpeaker']
-  >(null);
+  const [peers, setPeers] = useState<HMSPeer[]>([]);
+  const [localPeer, setLocalPeer] = useState<HMSPeer | null>(null);
 
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
     sdk.join(config, {
       onJoin: room => {
-        sdkEventEmitter.emit('join', room);
+        setLocalPeerAndPeers();
         listener.onJoin(room);
       },
       onRoomUpdate: (type, room) => {
-        sdkEventEmitter.emit('room-update', type, room);
         listener.onRoomUpdate(type, room);
       },
       onPeerUpdate: (type, peer) => {
+        handlePeerUpdate(type, peer);
         sdkEventEmitter.emit('peer-update', type, peer);
         listener.onPeerUpdate(type, peer);
       },
       onTrackUpdate: (type, track, peer) => {
-        sdkEventEmitter.emit('track-update', type, track, peer);
+        setLocalPeerAndPeers();
         listener.onTrackUpdate(type, track, peer);
       },
       onMessageReceived: message => {
@@ -52,13 +61,48 @@ export const HMSRoomProvider: React.FC = props => {
         listener.onMessageReceived(message);
       },
       onError: exception => {
-        sdkEventEmitter.emit('error', exception);
         listener.onError(exception);
       },
     });
+
+    sdk.addAudioListener({
+      onAudioLevelUpdate: speakers =>
+        sdkEventEmitter.emit('audio-level-update', speakers),
+    });
   };
 
-  const leave = () => sdk.leave();
+  const setLocalPeerAndPeers = () => {
+    setPeers(sdk.getPeers());
+    setLocalPeer(sdk.getLocalPeer());
+  };
+
+  const handlePeerUpdate = (type: HMSPeerUpdate, _peer: HMSPeer | null) => {
+    if (
+      ![
+        HMSPeerUpdate.BECAME_DOMINANT_SPEAKER,
+        HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER,
+      ].includes(type)
+    ) {
+      setLocalPeerAndPeers();
+    }
+  };
+
+  /**
+   * Checks the audio/video mute status of the peer given or local peer if not given.
+   * @param type Mute status of audio track or video track.
+   * @param peer Peer to check the mute status. LocalPeer is checked if undefined.
+   */
+  const isPeerMuted = (type: 'audio' | 'video', peer?: HMSPeer) => {
+    const checkPeer = peer
+      ? peers.find(peerObj => peer.peerId === peerObj.peerId)
+      : localPeer;
+
+    if (type === 'audio') {
+      return Boolean(checkPeer?.audioTrack?.enabled);
+    } else {
+      return Boolean(checkPeer?.videoTrack?.enabled);
+    }
+  };
 
   const toggleMute = async (type: 'audio' | 'video') => {
     if (localPeer && localPeer.audioTrack && type === 'audio') {
@@ -67,38 +111,52 @@ export const HMSRoomProvider: React.FC = props => {
     if (localPeer && localPeer.videoTrack && type === 'video') {
       await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
     }
-    setLocalPeer(sdk.getLocalPeer());
-    setPeers(sdk.getPeers());
+  };
+
+  const hasPeerScreenShared = (peer: HMSPeer | undefined | null) => {
+    return Boolean(
+      peer &&
+        peer.auxiliaryTracks.length > 0 &&
+        peer.auxiliaryTracks.some(
+          track => track.type === 'video' && track.source === 'screen',
+        ),
+    );
   };
 
   const toggleScreenShare = async () => {
-    if (!isScreenShare) {
-      HMSLogger.d('[toggleScreenshare]', 'Starting Screenshare');
-      setIsScreenShare(true);
+    const isLocalScreenShared = hasPeerScreenShared(localPeer);
+    if (!isLocalScreenShared) {
       await sdk.startScreenShare(() => {
-        setIsScreenShare(false);
-        setPeers(sdk.getPeers());
         setLocalPeer(sdk.getLocalPeer());
       });
     } else {
-      HMSLogger.d('[toggleScreenshare]', 'Stopping Screenshare');
-      setIsScreenShare(false);
       await sdk.stopScreenShare();
     }
 
-    setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };
 
-  const receiveMessage = (message: HMSMessage) => {
-    setMessages(prevMessages => [...prevMessages, message]);
+  const getScreenShareStatus = (): ScreenShareStatus => {
+    const screenSharePeer = peers.find(hasPeerScreenShared);
+    if (screenSharePeer) {
+      return {
+        isScreenShared: true,
+        peer: screenSharePeer,
+        track:
+          screenSharePeer.auxiliaryTracks.find(
+            track => track.type === 'video' && track.source === 'screen',
+          ) || null,
+      };
+    } else {
+      return {
+        isScreenShared: false,
+        peer: null,
+        track: null,
+      };
+    }
   };
 
-  const sendMessage = (message: string) => {
-    const hmsMessage = sdk.sendMessage('chat', message);
-    receiveMessage({ ...hmsMessage, sender: 'You' });
-    HMSLogger.d('[sendMessage]', message);
-  };
+  const leave = () => sdk.leave();
 
   window.onunload = () => {
     leave();
@@ -108,30 +166,26 @@ export const HMSRoomProvider: React.FC = props => {
     <HMSContext.Provider
       value={{
         sdk,
-        peers: peers,
-        localPeer: localPeer,
-        messages: messages.map(message => ({
-          message: message.message,
-          time: message.time,
-          sender: message.sender,
-        })),
-        audioMuted: localPeer.audioTrack?.enabled as boolean,
-        videoMuted: localPeer.videoTrack?.enabled as boolean,
-        dominantSpeaker,
-        join: join,
-        leave: leave,
-        toggleMute: toggleMute,
-        toggleScreenShare: toggleScreenShare,
-        sendMessage: sendMessage,
+        localPeer,
+        peers,
+        audioMuted: isPeerMuted('audio'),
+        videoMuted: isPeerMuted('video'),
+        join,
+        leave,
+        isPeerMuted,
+        toggleMute,
+        toggleScreenShare,
+        getScreenShareStatus,
       }}
     >
-      <Silence />
-      {props.children}
+      <MessageProvider>
+        <SpeakerProvider>{props.children}</SpeakerProvider>
+      </MessageProvider>
     </HMSContext.Provider>
   );
 };
 
-export const useHMSRoom = (): HMSRoomProps => {
+export const useHMSRoom = (): HMSRoomProviderProps => {
   const HMSContextConsumer = useContext(HMSContext);
 
   if (HMSContextConsumer === null) {

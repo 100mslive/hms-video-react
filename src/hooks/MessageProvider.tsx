@@ -2,7 +2,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import { Message } from '../components/ChatBox/ChatBox';
 import sdkEventEmitter from './helpers/event-emitter';
-import { useHMS } from './HMSProvider';
+import { useHMSRoom } from './HMSRoomProvider';
 
 interface MessageProviderProps {
   messages: Message[];
@@ -12,7 +12,7 @@ interface MessageProviderProps {
 const MessageContext = createContext<MessageProviderProps | null>(null);
 
 export const MessageProvider: React.FC = props => {
-  const { sdk } = useHMS();
+  const { sdk } = useHMSRoom();
   const [messages, setMessages] = useState<HMSMessage[]>([]);
 
   useEffect(() => {
