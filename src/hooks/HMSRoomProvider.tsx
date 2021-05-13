@@ -30,14 +30,6 @@ export const HMSRoomProvider: React.FC = props => {
     HMSRoomProps['dominantSpeaker']
   >(null);
 
-  // useEffect(() => {
-  //     toggleMuteInPeer('audio');
-  // }, [audioMuted]);
-
-  // useEffect(() => {
-  //   toggleMuteInPeer('video');
-  // }, [videoMuted]);
-
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
     sdk.join(
       config,
@@ -65,34 +57,16 @@ export const HMSRoomProvider: React.FC = props => {
   };
 
   const toggleMute = async (type: 'audio' | 'video') => {
-
     if (localPeer && localPeer.audioTrack && type === 'audio') {
-      await localPeer?.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
+      await localPeer.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
     }
     if (localPeer && localPeer.videoTrack && type === 'video') {
       await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
     }
+    setLocalPeer(sdk.getLocalPeer());
+    setPeers(sdk.getPeers());
 
-    // if (type === 'audio') {
-    //   setAudioMuted(prevMuted => !prevMuted);
-    // } else if (type === 'video') {
-    //   setVideoMuted(prevMuted => !prevMuted);
-    // }
-
-    //toggleMuteInPeer(type);
   };
-
-  // const toggleMuteInPeer = async (type: 'audio' | 'video') => {
-  //   if (localPeer && localPeer.audioTrack && type === 'audio') {
-  //     await localPeer?.audioTrack.setEnabled(!localPeer.audioTrack.enabled);
-  //   }
-  //   if (localPeer && localPeer.videoTrack && type === 'video') {
-  //     await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
-  //   }
-
-  //   setPeers(sdk.getPeers());
-  //   setLocalPeer(sdk.getLocalPeer());
-  // };
 
   const toggleScreenShare = async () => {
     if (!isScreenShare) {
