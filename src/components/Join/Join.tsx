@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { withClasses } from '../../utils/styles';
 import { Button } from '../TwButton';
-import { combineClasses } from '../../utils';
+import { resolveClasses } from '../../utils/classes/resolveClasses';
 
 interface Fields {
   username: string;
@@ -46,23 +45,28 @@ interface StyledJoinProps {
    */
   submitOnClick: ({ username, roomId, role, endpoint }: Fields) => void;
   /**
-   * default classes
-   */
-  defaultClasses?: JoinClasses;
-  /**
    * extra classes added  by user
    */
-  classes?: JoinClasses;
+  classes?: { [key: string]: string } | JoinClasses;
 }
 
-const StyledJoin = ({
+type NativeAttrs = Omit<
+  React.DetailsHTMLAttributes<any>,
+  keyof StyledJoinProps
+>;
+
+export type JoinProps = StyledJoinProps & NativeAttrs;
+
+export const Join = ({
   initialValues,
   submitOnClick,
-  classes: extraClasses,
-  defaultClasses,
+  classes,
+  ...props
 }: StyledJoinProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const finalClasses: JoinClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
   const [username, setUserName] = useState(initialValues?.username || '');
   const [role, setRole] = useState(initialValues?.role || 'Student');
   const [roomId, setRoomId] = useState(
@@ -78,41 +82,41 @@ const StyledJoin = ({
   }, [initialValues]);
 
   return (
-    <div className={combinedClasses?.root}>
-      <div className={combinedClasses?.containerRoot}>
-        <div className={combinedClasses?.header}>Join your class</div>
-        <div className={combinedClasses?.inputRoot}>
-          <div className={combinedClasses?.inputName}>
+    <div className={finalClasses?.root} {...props}>
+      <div className={finalClasses?.containerRoot}>
+        <div className={finalClasses?.header}>Join your class</div>
+        <div className={finalClasses?.inputRoot}>
+          <div className={finalClasses?.inputName}>
             <span>Username:</span>
           </div>
-          <div className={combinedClasses?.inputFieldRoot}>
+          <div className={finalClasses?.inputFieldRoot}>
             <input
-              className={combinedClasses?.inputField}
+              className={finalClasses?.inputField}
               value={initialValues?.username || username}
               onChange={event => {
                 setUserName(event.target.value);
               }}
             ></input>
           </div>
-          <div className={combinedClasses?.inputName}>
+          <div className={finalClasses?.inputName}>
             <span>RoomId:</span>
           </div>
-          <div className={combinedClasses?.inputFieldRoot}>
+          <div className={finalClasses?.inputFieldRoot}>
             <input
-              className={combinedClasses?.inputField}
+              className={finalClasses?.inputField}
               value={initialValues?.roomId || roomId}
               onChange={event => {
                 setRoomId(event.target.value);
               }}
             ></input>
           </div>
-          <div className={combinedClasses?.inputName}>
+          <div className={finalClasses?.inputName}>
             <span>Role:</span>
           </div>
-          <div className={combinedClasses?.inputFieldRoot}>
+          <div className={finalClasses?.inputFieldRoot}>
             <select
               name="role"
-              className={combinedClasses?.inputField}
+              className={finalClasses?.inputField}
               value={initialValues?.role || role}
               onChange={event => {
                 setRole(event.target.value);
@@ -124,13 +128,13 @@ const StyledJoin = ({
               <option value="Viewer">Viewer</option>
             </select>
           </div>
-          <div className={combinedClasses?.inputName}>
+          <div className={finalClasses?.inputName}>
             <span>Environment:</span>
           </div>
-          <div className={combinedClasses?.inputFieldRoot}>
+          <div className={finalClasses?.inputFieldRoot}>
             <select
               name="endpoint"
-              className={combinedClasses?.inputField}
+              className={finalClasses?.inputField}
               value={initialValues?.endpoint || endpoint}
               onChange={event => {
                 setEndpoint(event.target.value);
@@ -143,7 +147,7 @@ const StyledJoin = ({
               <option value="100ms-grpc">100ms-grpc</option>
             </select>
           </div>
-          <div className={combinedClasses?.joinRoot}>
+          <div className={finalClasses?.joinRoot}>
             <Button
               variant={'emphasized'}
               onClick={() =>
@@ -163,10 +167,3 @@ const StyledJoin = ({
     </div>
   );
 };
-
-export type JoinProps = Omit<StyledJoinProps, 'defaultClasses'>;
-
-export const Join = withClasses<JoinClasses | undefined>(
-  defaultClasses,
-  'join',
-)<StyledJoinProps>(StyledJoin);
