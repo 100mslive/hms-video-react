@@ -27,10 +27,11 @@ export const SpeakerProvider: React.FC = props => {
   }, []);
 
   const updateSpeakers = (newSpeakers: HMSSpeaker[]) => {
-    if (!areSpeakersApproxEqual(speakers, newSpeakers)) {
-      HMSLogger.d('Listener [onAudioLevelUpdate]: ', newSpeakers);
-      setSpeakers(newSpeakers);
-    }
+    HMSLogger.d('Listener [onAudioLevelUpdate]: ', newSpeakers);
+    setSpeakers(newSpeakers);
+    // Removed for now. Doesn't update when room goes silent- empty array is ignored and passes down last stored array.
+    // if (!areSpeakersApproxEqual(speakers, newSpeakers)) {
+    // }
   };
 
   const updateDominantSpeaker = (type: HMSPeerUpdate, peer: HMSPeer | null) => {
