@@ -5,9 +5,6 @@ import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-l
 import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import React, { createContext, useContext, useState } from 'react';
 import HMSLogger from '../utils/ui-logger';
-<<<<<<< HEAD
-import { areSpeakersApproxEqual } from './helpers/audioUtils';
-=======
 import sdkEventEmitter from './helpers/event-emitter';
 import { MessageProvider } from './MessageProvider';
 import { SpeakerProvider } from './SpeakerProvider';
@@ -31,7 +28,6 @@ interface HMSRoomProviderProps {
   toggleScreenShare: () => void;
   getScreenShareStatus: () => ScreenShareStatus;
 }
->>>>>>> develop
 
 const sdk = new HMSSdk();
 
@@ -122,12 +118,8 @@ export const HMSRoomProvider: React.FC = props => {
       await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
       HMSLogger.d('toggleMute: after', localPeer.videoTrack.enabled);
     }
-<<<<<<< HEAD
     setLocalPeer(sdk.getLocalPeer());
     setPeers(sdk.getPeers());
-=======
-
-    setLocalPeer(localPeer);
   };
 
   const hasPeerScreenShared = (peer: HMSPeer | undefined | null) => {
@@ -138,7 +130,6 @@ export const HMSRoomProvider: React.FC = props => {
           track => track.type === 'video' && track.source === 'screen',
         ),
     );
->>>>>>> develop
   };
 
   const toggleScreenShare = async () => {
