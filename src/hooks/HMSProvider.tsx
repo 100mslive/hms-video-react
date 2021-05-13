@@ -1,8 +1,9 @@
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
-import React, { createContext } from 'react';
+import React, { createContext, useContext } from 'react';
 import sdkEventEmitter from './helpers/event-emitter';
+import { MessageProvider } from './MessageProvider';
 import { SpeakerProvider } from './SpeakerProvider';
 
 interface HMSProviderProps {
@@ -64,7 +65,19 @@ export const HMSProvider: React.FC = props => {
         leave: leave,
       }}
     >
-      <SpeakerProvider>{props.children}</SpeakerProvider>
+      <MessageProvider>
+        <SpeakerProvider>{props.children}</SpeakerProvider>
+      </MessageProvider>
     </HMSContext.Provider>
   );
+};
+
+export const useHMS = (): HMSProviderProps => {
+  const HMSContextConsumer = useContext(HMSContext);
+
+  if (HMSContextConsumer === null) {
+    throw new Error('HMSContext state variables are not set');
+  }
+
+  return HMSContextConsumer;
 };

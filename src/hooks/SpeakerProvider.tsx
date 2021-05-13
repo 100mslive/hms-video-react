@@ -45,7 +45,7 @@ export const SpeakerProvider: React.FC = props => {
   );
 };
 
-export const useHMSSpeakers = (): SpeakerProviderProps => {
+export const useHMSSpeaker = (): SpeakerProviderProps => {
   const SpeakerContextConsumer = useContext(SpeakerContext);
 
   if (SpeakerContextConsumer === null) {
