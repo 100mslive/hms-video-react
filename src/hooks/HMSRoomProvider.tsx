@@ -10,6 +10,7 @@ import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 import HMSLogger from '../utils/ui-logger';
+import {areSpeakersApproxEqual} from "./helpers/audioUtils";
 
 const sdk = new HMSSdk();
 
@@ -43,8 +44,10 @@ export const HMSRoomProvider: React.FC = props => {
       ),
     );
     sdk.addAudioListener({
-      onAudioLevelUpdate: speakers => {
-        setSpeakers(speakers);
+      onAudioLevelUpdate: newSpeakers => {
+        if (!areSpeakersApproxEqual(speakers, newSpeakers)) {
+          setSpeakers(newSpeakers);
+        }
       },
     });
   };
