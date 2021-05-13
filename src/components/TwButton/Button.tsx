@@ -128,8 +128,8 @@ const defaultClasses: ButtonClasses = {
   rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
   rootStandard: 'text-gray-700 bg-gray-200 hover:bg-gray-300',
   rootDanger: 'text-gray-700 bg-red-main hover:bg-red-tint',
-  rootEmphasized: 'text-gray-700 bg-blue-main hover:bg-brand-tint',
-  rootNoFill: 'text-gray-200 shadow-none',
+  rootEmphasized: 'text-gray-700 bg-blue-main hover:bg-blue-tint',
+  rootNoFill: 'text-gray-700 shadow-none',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootSizeSm: 'px-2.5 py-1.5',
