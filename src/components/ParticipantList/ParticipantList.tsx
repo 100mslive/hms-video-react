@@ -116,8 +116,8 @@ export const StyledParticipantList = ({
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          {/* @ts-expect-error */}
           {roles &&
+          //@ts-expect-error
             roles.map((role, index) => (
               <div key={index}>
                 <div>

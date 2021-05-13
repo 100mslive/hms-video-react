@@ -118,8 +118,7 @@ export const HMSRoomProvider: React.FC = props => {
       await localPeer.videoTrack.setEnabled(!localPeer.videoTrack.enabled);
       HMSLogger.d('toggleMute: after', localPeer.videoTrack.enabled);
     }
-    setLocalPeer(sdk.getLocalPeer());
-    setPeers(sdk.getPeers());
+    setLocalPeerAndPeers();
   };
 
   const hasPeerScreenShared = (peer: HMSPeer | undefined | null) => {
@@ -177,8 +176,8 @@ export const HMSRoomProvider: React.FC = props => {
         sdk,
         localPeer,
         peers,
-        audioMuted: localPeer?.audioTrack?.enabled as boolean,
-        videoMuted: localPeer?.videoTrack?.enabled as boolean,
+        audioMuted: !(localPeer?.audioTrack && localPeer?.audioTrack?.enabled) as boolean,
+        videoMuted: !(localPeer?.audioTrack && localPeer?.videoTrack?.enabled) as boolean,
         join,
         leave,
         isPeerMuted,
