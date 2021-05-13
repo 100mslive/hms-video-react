@@ -136,13 +136,13 @@ export const HMSRoomProvider: React.FC = props => {
     const isLocalScreenShared = hasPeerScreenShared(localPeer);
     if (!isLocalScreenShared) {
       await sdk.startScreenShare(() => {
-        setLocalPeer(sdk.getLocalPeer());
+        setLocalPeerAndPeers();
       });
     } else {
       await sdk.stopScreenShare();
     }
 
-    setLocalPeer(sdk.getLocalPeer());
+    setLocalPeerAndPeers();
   };
 
   const getScreenShareStatus = (): ScreenShareStatus => {
