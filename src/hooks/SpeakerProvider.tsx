@@ -3,6 +3,8 @@ import { HMSPeerUpdate } from '@100mslive/100ms-web-sdk';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 import sdkEventEmitter from './helpers/event-emitter';
+import { areSpeakersApproxEqual } from './helpers/audioUtils';
+import HMSLogger from '../utils/ui-logger';
 
 interface SpeakerProviderProps {
   speakers: HMSSpeaker[];
@@ -16,13 +18,20 @@ export const SpeakerProvider: React.FC = props => {
   const [speakers, setSpeakers] = useState<HMSSpeaker[]>([]);
 
   useEffect(() => {
-    sdkEventEmitter.on('audio-level-update', setSpeakers);
+    sdkEventEmitter.on('audio-level-update', updateSpeakers);
     sdkEventEmitter.on('peer-update', updateDominantSpeaker);
     return () => {
-      sdkEventEmitter.off('audio-level-update', setSpeakers);
+      sdkEventEmitter.off('audio-level-update', updateSpeakers);
       sdkEventEmitter.off('peer-update', updateDominantSpeaker);
     };
   }, []);
+
+  const updateSpeakers = (newSpeakers: HMSSpeaker[]) => {
+    if (!areSpeakersApproxEqual(speakers, newSpeakers)) {
+      HMSLogger.d('Listener [onAudioLevelUpdate]: ', newSpeakers);
+      setSpeakers(newSpeakers);
+    }
+  };
 
   const updateDominantSpeaker = (type: HMSPeerUpdate, peer: HMSPeer | null) => {
     if (type === HMSPeerUpdate.BECAME_DOMINANT_SPEAKER) {

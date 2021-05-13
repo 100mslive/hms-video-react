@@ -69,7 +69,6 @@ export const HMSRoomProvider: React.FC = props => {
 
     sdk.addAudioListener({
       onAudioLevelUpdate: speakers => {
-        HMSLogger.d('Listener [onAudioLevelUpdate]: ', speakers);
         sdkEventEmitter.emit('audio-level-update', speakers);
       },
     });
