@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
 import { chunkStreams } from '../../utils';
@@ -21,6 +21,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { combineClasses } from '../../utils';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { useCallback } from '@storybook/client-api';
 
 export interface VideoListClasses extends VideoTileClasses {
   /**
@@ -234,7 +235,9 @@ export const StyledVideoList = ({
 }: StyledVideoListProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  
   const { width = 0, height = 0, ref } = useResizeDetector();
+  
   try {
     let context = useHMSTheme();
     if (aspectRatio === undefined) {
@@ -276,18 +279,24 @@ export const StyledVideoList = ({
     ),
   };
 
-  //Flooring since there's a bug in react-slick where it converts widdh into a number
-  const chunkedStreams = chunkStreams({
-    streams,
-    parentWidth: Math.floor(width),
-    parentHeight: Math.floor(height),
-    maxTileCount,
-    maxRowCount,
-    maxColCount,
-    aspectRatio,
-    onlyOnePage: overflow === 'hidden',
-  });
+  //Split a method that just calculates aspectRatio on the basis of streams, if needed
 
+  //Flooring since there's a bug in react-slick where it converts widdh into a number
+  
+  const chunkedStreams = useMemo(()=>{
+    return chunkStreams({
+      streams,
+      parentWidth: Math.floor(width),
+      parentHeight: Math.floor(height),
+      maxTileCount,
+      maxRowCount,
+      maxColCount,
+      aspectRatio,
+      onlyOnePage: overflow === 'hidden',
+    })
+  },[streams, width, height, maxTileCount, maxRowCount, maxColCount, aspectRatio, overflow]);
+
+  
   return (
     <div className={`${combinedClasses?.root}`} ref={ref}>
       {chunkedStreams && chunkedStreams.length > 0 && (

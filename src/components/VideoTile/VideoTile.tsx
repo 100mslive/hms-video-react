@@ -121,7 +121,7 @@ const StyledVideoTile = ({
     }
   } catch (e) {}
 
-  const { width, height } = videoTrack.getSettings();
+  const { width, height } = videoTrack?videoTrack.getSettings():{width:1, height:1};
   const impliedAspectRatio = aspectRatio ? aspectRatio : { width, height };
 
   return (
