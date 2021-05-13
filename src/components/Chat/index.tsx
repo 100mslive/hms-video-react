@@ -25,7 +25,7 @@ export default function Chat(args: ChatProps) {
   return (
     <div>
       <Button onClick={handleClick} active={open}>
-          <ChatIcon />
+        <ChatIcon />
       </Button>
       <Popover
         id={id}

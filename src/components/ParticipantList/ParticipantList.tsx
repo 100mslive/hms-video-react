@@ -13,7 +13,7 @@ import Popover from '@material-ui/core/Popover';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../Button';
-import {groupBy} from 'lodash';
+import { groupBy } from 'lodash';
 
 export interface ParticipantListClasses {
   root?: string;
@@ -22,7 +22,7 @@ export interface ParticipantListClasses {
   buttonClosed?: string;
   buttonInner?: string;
   buttonText?: string;
-  carat?:string;
+  carat?: string;
   menuRoot?: string;
   menuInner?: string;
   menuSection?: string;
@@ -46,7 +46,7 @@ const defaultClasses: ParticipantListClasses = {
   buttonClosed: 'dark:bg-black',
   buttonInner: 'flex flex-grow justify-center px-3 tracking-wide self-center',
   buttonText: 'pl-2 self-center',
-  carat:"w-3 h-3",
+  carat: 'w-3 h-3',
   menuRoot: 'max-h-100 rounded-bl-xl rounded-br-xl mt-6',
   menuInner:
     'w-60 max-h-100 overflow-y-auto rounded-bl-none rounded-br-none bg-white dark:bg-gray-100 focus:outline-none',
@@ -74,8 +74,11 @@ export const StyledParticipantList = ({
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
-  const rolesMap = groupBy(participantList, participant => participant.peer.role);
-  const roles = Object.keys(rolesMap) as unknown as keyof RoleMap[];
+  const rolesMap = groupBy(
+    participantList,
+    participant => participant.peer.role,
+  );
+  const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
 
   return (
     <div className={`${combinedClasses?.root}`}>
@@ -113,69 +116,72 @@ export const StyledParticipantList = ({
           aria-labelledby="menu-button"
           tabIndex={-1}
         >
-          {/* @ts-expect-error */}
-          {roles && roles.map((role, index) => (
+          {roles &&
+          //@ts-expect-error
+            roles.map((role, index) => (
               <div key={index}>
                 <div>
                   <span
                     className={`${combinedClasses?.menuSection}`}
                     role="menuitem"
-                    >
-                    {role==="undefined"?'Unknown':role}{rolesMap[role].length>1?'s':''} {rolesMap[role].length}
-                  </span>
-                 </div>
-                <div>
-                {rolesMap[role] && rolesMap[role].map(
-                  (participant, index) => (
-                  <a
-                    className={`${combinedClasses?.menuItem}`}
-                    role="menuitem"
-                    key={index}
                   >
-                    <AvatarList label={participant.peer.displayName} />
-                    <div className={`${combinedClasses?.menuText}`}>
-                      {participant.peer.displayName}
-                    </div>
-                    <div className={`${combinedClasses?.menuIconContainer}`}>
-                      <Button
-                        variant={'icon-only'}
-                        shape={'circle'}
-                        size={'sm'}
-                        classes={{
-                          iconOnlySm: 'opacity-0 hover:opacity-100',
-                          root: 'to-be-overridden',
-                        }}
-                        active={participant.isAudioMuted}
+                    {role === 'undefined' ? 'Unknown' : role}
+                    {rolesMap[role].length > 1 ? 's' : ''}{' '}
+                    {rolesMap[role].length}
+                  </span>
+                </div>
+                <div>
+                  {rolesMap[role] &&
+                    rolesMap[role].map((participant, index) => (
+                      <a
+                        className={`${combinedClasses?.menuItem}`}
+                        role="menuitem"
+                        key={index}
                       >
-                        {participant.isAudioMuted ? (
-                          <MicOffIcon />
-                        ) : (
-                          <MicOnIcon />
-                        )}
-                      </Button>
-                      <Button
-                        variant={'icon-only'}
-                        shape={'circle'}
-                        size={'sm'}
-                        classes={{
-                          iconOnlySm: 'opacity-0 hover:opacity-100',
-                        }}
-                        active={participant.isStarMarked}
-                      >
-                        {participant.isStarMarked ? (
-                          <StarIcon />
-                        ) : (
-                          <StarFillIcon />
-                        )}
-                      </Button>
-                    </div>
-                  </a>
-                ))}
+                        <AvatarList label={participant.peer.displayName} />
+                        <div className={`${combinedClasses?.menuText}`}>
+                          {participant.peer.displayName}
+                        </div>
+                        <div
+                          className={`${combinedClasses?.menuIconContainer}`}
+                        >
+                          <Button
+                            variant={'icon-only'}
+                            shape={'circle'}
+                            size={'sm'}
+                            classes={{
+                              iconOnlySm: 'opacity-0 hover:opacity-100',
+                              root: 'to-be-overridden',
+                            }}
+                            active={participant.isAudioMuted}
+                          >
+                            {participant.isAudioMuted ? (
+                              <MicOffIcon />
+                            ) : (
+                              <MicOnIcon />
+                            )}
+                          </Button>
+                          <Button
+                            variant={'icon-only'}
+                            shape={'circle'}
+                            size={'sm'}
+                            classes={{
+                              iconOnlySm: 'opacity-0 hover:opacity-100',
+                            }}
+                            active={participant.isStarMarked}
+                          >
+                            {participant.isStarMarked ? (
+                              <StarIcon />
+                            ) : (
+                              <StarFillIcon />
+                            )}
+                          </Button>
+                        </div>
+                      </a>
+                    ))}
+                </div>
               </div>
-            </div>
-        )
-
-          )}
+            ))}
         </div>
       </Popover>
     </div>

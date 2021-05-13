@@ -1,15 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './index.css';
 import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import {
-  getTileContainerDimensions,
-  getVideoTileLabel,
-  combineClasses,
-} from '../../utils';
-import { useResizeDetector } from 'react-resize-detector';
+import { getVideoTileLabel, combineClasses } from '../../utils';
 import { withClasses } from '../../utils/styles';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 interface StyledVideoTileProps extends VideoProps {
@@ -83,9 +78,9 @@ export interface VideoTileClasses extends VideoClasses {
 }
 
 const defaultClasses: VideoTileClasses = {
-  root:
-    'group w-full h-full flex relative items-center justify-center rounded-lg',
-  videoContainer: 'relative rounded-lg shadow-lg z-10',
+  root: 'group w-full h-full flex relative justify-center rounded-lg ',
+  videoContainer:
+    'relative rounded-lg shadow-lg object-cover relative max-w-full max-h-full',
   avatarContainer:
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
   videoContainerCircle: 'rounded-full',
@@ -115,16 +110,7 @@ const StyledVideoTile = ({
 }: StyledVideoTileProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  const [height, setHeight] = useState(0);
-  const [width, setWidth] = useState(0);
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
-  const isSquare =
-    displayShape === 'rectangle' &&
-    aspectRatio &&
-    aspectRatio.width === aspectRatio.height;
-  const isCircle = displayShape === 'circle';
-  const isSquareOrCircle = isSquare || isCircle;
-
   try {
     let context = useHMSTheme();
     if (aspectRatio === undefined) {
@@ -135,50 +121,27 @@ const StyledVideoTile = ({
     }
   } catch (e) {}
 
-  const {
-    width: containerWidth,
-    height: containerHeight,
-    ref: containerRef,
-  } = useResizeDetector();
-
-  useEffect(() => {
-    if (containerWidth && containerHeight) {
-      /*
-       * If aspect ratio is defined, container width is the largest rectangle fitting into parent
-       * If aspect ratio is not defined, container width is the same as the video dimensions
-       */
-      const { width, height } = getTileContainerDimensions({
-        parentWidth: containerWidth,
-        parentHeight: containerHeight,
-        videoTrack,
-        objectFit,
-        aspectRatio,
-        isSquareOrCircle,
-      });
-      setHeight(height);
-      setWidth(width);
-    }
-  }, [
-    videoTrack,
-    aspectRatio,
-    displayShape,
-    objectFit,
-    isSquareOrCircle,
-    containerWidth,
-    containerHeight,
-  ]);
+  const { width, height } = videoTrack?videoTrack.getSettings():{width:1, height:1};
+  const impliedAspectRatio = aspectRatio ? aspectRatio : { width, height };
 
   return (
-    <div ref={containerRef} className={combinedClasses?.root}>
-      {containerHeight && containerWidth && (
+    <div className={combinedClasses?.root}>
+      {impliedAspectRatio.width && impliedAspectRatio.height && (
         <div
           className={`${combinedClasses?.videoContainer} ${
             displayShape === 'circle'
               ? combinedClasses?.videoContainerCircle
               : ''
-          }`}
-          style={{ width: `${width}px`, height: `${height}px` }}
+          } `}
+          style={{
+            aspectRatio: `${
+              displayShape === 'rectangle'
+                ? impliedAspectRatio.width / impliedAspectRatio.height
+                : 1
+            }`,
+          }}
         >
+          {/* TODO this doesn't work in Safari */}
           <Video
             videoTrack={videoTrack}
             hmsVideoTrack={hmsVideoTrack}
@@ -206,11 +169,12 @@ const StyledVideoTile = ({
           {controlsComponent ? (
             controlsComponent
           ) : (
+            // TODO circle controls are broken now
             <VideoTileControls
               label={label}
               isAudioMuted={isAudioMuted}
               showAudioMuteStatus={showAudioMuteStatus}
-              showGradient={!isCircle}
+              showGradient={displayShape === 'circle'}
               allowRemoteMute={allowRemoteMute}
               showAudioLevel={
                 showAudioLevel && audioLevelDisplayType !== 'border'

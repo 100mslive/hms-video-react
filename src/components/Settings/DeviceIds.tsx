@@ -1,5 +1,5 @@
 export default interface DeviceIds {
-    selectedVideoInput?: string;
-    selectedAudioInput?: string;
-    selectedAudioOutput?: string;
-  }
+  selectedVideoInput?: string;
+  selectedAudioInput?: string;
+  selectedAudioOutput?: string;
+}

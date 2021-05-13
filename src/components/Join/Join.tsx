@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
-import { apply, setup, tw } from 'twind';
+//@ts-ignore
+import { apply, create } from 'twind';
 import { Button } from '../TwButton';
 
 const colors = {
@@ -34,13 +35,6 @@ const colors = {
     800: 'rgba(59,59,59,0.13)',
   },
 };
-
-setup({
-  theme: {
-    colors: colors,
-  },
-});
-
 interface Fields {
   username: string;
   roomId: string;
@@ -62,14 +56,14 @@ interface JoinClasses {
 
 const defaultClasses: JoinClasses = {
   root:
-    'flex bg-gray-700 justify-center items-center w-screen h-screen text-gray-100 ',
+    'flex dark:bg-black dark:text-white bg-gray-700 justify-center items-center w-screen h-screen text-gray-100 ',
   containerRoot:
-    'bg-gray-600 bg-gray-500 w-1/2 m-2 p-3 rounded-lg divide-solid',
+    'bg-gray-600 dark:bg-gray-100 bg-gray-500 w-1/2 m-2 p-3 rounded-lg divide-solid',
   header: 'text-2xl mb-3 p-3 border-b-2',
   inputRoot: 'flex flex-wrap text-lg',
   inputName: 'w-1/3 flex justify-end items-center',
   inputFieldRoot: 'p-2 w-2/3',
-  inputField: 'rounded-lg bg-gray-700 w-full p-1',
+  inputField: 'rounded-lg bg-gray-700 dark:bg-gray-200 w-full p-1',
   joinRoot: 'w-full flex justify-end m-2',
   joinButton: 'bg-brand-main  rounded-lg px-5 py-2 focus:outline-none',
 };
@@ -111,6 +105,15 @@ export const Join = ({
     initialValues?.roomId || '607d781cdcee704ca43cafb9',
   );
   const [endpoint, setEndpoint] = useState(initialValues?.endpoint || 'qa2-us');
+  
+  const tw = useMemo(()=>{return create({
+    theme: {
+      extend:{
+        colors: colors,
+      }
+    },
+    darkMode:'class',
+  }).tw},[]);   
 
   useEffect(() => {
     initialValues?.username && setUserName(initialValues.username);

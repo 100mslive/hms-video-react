@@ -56,7 +56,7 @@ export const StyledVideoTileControls = ({
 }: StyledVideoTileControlsProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  
+
   return (
     <div className={`${combinedClasses?.root}`}>
       <div className={`${showGradient ? combinedClasses?.gradient : ''}`} />

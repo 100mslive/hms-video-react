@@ -12,7 +12,7 @@ export default meta;
 
 const Template: Story<JoinProps> = args => {
   return (
-    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
       <div>
         <Join {...args} />
       </div>
