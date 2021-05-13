@@ -32,7 +32,7 @@ export interface ParticipantListClasses {
 }
 
 interface StyledParticipantListProps {
-  participantList: Array<Participant>;
+  participantList?: Array<Participant>;
   defaultClasses?: ParticipantListClasses;
   classes?: ParticipantListClasses;
 }
@@ -68,19 +68,14 @@ export const StyledParticipantList = ({
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [rolesMap, setRolesMap] = useState<RoleMap | {}>({});
-  const [roles, setRoles] = useState<keyof RoleMap[] | []>([]);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
   };
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
-  useEffect(()=>{
-    const map = groupBy(participantList, participant => participant.peer.role);
-    setRolesMap(map);
-    setRoles(Object.keys(map) as unknown as keyof RoleMap[]);
-  },[participantList])
+  const rolesMap = groupBy(participantList, participant => participant.peer.role);
+  const roles = Object.keys(rolesMap) as unknown as keyof RoleMap[];
 
   return (
     <div className={`${combinedClasses?.root}`}>
@@ -94,7 +89,7 @@ export const StyledParticipantList = ({
         onClick={handleClick}
       >
         <div className={`${combinedClasses?.buttonInner}`}>
-          {participantList.length} in room
+          {participantList?.length} in room
           <span className={`${combinedClasses?.buttonText}`}>
             {open ? (
               <UpCaratIcon className={combinedClasses?.carat} />
@@ -126,14 +121,11 @@ export const StyledParticipantList = ({
                     className={`${combinedClasses?.menuSection}`}
                     role="menuitem"
                     >
-                    {/* @ts-expect-error */}
                     {role==="undefined"?'Unknown':role}{rolesMap[role].length>1?'s':''} {rolesMap[role].length}
                   </span>
                  </div>
                 <div>
-                  {/* @ts-expect-error */}
                 {rolesMap[role] && rolesMap[role].map(
-                  // @ts-expect-error
                   (participant, index) => (
                   <a
                     className={`${combinedClasses?.menuItem}`}
@@ -161,7 +153,6 @@ export const StyledParticipantList = ({
                           <MicOnIcon />
                         )}
                       </Button>
-                      {/* <MuteListButton isMuteOn={participant.isAudioMuted} /> */}
                       <Button
                         variant={'icon-only'}
                         shape={'circle'}
@@ -177,9 +168,6 @@ export const StyledParticipantList = ({
                           <StarFillIcon />
                         )}
                       </Button>
-                      {/* <SpotlightListButton
-                        isSpotlightOn={participant.isStarMarked}
-                      /> */}
                     </div>
                   </a>
                 ))}

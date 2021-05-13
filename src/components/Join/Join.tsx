@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { withClasses } from '../../utils/styles';
-import { Button } from '../Button';
+import { Button } from '../TwButton';
 import { combineClasses } from '../../utils';
 
 interface Fields {

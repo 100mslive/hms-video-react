@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import '../index.css';
 import { ButtonDisplayType } from '../../../types';
 import {
@@ -8,15 +8,19 @@ import {
   CamOnIcon,
   CamOffIcon,
 } from '../../Icons';
-import { Button } from '../../Button';
+import { Button } from '../../TwButton';
 import { Settings } from '../../Settings/Settings';
-import DeviceIds from '../../Settings/DeviceIds'
+import DeviceIds from '../../Settings/DeviceIds';
 
 export interface VideoTileControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   showGradient?: boolean;
-  getDevices: ({selectedVideoInput, selectedAudioInput, selectedAudioOutput}: DeviceIds) => void;
+  getDevices: ({
+    selectedVideoInput,
+    selectedAudioInput,
+    selectedAudioOutput,
+  }: DeviceIds) => void;
   classes?: {
     root?: string;
     controls?: string;
@@ -47,12 +51,12 @@ export const VideoTileControls = ({
 }: VideoTileControlsProps) => {
   const [maxTileCount, setMaxTileCount] = useState(16);
 
-
   return (
     <div className={`${classes.root}`}>
       <div className={`${classes.controls}`}>
         <Button
-          variant={'icon-only'}
+          iconOnly
+          variant="no-fill"
           active={isAudioMuted}
           shape={buttonDisplay}
           onClick={audioButtonOnClick}
@@ -65,7 +69,8 @@ export const VideoTileControls = ({
           isAudioMuted={isAudioMuted}
         /> */}
         <Button
-          variant={'icon-only'}
+          iconOnly
+          variant="no-fill"
           active={isVideoMuted}
           shape={buttonDisplay}
           onClick={videoButtonOnClick}
@@ -80,11 +85,11 @@ export const VideoTileControls = ({
       </div>
       <div className={`${classes.rightcontrols}`}>
         <Settings
-              maxTileCount={maxTileCount}
-              setMaxTileCount={setMaxTileCount}
-              getDevices={getDevices}
-              key={0}
-              />
+          maxTileCount={maxTileCount}
+          setMaxTileCount={setMaxTileCount}
+          getDevices={getDevices}
+          key={0}
+        />
         {/* <SettingsButton
           clickHandler={settingsButtonOnClick}
           buttonDisplay={buttonDisplay}

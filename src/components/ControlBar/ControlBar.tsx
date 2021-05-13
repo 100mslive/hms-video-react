@@ -9,12 +9,12 @@ import {
   ChatIcon,
   ShareScreenIcon,
 } from '../Icons';
-import { Button } from '../Button';
+import { Button as TwButton } from '../TwButton';
 import { Settings } from '../Settings/Settings';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import DeviceIds from '../Settings/DeviceIds'
+import DeviceIds from '../Settings/DeviceIds';
 
 export interface ControlBarClasses {
   root?: string;
@@ -47,16 +47,18 @@ const defaultClasses: ControlBarClasses = {
   root:
     'flex flex-grow bg-white dark:bg-black h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
   leftRoot:
-    'flex md:flex-none md:self-center md:justify-center gap-x-4 md:left-0 md:ml-2 md:absolute',
+    'flex md:flex-none md:self-center md:justify-center gap-x-4 md:left-0 md:ml-2 md:absolute items-center',
   centerRoot:
     'flex md:flex-grow gap-x-4 md:mr-2 md:self-center md:justify-center',
   rightRoot:
     'flex md:flex-none gap-x-4 md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
 };
 
-const getDevices = ({selectedVideoInput, selectedAudioInput, selectedAudioOutput}: DeviceIds) =>{
-
-}
+const getDevices = ({
+  selectedVideoInput,
+  selectedAudioInput,
+  selectedAudioOutput,
+}: DeviceIds) => {};
 export const StyledControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
@@ -76,57 +78,60 @@ export const StyledControlBar = ({
       setMaxTileCount={setMaxTileCount}
       key={0}
     />,
-    <Button
-      variant={'icon-only'}
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
       shape={buttonDisplay}
-      size="lg"
       onClick={screenshareButtonOnClick}
       key={1}
     >
       <ShareScreenIcon />
-    </Button>,
-    <Button
-      variant={'icon-only'}
+    </TwButton>,
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
       shape={buttonDisplay}
       onClick={chatButtonOnClick}
       active={isChatOpen}
       key={2}
-      size="lg"
     >
       <ChatIcon />
-    </Button>,
+    </TwButton>,
   ],
   centerComponents = [
-    <Button
-      variant={'icon-only'}
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
       shape={buttonDisplay}
       active={isVideoMuted}
       onClick={videoButtonOnClick}
-      size="lg"
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
-    </Button>,
-    <Button
-      variant={'icon-only'}
+    </TwButton>,
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
       shape={buttonDisplay}
       active={isAudioMuted}
       onClick={audioButtonOnClick}
-      size="lg"
     >
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
-    </Button>,
+    </TwButton>,
   ],
   rightComponents = [
-    <Button
+    <TwButton
+      size="md"
       shape={buttonDisplay}
       variant={'danger'}
       onClick={leaveButtonOnClick}
-      size="lg"
+      icon={<HangUpIcon />}
     >
-      <HangUpIcon/>
-      {' '}
       Leave room
-    </Button>,
+    </TwButton>,
   ],
   defaultClasses,
   classes: extraClasses,

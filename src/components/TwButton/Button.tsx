@@ -123,21 +123,21 @@ export interface ButtonClasses {
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex items-center text-base font-medium shadow-sm focus:outline-none',
+    'inline-flex items-center justify-center text-base font-medium shadow-sm focus:outline-none',
   rootFocus: 'focus:ring focus:ring-blue-tint',
   rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
   rootStandard: 'text-gray-700 bg-gray-200 hover:bg-gray-300',
   rootDanger: 'text-gray-700 bg-red-main hover:bg-red-tint',
-  rootEmphasized: 'text-gray-700 bg-blue-main hover:bg-brand-tint',
-  rootNoFill: 'text-gray-200 shadow-none',
+  rootEmphasized: 'text-gray-700 bg-blue-main hover:bg-blue-tint',
+  rootNoFill: 'text-gray-700 shadow-none',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootSizeSm: 'px-2.5 py-1.5',
-  rootSizeMd: 'px-4 py-2',
+  rootSizeMd: 'px-4 h-11',
   rootSizeLg: 'px-6 py-3',
-  rootIconSizeSm: 'p-2',
-  rootIconSizeMd: 'p-3',
-  rootIconSizeLg: 'p-4',
+  rootIconSizeSm: 'w-9 h-9',
+  rootIconSizeMd: 'w-11 h-11 hover:bg-gray-100',
+  rootIconSizeLg: 'w-14 h-14',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({

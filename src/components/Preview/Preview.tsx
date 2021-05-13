@@ -7,9 +7,9 @@ import { MessageModal } from '../MessageModal';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-import { Button } from '../Button';
+import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
-import DeviceIds from '../Settings/DeviceIds'
+import DeviceIds from '../Settings/DeviceIds';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -39,7 +39,11 @@ const defaultClasses: PreviewClasses = {
 interface StyledPreviewProps {
   name: string;
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
-  getDevices: ({selectedVideoInput, selectedAudioInput, selectedAudioOutput}: DeviceIds) => void;
+  getDevices: ({
+    selectedVideoInput,
+    selectedAudioInput,
+    selectedAudioOutput,
+  }: DeviceIds) => void;
   goBackOnClick: () => void;
   toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
@@ -274,7 +278,7 @@ const StyledPreview = ({
             joinOnClick({ audioMuted, videoMuted });
           }}
         >
-          Join{' '}
+          Join
         </Button>
         {/* <div
           className={combinedClasses?.joinButton}
@@ -287,8 +291,8 @@ const StyledPreview = ({
         </div> */}
         {/* goBackButton */}
         <Button
+          classes={{ rootNoFill: 'mt-4' }}
           variant={'no-fill'}
-          size={'lg'}
           onClick={() => {
             closeMediaStream(mediaStream);
             goBackOnClick();

@@ -5,10 +5,9 @@ import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-import { Button } from '../Button';
+import { Button as TwButton } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
-import DeviceIds from './DeviceIds'
-
+import DeviceIds from './DeviceIds';
 
 export interface SettingsClasses {
   root?: string;
@@ -25,18 +24,22 @@ export interface SettingsClasses {
   selectContainer?: string;
   select?: string;
   selectInner?: string;
-  divider?:string;
-  sliderContainer?:string;
-  sliderInner?:string;
-  sliderLabelContainer?:string;
-  sliderLabel?:string;
-  slider?:string;
+  divider?: string;
+  sliderContainer?: string;
+  sliderInner?: string;
+  sliderLabelContainer?: string;
+  sliderLabel?: string;
+  slider?: string;
 }
 
 interface StyledSettingsProps {
   setMaxTileCount: (count: number) => void;
   maxTileCount: number;
-  getDevices: ({selectedVideoInput, selectedAudioInput, selectedAudioOutput}: DeviceIds) => void;
+  getDevices: ({
+    selectedVideoInput,
+    selectedAudioInput,
+    selectedAudioOutput,
+  }: DeviceIds) => void;
   defaultClasses?: SettingsClasses;
   classes?: SettingsClasses;
 }
@@ -57,12 +60,12 @@ const defaultClasses: SettingsClasses = {
   select:
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   selectInner: 'p-4',
-  divider:'bg-gray-200 h-px w-full my-4',
-  sliderContainer:'w-full my-1.5',
-  sliderInner:'w-full flex',
-  sliderLabelContainer:'w-1/3 flex justify-end items-center ',
-  sliderLabel:'text-right',
-  slider:'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
+  divider: 'bg-gray-200 h-px w-full my-4',
+  sliderContainer: 'w-full my-1.5',
+  sliderInner: 'w-full flex',
+  sliderLabelContainer: 'w-1/3 flex justify-end items-center ',
+  sliderLabel: 'text-right',
+  slider: 'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
 };
 
 //TODO figure out how to expose this outside
@@ -101,7 +104,9 @@ const StyledSettings = ({
 
   const [selectedAudioInput, setSelectedAudioInput] = React.useState('default');
   const [selectedVideoInput, setSelectedVideoInput] = React.useState('default');
-  const [selectedAudioOutput, setSelectedAudioOutput] = React.useState('default');
+  const [selectedAudioOutput, setSelectedAudioOutput] = React.useState(
+    'default',
+  );
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -109,7 +114,7 @@ const StyledSettings = ({
 
   const handleClose = () => {
     setOpen(false);
-    getDevices({selectedVideoInput, selectedAudioInput, selectedAudioOutput});
+    getDevices({ selectedVideoInput, selectedAudioInput, selectedAudioOutput });
   };
   const handleChange = (event: any, newValue: number | number[]) => {
     setMaxTileCount(newValue as number);
@@ -132,9 +137,14 @@ const StyledSettings = ({
 
   return (
     <>
-      <Button onClick={handleClickOpen} variant={'icon-only'}>
+      <TwButton
+        iconOnly
+        variant={'no-fill'}
+        iconSize="md"
+        onClick={handleClickOpen}
+      >
         <SettingsIcon />
-      </Button>
+      </TwButton>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -151,12 +161,15 @@ const StyledSettings = ({
               </span>
               <span className={`${combinedClasses?.titleText}`}>Settings</span>
             </span>
-            <span>
-              <Button variant={'icon-only'} onClick={handleClose}>
-                {' '}
-                <CloseIcon />{' '}
-              </Button>
-            </span>
+
+            <TwButton
+              iconOnly
+              variant={'no-fill'}
+              iconSize="md"
+              onClick={handleClose}
+            >
+              <CloseIcon />
+            </TwButton>
           </div>
 
           <div className={`${combinedClasses?.formContainer}`}>
@@ -168,11 +181,9 @@ const StyledSettings = ({
                 <select
                   name="camera"
                   className={`${combinedClasses?.select}`}
-                  onChange={
-                    event=> {
-                      setSelectedVideoInput(event.target.value)
-                    }
-                  }
+                  onChange={event => {
+                    setSelectedVideoInput(event.target.value);
+                  }}
                   // value={role}
                   // onChange={event => {
                   //   setRole(event.target.value);
@@ -198,12 +209,10 @@ const StyledSettings = ({
                 <select
                   name="microphone"
                   className={`${combinedClasses?.select}`}
-                  onChange={
-                    event=> {
-                      setSelectedAudioInput(event.target.value)
-                    }
-                  }
-                  
+                  onChange={event => {
+                    setSelectedAudioInput(event.target.value);
+                  }}
+
                   // value={role}
                   // onChange={event => {
                   //   setRole(event.target.value);
@@ -229,11 +238,9 @@ const StyledSettings = ({
                 <select
                   name="audio-output"
                   className={`${combinedClasses?.select}`}
-                  onChange={
-                    event=> {
-                      setSelectedAudioOutput(event.target.value)
-                    }
-                  }
+                  onChange={event => {
+                    setSelectedAudioOutput(event.target.value);
+                  }}
                   // value={role}
                   // onChange={event => {
                   //   setRole(event.target.value);
@@ -353,7 +360,9 @@ const StyledSettings = ({
             <div className={combinedClasses?.sliderContainer}>
               <div className={combinedClasses?.sliderInner}>
                 <div className={combinedClasses?.sliderLabelContainer}>
-                  <span className={combinedClasses?.sliderLabel}>Participants in view:</span>
+                  <span className={combinedClasses?.sliderLabel}>
+                    Participants in view:
+                  </span>
                 </div>
                 <div className={combinedClasses?.slider}>
                   <HMSSlider
