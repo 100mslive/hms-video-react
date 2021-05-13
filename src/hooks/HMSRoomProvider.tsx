@@ -6,7 +6,6 @@ import HMSRoomProps from './interfaces/HMSRoomProps';
 import createListener from './helpers/createListener';
 import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
 import { Silence } from '../components/Silence';
-import { useEffect } from 'react';
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 import HMSLogger from '../utils/ui-logger';
@@ -33,15 +32,6 @@ export const HMSRoomProvider: React.FC = props => {
   const [dominantSpeaker, setDominantSpeaker] = useState<
     HMSRoomProps['dominantSpeaker']
   >(null);
-
-  useEffect(() => {
-    if (audioMuted) {
-      toggleMuteInPeer('audio');
-    }
-    if (videoMuted) {
-      toggleMuteInPeer('video');
-    }
-  }, [localPeer]);
 
   const join = (config: HMSConfig, listener: HMSUpdateListener) => {
     sdk.join(
@@ -117,6 +107,13 @@ export const HMSRoomProvider: React.FC = props => {
     setPeers(sdk.getPeers());
     setLocalPeer(sdk.getLocalPeer());
   };
+
+  if (audioMuted) {
+    toggleMuteInPeer('audio');
+  }
+  if (videoMuted) {
+    toggleMuteInPeer('video');
+  }
 
   const receiveMessage = (message: HMSMessage) => {
     setMessages(prevMessages => [...prevMessages, message]);
