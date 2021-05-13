@@ -64,9 +64,9 @@ export const HMSRoomProvider: React.FC = props => {
     );
     sdk.addAudioListener({
       onAudioLevelUpdate: newSpeakers => {
-        if (!areSpeakersApproxEqual(speakers, newSpeakers)) {
-          setSpeakers(newSpeakers);
-        }
+        setSpeakers(oldSpeakers => {
+            return areSpeakersApproxEqual(oldSpeakers, newSpeakers) ? oldSpeakers : newSpeakers;
+        })
       },
     });
   };
