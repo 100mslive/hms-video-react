@@ -5,6 +5,7 @@ import HMSThemeProps, { appBuilder } from './interfaces/HMSThemeProvider';
 import { merge } from 'lodash';
 
 import { theme as defaultTailwindConfig } from '../defaultTheme';
+import { create } from 'twind';
 
 const HMSThemeContext = createContext<HMSThemeProps | null>(null);
 
@@ -40,9 +41,11 @@ export const HMSThemeProvider = ({
     document.documentElement.classList.add('dark');
   }
   const twConfig = merge(defaultTailwindConfig, config);
+  const { tw } = create(twConfig || {});
   return (
     <HMSThemeContext.Provider
       value={{
+        tw,
         tailwindConfig: twConfig,
         appBuilder,
       }}

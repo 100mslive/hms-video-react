@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from 'react';
 // @ts-ignore
 import { tw, style } from 'twind/style';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
 
 interface StyledButtonProps {
@@ -113,6 +114,7 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   children,
   ...props
 }) => {
+  const { tw } = useHMSTheme();
   const finalClasses: ButtonClasses = resolveClasses(
     classes || {},
     defaultClasses,
