@@ -21,7 +21,6 @@ import { useResizeDetector } from 'react-resize-detector';
 import { combineClasses } from '../../utils';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { useCallback } from '@storybook/client-api';
 
 export interface VideoListClasses extends VideoTileClasses {
   /**

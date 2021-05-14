@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
@@ -7,7 +7,7 @@ import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button as TwButton } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
-import DeviceIds from './DeviceIds';
+import {groupBy, Dictionary} from 'lodash';
 
 export interface SettingsClasses {
   root?: string;
@@ -30,16 +30,18 @@ export interface SettingsClasses {
   sliderLabelContainer?: string;
   sliderLabel?: string;
   slider?: string;
+  errorContainer?:string;
 }
 
+export interface SettingsFormProps {
+  selectedVideoInput?: string;
+  selectedAudioInput?: string;
+  selectedAudioOutput?: string;
+  maxTileCount?: number;
+}
 interface StyledSettingsProps {
-  setMaxTileCount: (count: number) => void;
-  maxTileCount: number;
-  getDevices: ({
-    selectedVideoInput,
-    selectedAudioInput,
-    selectedAudioOutput,
-  }: DeviceIds) => void;
+  initialValues?:SettingsFormProps,
+  onChange?:(values:SettingsFormProps) => void
   defaultClasses?: SettingsClasses;
   classes?: SettingsClasses;
 }
@@ -66,6 +68,7 @@ const defaultClasses: SettingsClasses = {
   sliderLabelContainer: 'w-1/3 flex justify-end items-center ',
   sliderLabel: 'text-right',
   slider: 'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
+  errorContainer:'flex justify-center items-center w-full px-8 py-4'
 };
 
 //TODO figure out how to expose this outside
@@ -89,24 +92,24 @@ const HMSSlider = withStyles({
 
 //TODO replace with unpkg
 const StyledSettings = ({
-  maxTileCount,
-  setMaxTileCount,
-  getDevices,
+  onChange,
+  initialValues,
   defaultClasses,
   classes: extraClasses,
 }: StyledSettingsProps) => {
+  //TODO accept initial entry values
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  const [open, setOpen] = React.useState(false);
-  const [audioInput, setAudioInput] = React.useState<MediaDeviceInfo[]>([]);
-  const [audioOutput, setAudioOutput] = React.useState<MediaDeviceInfo[]>([]);
-  const [videoInput, setVideoInput] = React.useState<MediaDeviceInfo[]>([]);
+  const [open, setOpen] = useState(false);
+  const [deviceGroups, setDeviceGroups] = useState<Dictionary<MediaDeviceInfo[]>>({});
+  const [error, setError] = useState('');
 
-  const [selectedAudioInput, setSelectedAudioInput] = React.useState('default');
-  const [selectedVideoInput, setSelectedVideoInput] = React.useState('default');
-  const [selectedAudioOutput, setSelectedAudioOutput] = React.useState(
-    'default',
-  );
+  const [values, setValues] = useState<SettingsFormProps>({
+    selectedAudioInput:initialValues?.selectedAudioInput?initialValues?.selectedAudioInput:'default',
+    selectedVideoInput:initialValues?.selectedVideoInput?initialValues?.selectedVideoInput:'default',
+    selectedAudioOutput:initialValues?.selectedAudioOutput?initialValues?.selectedAudioOutput:'default',
+    maxTileCount:initialValues?.maxTileCount?initialValues?.maxTileCount:8
+  })
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -114,26 +117,35 @@ const StyledSettings = ({
 
   const handleClose = () => {
     setOpen(false);
-    getDevices({ selectedVideoInput, selectedAudioInput, selectedAudioOutput });
+    onChange && onChange(values);
   };
-  const handleChange = (event: any, newValue: number | number[]) => {
-    setMaxTileCount(newValue as number);
-  };
+
+  const handleInputChange = (name:keyof SettingsFormProps, value:any) => { 
+      setValues(values=> {
+        const newValues = {...values};
+        newValues[name] = value;
+        return newValues
+      })
+  }
 
   useEffect(() => {
     navigator.mediaDevices.enumerateDevices().then(devices => {
-      for (let device of devices) {
-        HMSLogger.w('Device:', device);
-        if (device.kind === 'videoinput') {
-          setVideoInput(videoDevices => [...videoDevices, device]);
-        } else if (device.kind === 'audioinput') {
-          setAudioInput(prevAudioInput => [...prevAudioInput, device]);
-        } else if (device.kind === 'audiooutput') {
-          setAudioOutput(prevAudioOutput => [...prevAudioOutput, device]);
-        }
-      }
-    });
+      const deviceGroups = groupBy(devices, 'kind');
+      HMSLogger.d('Groups:', deviceGroups);
+      setDeviceGroups(deviceGroups);
+    }, error =>{
+    //TODO this is not working right now
+    setError(error);
+    })
   }, []);
+
+  const videoInput = deviceGroups['videoinput']?deviceGroups['videoinput']:[];
+  const audioInput = deviceGroups['audioinput']?deviceGroups['audioinput']:[];
+  const audioOutput = deviceGroups['audiooutput']?deviceGroups['audiooutput']:[];
+  //TODO handle case where selected device is not in list
+  // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
+  // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
+  // videoInput.length > 0 && videoInput.findIndex(device => device.deviceId===values?.selectedVideoInput)===-1 && setValues({selectedVideoInput:videoInput[0].deviceId});
 
   return (
     <>
@@ -171,23 +183,19 @@ const StyledSettings = ({
               <CloseIcon />
             </TwButton>
           </div>
-
+          
           <div className={`${combinedClasses?.formContainer}`}>
-            <div className={`${combinedClasses?.formInner}`}>
+          {error===''?(<><div className={`${combinedClasses?.formInner}`}>
               <div className={`${combinedClasses?.selectLabel}`}>
                 <span>Camera:</span>
               </div>
               <div className={`${combinedClasses?.selectContainer}`}>
-                <select
+                {videoInput.length>0 && (<select
                   name="camera"
                   className={`${combinedClasses?.select}`}
                   onChange={event => {
-                    setSelectedVideoInput(event.target.value);
+                    handleInputChange('selectedVideoInput', event.target.value)
                   }}
-                  // value={role}
-                  // onChange={event => {
-                  //   setRole(event.target.value);
-                  // }}
                 >
                   {videoInput.map((device, index) => (
                     <option
@@ -195,10 +203,10 @@ const StyledSettings = ({
                       className={`${combinedClasses?.selectInner}`}
                       key={index}
                     >
-                      {device.label}
+                      {device.label} {device.deviceId}
                     </option>
                   ))}
-                </select>
+                </select>)}
               </div>
             </div>
             <div className={`${combinedClasses?.formInner}`}>
@@ -206,17 +214,13 @@ const StyledSettings = ({
                 <span>Microphone:</span>
               </div>
               <div className={`${combinedClasses?.selectContainer}`}>
-                <select
+              {audioInput.length>0 && (<select
                   name="microphone"
                   className={`${combinedClasses?.select}`}
                   onChange={event => {
-                    setSelectedAudioInput(event.target.value);
+                    handleInputChange('selectedAudioInput', event.target.value)
                   }}
-
-                  // value={role}
-                  // onChange={event => {
-                  //   setRole(event.target.value);
-                  // }}
+                  value={values.selectedAudioInput}
                 >
                   {audioInput.map((device, index) => (
                     <option
@@ -227,7 +231,7 @@ const StyledSettings = ({
                       {device.label}
                     </option>
                   ))}
-                </select>
+                </select>)}
               </div>
             </div>
             <div className={`${combinedClasses?.formInner}`}>
@@ -235,16 +239,13 @@ const StyledSettings = ({
                 <span>Audio Output:</span>
               </div>
               <div className={`${combinedClasses?.selectContainer}`}>
-                <select
+                {audioOutput.length>0 && (<select
                   name="audio-output"
                   className={`${combinedClasses?.select}`}
                   onChange={event => {
-                    setSelectedAudioOutput(event.target.value);
+                    handleInputChange('selectedAudioOutput', event.target.value)
                   }}
-                  // value={role}
-                  // onChange={event => {
-                  //   setRole(event.target.value);
-                  // }}
+                  value={values.selectedAudioOutput}
                 >
                   {audioOutput.map((device, index) => (
                     <option
@@ -255,9 +256,9 @@ const StyledSettings = ({
                       {device.label}
                     </option>
                   ))}
-                </select>
+                </select>)}
               </div>
-            </div>
+            </div></>):(<div className={combinedClasses?.errorContainer}>Error in accessing devices. Please check permissions. Are all devices plugged in?</div>)}
             {/* <div className="w-full my-1.5">
               <div className="w-full flex  ">
                 <div className="w-1/3 flex justify-end items-center ">
@@ -367,8 +368,8 @@ const StyledSettings = ({
                 <div className={combinedClasses?.slider}>
                   <HMSSlider
                     defaultValue={8}
-                    value={maxTileCount}
-                    onChange={handleChange}
+                    value={values.maxTileCount}
+                    onChange={(event, value)=>{handleInputChange('maxTileCount', value)}}
                     aria-labelledby="continuous-slider"
                     valueLabelDisplay="auto"
                     step={1}

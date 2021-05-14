@@ -17,12 +17,10 @@ export default meta;
 const Template: Story<SettingsProps> = (args: SettingsProps) => {
   const [maxTileCount, setMaxTileCount] = useState(8);
   return (
-    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
       <div className="w-full flex justify-center">
         <Settings
-          maxTileCount={maxTileCount}
-          setMaxTileCount={setMaxTileCount}
-          getDevices={props => {}}
+          onChange={props => {alert(JSON.stringify(props))}}
         />
       </div>
     </HMSThemeProvider>
