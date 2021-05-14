@@ -25,19 +25,19 @@ const Template: Story<ChatProps> = args => {
       return messages;
     });
   };
-  useEffect(()=>{
-    setInterval(()=>{
+  useEffect(() => {
+    setInterval(() => {
       setMesaages(prevMessages => {
         let messages = [...prevMessages];
         messages.push({
-          message:"Ghost message",
-          sender:"Ghost",
-          time:new Date(),
-        })
+          message: 'Ghost message',
+          sender: 'Ghost',
+          time: new Date(),
+        });
         return messages;
-      })
-    },8000)
-  },[])
+      });
+    }, 8000);
+  }, []);
   return (
     <div className="w-full h-full flex justify-center">
       <div style={{ height: '466px', width: '240px' }}>

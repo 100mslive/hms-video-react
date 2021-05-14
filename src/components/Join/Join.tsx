@@ -1,8 +1,40 @@
-import React, { useEffect, useState } from 'react';
-import { withClasses } from '../../utils/styles';
+import React, { useEffect, useState, useMemo } from 'react';
+import { resolveClasses } from '../../utils/classes/resolveClasses';
+//@ts-ignore
+import { apply, create } from 'twind';
 import { Button } from '../TwButton';
-import { combineClasses } from '../../utils';
 
+const colors = {
+  blue: {
+    tint: '#74AAFF',
+    main: '#2F80FF',
+    shade: '#0B326F',
+  },
+  red: {
+    tint: '#E66977',
+    main: '#D74451',
+    shade: '#6F2229',
+  },
+  gray: {
+    100: '#212121',
+    200: '#3B3B3B',
+    300: '#5E5E5E',
+    400: '#8E8E8E',
+    500: '#C7C7C7',
+    600: '#E3E3E3',
+    700: '#F2F2F2',
+  },
+  transparent: {
+    100: 'rgba(0, 0, 0, 0.37)',
+    200: 'rgba(196,196,196, 0.21) ',
+    300: 'rgba(255, 255, 255, 0.25)',
+    400: 'rgba(0, 0, 0, 0.75)',
+    500: 'rgba(0, 0, 0, 0.9375)',
+    600: 'rgba(59, 59, 59, 0.3)',
+    700: 'rgba(0,0,0,0.22)',
+    800: 'rgba(59,59,59,0.13)',
+  },
+};
 interface Fields {
   username: string;
   roomId: string;
@@ -24,17 +56,16 @@ interface JoinClasses {
 
 const defaultClasses: JoinClasses = {
   root:
-    'flex justify-center bg-white dark:bg-black items-center w-screen h-screen text-gray-100 dark:text-white',
+    'flex dark:bg-black dark:text-white bg-gray-700 justify-center items-center w-screen h-screen text-gray-100 ',
   containerRoot:
-    'bg-gray-600 dark:bg-gray-100 w-1/2 m-2 p-3 rounded-lg divide-solid',
+    'bg-gray-600 dark:bg-gray-100 bg-gray-500 w-1/2 m-2 p-3 rounded-lg divide-solid',
   header: 'text-2xl mb-3 p-3 border-b-2',
   inputRoot: 'flex flex-wrap text-lg',
   inputName: 'w-1/3 flex justify-end items-center',
   inputFieldRoot: 'p-2 w-2/3',
-  inputField: 'rounded-lg bg-white dark:bg-gray-200 w-full p-1',
+  inputField: 'rounded-lg bg-gray-700 dark:bg-gray-200 w-full p-1',
   joinRoot: 'w-full flex justify-end m-2',
-  joinButton:
-    'bg-brand-main text-white rounded-lg px-5 py-2 focus:outline-none',
+  joinButton: 'bg-brand-main  rounded-lg px-5 py-2 focus:outline-none',
 };
 interface StyledJoinProps {
   /**
@@ -46,29 +77,43 @@ interface StyledJoinProps {
    */
   submitOnClick: ({ username, roomId, role, endpoint }: Fields) => void;
   /**
-   * default classes
-   */
-  defaultClasses?: JoinClasses;
-  /**
    * extra classes added  by user
    */
-  classes?: JoinClasses;
+  classes?: { [key: string]: string } | JoinClasses;
 }
 
-const StyledJoin = ({
+type NativeAttrs = Omit<
+  React.DetailsHTMLAttributes<any>,
+  keyof StyledJoinProps
+>;
+
+export type JoinProps = StyledJoinProps & NativeAttrs;
+
+export const Join = ({
   initialValues,
   submitOnClick,
-  classes: extraClasses,
-  defaultClasses,
+  classes,
+  ...props
 }: StyledJoinProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const finalClasses: JoinClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
   const [username, setUserName] = useState(initialValues?.username || '');
   const [role, setRole] = useState(initialValues?.role || 'Student');
   const [roomId, setRoomId] = useState(
     initialValues?.roomId || '607d781cdcee704ca43cafb9',
   );
   const [endpoint, setEndpoint] = useState(initialValues?.endpoint || 'qa2-us');
+  
+  const tw = useMemo(()=>{return create({
+    theme: {
+      extend:{
+        colors: colors,
+      }
+    },
+    darkMode:'class',
+  }).tw},[]);   
 
   useEffect(() => {
     initialValues?.username && setUserName(initialValues.username);
@@ -77,42 +122,46 @@ const StyledJoin = ({
     initialValues?.endpoint && setEndpoint(initialValues.endpoint);
   }, [initialValues]);
 
+  const parseClass = (s: keyof JoinClasses) => {
+    return tw(`hmsui-${s}`, apply(finalClasses[s]));
+  };
+
   return (
-    <div className={combinedClasses?.root}>
-      <div className={combinedClasses?.containerRoot}>
-        <div className={combinedClasses?.header}>Join your class</div>
-        <div className={combinedClasses?.inputRoot}>
-          <div className={combinedClasses?.inputName}>
+    <div className={parseClass('root')} {...props}>
+      <div className={parseClass('containerRoot')}>
+        <div className={parseClass('header')}>Join your class</div>
+        <div className={parseClass('inputRoot')}>
+          <div className={parseClass('inputName')}>
             <span>Username:</span>
           </div>
-          <div className={combinedClasses?.inputFieldRoot}>
+          <div className={parseClass('inputFieldRoot')}>
             <input
-              className={combinedClasses?.inputField}
+              className={parseClass('inputField')}
               value={initialValues?.username || username}
               onChange={event => {
                 setUserName(event.target.value);
               }}
             ></input>
           </div>
-          <div className={combinedClasses?.inputName}>
+          <div className={parseClass('inputName')}>
             <span>RoomId:</span>
           </div>
-          <div className={combinedClasses?.inputFieldRoot}>
+          <div className={parseClass('inputFieldRoot')}>
             <input
-              className={combinedClasses?.inputField}
+              className={parseClass('inputField')}
               value={initialValues?.roomId || roomId}
               onChange={event => {
                 setRoomId(event.target.value);
               }}
             ></input>
           </div>
-          <div className={combinedClasses?.inputName}>
+          <div className={parseClass('inputName')}>
             <span>Role:</span>
           </div>
-          <div className={combinedClasses?.inputFieldRoot}>
+          <div className={parseClass('inputFieldRoot')}>
             <select
               name="role"
-              className={combinedClasses?.inputField}
+              className={parseClass('inputField')}
               value={initialValues?.role || role}
               onChange={event => {
                 setRole(event.target.value);
@@ -124,13 +173,13 @@ const StyledJoin = ({
               <option value="Viewer">Viewer</option>
             </select>
           </div>
-          <div className={combinedClasses?.inputName}>
+          <div className={parseClass('inputName')}>
             <span>Environment:</span>
           </div>
-          <div className={combinedClasses?.inputFieldRoot}>
+          <div className={parseClass('inputFieldRoot')}>
             <select
               name="endpoint"
-              className={combinedClasses?.inputField}
+              className={parseClass('inputField')}
               value={initialValues?.endpoint || endpoint}
               onChange={event => {
                 setEndpoint(event.target.value);
@@ -143,7 +192,7 @@ const StyledJoin = ({
               <option value="100ms-grpc">100ms-grpc</option>
             </select>
           </div>
-          <div className={combinedClasses?.joinRoot}>
+          <div className={parseClass('joinRoot')}>
             <Button
               variant={'emphasized'}
               onClick={() =>
@@ -163,10 +212,3 @@ const StyledJoin = ({
     </div>
   );
 };
-
-export type JoinProps = Omit<StyledJoinProps, 'defaultClasses'>;
-
-export const Join = withClasses<JoinClasses | undefined>(
-  defaultClasses,
-  'join',
-)<StyledJoinProps>(StyledJoin);

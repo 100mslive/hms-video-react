@@ -22,7 +22,7 @@ const Template: Story<SettingsProps> = (args: SettingsProps) => {
         <Settings
           maxTileCount={maxTileCount}
           setMaxTileCount={setMaxTileCount}
-          getDevices={(props)=>{}}
+          getDevices={props => {}}
         />
       </div>
     </HMSThemeProvider>

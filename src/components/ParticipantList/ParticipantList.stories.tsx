@@ -124,7 +124,10 @@ Default.args = {
 Real.args = {
   participantList: [
     {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar asdasdasdasdasdasdasdasdas'},
+      peer: {
+        id: '123',
+        displayName: 'Sudhanshu Kumar asdasdasdasdasdasdasdasdas',
+      },
       isAudioMuted: false,
       isStarMarked: false,
     },

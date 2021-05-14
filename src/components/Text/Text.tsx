@@ -126,7 +126,7 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
     ],
   });
   const twClasses = typography({ size, variant });
-  const propClass = 'hmsui ' + camelize(`root ${variant} ${size}`);
+  const propClass = `hmsui ${camelize(`root ${variant} ${size}`)}`;
   const className = tw(propClass, twClasses);
   return (
     <TagName className={className} {...props}>
