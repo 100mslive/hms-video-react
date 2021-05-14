@@ -8,6 +8,25 @@ import { theme as defaultTailwindConfig } from '../defaultTheme';
 
 const HMSThemeContext = createContext<HMSThemeProps | null>(null);
 
+const config = {
+  // theme: {
+  //   extend: {
+  //     colors: {
+  //       brand: {
+  //         tint: '#74AAFF',
+  //         main: '#2F80FF',
+  //         shade: '#0B326F',
+  //       },
+  //       danger: {
+  //         tint: '#E66977',
+  //         main: '#D74451',
+  //         shade: '#6F2229',
+  //       },
+  //     },
+  //   },
+  // },
+};
+
 export const HMSThemeProvider = ({
   config,
   children,
@@ -20,10 +39,11 @@ export const HMSThemeProvider = ({
   if (appBuilder.theme === 'dark') {
     document.documentElement.classList.add('dark');
   }
+  const twConfig = merge(defaultTailwindConfig, config);
   return (
     <HMSThemeContext.Provider
       value={{
-        tailwindConfig: merge(defaultTailwindConfig, config),
+        tailwindConfig: twConfig,
         appBuilder,
       }}
     >
