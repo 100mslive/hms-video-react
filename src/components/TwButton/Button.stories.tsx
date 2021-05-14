@@ -11,6 +11,25 @@ const meta: Meta = {
 
 export default meta;
 
+const config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          tint: '#74AAFF',
+          main: '#424874',
+          shade: '#0B326F',
+        },
+        red: {
+          tint: '#E66977',
+          main: '#424874',
+          shade: '#6F2229',
+        },
+      },
+    },
+  },
+};
+
 const Basic: Story<ButtonProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
@@ -77,6 +96,16 @@ const IconOnly: Story<ButtonProps> = args => {
   );
 };
 
+const Custom: Story<ButtonProps> = args => {
+  return (
+    <div className="w-full h-1/2 flex justify-center bg-white py-4">
+      <HMSThemeProvider config={config} appBuilder={{ theme: 'dark' }}>
+        <Button {...args}>Custom Config</Button>
+      </HMSThemeProvider>
+    </div>
+  );
+};
+
 export const Default = Basic.bind({});
 Basic.args = {};
 
@@ -90,4 +119,7 @@ export const ButtonClasses = Classes.bind({});
 Basic.args = {};
 
 export const IconOnlyButton = IconOnly.bind({});
+Basic.args = {};
+
+export const CustomConfig = Custom.bind({});
 Basic.args = {};

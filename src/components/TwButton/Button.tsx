@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 // @ts-ignore
-import { tw, style } from 'twind/style';
+import { style } from 'twind/style';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
 
@@ -82,13 +82,13 @@ export interface ButtonClasses {
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex items-center justify-center text-base font-medium shadow-sm focus:outline-none',
-  rootFocus: 'focus:ring focus:ring-blue-tint',
+    'inline-flex text-white items-center justify-center text-base font-medium shadow-sm focus:outline-none',
+  rootFocus: 'focus:ring focus:ring-brand-tint',
   rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
-  rootStandard: 'text-gray-700 bg-gray-200 hover:bg-gray-300',
-  rootDanger: 'text-gray-700 bg-red-main hover:bg-red-tint',
-  rootEmphasized: 'text-gray-700 bg-blue-main hover:bg-blue-tint',
-  rootNoFill: 'text-gray-700 shadow-none',
+  rootStandard: 'bg-gray-200 hover:bg-gray-300',
+  rootDanger: 'bg-red-main hover:bg-red-tint',
+  rootEmphasized: 'bg-brand-main hover:bg-brand-tint',
+  rootNoFill: 'text-black shadow-none',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootSizeSm: 'px-2.5 py-1.5',
