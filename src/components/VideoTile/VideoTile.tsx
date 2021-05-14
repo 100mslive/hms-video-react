@@ -116,13 +116,14 @@ const StyledVideoTile = ({
     if (aspectRatio === undefined) {
       aspectRatio = context.appBuilder.videoTileAspectRatio;
     }
+    //TODO this is the wrong prop
     if (showAudioMuteStatus === undefined) {
       showAudioMuteStatus = context.appBuilder.showAvatar;
     }
   } catch (e) {}
 
   const { width, height } = videoTrack?videoTrack.getSettings():{width:1, height:1};
-  const impliedAspectRatio = aspectRatio ? aspectRatio : { width, height };
+  const impliedAspectRatio = (aspectRatio && objectFit==='cover') ? aspectRatio : { width, height };
 
   return (
     <div className={combinedClasses?.root}>

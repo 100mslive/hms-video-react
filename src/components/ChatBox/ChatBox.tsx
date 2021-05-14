@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { CloseIcon, PeopleIcon, SendIcon } from '../Icons';
+import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
 import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Autolinker from 'autolinker';
@@ -31,6 +31,7 @@ interface ChatBoxClasses {
   chatInput?: string;
   unreadMessagesContainer?: string;
   unreadMessagesInner?: string;
+  unreadIcon?:string;
 }
 
 const defaultClasses: ChatBoxClasses = {
@@ -58,7 +59,8 @@ const defaultClasses: ChatBoxClasses = {
   unreadMessagesContainer:
     'absolute left-0 p-1 w-full bottom-full flex justify-center',
   unreadMessagesInner:
-    'rounded-md px-2 py-1 bg-gray-500 text-gray-100 dark:bg-gray-300 dark:text-white flex justify-center',
+    'rounded-md px-2 py-1 bg-brand-main text-white flex cursor-pointer items-center ',
+  unreadIcon:'ml-2 w-3 h-3'
 };
 
 export interface Message {
@@ -92,8 +94,8 @@ export const StyledChatBox = ({
   messages,
   onSend,
   onClose,
-  willScrollToBottom = true,
-  scrollAnimation = 'smooth',
+  willScrollToBottom = true, //TODO shouldn't be exposed as a prop
+  scrollAnimation = 'auto', //TODO shouldn't be exposed as a prop
   messageFormatter = (message: string) => {
     let text = Autolinker.link(message, {
       sanitizeHtml: true,
@@ -160,7 +162,9 @@ export const StyledChatBox = ({
   }, [localMessages, toScroll]);
 
   useEffect(() => {
-    setUnreadMessagesCount(0);
+    if(inView){
+      setUnreadMessagesCount(0);
+    }
   }, [inView]);
 
   return (
@@ -268,10 +272,10 @@ export const StyledChatBox = ({
         <div className={combinedClasses?.footer}>
           {unreadMessagesCount !== 0 && (
             <div className={combinedClasses?.unreadMessagesContainer}>
-              <div className={combinedClasses?.unreadMessagesInner}>
-                {`${unreadMessagesCount} new message${
+              <div className={combinedClasses?.unreadMessagesInner} onClick={()=>{scrollToBottom({behavior:scrollAnimation})}}>
+                {`New message${
                   unreadMessagesCount > 1 ? 's' : ''
-                }`}
+                }`}<DownCaratIcon className={combinedClasses?.unreadIcon}/>
               </div>
             </div>
           )}
