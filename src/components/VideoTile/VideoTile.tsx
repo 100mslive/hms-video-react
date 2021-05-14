@@ -122,7 +122,7 @@ const StyledVideoTile = ({
   } catch (e) {}
 
   const { width, height } = videoTrack?videoTrack.getSettings():{width:1, height:1};
-  const impliedAspectRatio = aspectRatio ? aspectRatio : { width, height };
+  const impliedAspectRatio = (aspectRatio && objectFit==='cover') ? aspectRatio : { width, height };
 
   return (
     <div className={combinedClasses?.root}>
