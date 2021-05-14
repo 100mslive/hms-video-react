@@ -7,7 +7,7 @@ import { Avatar } from '../Avatar';
 import { getVideoTileLabel, combineClasses } from '../../utils';
 import { withClasses } from '../../utils/styles';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-interface StyledVideoTileProps extends VideoProps {
+interface StyledVideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
    */
