@@ -116,6 +116,7 @@ const StyledVideoTile = ({
     if (aspectRatio === undefined) {
       aspectRatio = context.appBuilder.videoTileAspectRatio;
     }
+    //TODO this is the wrong prop
     if (showAudioMuteStatus === undefined) {
       showAudioMuteStatus = context.appBuilder.showAvatar;
     }
