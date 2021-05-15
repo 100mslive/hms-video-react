@@ -63,7 +63,7 @@ export const StyledControlBar = ({
   screenshareButtonOnClick,
   leftComponents = [
     <Settings
-      onChange={(props)=>{alert(props)}}
+      onChange={(props)=>{console.debug('Settings on change called ', props)}}
       key={0}
     />,
     <TwButton
