@@ -107,6 +107,7 @@ const StyledVideoTile = ({
   controlsComponent,
   classes: extraClasses,
   defaultClasses,
+  audioLevelEmitter,
 }: StyledVideoTileProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
@@ -159,6 +160,7 @@ const StyledVideoTile = ({
             audioLevelDisplayType={audioLevelDisplayType}
             audioLevelDisplayColor={audioLevelDisplayColor}
             displayShape={displayShape}
+            audioLevelEmitter={audioLevelEmitter}
           />
           {isVideoMuted && (
             <div

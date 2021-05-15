@@ -98,6 +98,8 @@ interface StyledVideoProps {
    * extra classes added  by user
    */
   classes?: VideoClasses;
+
+  audioLevelEmitter?: any;
 }
 
 const defaultClasses: VideoClasses = {
@@ -124,6 +126,7 @@ export const StyledVideo = ({
   displayShape,
   classes: extraClasses,
   defaultClasses,
+  audioLevelEmitter,
 }: StyledVideoProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
@@ -183,6 +186,7 @@ export const StyledVideo = ({
       {showAudioLevel && audioLevelDisplayType === 'border' && (
         <AudioLevelIndicator
           peerId={peerId}
+          audioLevelEmitter={audioLevelEmitter}
           isAudioMuted={isAudioMuted}
           type={'border'}
           level={audioLevel}

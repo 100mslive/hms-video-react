@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { EventEmitter } from 'events';
 import { AudioLevelDisplayType } from '../../types';
 import { DisplayShapes } from '../Video';
 import InlineCircle from './InlineCircle';
@@ -6,7 +7,6 @@ import InlineWave from './InlineWave';
 import { AudioLevelBorder } from './Border';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-import { audioLevelEmitter } from '../../hooks/SpeakerProvider';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 
 export interface AudioLevelIndicatorClasses {
@@ -26,6 +26,7 @@ const defaultClasses: AudioLevelIndicatorClasses = {
 };
 export interface StyledAudioLevelIndicatorProps {
   peerId?: string;
+  audioLevelEmitter?: EventEmitter;
   type: AudioLevelDisplayType;
   isAudioMuted?: boolean;
   level?: number;
@@ -37,6 +38,7 @@ export interface StyledAudioLevelIndicatorProps {
 
 const StyledAudioLevelIndicator = ({
   peerId,
+  audioLevelEmitter,
   type,
   isAudioMuted = false,
   level = 0,
@@ -48,12 +50,15 @@ const StyledAudioLevelIndicator = ({
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [peerAudioLevel, setPeerAudioLevel] = useState(0);
-  if (peerId) {
+  useEffect(() => {
     const handleAudioLevelUpdate = (speaker: HMSSpeaker) => {
       setPeerAudioLevel(speaker.audioLevel);
     };
-    audioLevelEmitter.on(peerId, handleAudioLevelUpdate);
-  }
+    peerId && audioLevelEmitter?.on(peerId, handleAudioLevelUpdate);
+    return () => {
+      peerId && audioLevelEmitter?.off(peerId, handleAudioLevelUpdate);
+    };
+  }, [peerId]);
 
   const audioLevel = Number(!isAudioMuted && (peerAudioLevel || level));
 
