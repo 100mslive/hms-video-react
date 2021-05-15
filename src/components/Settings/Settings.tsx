@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEventHandler} from 'react';
+import React, { useEffect, useState, ChangeEventHandler } from 'react';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
@@ -7,7 +7,7 @@ import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button as TwButton } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
-import {groupBy, Dictionary} from 'lodash';
+import { groupBy, Dictionary } from 'lodash';
 
 export interface SettingsClasses {
   root?: string;
@@ -30,7 +30,7 @@ export interface SettingsClasses {
   sliderLabelContainer?: string;
   sliderLabel?: string;
   slider?: string;
-  errorContainer?:string;
+  errorContainer?: string;
 }
 
 export interface SettingsFormProps {
@@ -40,8 +40,8 @@ export interface SettingsFormProps {
   maxTileCount?: number;
 }
 interface StyledSettingsProps {
-  initialValues?:SettingsFormProps,
-  onChange?:(values:SettingsFormProps) => void
+  initialValues?: SettingsFormProps;
+  onChange?: (values: SettingsFormProps) => void;
   defaultClasses?: SettingsClasses;
   classes?: SettingsClasses;
 }
@@ -68,7 +68,7 @@ const defaultClasses: SettingsClasses = {
   sliderLabelContainer: 'w-1/3 flex justify-end items-center ',
   sliderLabel: 'text-right',
   slider: 'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
-  errorContainer:'flex justify-center items-center w-full px-8 py-4'
+  errorContainer: 'flex justify-center items-center w-full px-8 py-4',
 };
 
 //TODO figure out how to expose this outside
@@ -101,15 +101,23 @@ const StyledSettings = ({
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
   const [open, setOpen] = useState(false);
-  const [deviceGroups, setDeviceGroups] = useState<Dictionary<MediaDeviceInfo[]>>({});
+  const [deviceGroups, setDeviceGroups] = useState<
+    Dictionary<MediaDeviceInfo[]>
+  >({});
   const [error, setError] = useState('');
 
   const [values, setValues] = useState<SettingsFormProps>({
-    selectedAudioInput:initialValues?.selectedAudioInput?initialValues?.selectedAudioInput:'default',
-    selectedVideoInput:initialValues?.selectedVideoInput?initialValues?.selectedVideoInput:'default',
-    selectedAudioOutput:initialValues?.selectedAudioOutput?initialValues?.selectedAudioOutput:'default',
-    maxTileCount:initialValues?.maxTileCount?initialValues?.maxTileCount:9
-  })
+    selectedAudioInput: initialValues?.selectedAudioInput
+      ? initialValues?.selectedAudioInput
+      : 'default',
+    selectedVideoInput: initialValues?.selectedVideoInput
+      ? initialValues?.selectedVideoInput
+      : 'default',
+    selectedAudioOutput: initialValues?.selectedAudioOutput
+      ? initialValues?.selectedAudioOutput
+      : 'default',
+    maxTileCount: initialValues?.maxTileCount ? initialValues?.maxTileCount : 9,
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -120,37 +128,47 @@ const StyledSettings = ({
     onChange && onChange(values);
   };
 
-  const handleInputChange:ChangeEventHandler<any> = (event) => { 
-    const newValues = {...values};
-    newValues[event.currentTarget.name as keyof SettingsFormProps] = event.currentTarget.value;
+  const handleInputChange: ChangeEventHandler<any> = event => {
+    const newValues = { ...values };
+    newValues[event.currentTarget.name as keyof SettingsFormProps] =
+      event.currentTarget.value;
     setValues(newValues);
-  }
+  };
 
   const handleSliderChange = (event: any, newValue: number | number[]) => {
-    const newValues = {...values};
+    const newValues = { ...values };
     //TODO make this generic
-    if(typeof newValue ==='number'){
+    if (typeof newValue === 'number') {
       newValues['maxTileCount'] = newValue;
     }
     setValues(newValues);
-  }
+  };
 
   useEffect(() => {
-      if(open){
-        navigator.mediaDevices.enumerateDevices().then(devices => {
+    if (open) {
+      navigator.mediaDevices.enumerateDevices().then(
+        devices => {
           const deviceGroups = groupBy(devices, 'kind');
           HMSLogger.d('Groups:', deviceGroups);
           setDeviceGroups(deviceGroups);
-        }, error =>{
-        //TODO this is not working right now
-        setError(error);
-        })
+        },
+        error => {
+          //TODO this is not working right now
+          setError(error);
+        },
+      );
     }
   }, [open]);
 
-  const videoInput = deviceGroups['videoinput']?deviceGroups['videoinput']:[];
-  const audioInput = deviceGroups['audioinput']?deviceGroups['audioinput']:[];
-  const audioOutput = deviceGroups['audiooutput']?deviceGroups['audiooutput']:[];
+  const videoInput = deviceGroups['videoinput']
+    ? deviceGroups['videoinput']
+    : [];
+  const audioInput = deviceGroups['audioinput']
+    ? deviceGroups['audioinput']
+    : [];
+  const audioOutput = deviceGroups['audiooutput']
+    ? deviceGroups['audiooutput']
+    : [];
   //TODO handle case where selected device is not in list
   // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
   // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
@@ -192,77 +210,92 @@ const StyledSettings = ({
               <CloseIcon />
             </TwButton>
           </div>
-          
+
           <div className={`${combinedClasses?.formContainer}`}>
-          {error===''?(<><div className={`${combinedClasses?.formInner}`}>
-              <div className={`${combinedClasses?.selectLabel}`}>
-                <span>Camera:</span>
+            {error === '' ? (
+              <>
+                <div className={`${combinedClasses?.formInner}`}>
+                  <div className={`${combinedClasses?.selectLabel}`}>
+                    <span>Camera:</span>
+                  </div>
+                  <div className={`${combinedClasses?.selectContainer}`}>
+                    {videoInput.length > 0 && (
+                      <select
+                        name="selectedVideoInput"
+                        className={`${combinedClasses?.select}`}
+                        onChange={handleInputChange}
+                        value={values.selectedVideoInput}
+                      >
+                        {videoInput.map((device, index) => (
+                          <option
+                            value={device.deviceId}
+                            className={`${combinedClasses?.selectInner}`}
+                            key={index}
+                          >
+                            {device.label} {device.deviceId}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+                <div className={`${combinedClasses?.formInner}`}>
+                  <div className={`${combinedClasses?.selectLabel}`}>
+                    <span>Microphone:</span>
+                  </div>
+                  <div className={`${combinedClasses?.selectContainer}`}>
+                    {audioInput.length > 0 && (
+                      <select
+                        name="selectedAudioInput"
+                        className={`${combinedClasses?.select}`}
+                        onChange={handleInputChange}
+                        value={values.selectedAudioInput}
+                      >
+                        {audioInput.map((device, index) => (
+                          <option
+                            value={device.deviceId}
+                            className={`${combinedClasses?.selectInner}`}
+                            key={index}
+                          >
+                            {device.label}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+                <div className={`${combinedClasses?.formInner}`}>
+                  <div className={`${combinedClasses?.selectLabel}`}>
+                    <span>Audio Output:</span>
+                  </div>
+                  <div className={`${combinedClasses?.selectContainer}`}>
+                    {audioOutput.length > 0 && (
+                      <select
+                        name="selectedAudioOutput"
+                        className={`${combinedClasses?.select}`}
+                        onChange={handleInputChange}
+                        value={values.selectedAudioOutput}
+                      >
+                        {audioOutput.map((device, index) => (
+                          <option
+                            value={device.deviceId}
+                            className={`${combinedClasses?.select}`}
+                            key={index}
+                          >
+                            {device.label}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className={combinedClasses?.errorContainer}>
+                Error in accessing devices. Please check permissions. Are all
+                devices plugged in?
               </div>
-              <div className={`${combinedClasses?.selectContainer}`}>
-                {videoInput.length>0 && (<select
-                  name="selectedVideoInput"
-                  className={`${combinedClasses?.select}`}
-                  onChange={handleInputChange}
-                  value={values.selectedVideoInput}
-                >
-                  {videoInput.map((device, index) => (
-                    <option
-                      value={device.deviceId}
-                      className={`${combinedClasses?.selectInner}`}
-                      key={index}
-                    >
-                      {device.label} {device.deviceId}
-                    </option>
-                  ))}
-                </select>)}
-              </div>
-            </div>
-            <div className={`${combinedClasses?.formInner}`}>
-              <div className={`${combinedClasses?.selectLabel}`}>
-                <span>Microphone:</span>
-              </div>
-              <div className={`${combinedClasses?.selectContainer}`}>
-              {audioInput.length>0 && (<select
-                  name="selectedAudioInput"
-                  className={`${combinedClasses?.select}`}
-                  onChange={handleInputChange}
-                  value={values.selectedAudioInput}
-                >
-                  {audioInput.map((device, index) => (
-                    <option
-                      value={device.deviceId}
-                      className={`${combinedClasses?.selectInner}`}
-                      key={index}
-                    >
-                      {device.label}
-                    </option>
-                  ))}
-                </select>)}
-              </div>
-            </div>
-            <div className={`${combinedClasses?.formInner}`}>
-              <div className={`${combinedClasses?.selectLabel}`}>
-                <span>Audio Output:</span>
-              </div>
-              <div className={`${combinedClasses?.selectContainer}`}>
-                {audioOutput.length>0 && (<select
-                  name="selectedAudioOutput"
-                  className={`${combinedClasses?.select}`}
-                  onChange={handleInputChange}
-                  value={values.selectedAudioOutput}
-                >
-                  {audioOutput.map((device, index) => (
-                    <option
-                      value={device.deviceId}
-                      className={`${combinedClasses?.select}`}
-                      key={index}
-                    >
-                      {device.label}
-                    </option>
-                  ))}
-                </select>)}
-              </div>
-            </div></>):(<div className={combinedClasses?.errorContainer}>Error in accessing devices. Please check permissions. Are all devices plugged in?</div>)}
+            )}
             {/* <div className="w-full my-1.5">
               <div className="w-full flex  ">
                 <div className="w-1/3 flex justify-end items-center ">
@@ -381,13 +414,13 @@ const StyledSettings = ({
                     max={49}
                     step={null}
                     marks={[
-                      {value:1},
-                      {value:4},
-                      {value:9},
-                      {value:16},
-                      {value:25},
-                      {value:36},
-                      {value:49},
+                      { value: 1 },
+                      { value: 4 },
+                      { value: 9 },
+                      { value: 16 },
+                      { value: 25 },
+                      { value: 36 },
+                      { value: 49 },
                     ]}
                   />
                 </div>

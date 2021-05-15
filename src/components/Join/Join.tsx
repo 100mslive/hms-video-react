@@ -105,15 +105,17 @@ export const Join = ({
     initialValues?.roomId || '607d781cdcee704ca43cafb9',
   );
   const [endpoint, setEndpoint] = useState(initialValues?.endpoint || 'qa2-us');
-  
-  const tw = useMemo(()=>{return create({
-    theme: {
-      extend:{
-        colors: colors,
-      }
-    },
-    darkMode:'class',
-  }).tw},[]);   
+
+  const tw = useMemo(() => {
+    return create({
+      theme: {
+        extend: {
+          colors: colors,
+        },
+      },
+      darkMode: 'class',
+    }).tw;
+  }, []);
 
   useEffect(() => {
     initialValues?.username && setUserName(initialValues.username);

@@ -20,7 +20,9 @@ const Template: Story<SettingsProps> = (args: SettingsProps) => {
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
       <div className="w-full flex justify-center">
         <Settings
-          onChange={props => {alert(JSON.stringify(props))}}
+          onChange={props => {
+            alert(JSON.stringify(props));
+          }}
         />
       </div>
     </HMSThemeProvider>

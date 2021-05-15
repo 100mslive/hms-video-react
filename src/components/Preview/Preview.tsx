@@ -39,7 +39,7 @@ const defaultClasses: PreviewClasses = {
 interface StyledPreviewProps {
   name: string;
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
-  onChange:(values:SettingsFormProps) => void;
+  onChange: (values: SettingsFormProps) => void;
   goBackOnClick: () => void;
   toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
@@ -156,7 +156,10 @@ const StyledPreview = ({
       setAllow(false);
     } else {
       // window.navigator.mediaDevices
-      getUserMedia({ audio: {deviceId:selectedAudioInput}, video: {deviceId:selectedVideoInput},  })
+      getUserMedia({
+        audio: { deviceId: selectedAudioInput },
+        video: { deviceId: selectedVideoInput },
+      })
         .then((stream: MediaStream) => setMediaStream(stream))
         .catch((error: any) => {
           HMSLogger.e('[Preview]', error);
@@ -213,15 +216,17 @@ const StyledPreview = ({
 
   window.onunload = () => closeMediaStream(mediaStream);
 
-  useEffect(()=>{
-    startMediaStream()
-  },[selectedAudioInput, selectedVideoInput]);
+  useEffect(() => {
+    startMediaStream();
+  }, [selectedAudioInput, selectedVideoInput]);
 
-  const handleDeviceChange = useCallback((values:SettingsFormProps) => {
-    values?.selectedAudioInput && setSelectedAudioInput(values.selectedAudioInput);
-    values?.selectedVideoInput && setSelectedVideoInput(values.selectedVideoInput);
+  const handleDeviceChange = useCallback((values: SettingsFormProps) => {
+    values?.selectedAudioInput &&
+      setSelectedAudioInput(values.selectedAudioInput);
+    values?.selectedVideoInput &&
+      setSelectedVideoInput(values.selectedVideoInput);
     onChange(values);
-  },[])
+  }, []);
 
   return (
     // root
