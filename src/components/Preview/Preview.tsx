@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { closeMediaStream } from '../../utils';
 import { getLocalStreamException, getUserMedia } from '../../utils/preview';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -9,7 +9,7 @@ import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
-import DeviceIds from '../Settings/DeviceIds';
+import { SettingsFormProps } from '../Settings/Settings';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -39,11 +39,7 @@ const defaultClasses: PreviewClasses = {
 interface StyledPreviewProps {
   name: string;
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
-  getDevices: ({
-    selectedVideoInput,
-    selectedAudioInput,
-    selectedAudioOutput,
-  }: DeviceIds) => void;
+  onChange:(values:SettingsFormProps) => void;
   goBackOnClick: () => void;
   toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
@@ -62,7 +58,7 @@ const StyledPreview = ({
   name,
   joinOnClick,
   goBackOnClick,
-  getDevices,
+  onChange,
   videoTileProps,
   classes: extraClasses,
   defaultClasses,
@@ -80,12 +76,8 @@ const StyledPreview = ({
   const [audioOutput, setAudioutput] = useState(Array);
   const [audioMuted, setAudioMuted] = useState(false);
   const [videoMuted, setVideoMuted] = useState(false);
-
-  useEffect(() => {
-    startMediaStream();
-    return () => closeMediaStream(mediaStream);
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [selectedAudioInput, setSelectedAudioInput] = useState('default');
+  const [selectedVideoInput, setSelectedVideoInput] = useState('default');
 
   const toggleMediaState = (type: string) => {
     if (type === 'audio') {
@@ -164,7 +156,7 @@ const StyledPreview = ({
       setAllow(false);
     } else {
       // window.navigator.mediaDevices
-      getUserMedia({ audio: true, video: true })
+      getUserMedia({ audio: {deviceId:selectedAudioInput}, video: {deviceId:selectedVideoInput},  })
         .then((stream: MediaStream) => setMediaStream(stream))
         .catch((error: any) => {
           HMSLogger.e('[Preview]', error);
@@ -221,6 +213,16 @@ const StyledPreview = ({
 
   window.onunload = () => closeMediaStream(mediaStream);
 
+  useEffect(()=>{
+    startMediaStream()
+  },[selectedAudioInput, selectedVideoInput]);
+
+  const handleDeviceChange = useCallback((values:SettingsFormProps) => {
+    values?.selectedAudioInput && setSelectedAudioInput(values.selectedAudioInput);
+    values?.selectedVideoInput && setSelectedVideoInput(values.selectedVideoInput);
+    onChange(values);
+  },[])
+
   return (
     // root
     <div className={combinedClasses?.root}>
@@ -255,14 +257,11 @@ const StyledPreview = ({
             classes={videoTileClasses}
             controlsComponent={
               <VideoTileControls
-                settingsButtonOnClick={() =>
-                  HMSLogger.w('[Settings]', 'Settings Component yet to be made')
-                }
                 audioButtonOnClick={() => toggleMediaState('audio')}
                 videoButtonOnClick={() => toggleMediaState('video')}
-                getDevices={getDevices}
                 isAudioMuted={audioMuted}
                 isVideoMuted={videoMuted}
+                onChange={handleDeviceChange}
               />
             }
           />
@@ -280,16 +279,6 @@ const StyledPreview = ({
         >
           Join
         </Button>
-        {/* <div
-          className={combinedClasses?.joinButton}
-          onClick={() => {
-            closeMediaStream(mediaStream);
-            joinOnClick({ audioMuted, videoMuted });
-          }}
-        >
-          Join
-        </div> */}
-        {/* goBackButton */}
         <Button
           classes={{ rootNoFill: 'mt-4' }}
           variant={'no-fill'}
@@ -300,15 +289,6 @@ const StyledPreview = ({
         >
           Go back{' '}
         </Button>
-        {/* <div
-          className={combinedClasses?.goBackButton}
-          onClick={() => {
-            closeMediaStream(mediaStream);
-            goBackOnClick();
-          }}
-        >
-          Go back
-        </div> */}
       </div>
     </div>
   );
