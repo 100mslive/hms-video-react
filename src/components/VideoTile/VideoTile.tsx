@@ -7,6 +7,7 @@ import { Avatar } from '../Avatar';
 import { getVideoTileLabel } from '../../utils';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
+// @ts-ignore
 import { apply } from 'twind';
 interface StyledVideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
