@@ -4,10 +4,13 @@ import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
 import { Button as TwButton } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { groupBy, Dictionary } from 'lodash';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { resolveClasses } from '../../utils/classes/resolveClasses';
+// @ts-ignore
+import { apply } from 'twind';
 
 export interface SettingsClasses {
   root?: string;
@@ -94,12 +97,15 @@ const HMSSlider = withStyles({
 const StyledSettings = ({
   onChange,
   initialValues,
-  defaultClasses,
-  classes: extraClasses,
+  classes,
 }: StyledSettingsProps) => {
   //TODO accept initial entry values
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const { tw } = useHMSTheme();
+  const finalClasses: SettingsClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
+
   const [open, setOpen] = useState(false);
   const [deviceGroups, setDeviceGroups] = useState<
     Dictionary<MediaDeviceInfo[]>
@@ -174,6 +180,10 @@ const StyledSettings = ({
   // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
   // videoInput.length > 0 && videoInput.findIndex(device => device.deviceId===values?.selectedVideoInput)===-1 && setValues({selectedVideoInput:videoInput[0].deviceId});
 
+  const parseClass = (s: keyof SettingsClasses) => {
+    return tw(`hmsui-settings-${s}`, apply(finalClasses[s]));
+  };
+
   return (
     <>
       <TwButton
@@ -189,16 +199,16 @@ const StyledSettings = ({
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        className={`${combinedClasses?.dialogRoot}`}
+        className={`${parseClass('dialogRoot')}`}
         maxWidth="sm"
       >
-        <div className={`${combinedClasses?.dialogContainer}`}>
-          <div className={`${combinedClasses?.dialogInner}`}>
-            <span className={`${combinedClasses?.titleContainer}`}>
-              <span className={`${combinedClasses?.titleIcon}`}>
+        <div className={`${parseClass('dialogContainer')}`}>
+          <div className={`${parseClass('dialogInner')}`}>
+            <span className={`${parseClass('titleContainer')}`}>
+              <span className={`${parseClass('titleIcon')}`}>
                 <SettingsIcon className="w-7 h-7" />
               </span>
-              <span className={`${combinedClasses?.titleText}`}>Settings</span>
+              <span className={`${parseClass('titleText')}`}>Settings</span>
             </span>
 
             <TwButton
@@ -211,25 +221,25 @@ const StyledSettings = ({
             </TwButton>
           </div>
 
-          <div className={`${combinedClasses?.formContainer}`}>
+          <div className={`${parseClass('formContainer')}`}>
             {error === '' ? (
               <>
-                <div className={`${combinedClasses?.formInner}`}>
-                  <div className={`${combinedClasses?.selectLabel}`}>
+                <div className={`${parseClass('formInner')}`}>
+                  <div className={`${parseClass('selectLabel')}`}>
                     <span>Camera:</span>
                   </div>
-                  <div className={`${combinedClasses?.selectContainer}`}>
+                  <div className={`${parseClass('selectContainer')}`}>
                     {videoInput.length > 0 && (
                       <select
                         name="selectedVideoInput"
-                        className={`${combinedClasses?.select}`}
+                        className={`${parseClass('select')}`}
                         onChange={handleInputChange}
                         value={values.selectedVideoInput}
                       >
                         {videoInput.map((device, index) => (
                           <option
                             value={device.deviceId}
-                            className={`${combinedClasses?.selectInner}`}
+                            className={`${parseClass('selectInner')}`}
                             key={index}
                           >
                             {device.label} {device.deviceId}
@@ -239,22 +249,22 @@ const StyledSettings = ({
                     )}
                   </div>
                 </div>
-                <div className={`${combinedClasses?.formInner}`}>
-                  <div className={`${combinedClasses?.selectLabel}`}>
+                <div className={`${parseClass('formInner')}`}>
+                  <div className={`${parseClass('selectLabel')}`}>
                     <span>Microphone:</span>
                   </div>
-                  <div className={`${combinedClasses?.selectContainer}`}>
+                  <div className={`${parseClass('selectContainer')}`}>
                     {audioInput.length > 0 && (
                       <select
                         name="selectedAudioInput"
-                        className={`${combinedClasses?.select}`}
+                        className={`${parseClass('select')}`}
                         onChange={handleInputChange}
                         value={values.selectedAudioInput}
                       >
                         {audioInput.map((device, index) => (
                           <option
                             value={device.deviceId}
-                            className={`${combinedClasses?.selectInner}`}
+                            className={`${parseClass('selectInner')}`}
                             key={index}
                           >
                             {device.label}
@@ -264,22 +274,22 @@ const StyledSettings = ({
                     )}
                   </div>
                 </div>
-                <div className={`${combinedClasses?.formInner}`}>
-                  <div className={`${combinedClasses?.selectLabel}`}>
+                <div className={`${parseClass('formInner')}`}>
+                  <div className={`${parseClass('selectLabel')}`}>
                     <span>Audio Output:</span>
                   </div>
-                  <div className={`${combinedClasses?.selectContainer}`}>
+                  <div className={`${parseClass('selectContainer')}`}>
                     {audioOutput.length > 0 && (
                       <select
                         name="selectedAudioOutput"
-                        className={`${combinedClasses?.select}`}
+                        className={`${parseClass('select')}`}
                         onChange={handleInputChange}
                         value={values.selectedAudioOutput}
                       >
                         {audioOutput.map((device, index) => (
                           <option
                             value={device.deviceId}
-                            className={`${combinedClasses?.select}`}
+                            className={`${parseClass('select')}`}
                             key={index}
                           >
                             {device.label}
@@ -291,7 +301,7 @@ const StyledSettings = ({
                 </div>
               </>
             ) : (
-              <div className={combinedClasses?.errorContainer}>
+              <div className={parseClass('errorContainer')}>
                 Error in accessing devices. Please check permissions. Are all
                 devices plugged in?
               </div>
@@ -394,15 +404,15 @@ const StyledSettings = ({
                 </div>
               </div>
             </div> */}
-            <div className={combinedClasses?.divider}></div>
-            <div className={combinedClasses?.sliderContainer}>
-              <div className={combinedClasses?.sliderInner}>
-                <div className={combinedClasses?.sliderLabelContainer}>
-                  <span className={combinedClasses?.sliderLabel}>
+            <div className={parseClass('divider')}></div>
+            <div className={parseClass('sliderContainer')}>
+              <div className={parseClass('sliderInner')}>
+                <div className={parseClass('sliderLabelContainer')}>
+                  <span className={parseClass('sliderLabel')}>
                     Participants in view:
                   </span>
                 </div>
-                <div className={combinedClasses?.slider}>
+                <div className={parseClass('slider')}>
                   <HMSSlider
                     name="maxTileCount"
                     defaultValue={9}

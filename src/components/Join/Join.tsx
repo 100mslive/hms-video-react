@@ -1,40 +1,10 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
 //@ts-ignore
-import { apply, create } from 'twind';
+import { apply } from 'twind';
 import { Button } from '../TwButton';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
-const colors = {
-  blue: {
-    tint: '#74AAFF',
-    main: '#2F80FF',
-    shade: '#0B326F',
-  },
-  red: {
-    tint: '#E66977',
-    main: '#D74451',
-    shade: '#6F2229',
-  },
-  gray: {
-    100: '#212121',
-    200: '#3B3B3B',
-    300: '#5E5E5E',
-    400: '#8E8E8E',
-    500: '#C7C7C7',
-    600: '#E3E3E3',
-    700: '#F2F2F2',
-  },
-  transparent: {
-    100: 'rgba(0, 0, 0, 0.37)',
-    200: 'rgba(196,196,196, 0.21) ',
-    300: 'rgba(255, 255, 255, 0.25)',
-    400: 'rgba(0, 0, 0, 0.75)',
-    500: 'rgba(0, 0, 0, 0.9375)',
-    600: 'rgba(59, 59, 59, 0.3)',
-    700: 'rgba(0,0,0,0.22)',
-    800: 'rgba(59,59,59,0.13)',
-  },
-};
 interface Fields {
   username: string;
   roomId: string;
@@ -106,16 +76,7 @@ export const Join = ({
   );
   const [endpoint, setEndpoint] = useState(initialValues?.endpoint || 'qa2-us');
 
-  const tw = useMemo(() => {
-    return create({
-      theme: {
-        extend: {
-          colors: colors,
-        },
-      },
-      darkMode: 'class',
-    }).tw;
-  }, []);
+  const { tw } = useHMSTheme();
 
   useEffect(() => {
     initialValues?.username && setUserName(initialValues.username);
@@ -125,7 +86,7 @@ export const Join = ({
   }, [initialValues]);
 
   const parseClass = (s: keyof JoinClasses) => {
-    return tw(`hmsui-${s}`, apply(finalClasses[s]));
+    return tw(`hmsui-join-${s}`, apply(finalClasses[s]));
   };
 
   return (
