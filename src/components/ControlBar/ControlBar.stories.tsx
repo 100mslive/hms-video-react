@@ -42,9 +42,6 @@ Default.args = {
   chatButtonOnClick: () => {
     alert('chat button clicked');
   },
-  setMaxTileCount: (count: number) => {
-    //alert(count + ' count set');
-  },
   isAudioMuted: true,
   isVideoMuted: true,
   isChatOpen: true,

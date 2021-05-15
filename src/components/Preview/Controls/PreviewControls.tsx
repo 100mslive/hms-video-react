@@ -15,7 +15,6 @@ export interface VideoTileControlsProps {
   isVideoMuted?: boolean;
   showGradient?: boolean;
   onChange: (values:SettingsFormProps) => void;
-  initialValues:SettingsFormProps;
   classes?: {
     root?: string;
     controls?: string;
@@ -33,7 +32,6 @@ export const VideoTileControls = ({
   audioButtonOnClick,
   videoButtonOnClick,
   onChange,
-  initialValues,
   classes = {
     root:
       'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-50 rounded-lg focus:outline-none',
@@ -69,7 +67,6 @@ export const VideoTileControls = ({
       <div className={`${classes.rightcontrols}`}>
         <Settings
           onChange={onChange}
-          initialValues={initialValues}
           key={0}
         />
       </div>

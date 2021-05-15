@@ -221,19 +221,11 @@ const StyledPreview = ({
 
   useEffect(()=>{
     console.log('Changing input');
-    try {
-      mediaStream.getVideoTracks()[0]?.applyConstraints({deviceId:{exact:selectedVideoInput}});      
-    } catch (error) {
-      console.error(error);
-    }
+    startMediaStream();
   },[selectedVideoInput])
 
   useEffect(()=>{
-    try {
-      mediaStream.getAudioTracks()[0]?.applyConstraints({deviceId:{exact:selectedAudioInput}});      
-    } catch (error) {
-      console.error(error);      
-    }
+    startMediaStream();
   },[selectedAudioInput])
 
   const handleDeviceChange = (values:SettingsFormProps) => {
@@ -281,7 +273,6 @@ const StyledPreview = ({
                 isAudioMuted={audioMuted}
                 isVideoMuted={videoMuted}
                 onChange={handleDeviceChange}
-                initialValues={{selectedVideoInput, selectedAudioInput}}
               />
             }
           />

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, ChangeEventHandler} from 'react';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
@@ -108,7 +108,7 @@ const StyledSettings = ({
     selectedAudioInput:initialValues?.selectedAudioInput?initialValues?.selectedAudioInput:'default',
     selectedVideoInput:initialValues?.selectedVideoInput?initialValues?.selectedVideoInput:'default',
     selectedAudioOutput:initialValues?.selectedAudioOutput?initialValues?.selectedAudioOutput:'default',
-    maxTileCount:initialValues?.maxTileCount?initialValues?.maxTileCount:8
+    maxTileCount:initialValues?.maxTileCount?initialValues?.maxTileCount:9
   })
 
   const handleClickOpen = () => {
@@ -120,12 +120,19 @@ const StyledSettings = ({
     onChange && onChange(values);
   };
 
-  const handleInputChange = (name:keyof SettingsFormProps, value:any) => { 
-      setValues(values=> {
-        const newValues = {...values};
-        newValues[name] = value;
-        return newValues
-      })
+  const handleInputChange:ChangeEventHandler<any> = (event) => { 
+    const newValues = {...values};
+    newValues[event.currentTarget.name as keyof SettingsFormProps] = event.currentTarget.value;
+    setValues(newValues);
+  }
+
+  const handleSliderChange = (event: any, newValue: number | number[]) => {
+    const newValues = {...values};
+    //TODO make this generic
+    if(typeof newValue ==='number'){
+      newValues['maxTileCount'] = newValue;
+    }
+    setValues(newValues);
   }
 
   useEffect(() => {
@@ -191,11 +198,10 @@ const StyledSettings = ({
               </div>
               <div className={`${combinedClasses?.selectContainer}`}>
                 {videoInput.length>0 && (<select
-                  name="camera"
+                  name="selectedVideoInput"
                   className={`${combinedClasses?.select}`}
-                  onChange={event => {
-                    handleInputChange('selectedVideoInput', event.target.value)
-                  }}
+                  onChange={handleInputChange}
+                  value={values.selectedVideoInput}
                 >
                   {videoInput.map((device, index) => (
                     <option
@@ -215,11 +221,9 @@ const StyledSettings = ({
               </div>
               <div className={`${combinedClasses?.selectContainer}`}>
               {audioInput.length>0 && (<select
-                  name="microphone"
+                  name="selectedAudioInput"
                   className={`${combinedClasses?.select}`}
-                  onChange={event => {
-                    handleInputChange('selectedAudioInput', event.target.value)
-                  }}
+                  onChange={handleInputChange}
                   value={values.selectedAudioInput}
                 >
                   {audioInput.map((device, index) => (
@@ -240,11 +244,9 @@ const StyledSettings = ({
               </div>
               <div className={`${combinedClasses?.selectContainer}`}>
                 {audioOutput.length>0 && (<select
-                  name="audio-output"
+                  name="selectedAudioOutput"
                   className={`${combinedClasses?.select}`}
-                  onChange={event => {
-                    handleInputChange('selectedAudioOutput', event.target.value)
-                  }}
+                  onChange={handleInputChange}
                   value={values.selectedAudioOutput}
                 >
                   {audioOutput.map((device, index) => (
@@ -367,14 +369,24 @@ const StyledSettings = ({
                 </div>
                 <div className={combinedClasses?.slider}>
                   <HMSSlider
-                    defaultValue={8}
+                    name="maxTileCount"
+                    defaultValue={9}
                     value={values.maxTileCount}
-                    onChange={(event, value)=>{handleInputChange('maxTileCount', value)}}
+                    onChange={handleSliderChange}
                     aria-labelledby="continuous-slider"
                     valueLabelDisplay="auto"
-                    step={1}
                     min={1}
-                    max={30}
+                    max={49}
+                    step={null}
+                    marks={[
+                      {value:1},
+                      {value:4},
+                      {value:9},
+                      {value:16},
+                      {value:25},
+                      {value:36},
+                      {value:49},
+                    ]}
                   />
                 </div>
               </div>
