@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { closeMediaStream } from '../../utils';
 import { getLocalStreamException, getUserMedia } from '../../utils/preview';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -10,7 +10,6 @@ import { combineClasses } from '../../utils';
 import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { SettingsFormProps } from '../Settings/Settings';
-import { useCallback } from '@storybook/client-api';
 
 interface MuteStatus {
   audioMuted?: boolean;
