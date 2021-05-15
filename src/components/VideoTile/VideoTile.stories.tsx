@@ -6,6 +6,7 @@ import { getVideoTileLabel } from '../../utils';
 import { loadStream } from '../../storybook/utils';
 import { VideoTileControls } from './Controls';
 import { MicOffIcon, MicOnIcon } from '../Icons';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 declare global {
   interface HTMLVideoElement {
@@ -101,9 +102,11 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
         }}
       ></video>
       {/* <video width="400" height="225" loop autoPlay muted ref={testVideoRef}/> */}
+      <HMSThemeProvider config={{}} appBuilder={{theme:'dark'}}>
       {videoTrack && audioTrack && (
         <VideoTile {...args} videoTrack={videoTrack} audioTrack={audioTrack} />
       )}
+      </HMSThemeProvider>
     </div>
   );
 };
@@ -168,6 +171,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
             }
           }}
         ></video>
+        <HMSThemeProvider config={{}} appBuilder={{theme:'dark'}}>
         {videoTrack && audioTrack && (
           <VideoTile
             {...args}
@@ -200,6 +204,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
             }
           />
         )}
+        </HMSThemeProvider>
       </div>
     </>
   );
