@@ -9,6 +9,7 @@ import HMSLogger from '../../utils/ui-logger';
 import { groupBy, Dictionary } from 'lodash';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
+// @ts-ignore
 import { apply } from 'twind';
 
 export interface SettingsClasses {
