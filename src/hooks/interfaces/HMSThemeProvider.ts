@@ -1,3 +1,5 @@
+import { TW } from "twind";
+
 export interface appBuilder {
   logo?: string;
   theme?: 'light' | 'dark';
@@ -11,6 +13,7 @@ export interface appBuilder {
 }
 
 export default interface HMSThemeProps {
+  tw: TW;
   tailwindConfig: any;
   appBuilder: appBuilder;
 }

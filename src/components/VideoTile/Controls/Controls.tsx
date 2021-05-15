@@ -1,11 +1,10 @@
 import React from 'react';
 import { AudioLevelDisplayType } from '../../../types';
-import { AudioLevelIndicator } from '../../AudioLevelIndicators/index';
-import '../index.css';
 import { combineClasses } from '../../../utils';
 import { withClasses } from '../../../utils/styles';
-import { MicOffIcon, MicOnIcon } from '../../Icons';
 import { Button } from '../../Button';
+import { MicOffIcon } from '../../Icons';
+import '../index.css';
 
 export interface VideoTileControlsClasses {
   root?: string;

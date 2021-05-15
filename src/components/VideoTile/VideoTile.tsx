@@ -7,7 +7,7 @@ import { Avatar } from '../Avatar';
 import { getVideoTileLabel, combineClasses } from '../../utils';
 import { withClasses } from '../../utils/styles';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-interface StyledVideoTileProps extends VideoProps {
+interface StyledVideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
    */
@@ -93,7 +93,7 @@ const StyledVideoTile = ({
   peer,
   isLocal = false,
   videoSource = 'camera',
-  audioLevel,
+  audioLevel = 0,
   isAudioMuted = false,
   isVideoMuted = false,
   showAudioMuteStatus,
@@ -107,6 +107,7 @@ const StyledVideoTile = ({
   controlsComponent,
   classes: extraClasses,
   defaultClasses,
+  audioLevelEmitter,
 }: StyledVideoTileProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
@@ -122,8 +123,11 @@ const StyledVideoTile = ({
     }
   } catch (e) {}
 
-  const { width, height } = videoTrack?videoTrack.getSettings():{width:1, height:1};
-  const impliedAspectRatio = (aspectRatio && objectFit==='cover') ? aspectRatio : { width, height };
+  const { width, height } = videoTrack
+    ? videoTrack.getSettings()
+    : { width: 1, height: 1 };
+  const impliedAspectRatio =
+    aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
 
   return (
     <div className={combinedClasses?.root}>
@@ -144,17 +148,19 @@ const StyledVideoTile = ({
         >
           {/* TODO this doesn't work in Safari */}
           <Video
+            peerId={peer.id}
             videoTrack={videoTrack}
             hmsVideoTrack={hmsVideoTrack}
             audioTrack={audioTrack}
             objectFit={objectFit}
             isLocal={isLocal}
+            isAudioMuted={isAudioMuted}
             videoSource={videoSource}
             showAudioLevel={showAudioLevel}
-            audioLevel={audioLevel}
             audioLevelDisplayType={audioLevelDisplayType}
             audioLevelDisplayColor={audioLevelDisplayColor}
             displayShape={displayShape}
+            audioLevelEmitter={audioLevelEmitter}
           />
           {isVideoMuted && (
             <div
