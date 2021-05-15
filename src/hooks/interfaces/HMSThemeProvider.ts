@@ -1,4 +1,4 @@
-import { TW } from "twind";
+import { TW } from 'twind';
 
 export interface appBuilder {
   logo?: string;

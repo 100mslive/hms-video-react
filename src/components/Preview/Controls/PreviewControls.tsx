@@ -1,12 +1,7 @@
 import React from 'react';
 import '../index.css';
 import { ButtonDisplayType } from '../../../types';
-import {
-  MicOffIcon,
-  MicOnIcon,
-  CamOnIcon,
-  CamOffIcon,
-} from '../../Icons';
+import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
 import { Button } from '../../TwButton';
 import { Settings, SettingsFormProps } from '../../Settings/Settings';
 
@@ -14,7 +9,7 @@ export interface VideoTileControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   showGradient?: boolean;
-  onChange: (values:SettingsFormProps) => void;
+  onChange: (values: SettingsFormProps) => void;
   classes?: {
     root?: string;
     controls?: string;
@@ -41,7 +36,6 @@ export const VideoTileControls = ({
       'flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide',
   },
 }: VideoTileControlsProps) => {
-
   return (
     <div className={`${classes.root}`}>
       <div className={`${classes.controls}`}>
@@ -65,10 +59,7 @@ export const VideoTileControls = ({
         </Button>
       </div>
       <div className={`${classes.rightcontrols}`}>
-        <Settings
-          onChange={onChange}
-          key={0}
-        />
+        <Settings onChange={onChange} key={0} />
       </div>
     </div>
   );

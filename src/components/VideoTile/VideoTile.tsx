@@ -131,22 +131,28 @@ const StyledVideoTile = ({
 
   return (
     <div className={combinedClasses?.root}>
-      {impliedAspectRatio.width && impliedAspectRatio.height && (
+      {((impliedAspectRatio.width && impliedAspectRatio.height) ||
+        objectFit === 'contain') && (
         <div
           className={`${combinedClasses?.videoContainer} ${
             displayShape === 'circle'
               ? combinedClasses?.videoContainerCircle
               : ''
           } `}
-          style={{
-            aspectRatio: `${
-              displayShape === 'rectangle'
-                ? impliedAspectRatio.width / impliedAspectRatio.height
-                : 1
-            }`,
-          }}
+          style={
+            objectFit !== 'contain'
+              ? {
+                  aspectRatio: `${
+                    displayShape === 'rectangle'
+                      ? //@ts-expect-error
+                        impliedAspectRatio.width / impliedAspectRatio.height
+                      : 1
+                  }`,
+                }
+              : { objectFit: 'contain', width: '100%', height: '100%' }
+          }
         >
-          {/* TODO this doesn't work in Safari */}
+          {/* TODO this doesn't work in Safari and looks ugly with contain*/}
           <Video
             peerId={peer.id}
             videoTrack={videoTrack}
