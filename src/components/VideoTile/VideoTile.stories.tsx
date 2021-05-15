@@ -220,6 +220,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
 export const DefaultVideoTile = Template.bind({});
 export const GoogleMeetVideoTile = MeetTemplate.bind({});
 export const CampFireVideoTile = Template.bind({});
+export const ClassesOverrideVideoTile = Template.bind({});
 
 DefaultVideoTile.args = {
   isLocal: true,
@@ -252,4 +253,16 @@ CampFireVideoTile.args = {
   audioLevelDisplayType: 'border',
   audioLevel: 40,
   videoSource: 'camera',
+};
+
+ClassesOverrideVideoTile.args = {
+  isLocal: true,
+  peer: { id: '123', displayName: 'Eswar' },
+  aspectRatio: { width: 16, height: 9 },
+  displayShape: 'rectangle',
+  showAudioLevel: true,
+  audioLevelDisplayType: 'border',
+  audioLevel: 40,
+  videoSource: 'camera',
+  classes: { videoContainer: 'border-8 border-red-800' },
 };

@@ -4,9 +4,10 @@ import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import { getVideoTileLabel, combineClasses } from '../../utils';
-import { withClasses } from '../../utils/styles';
+import { getVideoTileLabel } from '../../utils';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { resolveClasses } from '../../utils/classes/resolveClasses';
+import { apply } from 'twind';
 interface StyledVideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
@@ -86,7 +87,7 @@ const defaultClasses: VideoTileClasses = {
   videoContainerCircle: 'rounded-full',
 };
 
-const StyledVideoTile = ({
+export const VideoTile = ({
   videoTrack,
   hmsVideoTrack,
   audioTrack,
@@ -105,21 +106,26 @@ const StyledVideoTile = ({
   audioLevelDisplayColor = '#0F6CFF',
   allowRemoteMute = false,
   controlsComponent,
-  classes: extraClasses,
-  defaultClasses,
+  classes,
   audioLevelEmitter,
 }: StyledVideoTileProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const finalClasses: VideoTileClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
+  console.log(finalClasses);
+  const { tw, appBuilder } = useHMSTheme();
+  const parseClass = (s: keyof VideoTileClasses) => {
+    return tw(`hmsui-videotile-${s}`, apply(finalClasses[s]));
+  };
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
   try {
-    let context = useHMSTheme();
     if (aspectRatio === undefined) {
-      aspectRatio = context.appBuilder.videoTileAspectRatio;
+      aspectRatio = appBuilder.videoTileAspectRatio;
     }
     //TODO this is the wrong prop
     if (showAudioMuteStatus === undefined) {
-      showAudioMuteStatus = context.appBuilder.showAvatar;
+      showAudioMuteStatus = appBuilder.showAvatar;
     }
   } catch (e) {}
 
@@ -130,13 +136,11 @@ const StyledVideoTile = ({
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
 
   return (
-    <div className={combinedClasses?.root}>
+    <div className={parseClass('root')}>
       {impliedAspectRatio.width && impliedAspectRatio.height && (
         <div
-          className={`${combinedClasses?.videoContainer} ${
-            displayShape === 'circle'
-              ? combinedClasses?.videoContainerCircle
-              : ''
+          className={`${parseClass('videoContainer')} ${
+            displayShape === 'circle' ? parseClass('videoContainerCircle') : ''
           } `}
           style={{
             aspectRatio: `${
@@ -164,9 +168,9 @@ const StyledVideoTile = ({
           />
           {isVideoMuted && (
             <div
-              className={`${combinedClasses?.avatarContainer} ${
+              className={`${parseClass('avatarContainer')} ${
                 displayShape === 'circle'
-                  ? combinedClasses?.avatarContainerCircle
+                  ? parseClass('avatarContainerCircle')
                   : ''
               }`}
             >
@@ -197,8 +201,3 @@ const StyledVideoTile = ({
 };
 
 export type VideoTileProps = Omit<StyledVideoTileProps, 'defaultClasses'>;
-
-export const VideoTile = withClasses<VideoTileClasses | undefined>(
-  defaultClasses,
-  'videoTile',
-)<StyledVideoTileProps>(StyledVideoTile);
