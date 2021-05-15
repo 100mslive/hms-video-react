@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
-import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
 import { withClasses } from '../../utils/styles';
@@ -31,7 +30,7 @@ interface ChatBoxClasses {
   chatInput?: string;
   unreadMessagesContainer?: string;
   unreadMessagesInner?: string;
-  unreadIcon?:string;
+  unreadIcon?: string;
 }
 
 const defaultClasses: ChatBoxClasses = {
@@ -60,7 +59,7 @@ const defaultClasses: ChatBoxClasses = {
     'absolute left-0 p-1 w-full bottom-full flex justify-center',
   unreadMessagesInner:
     'rounded-md px-2 py-1 bg-brand-main text-white flex cursor-pointer items-center ',
-  unreadIcon:'ml-2 w-3 h-3'
+  unreadIcon: 'ml-2 w-3 h-3',
 };
 
 export interface Message {
@@ -133,6 +132,7 @@ export const StyledChatBox = ({
       behavior: behavior,
     });
   };
+
   useEffect(() => {
     if (localMessages.length > 0) {
       // TODO there should be instant chat sending locally. Chat hooks should go here
@@ -162,7 +162,7 @@ export const StyledChatBox = ({
   }, [localMessages, toScroll]);
 
   useEffect(() => {
-    if(inView){
+    if (inView) {
       setUnreadMessagesCount(0);
     }
   }, [inView]);
@@ -266,23 +266,27 @@ export const StyledChatBox = ({
               There are no messages here.
             </div>
           )}
-          <div ref={messagesEndRef} />
+          <div ref={messagesEndRef}></div>
         </div>
         {/* footer */}
         <div className={combinedClasses?.footer}>
           {unreadMessagesCount !== 0 && (
             <div className={combinedClasses?.unreadMessagesContainer}>
-              <div className={combinedClasses?.unreadMessagesInner} onClick={()=>{scrollToBottom({behavior:scrollAnimation})}}>
-                {`New message${
-                  unreadMessagesCount > 1 ? 's' : ''
-                }`}<DownCaratIcon className={combinedClasses?.unreadIcon}/>
+              <div
+                className={combinedClasses?.unreadMessagesInner}
+                onClick={() => {
+                  scrollToBottom({ behavior: scrollAnimation });
+                }}
+              >
+                {`New message${unreadMessagesCount > 1 ? 's' : ''}`}
+                <DownCaratIcon className={combinedClasses?.unreadIcon} />
               </div>
             </div>
           )}
           {/* chatInput */}
           {/* TODO: move no scrollbar logic to tailwind */}
-          <TextareaAutosize
-            rowsMax={3}
+          <textarea
+            rows={2}
             className={`${combinedClasses?.chatInput} no-scrollbar`}
             placeholder="Write something here"
             value={message}
