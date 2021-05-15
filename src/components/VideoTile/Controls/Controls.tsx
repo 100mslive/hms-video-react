@@ -1,10 +1,12 @@
 import React from 'react';
 import { AudioLevelDisplayType } from '../../../types';
-import { combineClasses } from '../../../utils';
-import { withClasses } from '../../../utils/styles';
 import { Button } from '../../Button';
 import { MicOffIcon } from '../../Icons';
 import '../index.css';
+//@ts-ignore
+import { apply } from 'twind';
+import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
+import { resolveClasses } from '../../../utils/classes/resolveClasses';
 
 export interface VideoTileControlsClasses {
   root?: string;
@@ -41,7 +43,7 @@ const defaultClasses: VideoTileControlsClasses = {
   label: 'mt-1 mx-1',
 };
 
-export const StyledVideoTileControls = ({
+export const VideoTileControls = ({
   label = '',
   isAudioMuted = false,
   showGradient = true,
@@ -50,16 +52,20 @@ export const StyledVideoTileControls = ({
   showAudioLevel = false,
   audioLevelDisplayType = 'inline-wave',
   audioLevel,
-  defaultClasses,
-  classes: extraClasses,
+  classes,
 }: StyledVideoTileControlsProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
-
+  const finalClasses: VideoTileControlsClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
+  const { tw } = useHMSTheme();
+  const parseClass = (s: keyof VideoTileControlsClasses) => {
+    return tw(`hmsui-videocontrols-${s}`, apply(finalClasses[s]));
+  };
   return (
-    <div className={`${combinedClasses?.root}`}>
-      <div className={`${showGradient ? combinedClasses?.gradient : ''}`} />
-      <div className={`${combinedClasses?.controlsInner}`}>
+    <div className={`${parseClass('root')}`}>
+      <div className={`${showGradient ? parseClass('gradient') : ''}`} />
+      <div className={`${parseClass('controlsInner')}`}>
         <div className="flex justify-center">
           {showAudioMuteStatus && isAudioMuted && !allowRemoteMute && (
             <MicOffIcon />
@@ -76,8 +82,8 @@ export const StyledVideoTileControls = ({
             </Button>
           )}
         </div>
-        <div className={`${combinedClasses?.label}`}>{label}</div>
-        <div className={`${combinedClasses?.controls}`}>
+        <div className={`${parseClass('label')}`}>{label}</div>
+        <div className={`${parseClass('controls')}`}>
           {!isAudioMuted && allowRemoteMute && (
             <Button variant={'icon-only'} size={'md'}>
               <MicOffIcon />
@@ -93,10 +99,3 @@ export type VideoTileControlsProps = Omit<
   StyledVideoTileControlsProps,
   'defaultClasses'
 >;
-
-export const VideoTileControls = withClasses<
-  VideoTileControlsClasses | undefined
->(
-  defaultClasses,
-  'videoTileControls',
-)<StyledVideoTileControlsProps>(StyledVideoTileControls);
