@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { closeMediaStream } from '../../utils';
 import { getLocalStreamException, getUserMedia } from '../../utils/preview';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -78,12 +78,6 @@ const StyledPreview = ({
   const [videoMuted, setVideoMuted] = useState(false);
   const [selectedAudioInput, setSelectedAudioInput] = useState('default');
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
-
-  useEffect(() => {
-    startMediaStream();
-    return () => closeMediaStream(mediaStream);
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const toggleMediaState = (type: string) => {
     if (type === 'audio') {
@@ -223,11 +217,11 @@ const StyledPreview = ({
     startMediaStream()
   },[selectedAudioInput, selectedVideoInput]);
 
-  const handleDeviceChange = (values:SettingsFormProps) => {
+  const handleDeviceChange = useCallback((values:SettingsFormProps) => {
     values?.selectedAudioInput && setSelectedAudioInput(values.selectedAudioInput);
     values?.selectedVideoInput && setSelectedVideoInput(values.selectedVideoInput);
     onChange(values);
-  }
+  },[])
 
   return (
     // root
