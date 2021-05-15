@@ -136,15 +136,17 @@ const StyledSettings = ({
   }
 
   useEffect(() => {
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-      const deviceGroups = groupBy(devices, 'kind');
-      HMSLogger.d('Groups:', deviceGroups);
-      setDeviceGroups(deviceGroups);
-    }, error =>{
-    //TODO this is not working right now
-    setError(error);
-    })
-  }, []);
+      if(open){
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+          const deviceGroups = groupBy(devices, 'kind');
+          HMSLogger.d('Groups:', deviceGroups);
+          setDeviceGroups(deviceGroups);
+        }, error =>{
+        //TODO this is not working right now
+        setError(error);
+        })
+    }
+  }, [open]);
 
   const videoInput = deviceGroups['videoinput']?deviceGroups['videoinput']:[];
   const audioInput = deviceGroups['audioinput']?deviceGroups['audioinput']:[];
