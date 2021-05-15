@@ -21,7 +21,6 @@ import { useResizeDetector } from 'react-resize-detector';
 import { combineClasses } from '../../utils';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { useCallback } from '@storybook/client-api';
 
 export interface VideoListClasses extends VideoTileClasses {
   /**
@@ -126,6 +125,8 @@ interface StyledVideoListProps {
    * extra classes added  by user
    */
   classes?: VideoListClasses;
+
+  audioLevelEmitter?: any;
 }
 
 const defaultClasses: VideoListClasses = {
@@ -232,12 +233,13 @@ export const StyledVideoList = ({
   showAudioMuteStatus,
   defaultClasses,
   classes: extraClasses,
+  audioLevelEmitter,
 }: StyledVideoListProps) => {
   //@ts-expect-error
   const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  
+
   const { width = 0, height = 0, ref } = useResizeDetector();
-  
+
   try {
     let context = useHMSTheme();
     if (aspectRatio === undefined) {
@@ -282,8 +284,8 @@ export const StyledVideoList = ({
   //Split a method that just calculates aspectRatio on the basis of streams, if needed
 
   //Flooring since there's a bug in react-slick where it converts widdh into a number
-  
-  const chunkedStreams = useMemo(()=>{
+
+  const chunkedStreams = useMemo(() => {
     return chunkStreams({
       streams,
       parentWidth: Math.floor(width),
@@ -293,10 +295,18 @@ export const StyledVideoList = ({
       maxColCount,
       aspectRatio,
       onlyOnePage: overflow === 'hidden',
-    })
-  },[streams, width, height, maxTileCount, maxRowCount, maxColCount, aspectRatio, overflow]);
+    });
+  }, [
+    streams,
+    width,
+    height,
+    maxTileCount,
+    maxRowCount,
+    maxColCount,
+    aspectRatio,
+    overflow,
+  ]);
 
-  
   return (
     <div className={`${combinedClasses?.root}`} ref={ref}>
       {chunkedStreams && chunkedStreams.length > 0 && (
@@ -344,6 +354,7 @@ export const StyledVideoList = ({
                           controlsComponent={
                             videoTileControls && videoTileControls[index]
                           }
+                          audioLevelEmitter={audioLevelEmitter}
                         />
                       </div>
                     );
