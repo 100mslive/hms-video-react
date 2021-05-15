@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { closeMediaStream } from '../../utils';
 import { getLocalStreamException, getUserMedia } from '../../utils/preview';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -219,7 +219,9 @@ const StyledPreview = ({
 
   window.onunload = () => closeMediaStream(mediaStream);
 
-  useCallback(startMediaStream, [selectedAudioInput, selectedVideoInput])
+  useEffect(()=>{
+    startMediaStream()
+  },[selectedAudioInput, selectedVideoInput]);
 
   const handleDeviceChange = (values:SettingsFormProps) => {
     values?.selectedAudioInput && setSelectedAudioInput(values.selectedAudioInput);
