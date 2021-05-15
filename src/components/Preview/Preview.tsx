@@ -10,6 +10,7 @@ import { combineClasses } from '../../utils';
 import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { SettingsFormProps } from '../Settings/Settings';
+import { useCallback } from '@storybook/client-api';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -219,14 +220,7 @@ const StyledPreview = ({
 
   window.onunload = () => closeMediaStream(mediaStream);
 
-  useEffect(()=>{
-    console.log('Changing input');
-    startMediaStream();
-  },[selectedVideoInput])
-
-  useEffect(()=>{
-    startMediaStream();
-  },[selectedAudioInput])
+  useCallback(startMediaStream, [selectedAudioInput, selectedVideoInput])
 
   const handleDeviceChange = (values:SettingsFormProps) => {
     values?.selectedAudioInput && setSelectedAudioInput(values.selectedAudioInput);
