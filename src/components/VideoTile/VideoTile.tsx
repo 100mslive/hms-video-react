@@ -114,7 +114,6 @@ export const VideoTile = ({
     classes || {},
     defaultClasses,
   );
-  console.log(finalClasses);
   const { tw, appBuilder } = useHMSTheme();
   const parseClass = (s: keyof VideoTileClasses) => {
     return tw(`hmsui-videotile-${s}`, apply(finalClasses[s]));
