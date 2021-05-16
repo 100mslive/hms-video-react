@@ -7,3 +7,4 @@ package-lock.json
 yarn.lock
 *.tgz
 ignore
+/.idea
