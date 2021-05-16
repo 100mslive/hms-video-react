@@ -1,6 +1,7 @@
 import { Meta, Story } from '@storybook/react';
 import React from 'react';
 import { VideoTileControls, VideoTileControlsProps } from '.';
+import { HMSThemeProvider } from '../../..';
 
 const meta: Meta = {
   title: 'Video /TileControls',
@@ -14,9 +15,11 @@ export default meta;
 
 const Template: Story<VideoTileControlsProps> = args => {
   return (
-    <div className="video-tile relative flex items-center justify-center h-72 sm:h-80">
-      <VideoTileControls {...args} />
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+      <div className="video-tile relative flex items-center justify-center h-72 sm:h-80">
+        <VideoTileControls {...args} />
+      </div>
+    </HMSThemeProvider>
   );
 };
 

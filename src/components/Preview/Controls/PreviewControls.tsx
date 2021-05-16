@@ -1,26 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import '../index.css';
 import { ButtonDisplayType } from '../../../types';
-import {
-  SettingsIcon,
-  MicOffIcon,
-  MicOnIcon,
-  CamOnIcon,
-  CamOffIcon,
-} from '../../Icons';
+import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
 import { Button } from '../../TwButton';
-import { Settings } from '../../Settings/Settings';
-import DeviceIds from '../../Settings/DeviceIds';
+import { Settings, SettingsFormProps } from '../../Settings/Settings';
 
 export interface VideoTileControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   showGradient?: boolean;
-  getDevices: ({
-    selectedVideoInput,
-    selectedAudioInput,
-    selectedAudioOutput,
-  }: DeviceIds) => void;
+  onChange: (values: SettingsFormProps) => void;
   classes?: {
     root?: string;
     controls?: string;
@@ -28,7 +17,6 @@ export interface VideoTileControlsProps {
   };
   audioButtonOnClick: () => void;
   videoButtonOnClick: React.MouseEventHandler;
-  settingsButtonOnClick: React.MouseEventHandler;
   buttonDisplay?: ButtonDisplayType;
 }
 
@@ -36,10 +24,9 @@ export const VideoTileControls = ({
   isAudioMuted = false,
   isVideoMuted = false,
   buttonDisplay = 'rectangle',
-  getDevices,
   audioButtonOnClick,
   videoButtonOnClick,
-  settingsButtonOnClick,
+  onChange,
   classes = {
     root:
       'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-50 rounded-lg focus:outline-none',
@@ -49,8 +36,6 @@ export const VideoTileControls = ({
       'flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide',
   },
 }: VideoTileControlsProps) => {
-  const [maxTileCount, setMaxTileCount] = useState(16);
-
   return (
     <div className={`${classes.root}`}>
       <div className={`${classes.controls}`}>
@@ -63,11 +48,6 @@ export const VideoTileControls = ({
         >
           {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
         </Button>
-        {/* <AudioPreviewButton
-          clickHandler={audioButtonOnClick}
-          buttonDisplay={buttonDisplay}
-          isAudioMuted={isAudioMuted}
-        /> */}
         <Button
           iconOnly
           variant="no-fill"
@@ -77,23 +57,9 @@ export const VideoTileControls = ({
         >
           {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
         </Button>
-        {/* <VideoPreviewButton
-          clickHandler={videoButtonOnClick}
-          buttonDisplay={buttonDisplay}
-          isVideoMuted={isVideoMuted}
-        /> */}
       </div>
       <div className={`${classes.rightcontrols}`}>
-        <Settings
-          maxTileCount={maxTileCount}
-          setMaxTileCount={setMaxTileCount}
-          getDevices={getDevices}
-          key={0}
-        />
-        {/* <SettingsButton
-          clickHandler={settingsButtonOnClick}
-          buttonDisplay={buttonDisplay}
-        /> */}
+        <Settings onChange={onChange} key={0} />
       </div>
     </div>
   );

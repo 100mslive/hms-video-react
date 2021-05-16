@@ -6,6 +6,7 @@ import { getVideoTileLabel } from '../../utils';
 import { loadStream } from '../../storybook/utils';
 import { VideoTileControls } from './Controls';
 import { MicOffIcon, MicOnIcon } from '../Icons';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 declare global {
   interface HTMLVideoElement {
@@ -80,31 +81,37 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   }, [args.videoSource, args.isLocal]);
 
   return (
-    <div className="flex items-center justify-center h-full sm:h-80">
-      <video
-        crossOrigin="anonymous"
-        className="hidden"
-        width="400"
-        height="225"
-        ref={dummyVideoRef}
-        loop
-        autoPlay
-        onPlay={() => {
-          if (dummyVideoRef && dummyVideoRef.current) {
-            setVideoTrack(
-              dummyVideoRef.current.captureStream().getVideoTracks()[0],
-            );
-            setAudioTrack(
-              dummyVideoRef.current.captureStream().getAudioTracks()[0],
-            );
-          }
-        }}
-      ></video>
-      {/* <video width="400" height="225" loop autoPlay muted ref={testVideoRef}/> */}
-      {videoTrack && audioTrack && (
-        <VideoTile {...args} videoTrack={videoTrack} audioTrack={audioTrack} />
-      )}
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+      <div className="flex items-center justify-center h-full sm:h-80">
+        <video
+          crossOrigin="anonymous"
+          className="hidden"
+          width="400"
+          height="225"
+          ref={dummyVideoRef}
+          loop
+          autoPlay
+          onPlay={() => {
+            if (dummyVideoRef && dummyVideoRef.current) {
+              setVideoTrack(
+                dummyVideoRef.current.captureStream().getVideoTracks()[0],
+              );
+              setAudioTrack(
+                dummyVideoRef.current.captureStream().getAudioTracks()[0],
+              );
+            }
+          }}
+        ></video>
+        {/* <video width="400" height="225" loop autoPlay muted ref={testVideoRef}/> */}
+        {videoTrack && audioTrack && (
+          <VideoTile
+            {...args}
+            videoTrack={videoTrack}
+            audioTrack={audioTrack}
+          />
+        )}
+      </div>
+    </HMSThemeProvider>
   );
 };
 
@@ -148,59 +155,61 @@ const MeetTemplate: Story<VideoTileProps> = args => {
 
   return (
     <>
-      <div className="flex items-center justify-center h-72 sm:h-80">
-        <video
-          crossOrigin="anonymous"
-          className="hidden"
-          width="400"
-          height="225"
-          ref={dummyVideoRef}
-          loop
-          autoPlay
-          onPlay={() => {
-            if (dummyVideoRef && dummyVideoRef.current) {
-              setVideoTrack(
-                dummyVideoRef.current.captureStream().getVideoTracks()[0],
-              );
-              setAudioTrack(
-                dummyVideoRef.current.captureStream().getAudioTracks()[0],
-              );
-            }
-          }}
-        ></video>
-        {videoTrack && audioTrack && (
-          <VideoTile
-            {...args}
-            videoTrack={videoTrack}
-            audioTrack={audioTrack}
-            controlsComponent={
-              <>
-                {args.allowRemoteMute && (
-                  <div className="inset-center">
-                    <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
-                      {args.isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+        <div className="flex items-center justify-center h-72 sm:h-80">
+          <video
+            crossOrigin="anonymous"
+            className="hidden"
+            width="400"
+            height="225"
+            ref={dummyVideoRef}
+            loop
+            autoPlay
+            onPlay={() => {
+              if (dummyVideoRef && dummyVideoRef.current) {
+                setVideoTrack(
+                  dummyVideoRef.current.captureStream().getVideoTracks()[0],
+                );
+                setAudioTrack(
+                  dummyVideoRef.current.captureStream().getAudioTracks()[0],
+                );
+              }
+            }}
+          ></video>
+          {videoTrack && audioTrack && (
+            <VideoTile
+              {...args}
+              videoTrack={videoTrack}
+              audioTrack={audioTrack}
+              controlsComponent={
+                <>
+                  {args.allowRemoteMute && (
+                    <div className="inset-center">
+                      <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
+                        {args.isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+                      </div>
                     </div>
-                  </div>
-                )}
-                <VideoTileControls
-                  label={getVideoTileLabel(
-                    args.peer.displayName,
-                    args.isLocal || false,
-                    args.videoSource,
                   )}
-                  isAudioMuted={args.isAudioMuted}
-                  showAudioMuteStatus={args.showAudioMuteStatus}
-                  showGradient={false}
-                  allowRemoteMute={false}
-                  showAudioLevel={args.showAudioLevel}
-                  audioLevelDisplayType="inline-wave"
-                  audioLevel={args.audioLevel}
-                />
-              </>
-            }
-          />
-        )}
-      </div>
+                  <VideoTileControls
+                    label={getVideoTileLabel(
+                      args.peer.displayName,
+                      args.isLocal || false,
+                      args.videoSource,
+                    )}
+                    isAudioMuted={args.isAudioMuted}
+                    showAudioMuteStatus={args.showAudioMuteStatus}
+                    showGradient={false}
+                    allowRemoteMute={false}
+                    showAudioLevel={args.showAudioLevel}
+                    audioLevelDisplayType="inline-wave"
+                    audioLevel={args.audioLevel}
+                  />
+                </>
+              }
+            />
+          )}
+        </div>
+      </HMSThemeProvider>
     </>
   );
 };
@@ -211,6 +220,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
 export const DefaultVideoTile = Template.bind({});
 export const GoogleMeetVideoTile = MeetTemplate.bind({});
 export const CampFireVideoTile = Template.bind({});
+export const ClassesOverrideVideoTile = Template.bind({});
 
 DefaultVideoTile.args = {
   isLocal: true,
@@ -243,4 +253,16 @@ CampFireVideoTile.args = {
   audioLevelDisplayType: 'border',
   audioLevel: 40,
   videoSource: 'camera',
+};
+
+ClassesOverrideVideoTile.args = {
+  isLocal: true,
+  peer: { id: '123', displayName: 'Eswar' },
+  aspectRatio: { width: 16, height: 9 },
+  displayShape: 'rectangle',
+  showAudioLevel: true,
+  audioLevelDisplayType: 'border',
+  audioLevel: 40,
+  videoSource: 'camera',
+  classes: { videoContainer: 'border-8 border-red-800' },
 };

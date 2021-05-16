@@ -14,7 +14,6 @@ import { Settings } from '../Settings/Settings';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import DeviceIds from '../Settings/DeviceIds';
 
 export interface ControlBarClasses {
   root?: string;
@@ -27,14 +26,12 @@ interface StyledControlBarProps {
   isVideoMuted?: boolean;
   isChatOpen?: boolean;
   buttonDisplay: ButtonDisplayType;
-  maxTileCount: number;
 
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
   chatButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
-  setMaxTileCount: (count: number) => void;
 
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
@@ -54,28 +51,21 @@ const defaultClasses: ControlBarClasses = {
     'flex md:flex-none gap-x-4 md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
 };
 
-const getDevices = ({
-  selectedVideoInput,
-  selectedAudioInput,
-  selectedAudioOutput,
-}: DeviceIds) => {};
 export const StyledControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
   isChatOpen = false,
   buttonDisplay = 'rectangle',
-  maxTileCount,
   audioButtonOnClick,
   videoButtonOnClick,
   leaveButtonOnClick,
   chatButtonOnClick,
   screenshareButtonOnClick,
-  setMaxTileCount,
   leftComponents = [
     <Settings
-      getDevices={getDevices}
-      maxTileCount={maxTileCount}
-      setMaxTileCount={setMaxTileCount}
+      onChange={props => {
+        console.debug('Settings on change called ', props);
+      }}
       key={0}
     />,
     <TwButton

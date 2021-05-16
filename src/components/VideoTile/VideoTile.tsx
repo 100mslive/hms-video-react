@@ -4,10 +4,12 @@ import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
-import { getVideoTileLabel, combineClasses } from '../../utils';
-import { withClasses } from '../../utils/styles';
+import { getVideoTileLabel } from '../../utils';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-interface StyledVideoTileProps extends VideoProps {
+import { resolveClasses } from '../../utils/classes/resolveClasses';
+// @ts-ignore
+import { apply } from 'twind';
+interface StyledVideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
    */
@@ -86,14 +88,14 @@ const defaultClasses: VideoTileClasses = {
   videoContainerCircle: 'rounded-full',
 };
 
-const StyledVideoTile = ({
+export const VideoTile = ({
   videoTrack,
   hmsVideoTrack,
   audioTrack,
   peer,
   isLocal = false,
   videoSource = 'camera',
-  audioLevel,
+  audioLevel = 0,
   isAudioMuted = false,
   isVideoMuted = false,
   showAudioMuteStatus,
@@ -105,62 +107,75 @@ const StyledVideoTile = ({
   audioLevelDisplayColor = '#0F6CFF',
   allowRemoteMute = false,
   controlsComponent,
-  classes: extraClasses,
-  defaultClasses,
+  classes,
+  audioLevelEmitter,
 }: StyledVideoTileProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const finalClasses: VideoTileClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
+  const { tw, appBuilder } = useHMSTheme();
+  const parseClass = (s: keyof VideoTileClasses) => {
+    return tw(`hmsui-videotile-${s}`, apply(finalClasses[s]));
+  };
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
   try {
-    let context = useHMSTheme();
     if (aspectRatio === undefined) {
-      aspectRatio = context.appBuilder.videoTileAspectRatio;
+      aspectRatio = appBuilder.videoTileAspectRatio;
     }
     //TODO this is the wrong prop
     if (showAudioMuteStatus === undefined) {
-      showAudioMuteStatus = context.appBuilder.showAvatar;
+      showAudioMuteStatus = appBuilder.showAvatar;
     }
   } catch (e) {}
 
-  const { width, height } = videoTrack?videoTrack.getSettings():{width:1, height:1};
-  const impliedAspectRatio = (aspectRatio && objectFit==='cover') ? aspectRatio : { width, height };
-
+  const { width, height } = videoTrack
+    ? videoTrack.getSettings()
+    : { width: 1, height: 1 };
+  const impliedAspectRatio =
+    aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
-    <div className={combinedClasses?.root}>
-      {impliedAspectRatio.width && impliedAspectRatio.height && (
+    <div className={parseClass('root')}>
+      {((impliedAspectRatio.width && impliedAspectRatio.height) ||
+        objectFit === 'contain') && (
         <div
-          className={`${combinedClasses?.videoContainer} ${
-            displayShape === 'circle'
-              ? combinedClasses?.videoContainerCircle
-              : ''
+          className={`${parseClass('videoContainer')} ${
+            displayShape === 'circle' ? parseClass('videoContainerCircle') : ''
           } `}
-          style={{
-            aspectRatio: `${
-              displayShape === 'rectangle'
-                ? impliedAspectRatio.width / impliedAspectRatio.height
-                : 1
-            }`,
-          }}
+          style={
+            objectFit !== 'contain'
+              ? {
+                  aspectRatio: `${
+                    displayShape === 'rectangle'
+                      ? //@ts-expect-error
+                        impliedAspectRatio.width / impliedAspectRatio.height
+                      : 1
+                  }`,
+                }
+              : { objectFit: 'contain', width: '100%', height: '100%' }
+          }
         >
-          {/* TODO this doesn't work in Safari */}
+          {/* TODO this doesn't work in Safari and looks ugly with contain*/}
           <Video
+            peerId={peer.id}
             videoTrack={videoTrack}
             hmsVideoTrack={hmsVideoTrack}
             audioTrack={audioTrack}
             objectFit={objectFit}
             isLocal={isLocal}
+            isAudioMuted={isAudioMuted}
             videoSource={videoSource}
             showAudioLevel={showAudioLevel}
-            audioLevel={audioLevel}
             audioLevelDisplayType={audioLevelDisplayType}
             audioLevelDisplayColor={audioLevelDisplayColor}
             displayShape={displayShape}
+            audioLevelEmitter={audioLevelEmitter}
           />
           {isVideoMuted && (
             <div
-              className={`${combinedClasses?.avatarContainer} ${
+              className={`${parseClass('avatarContainer')} ${
                 displayShape === 'circle'
-                  ? combinedClasses?.avatarContainerCircle
+                  ? parseClass('avatarContainerCircle')
                   : ''
               }`}
             >
@@ -191,8 +206,3 @@ const StyledVideoTile = ({
 };
 
 export type VideoTileProps = Omit<StyledVideoTileProps, 'defaultClasses'>;
-
-export const VideoTile = withClasses<VideoTileClasses | undefined>(
-  defaultClasses,
-  'videoTile',
-)<StyledVideoTileProps>(StyledVideoTile);

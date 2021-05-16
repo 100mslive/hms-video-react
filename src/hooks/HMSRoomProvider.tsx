@@ -176,8 +176,12 @@ export const HMSRoomProvider: React.FC = props => {
         sdk,
         localPeer,
         peers,
-        audioMuted: !(localPeer?.audioTrack && localPeer?.audioTrack?.enabled) as boolean,
-        videoMuted: !(localPeer?.audioTrack && localPeer?.videoTrack?.enabled) as boolean,
+        audioMuted: !(
+          localPeer?.audioTrack && localPeer?.audioTrack?.enabled
+        ) as boolean,
+        videoMuted: !(
+          localPeer?.audioTrack && localPeer?.videoTrack?.enabled
+        ) as boolean,
         join,
         leave,
         isPeerMuted,

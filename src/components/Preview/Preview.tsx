@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { closeMediaStream } from '../../utils';
 import { getLocalStreamException, getUserMedia } from '../../utils/preview';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileControls } from './Controls';
 import { MessageModal } from '../MessageModal';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
 import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
-import DeviceIds from '../Settings/DeviceIds';
+import { SettingsFormProps } from '../Settings/Settings';
+import { useHMSTheme } from '../..';
+import { resolveClasses } from '../../utils/classes/resolveClasses';
+// @ts-ignore
+import { apply } from 'twind';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -39,11 +41,7 @@ const defaultClasses: PreviewClasses = {
 interface StyledPreviewProps {
   name: string;
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
-  getDevices: ({
-    selectedVideoInput,
-    selectedAudioInput,
-    selectedAudioOutput,
-  }: DeviceIds) => void;
+  onChange: (values: SettingsFormProps) => void;
   goBackOnClick: () => void;
   toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
@@ -58,18 +56,20 @@ interface StyledPreviewProps {
   classes?: PreviewClasses;
 }
 
-const StyledPreview = ({
+export const Preview = ({
   name,
   joinOnClick,
   goBackOnClick,
-  getDevices,
+  onChange,
   videoTileProps,
-  classes: extraClasses,
-  defaultClasses,
+  classes,
   videoTileClasses,
 }: StyledPreviewProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const { tw } = useHMSTheme();
+  const finalClasses: PreviewClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
   const [mediaStream, setMediaStream] = useState(new MediaStream());
   const [errorState, setErrorState] = useState(false);
   const [title, setErrorTitle] = useState(String);
@@ -80,12 +80,8 @@ const StyledPreview = ({
   const [audioOutput, setAudioutput] = useState(Array);
   const [audioMuted, setAudioMuted] = useState(false);
   const [videoMuted, setVideoMuted] = useState(false);
-
-  useEffect(() => {
-    startMediaStream();
-    return () => closeMediaStream(mediaStream);
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [selectedAudioInput, setSelectedAudioInput] = useState('default');
+  const [selectedVideoInput, setSelectedVideoInput] = useState('default');
 
   const toggleMediaState = (type: string) => {
     if (type === 'audio') {
@@ -164,7 +160,10 @@ const StyledPreview = ({
       setAllow(false);
     } else {
       // window.navigator.mediaDevices
-      getUserMedia({ audio: true, video: true })
+      getUserMedia({
+        audio: { deviceId: selectedAudioInput },
+        video: { deviceId: selectedVideoInput },
+      })
         .then((stream: MediaStream) => setMediaStream(stream))
         .catch((error: any) => {
           HMSLogger.e('[Preview]', error);
@@ -221,12 +220,28 @@ const StyledPreview = ({
 
   window.onunload = () => closeMediaStream(mediaStream);
 
+  useEffect(() => {
+    startMediaStream();
+  }, [selectedAudioInput, selectedVideoInput]);
+
+  const handleDeviceChange = useCallback((values: SettingsFormProps) => {
+    values?.selectedAudioInput &&
+      setSelectedAudioInput(values.selectedAudioInput);
+    values?.selectedVideoInput &&
+      setSelectedVideoInput(values.selectedVideoInput);
+    onChange(values);
+  }, []);
+
+  const parseClass = (s: keyof PreviewClasses) => {
+    return tw(`hmsui-preview-${s}`, apply(finalClasses[s]));
+  };
+
   return (
     // root
-    <div className={combinedClasses?.root}>
-      <div className={combinedClasses?.containerRoot}>
+    <div className={parseClass('root')}>
+      <div className={parseClass('containerRoot')}>
         {/* header */}
-        <div className={combinedClasses?.header}>
+        <div className={parseClass('header')}>
           {/* messageModal */}
           <MessageModal
             show={showModal}
@@ -255,20 +270,17 @@ const StyledPreview = ({
             classes={videoTileClasses}
             controlsComponent={
               <VideoTileControls
-                settingsButtonOnClick={() =>
-                  HMSLogger.w('[Settings]', 'Settings Component yet to be made')
-                }
                 audioButtonOnClick={() => toggleMediaState('audio')}
                 videoButtonOnClick={() => toggleMediaState('video')}
-                getDevices={getDevices}
                 isAudioMuted={audioMuted}
                 isVideoMuted={videoMuted}
+                onChange={handleDeviceChange}
               />
             }
           />
         </div>
         {/* helloDiv */}
-        <div className={combinedClasses?.helloDiv}>Hello, {name}</div>
+        <div className={parseClass('helloDiv')}>Hello, {name}</div>
         {/* joinButton */}
         <Button
           variant={'emphasized'}
@@ -280,16 +292,6 @@ const StyledPreview = ({
         >
           Join
         </Button>
-        {/* <div
-          className={combinedClasses?.joinButton}
-          onClick={() => {
-            closeMediaStream(mediaStream);
-            joinOnClick({ audioMuted, videoMuted });
-          }}
-        >
-          Join
-        </div> */}
-        {/* goBackButton */}
         <Button
           classes={{ rootNoFill: 'mt-4' }}
           variant={'no-fill'}
@@ -300,23 +302,9 @@ const StyledPreview = ({
         >
           Go back{' '}
         </Button>
-        {/* <div
-          className={combinedClasses?.goBackButton}
-          onClick={() => {
-            closeMediaStream(mediaStream);
-            goBackOnClick();
-          }}
-        >
-          Go back
-        </div> */}
       </div>
     </div>
   );
 };
 
 export type PreviewProps = Omit<StyledPreviewProps, 'defaultClasses'>;
-
-export const Preview = withClasses<PreviewClasses | undefined>(
-  defaultClasses,
-  'preview',
-)<StyledPreviewProps>(StyledPreview);

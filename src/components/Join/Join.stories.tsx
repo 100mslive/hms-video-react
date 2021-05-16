@@ -22,9 +22,9 @@ const Template: Story<JoinProps> = args => {
 
 const OverrideClass: Story<JoinProps> = args => {
   return (
-    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
       <div>
-        <Join {...args} classes={{ containerRoot: 'bg-red-main' }} />
+        <Join {...args} classes={{ containerRoot: 'dark:bg-red-main' }} />
       </div>
     </HMSThemeProvider>
   );

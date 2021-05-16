@@ -1,13 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, ChangeEventHandler } from 'react';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
 import { Button as TwButton } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
-import DeviceIds from './DeviceIds';
+import { groupBy, Dictionary } from 'lodash';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { resolveClasses } from '../../utils/classes/resolveClasses';
+// @ts-ignore
+import { apply } from 'twind';
 
 export interface SettingsClasses {
   root?: string;
@@ -30,16 +33,18 @@ export interface SettingsClasses {
   sliderLabelContainer?: string;
   sliderLabel?: string;
   slider?: string;
+  errorContainer?: string;
 }
 
+export interface SettingsFormProps {
+  selectedVideoInput?: string;
+  selectedAudioInput?: string;
+  selectedAudioOutput?: string;
+  maxTileCount?: number;
+}
 interface StyledSettingsProps {
-  setMaxTileCount: (count: number) => void;
-  maxTileCount: number;
-  getDevices: ({
-    selectedVideoInput,
-    selectedAudioInput,
-    selectedAudioOutput,
-  }: DeviceIds) => void;
+  initialValues?: SettingsFormProps;
+  onChange?: (values: SettingsFormProps) => void;
   defaultClasses?: SettingsClasses;
   classes?: SettingsClasses;
 }
@@ -66,6 +71,7 @@ const defaultClasses: SettingsClasses = {
   sliderLabelContainer: 'w-1/3 flex justify-end items-center ',
   sliderLabel: 'text-right',
   slider: 'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
+  errorContainer: 'flex justify-center items-center w-full px-8 py-4',
 };
 
 //TODO figure out how to expose this outside
@@ -89,24 +95,35 @@ const HMSSlider = withStyles({
 
 //TODO replace with unpkg
 const StyledSettings = ({
-  maxTileCount,
-  setMaxTileCount,
-  getDevices,
-  defaultClasses,
-  classes: extraClasses,
+  onChange,
+  initialValues,
+  classes,
 }: StyledSettingsProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  const [open, setOpen] = React.useState(false);
-  const [audioInput, setAudioInput] = React.useState<MediaDeviceInfo[]>([]);
-  const [audioOutput, setAudioOutput] = React.useState<MediaDeviceInfo[]>([]);
-  const [videoInput, setVideoInput] = React.useState<MediaDeviceInfo[]>([]);
-
-  const [selectedAudioInput, setSelectedAudioInput] = React.useState('default');
-  const [selectedVideoInput, setSelectedVideoInput] = React.useState('default');
-  const [selectedAudioOutput, setSelectedAudioOutput] = React.useState(
-    'default',
+  //TODO accept initial entry values
+  const { tw } = useHMSTheme();
+  const finalClasses: SettingsClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
   );
+
+  const [open, setOpen] = useState(false);
+  const [deviceGroups, setDeviceGroups] = useState<
+    Dictionary<MediaDeviceInfo[]>
+  >({});
+  const [error, setError] = useState('');
+
+  const [values, setValues] = useState<SettingsFormProps>({
+    selectedAudioInput: initialValues?.selectedAudioInput
+      ? initialValues?.selectedAudioInput
+      : 'default',
+    selectedVideoInput: initialValues?.selectedVideoInput
+      ? initialValues?.selectedVideoInput
+      : 'default',
+    selectedAudioOutput: initialValues?.selectedAudioOutput
+      ? initialValues?.selectedAudioOutput
+      : 'default',
+    maxTileCount: initialValues?.maxTileCount ? initialValues?.maxTileCount : 9,
+  });
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -114,26 +131,58 @@ const StyledSettings = ({
 
   const handleClose = () => {
     setOpen(false);
-    getDevices({ selectedVideoInput, selectedAudioInput, selectedAudioOutput });
+    onChange && onChange(values);
   };
-  const handleChange = (event: any, newValue: number | number[]) => {
-    setMaxTileCount(newValue as number);
+
+  const handleInputChange: ChangeEventHandler<any> = event => {
+    const newValues = { ...values };
+    newValues[event.currentTarget.name as keyof SettingsFormProps] =
+      event.currentTarget.value;
+    setValues(newValues);
+  };
+
+  const handleSliderChange = (event: any, newValue: number | number[]) => {
+    const newValues = { ...values };
+    //TODO make this generic
+    if (typeof newValue === 'number') {
+      newValues['maxTileCount'] = newValue;
+    }
+    setValues(newValues);
   };
 
   useEffect(() => {
-    navigator.mediaDevices.enumerateDevices().then(devices => {
-      for (let device of devices) {
-        HMSLogger.w('Device:', device);
-        if (device.kind === 'videoinput') {
-          setVideoInput(videoDevices => [...videoDevices, device]);
-        } else if (device.kind === 'audioinput') {
-          setAudioInput(prevAudioInput => [...prevAudioInput, device]);
-        } else if (device.kind === 'audiooutput') {
-          setAudioOutput(prevAudioOutput => [...prevAudioOutput, device]);
-        }
-      }
-    });
-  }, []);
+    if (open) {
+      navigator.mediaDevices.enumerateDevices().then(
+        devices => {
+          const deviceGroups = groupBy(devices, 'kind');
+          HMSLogger.d('Groups:', deviceGroups);
+          setDeviceGroups(deviceGroups);
+        },
+        error => {
+          //TODO this is not working right now
+          setError(error);
+        },
+      );
+    }
+  }, [open]);
+
+  const videoInput = deviceGroups['videoinput']
+    ? deviceGroups['videoinput']
+    : [];
+  const audioInput = deviceGroups['audioinput']
+    ? deviceGroups['audioinput']
+    : [];
+  const audioOutput = deviceGroups['audiooutput']
+    ? deviceGroups['audiooutput']
+    : [];
+  //TODO handle case where selected device is not in list
+  // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
+  // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
+  // videoInput.length > 0 && videoInput.findIndex(device => device.deviceId===values?.selectedVideoInput)===-1 && setValues({selectedVideoInput:videoInput[0].deviceId});
+
+  const parseClass = (s: keyof SettingsClasses) => {
+    return tw(`hmsui-settings-${s}`, apply(finalClasses[s]));
+  };
 
   return (
     <>
@@ -150,16 +199,16 @@ const StyledSettings = ({
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        className={`${combinedClasses?.dialogRoot}`}
+        className={`${parseClass('dialogRoot')}`}
         maxWidth="sm"
       >
-        <div className={`${combinedClasses?.dialogContainer}`}>
-          <div className={`${combinedClasses?.dialogInner}`}>
-            <span className={`${combinedClasses?.titleContainer}`}>
-              <span className={`${combinedClasses?.titleIcon}`}>
+        <div className={`${parseClass('dialogContainer')}`}>
+          <div className={`${parseClass('dialogInner')}`}>
+            <span className={`${parseClass('titleContainer')}`}>
+              <span className={`${parseClass('titleIcon')}`}>
                 <SettingsIcon className="w-7 h-7" />
               </span>
-              <span className={`${combinedClasses?.titleText}`}>Settings</span>
+              <span className={`${parseClass('titleText')}`}>Settings</span>
             </span>
 
             <TwButton
@@ -172,92 +221,91 @@ const StyledSettings = ({
             </TwButton>
           </div>
 
-          <div className={`${combinedClasses?.formContainer}`}>
-            <div className={`${combinedClasses?.formInner}`}>
-              <div className={`${combinedClasses?.selectLabel}`}>
-                <span>Camera:</span>
+          <div className={`${parseClass('formContainer')}`}>
+            {error === '' ? (
+              <>
+                <div className={`${parseClass('formInner')}`}>
+                  <div className={`${parseClass('selectLabel')}`}>
+                    <span>Camera:</span>
+                  </div>
+                  <div className={`${parseClass('selectContainer')}`}>
+                    {videoInput.length > 0 && (
+                      <select
+                        name="selectedVideoInput"
+                        className={`${parseClass('select')}`}
+                        onChange={handleInputChange}
+                        value={values.selectedVideoInput}
+                      >
+                        {videoInput.map((device, index) => (
+                          <option
+                            value={device.deviceId}
+                            className={`${parseClass('selectInner')}`}
+                            key={index}
+                          >
+                            {device.label} {device.deviceId}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+                <div className={`${parseClass('formInner')}`}>
+                  <div className={`${parseClass('selectLabel')}`}>
+                    <span>Microphone:</span>
+                  </div>
+                  <div className={`${parseClass('selectContainer')}`}>
+                    {audioInput.length > 0 && (
+                      <select
+                        name="selectedAudioInput"
+                        className={`${parseClass('select')}`}
+                        onChange={handleInputChange}
+                        value={values.selectedAudioInput}
+                      >
+                        {audioInput.map((device, index) => (
+                          <option
+                            value={device.deviceId}
+                            className={`${parseClass('selectInner')}`}
+                            key={index}
+                          >
+                            {device.label}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+                <div className={`${parseClass('formInner')}`}>
+                  <div className={`${parseClass('selectLabel')}`}>
+                    <span>Audio Output:</span>
+                  </div>
+                  <div className={`${parseClass('selectContainer')}`}>
+                    {audioOutput.length > 0 && (
+                      <select
+                        name="selectedAudioOutput"
+                        className={`${parseClass('select')}`}
+                        onChange={handleInputChange}
+                        value={values.selectedAudioOutput}
+                      >
+                        {audioOutput.map((device, index) => (
+                          <option
+                            value={device.deviceId}
+                            className={`${parseClass('select')}`}
+                            key={index}
+                          >
+                            {device.label}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className={parseClass('errorContainer')}>
+                Error in accessing devices. Please check permissions. Are all
+                devices plugged in?
               </div>
-              <div className={`${combinedClasses?.selectContainer}`}>
-                <select
-                  name="camera"
-                  className={`${combinedClasses?.select}`}
-                  onChange={event => {
-                    setSelectedVideoInput(event.target.value);
-                  }}
-                  // value={role}
-                  // onChange={event => {
-                  //   setRole(event.target.value);
-                  // }}
-                >
-                  {videoInput.map((device, index) => (
-                    <option
-                      value={device.deviceId}
-                      className={`${combinedClasses?.selectInner}`}
-                      key={index}
-                    >
-                      {device.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className={`${combinedClasses?.formInner}`}>
-              <div className={`${combinedClasses?.selectLabel}`}>
-                <span>Microphone:</span>
-              </div>
-              <div className={`${combinedClasses?.selectContainer}`}>
-                <select
-                  name="microphone"
-                  className={`${combinedClasses?.select}`}
-                  onChange={event => {
-                    setSelectedAudioInput(event.target.value);
-                  }}
-
-                  // value={role}
-                  // onChange={event => {
-                  //   setRole(event.target.value);
-                  // }}
-                >
-                  {audioInput.map((device, index) => (
-                    <option
-                      value={device.deviceId}
-                      className={`${combinedClasses?.selectInner}`}
-                      key={index}
-                    >
-                      {device.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-            <div className={`${combinedClasses?.formInner}`}>
-              <div className={`${combinedClasses?.selectLabel}`}>
-                <span>Audio Output:</span>
-              </div>
-              <div className={`${combinedClasses?.selectContainer}`}>
-                <select
-                  name="audio-output"
-                  className={`${combinedClasses?.select}`}
-                  onChange={event => {
-                    setSelectedAudioOutput(event.target.value);
-                  }}
-                  // value={role}
-                  // onChange={event => {
-                  //   setRole(event.target.value);
-                  // }}
-                >
-                  {audioOutput.map((device, index) => (
-                    <option
-                      value={device.deviceId}
-                      className={`${combinedClasses?.select}`}
-                      key={index}
-                    >
-                      {device.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            )}
             {/* <div className="w-full my-1.5">
               <div className="w-full flex  ">
                 <div className="w-1/3 flex justify-end items-center ">
@@ -356,24 +404,34 @@ const StyledSettings = ({
                 </div>
               </div>
             </div> */}
-            <div className={combinedClasses?.divider}></div>
-            <div className={combinedClasses?.sliderContainer}>
-              <div className={combinedClasses?.sliderInner}>
-                <div className={combinedClasses?.sliderLabelContainer}>
-                  <span className={combinedClasses?.sliderLabel}>
+            <div className={parseClass('divider')}></div>
+            <div className={parseClass('sliderContainer')}>
+              <div className={parseClass('sliderInner')}>
+                <div className={parseClass('sliderLabelContainer')}>
+                  <span className={parseClass('sliderLabel')}>
                     Participants in view:
                   </span>
                 </div>
-                <div className={combinedClasses?.slider}>
+                <div className={parseClass('slider')}>
                   <HMSSlider
-                    defaultValue={8}
-                    value={maxTileCount}
-                    onChange={handleChange}
+                    name="maxTileCount"
+                    defaultValue={9}
+                    value={values.maxTileCount}
+                    onChange={handleSliderChange}
                     aria-labelledby="continuous-slider"
                     valueLabelDisplay="auto"
-                    step={1}
                     min={1}
-                    max={30}
+                    max={49}
+                    step={null}
+                    marks={[
+                      { value: 1 },
+                      { value: 4 },
+                      { value: 9 },
+                      { value: 16 },
+                      { value: 25 },
+                      { value: 36 },
+                      { value: 49 },
+                    ]}
                   />
                 </div>
               </div>
