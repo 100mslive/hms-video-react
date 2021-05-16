@@ -6,7 +6,7 @@ import '../index.css';
 //@ts-ignore
 import { apply } from 'twind';
 import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
-import { resolveClasses } from '../../../utils/classes/resolveClasses';
+import { resolveClasses } from '../../../utils/classes';
 
 export interface VideoTileControlsClasses {
   root?: string;

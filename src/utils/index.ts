@@ -515,6 +515,25 @@ function combineClasses(
     : defaultClasses;
 }
 
+const generateRandomString = () => Math.random().toString(36).substring(7)
+
+const mergeRefs = (...refs:(React.MutableRefObject<any> | ((node?: Element | null) => void))[]) => {
+  const filteredRefs = refs.filter(Boolean);
+  if (!filteredRefs.length) return null;
+  if (filteredRefs.length === 0) return filteredRefs[0];
+  return (inst:Element | null) => {
+    for (const ref of filteredRefs) {
+      if (typeof ref === 'function') {
+        ref(inst);
+      } else if (ref) {
+        ref.current = inst;
+      }
+    }
+  };
+};
+
+const scrollTo = (element:React.MutableRefObject<any>) => () => {element.current.scrollIntoView()}
+
 export {
   closeMediaStream,
   getVideoTileLabel,
@@ -528,4 +547,7 @@ export {
   combineClasses,
   chunkStreams,
   mode,
+  generateRandomString,
+  mergeRefs,
+  scrollTo
 };

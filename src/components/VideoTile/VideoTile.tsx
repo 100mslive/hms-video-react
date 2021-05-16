@@ -6,7 +6,7 @@ import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
 import { getVideoTileLabel } from '../../utils';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { resolveClasses } from '../../utils/classes/resolveClasses';
+import { resolveClasses } from '../../utils/classes';
 // @ts-ignore
 import { apply } from 'twind';
 interface StyledVideoTileProps extends Omit<VideoProps, 'peerId'> {

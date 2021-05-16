@@ -1,25 +1,13 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
 import { chunkStreams } from '../../utils';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import Slider, { Settings } from 'react-slick';
-import { Button } from '../Button';
 import './index.css';
-import {
-  LeftCaratIcon,
-  RightCaratIcon,
-  DownCaratIcon,
-  UpCaratIcon,
-  DotIcon,
-} from '../Icons';
-import { createPortal } from 'react-dom';
-import { CustomArrowProps } from 'react-slick';
+import {Carousel} from '../Carousel';
 import { useResizeDetector } from 'react-resize-detector';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { resolveClasses } from '../../utils/classes/resolveClasses';
+import { resolveClasses } from '../../utils/classes';
 // @ts-ignore
 import { apply } from 'twind';
 
@@ -146,84 +134,6 @@ const defaultClasses: VideoListClasses = {
   videoTileContainer: 'flex justify-center',
 };
 
-interface IArrowProps extends CustomArrowProps {
-  container: HTMLElement | null;
-}
-
-export function SliderRightArrow({ container, ...props }: IArrowProps) {
-  const { style, onClick } = props;
-  const RightArrow = (
-    <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <Button variant="icon-only" size="sm">
-        <RightCaratIcon />
-      </Button>
-    </div>
-  );
-  return container ? createPortal(RightArrow, container) : RightArrow;
-}
-
-interface IDots {
-  container: HTMLElement | null;
-  index: number;
-}
-
-const HorizontalDots = ({ container, index }: IDots) =>
-  container ? (
-    createPortal(
-      //eslint-disable-next-line jsx-a11y/anchor-is-valid
-      <a className="inline-block">
-        <DotIcon />
-      </a>,
-      container,
-    )
-  ) : (
-    <DotIcon />
-  );
-
-//TODO replace with button
-function SliderDownArrow(props: CustomArrowProps) {
-  const { style, onClick } = props;
-  return (
-    <div
-      className="slick-arrow absolute left-1/2 bottom-0 z-10"
-      style={{ ...style, display: 'block' }}
-      onClick={onClick}
-    >
-      <button className="text-2xl rounded-sm focus:outline-none">
-        <DownCaratIcon />
-      </button>
-    </div>
-  );
-}
-
-//TODO replace with button
-function SliderUpArrow(props: CustomArrowProps) {
-  const { style, onClick } = props;
-  return (
-    <div
-      className="slick-arrow left-1/2 top-0 z-10 absolute"
-      style={{ ...style, display: 'block' }}
-      onClick={onClick}
-    >
-      <button className="text-2xl  rounded-sm focus:outline-none">
-        <UpCaratIcon />
-      </button>
-    </div>
-  );
-}
-
-function SliderLeftArrow({ container, ...props }: IArrowProps) {
-  const { style, onClick } = props;
-  const LeftArrow = (
-    <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <Button variant="icon-only" size="sm">
-        <LeftCaratIcon />
-      </Button>
-    </div>
-  );
-  return container ? createPortal(LeftArrow, container) : LeftArrow;
-}
-
 export const VideoList = ({
   streams,
   overflow = 'scroll-x',
@@ -265,35 +175,6 @@ export const VideoList = ({
   } catch (e) {}
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
-  const horizontalDotsContainer = useRef(null);
-  const leftNavContainer = useRef(null);
-  const rightNavContainer = useRef(null);
-
-  var settings: Settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    swipeToSlide: true,
-    vertical: overflow === 'scroll-y',
-    nextArrow:
-      overflow === 'scroll-x' ? (
-        <SliderRightArrow container={rightNavContainer.current} />
-      ) : (
-        <SliderDownArrow />
-      ),
-    prevArrow:
-      overflow === 'scroll-x' ? (
-        <SliderLeftArrow container={leftNavContainer.current} />
-      ) : (
-        <SliderUpArrow />
-      ),
-    customPaging: index => (
-      <HorizontalDots
-        container={horizontalDotsContainer.current}
-        index={index}
-      />
-    ),
-  };
 
   //Split a method that just calculates aspectRatio on the basis of streams, if needed
 
@@ -324,7 +205,7 @@ export const VideoList = ({
   return (
     <div className={`${parseClass('root')}`} ref={ref}>
       {chunkedStreams && chunkedStreams.length > 0 && (
-        <Slider {...settings} className={`${parseClass('sliderRoot')}`}>
+        <Carousel>
           {chunkedStreams.map((streams, page) => {
             return (
               <div className={`${parseClass('sliderInner')}`} key={page}>
@@ -365,14 +246,8 @@ export const VideoList = ({
               </div>
             );
           })}
-        </Slider>
+        </Carousel>
       )}
-
-      <div className="absolute bottom-0 w-full flex justify-center">
-        <div ref={leftNavContainer} />
-        <div ref={horizontalDotsContainer} />
-        <div ref={rightNavContainer} />
-      </div>
     </div>
   );
 };
