@@ -20,6 +20,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
+// @ts-ignore
 import { apply } from 'twind';
 
 export interface VideoListClasses extends VideoTileClasses {
