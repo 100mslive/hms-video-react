@@ -29,9 +29,9 @@ interface PreviewClasses {
 }
 const defaultClasses: PreviewClasses = {
   root:
-    'flex h-screen w-screen bg-gray-600 dark:bg-black justify-center items-center',
+    'flex h-screen w-screen bg-white dark:bg-black justify-center items-center',
   containerRoot:
-    'flex flex-col items-center w-37.5 h-400 box-border bg-white dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
+    'bg-gray-700 flex flex-col items-center w-37.5 h-400 box-border  dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
   header: 'w-22.5 h-22.5 mt-1.875 mb-7',
   helloDiv: 'text-2xl font-medium mb-12',
   joinButton:

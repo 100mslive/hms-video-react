@@ -43,6 +43,6 @@ Default.args = {
     alert('chat button clicked');
   },
   isAudioMuted: true,
-  isVideoMuted: true,
+  isVideoMuted: false,
   isChatOpen: true,
 };

@@ -82,20 +82,22 @@ export interface ButtonClasses {
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex text-white items-center justify-center text-base font-medium shadow-sm focus:outline-none',
-  rootFocus: 'focus:ring focus:ring-brand-tint',
+    'inline-flex dark:text-white text-black items-center justify-center text-base font-medium shadow-sm focus:outline-none',
+  rootFocus: 'focus:ring focus:ring-brand-tint', //''
   rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
-  rootStandard: 'bg-gray-200 hover:bg-gray-300',
-  rootDanger: 'bg-red-main hover:bg-red-tint',
+  rootStandard:
+    'text-gray-100 dark:text-white bg-gray-600 dark:bg-gray-200 hover:gray-500 dark:hovergray-300 focus:gray-600  dark:focus:gray-200',
+  rootDanger: 'bg-red-main hover:bg-red-tint text-white',
   rootEmphasized: 'bg-brand-main hover:bg-brand-tint',
-  rootNoFill: 'text-white shadow-none',
+  rootNoFill:
+    'light:text-brand-main light:hover:text-brand-tint dark:text-white shadow-none',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootSizeSm: 'px-2.5 py-1.5',
   rootSizeMd: 'px-4 h-11',
   rootSizeLg: 'px-6 py-3',
   rootIconSizeSm: 'w-6 h-6',
-  rootIconSizeMd: 'w-11 h-11 hover:bg-gray-100',
+  rootIconSizeMd: 'w-11 h-11 ',
   rootIconSizeLg: 'w-14 h-14',
 };
 
@@ -114,7 +116,8 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   children,
   ...props
 }) => {
-  const { tw } = useHMSTheme();
+  const { tw, appBuilder } = useHMSTheme();
+  //alert(JSON.stringify(appBuilder));
   const finalClasses: ButtonClasses = resolveClasses(
     classes || {},
     defaultClasses,

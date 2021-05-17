@@ -11,6 +11,7 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { resolveClasses } from '../../utils/classes';
 // @ts-ignore
 import { apply } from 'twind';
+import { ButtonClasses } from '../TwButton/Button';
 
 export interface SettingsClasses {
   root?: string;
@@ -43,6 +44,7 @@ export interface SettingsFormProps {
   maxTileCount?: number;
 }
 interface StyledSettingsProps {
+  buttonClases?: ButtonClasses;
   initialValues?: SettingsFormProps;
   onChange?: (values: SettingsFormProps) => void;
   defaultClasses?: SettingsClasses;
@@ -98,6 +100,7 @@ const StyledSettings = ({
   onChange,
   initialValues,
   classes,
+  buttonClases,
 }: StyledSettingsProps) => {
   //TODO accept initial entry values
   const { tw } = useHMSTheme();
@@ -191,6 +194,7 @@ const StyledSettings = ({
         variant={'no-fill'}
         iconSize="md"
         onClick={handleClickOpen}
+        classes={buttonClases}
       >
         <SettingsIcon />
       </TwButton>

@@ -18,8 +18,8 @@ const Template: Story<HeaderProps> = args => {
         config={{}}
         appBuilder={{
           theme: 'dark',
-          // logo:
-          //   'https://image.shutterstock.com/image-illustration/gold-stack-overflow-icon-on-260nw-1113780074.jpg',
+          logo: '',
+          // 'https://image.shutterstock.com/image-illustration/gold-stack-overflow-icon-on-260nw-1113780074.jpg',
         }}
       >
         <Header {...args} rightComponents={[]} />

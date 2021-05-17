@@ -31,7 +31,7 @@ export const VideoTileControls = ({
     root:
       'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-50 rounded-lg focus:outline-none',
     controls:
-      'flex flex-grow self-center justify-center inline-block hover-hide space-x-1',
+      'flex flex-grow self-center justify-center inline-block hover-hide space-x-1 text-white',
     rightcontrols:
       'flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide',
   },
@@ -45,6 +45,7 @@ export const VideoTileControls = ({
           active={isAudioMuted}
           shape={buttonDisplay}
           onClick={audioButtonOnClick}
+          classes={{ rootNoFill: 'text-white' }}
         >
           {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
         </Button>
@@ -54,12 +55,18 @@ export const VideoTileControls = ({
           active={isVideoMuted}
           shape={buttonDisplay}
           onClick={videoButtonOnClick}
+          classes={{ rootNoFill: 'text-white' }}
         >
           {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
         </Button>
       </div>
       <div className={`${classes.rightcontrols}`}>
-        <Settings onChange={onChange} key={0} />
+        <Settings
+          onChange={onChange}
+          key={0}
+          //@ts-ignore
+          buttonClases={{ rootNoFill: 'text-white' }}
+        />
       </div>
     </div>
   );

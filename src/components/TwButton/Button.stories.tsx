@@ -33,7 +33,7 @@ const config = {
 const Basic: Story<ButtonProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
         <Button {...args}>Leave Room</Button>
       </HMSThemeProvider>
     </div>
@@ -87,7 +87,7 @@ const Classes: Story<ButtonProps> = args => {
 const IconOnly: Story<ButtonProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
         <Button iconOnly iconSize="sm" {...args}>
           <MicOffIcon />
         </Button>

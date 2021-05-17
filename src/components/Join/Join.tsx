@@ -26,14 +26,14 @@ interface JoinClasses {
 
 const defaultClasses: JoinClasses = {
   root:
-    'flex dark:bg-black dark:text-white bg-gray-700 justify-center items-center w-screen h-screen text-gray-100 ',
+    'flex dark:bg-black dark:text-white bg-white justify-center items-center w-screen h-screen text-gray-100 ',
   containerRoot:
-    'bg-gray-600 dark:bg-gray-100 bg-gray-500 w-1/2 m-2 p-3 rounded-lg divide-solid',
+    'bg-gray-600 dark:bg-gray-100 bg-white w-1/2 m-2 p-3 rounded-lg divide-solid shadow-sm',
   header: 'text-2xl mb-3 p-3 border-b-2',
   inputRoot: 'flex flex-wrap text-lg',
   inputName: 'w-1/3 flex justify-end items-center',
   inputFieldRoot: 'p-2 w-2/3',
-  inputField: 'rounded-lg bg-gray-700 dark:bg-gray-200 w-full p-1',
+  inputField: 'rounded-lg bg-gray-600 dark:bg-gray-200 w-full p-1',
   joinRoot: 'w-full flex justify-end m-2',
   joinButton: 'bg-brand-main  rounded-lg px-5 py-2 focus:outline-none',
 };
