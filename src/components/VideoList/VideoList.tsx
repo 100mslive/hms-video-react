@@ -1,26 +1,18 @@
-import React, { useRef, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
-import { chunkStreams } from '../../utils';
-import { withClasses } from '../../utils/styles';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import Slider, { Settings } from 'react-slick';
-import { Button } from '../Button';
-import './index.css';
 import {
-  LeftCaratIcon,
-  RightCaratIcon,
-  DownCaratIcon,
-  UpCaratIcon,
-  DotIcon,
-} from '../Icons';
-import { createPortal } from 'react-dom';
-import { CustomArrowProps } from 'react-slick';
+  chunkStreams,
+  getModeAspectRatio,
+  calculateLayoutSizes,
+} from '../../utils';
+import { Carousel } from '../Carousel';
 import { useResizeDetector } from 'react-resize-detector';
-import { combineClasses } from '../../utils';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { resolveClasses } from '../../utils/classes';
+// @ts-ignore
+import { apply } from 'twind';
 
 export interface VideoListClasses extends VideoTileClasses {
   /**
@@ -125,7 +117,13 @@ interface StyledVideoListProps {
    * extra classes added  by user
    */
   classes?: VideoListClasses;
-
+  /**
+   * videoTileClasses
+   */
+  videoTileClasses?: VideoTileClasses;
+  /**
+   *
+   */
   audioLevelEmitter?: any;
 }
 
@@ -139,85 +137,7 @@ const defaultClasses: VideoListClasses = {
   videoTileContainer: 'flex justify-center',
 };
 
-interface IArrowProps extends CustomArrowProps {
-  container: HTMLElement | null;
-}
-
-export function SliderRightArrow({ container, ...props }: IArrowProps) {
-  const { style, onClick } = props;
-  const RightArrow = (
-    <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <Button variant="icon-only" size="sm">
-        <RightCaratIcon />
-      </Button>
-    </div>
-  );
-  return container ? createPortal(RightArrow, container) : RightArrow;
-}
-
-interface IDots {
-  container: HTMLElement | null;
-  index: number;
-}
-
-const HorizontalDots = ({ container, index }: IDots) =>
-  container ? (
-    createPortal(
-      //eslint-disable-next-line jsx-a11y/anchor-is-valid
-      <a className="inline-block">
-        <DotIcon />
-      </a>,
-      container,
-    )
-  ) : (
-    <DotIcon />
-  );
-
-//TODO replace with button
-function SliderDownArrow(props: CustomArrowProps) {
-  const { style, onClick } = props;
-  return (
-    <div
-      className="slick-arrow absolute left-1/2 bottom-0 z-10"
-      style={{ ...style, display: 'block' }}
-      onClick={onClick}
-    >
-      <button className="text-2xl rounded-sm focus:outline-none">
-        <DownCaratIcon />
-      </button>
-    </div>
-  );
-}
-
-//TODO replace with button
-function SliderUpArrow(props: CustomArrowProps) {
-  const { style, onClick } = props;
-  return (
-    <div
-      className="slick-arrow left-1/2 top-0 z-10 absolute"
-      style={{ ...style, display: 'block' }}
-      onClick={onClick}
-    >
-      <button className="text-2xl  rounded-sm focus:outline-none">
-        <UpCaratIcon />
-      </button>
-    </div>
-  );
-}
-
-function SliderLeftArrow({ container, ...props }: IArrowProps) {
-  const { style, onClick } = props;
-  const LeftArrow = (
-    <div className="" style={{ ...style, display: 'block' }} onClick={onClick}>
-      <Button variant="icon-only" size="sm">
-        <LeftCaratIcon />
-      </Button>
-    </div>
-  );
-  return container ? createPortal(LeftArrow, container) : LeftArrow;
-}
-
-export const StyledVideoList = ({
+export const VideoList = ({
   streams,
   overflow = 'scroll-x',
   maxTileCount,
@@ -231,12 +151,19 @@ export const StyledVideoList = ({
   maxColCount,
   videoTileControls,
   showAudioMuteStatus,
-  defaultClasses,
-  classes: extraClasses,
+  classes,
+  videoTileClasses,
   audioLevelEmitter,
 }: StyledVideoListProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const finalClasses: VideoListClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
+  const { tw } = useHMSTheme();
+
+  const parseClass = (s: keyof VideoListClasses) => {
+    return tw(`hmsui-videolist-${s}`, apply(finalClasses[s]));
+  };
 
   const { width = 0, height = 0, ref } = useResizeDetector();
 
@@ -251,71 +178,80 @@ export const StyledVideoList = ({
   } catch (e) {}
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
-  const horizontalDotsContainer = useRef(null);
-  const leftNavContainer = useRef(null);
-  const rightNavContainer = useRef(null);
 
-  var settings: Settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    swipeToSlide: true,
-    vertical: overflow === 'scroll-y',
-    nextArrow:
-      overflow === 'scroll-x' ? (
-        <SliderRightArrow container={rightNavContainer.current} />
-      ) : (
-        <SliderDownArrow />
-      ),
-    prevArrow:
-      overflow === 'scroll-x' ? (
-        <SliderLeftArrow container={leftNavContainer.current} />
-      ) : (
-        <SliderUpArrow />
-      ),
-    customPaging: index => (
-      <HorizontalDots
-        container={horizontalDotsContainer.current}
-        index={index}
-      />
-    ),
-  };
+  const finalAspectRatio = useMemo(() => {
+    if (aspectRatio) {
+      return aspectRatio;
+    } else {
+      const modeAspectRatio = getModeAspectRatio(streams);
+      //Default to 1 if there are no video tracks
+      return {
+        width: !isNaN(modeAspectRatio) && modeAspectRatio ? modeAspectRatio : 1,
+        height: 1,
+      };
+    }
+  }, [aspectRatio, streams]);
 
-  //Split a method that just calculates aspectRatio on the basis of streams, if needed
-
-  //Flooring since there's a bug in react-slick where it converts widdh into a number
-
-  const chunkedStreams = useMemo(() => {
-    return chunkStreams({
-      streams,
+  const count = streams.length;
+  const {
+    tilesInFirstPage,
+    defaultWidth,
+    defaultHeight,
+    lastPageWidth,
+    lastPageHeight,
+    isLastPageDifferentFromFirstPage,
+  } = useMemo(() => {
+    //Flooring since there's a bug in react-slick where it converts widdh into a number
+    return calculateLayoutSizes({
+      count,
       parentWidth: Math.floor(width),
       parentHeight: Math.floor(height),
       maxTileCount,
       maxRowCount,
       maxColCount,
-      aspectRatio,
-      onlyOnePage: overflow === 'hidden',
+      aspectRatio: finalAspectRatio,
     });
   }, [
-    streams,
+    count,
     width,
     height,
     maxTileCount,
     maxRowCount,
     maxColCount,
-    aspectRatio,
+    finalAspectRatio,
+  ]);
+
+  const chunkedStreams = useMemo(() => {
+    return chunkStreams({
+      streams,
+      tilesInFirstPage,
+      onlyOnePage: overflow === 'hidden',
+      isLastPageDifferentFromFirstPage,
+      defaultWidth,
+      defaultHeight,
+      lastPageWidth,
+      lastPageHeight,
+    });
+  }, [
+    streams,
+    tilesInFirstPage,
     overflow,
+    width,
+    height,
+    maxColCount,
+    maxRowCount,
+    finalAspectRatio,
   ]);
 
   return (
-    <div className={`${combinedClasses?.root}`} ref={ref}>
+    <div className={`${parseClass('root')}`} ref={ref}>
       {chunkedStreams && chunkedStreams.length > 0 && (
-        <Slider {...settings} className={`${combinedClasses?.sliderRoot}`}>
+        <Carousel>
           {chunkedStreams.map((streams, page) => {
             return (
-              <div className={`${combinedClasses?.sliderInner}`} key={page}>
+              <div className={`${parseClass('sliderInner')}`} key={page}>
                 <div
-                  className={` ${combinedClasses?.listContainer}   flex-${
+                  className={` ${parseClass('listContainer')}   flex-${
                     maxRowCount
                       ? 'col'
                       : maxColCount
@@ -328,7 +264,7 @@ export const StyledVideoList = ({
                       <div
                         style={{ height: stream.height, width: stream.width }}
                         key={stream.peer.id}
-                        className={`${combinedClasses?.videoTileContainer}`}
+                        className={`${parseClass('videoTileContainer')}`}
                       >
                         <VideoTile
                           {...stream}
@@ -338,19 +274,7 @@ export const StyledVideoList = ({
                           showAudioLevel={showAudioLevel}
                           showAudioMuteStatus={showAudioMuteStatus}
                           aspectRatio={aspectRatio}
-                          classes={{
-                            root: combinedClasses?.videoTileRoot,
-                            videoContainer: combinedClasses?.videoContainer,
-                            avatarContainer: combinedClasses?.avatarContainer,
-                            videoContainerCircle:
-                              combinedClasses?.videoContainerCircle,
-                            video: combinedClasses?.video,
-                            videoCircle: combinedClasses?.videoCircle,
-                            videoLocal: combinedClasses?.videoLocal,
-                            videoCover: combinedClasses?.videoCover,
-                            videoContain: combinedClasses?.videoContain,
-                            borderAudioRoot: combinedClasses?.borderAudioRoot,
-                          }}
+                          classes={videoTileClasses}
                           controlsComponent={
                             videoTileControls && videoTileControls[index]
                           }
@@ -363,21 +287,10 @@ export const StyledVideoList = ({
               </div>
             );
           })}
-        </Slider>
+        </Carousel>
       )}
-
-      <div className="absolute bottom-0 w-full flex justify-center">
-        <div ref={leftNavContainer} />
-        <div ref={horizontalDotsContainer} />
-        <div ref={rightNavContainer} />
-      </div>
     </div>
   );
 };
 
 export type VideoListProps = Omit<StyledVideoListProps, 'defaultClasses'>;
-
-export const VideoList = withClasses<VideoListClasses | undefined>(
-  defaultClasses,
-  'videoList',
-)<StyledVideoListProps>(StyledVideoList);

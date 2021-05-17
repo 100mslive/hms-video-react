@@ -5,11 +5,13 @@ import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileControls } from './Controls';
 import { MessageModal } from '../MessageModal';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
 import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { SettingsFormProps } from '../Settings/Settings';
+import { useHMSTheme } from '../..';
+import { resolveClasses } from '../../utils/classes';
+// @ts-ignore
+import { apply } from 'twind';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -54,18 +56,20 @@ interface StyledPreviewProps {
   classes?: PreviewClasses;
 }
 
-const StyledPreview = ({
+export const Preview = ({
   name,
   joinOnClick,
   goBackOnClick,
   onChange,
   videoTileProps,
-  classes: extraClasses,
-  defaultClasses,
+  classes,
   videoTileClasses,
 }: StyledPreviewProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const { tw } = useHMSTheme();
+  const finalClasses: PreviewClasses = resolveClasses(
+    classes || {},
+    defaultClasses,
+  );
   const [mediaStream, setMediaStream] = useState(new MediaStream());
   const [errorState, setErrorState] = useState(false);
   const [title, setErrorTitle] = useState(String);
@@ -228,12 +232,16 @@ const StyledPreview = ({
     onChange(values);
   }, []);
 
+  const parseClass = (s: keyof PreviewClasses) => {
+    return tw(`hmsui-preview-${s}`, apply(finalClasses[s]));
+  };
+
   return (
     // root
-    <div className={combinedClasses?.root}>
-      <div className={combinedClasses?.containerRoot}>
+    <div className={parseClass('root')}>
+      <div className={parseClass('containerRoot')}>
         {/* header */}
-        <div className={combinedClasses?.header}>
+        <div className={parseClass('header')}>
           {/* messageModal */}
           <MessageModal
             show={showModal}
@@ -272,7 +280,7 @@ const StyledPreview = ({
           />
         </div>
         {/* helloDiv */}
-        <div className={combinedClasses?.helloDiv}>Hello, {name}</div>
+        <div className={parseClass('helloDiv')}>Hello, {name}</div>
         {/* joinButton */}
         <Button
           variant={'emphasized'}
@@ -300,8 +308,3 @@ const StyledPreview = ({
 };
 
 export type PreviewProps = Omit<StyledPreviewProps, 'defaultClasses'>;
-
-export const Preview = withClasses<PreviewClasses | undefined>(
-  defaultClasses,
-  'preview',
-)<StyledPreviewProps>(StyledPreview);

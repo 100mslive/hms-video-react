@@ -1,5 +1,5 @@
 {
-  "version": "0.2.16-38",
+  "version": "0.2.16-43",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -26,7 +26,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint"
+      "pre-commit": "tsdx lint --fix"
     }
   },
   "prettier": {
@@ -79,7 +79,7 @@
     "typescript": "^4.2.3"
   },
   "dependencies": {
-    "@100mslive/100ms-web-sdk": "0.0.12-26",
+    "@100mslive/100ms-web-sdk": "0.0.12-28",
     "@material-ui/core": "^4.11.3",
     "@twind/aspect-ratio": "^0.1.4",
     "autolinker": "^3.14.3",
@@ -92,9 +92,7 @@
     "react-intersection-observer": "^8.31.1",
     "react-markdown": "^6.0.0",
     "react-resize-detector": "^6.6.5",
-    "react-slick": "^0.28.1",
     "remark-gfm": "^1.0.0",
-    "slick-carousel": "^1.8.1",
     "tailwind-percentage-heights-plugin": "^0.1.4",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
     "twind": "^0.16.12"
