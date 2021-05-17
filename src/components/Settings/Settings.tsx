@@ -188,6 +188,7 @@ const StyledSettings = ({
     <>
       <TwButton
         iconOnly
+        active={open}
         variant={'no-fill'}
         iconSize="md"
         onClick={handleClickOpen}

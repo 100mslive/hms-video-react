@@ -51,6 +51,13 @@ const defaultClasses: ControlBarClasses = {
     'flex md:flex-none gap-x-4 md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
 };
 
+function VerticleDevider(){
+  return (
+    <div className="w-px bg-gray-200 h-6">
+    </div>
+  )
+}
+
 export const StyledControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
@@ -68,6 +75,8 @@ export const StyledControlBar = ({
       }}
       key={0}
     />,
+    <VerticleDevider />
+    ,
     <TwButton
       iconOnly
       variant={'no-fill'}
@@ -78,6 +87,8 @@ export const StyledControlBar = ({
     >
       <ShareScreenIcon />
     </TwButton>,
+    <VerticleDevider />
+    ,
     <TwButton
       iconOnly
       variant={'no-fill'}

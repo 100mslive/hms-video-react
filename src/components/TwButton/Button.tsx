@@ -82,8 +82,8 @@ export interface ButtonClasses {
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex text-white items-center justify-center text-base font-medium shadow-sm focus:outline-none',
-  rootFocus: 'focus:ring focus:ring-brand-tint',
+    'inline-flex items-center justify-center text-base font-medium shadow-sm focus:outline-none',
+  rootFocus: 'focus:ring-brand-tint',
   rootDisabled: 'opacity-50 cursor-not-allowed text', // TODO: disbaled hover state
   rootStandard: 'bg-gray-200 hover:bg-gray-300',
   rootDanger: 'bg-red-main hover:bg-red-tint',
@@ -94,9 +94,9 @@ const defaultClasses: ButtonClasses = {
   rootSizeSm: 'px-2.5 py-1.5',
   rootSizeMd: 'px-4 py-2',
   rootSizeLg: 'px-6 py-3',
-  rootIconSizeSm: 'w-6 h-6 p-0.5 rounded-full',
-  rootIconSizeMd: 'w-8 h-8 p-1',
-  rootIconSizeLg: 'w-9 h-9 p-1',
+  rootIconSizeSm: 'w-7 h-7 p-0.5 rounded-full',
+  rootIconSizeMd: 'w-9 h-9 p-1',
+  rootIconSizeLg: 'w-10 h-10 p-1',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
@@ -173,7 +173,7 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   const propClass = 'hmsui-button';
   const className = tw(propClass, twClasses);
   return (
-    <button type="button" className={`${className} icon-size-${size}`} {...props}>
+    <button type="button" className={`${className} icon-size-${size} ${active ? "bg-white text-black" :"text-white hover:bg-gray-200"} ${iconOnly ? "focus:ring-0":"focus:ring"}`} {...props}>
       {icon && !iconRight && <span className="mr-2 btn-icon flex items-center">{icon}</span>}
       {children}
       {iconRight && <span className="ml-2 btn-icon flex items-center">{icon}</span>}
