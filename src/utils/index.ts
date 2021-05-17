@@ -564,6 +564,10 @@ const scrollTo = (element: React.MutableRefObject<any>) => () => {
   element.current.scrollIntoView();
 };
 
+const sigmoid = (z:number) => {
+  return 1 / (1 + Math.exp(-z));
+}
+
 export {
   closeMediaStream,
   getVideoTileLabel,
@@ -579,4 +583,5 @@ export {
   scrollTo,
   getModeAspectRatio,
   calculateLayoutSizes,
+  sigmoid
 };
