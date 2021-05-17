@@ -4,7 +4,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-import { Button } from '../Button';
+import { Button } from '../TwButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
