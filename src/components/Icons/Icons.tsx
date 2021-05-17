@@ -280,10 +280,7 @@ export const MicOnIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const CamOnIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="30"
-    height="30"
     viewBox="0 0 36 36"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -298,10 +295,7 @@ export const CamOnIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const CamOffIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="30"
-    height="30"
     viewBox="0 0 24 24"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -316,10 +310,9 @@ export const CamOffIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const HangUpIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="30"
-    height="30"
+    height="20"
+    width="20"
     viewBox="0 0 22 10"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -434,8 +427,6 @@ export const ClockIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const ShareScreenIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="32"
-    height="32"
     viewBox="0 0 36 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -585,8 +576,8 @@ export const SendIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const ChatIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="24"
-    height="24"
+    height="18"
+    width="18"
     viewBox="0 0 28 28"
     xmlns="http://www.w3.org/2000/svg"
     {...props}

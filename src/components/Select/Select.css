@@ -1,0 +1,23 @@
+.dropdown-select-arrow::after {
+    content: '';
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    right: 16px;
+    height: 0.1rem;
+    width: 10px;
+    transform: rotate(45deg);
+    background-color: #8E8E8E;
+}
+
+.dropdown-select-arrow:before {
+    z-index: 1;
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    height: 0.1rem;
+    width: 10px;
+    transform: rotate(-225deg);
+    background-color: #8E8E8E;
+}

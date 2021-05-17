@@ -1,4 +1,6 @@
-.btn-icon svg {
+.icon-size-sm svg,
+.icon-size-md svg,
+.icon-size-lg svg {
     fill: currentColor;
 }
 

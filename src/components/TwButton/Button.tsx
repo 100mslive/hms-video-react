@@ -89,15 +89,15 @@ const defaultClasses: ButtonClasses = {
   rootStandard: 'bg-gray-200 hover:bg-gray-300',
   rootDanger: 'bg-red-main hover:bg-red-tint',
   rootEmphasized: 'bg-brand-main hover:bg-brand-tint',
-  rootNoFill: 'text-blue-700 shadow-none hover:text-blue-300',
+  rootNoFill: 'hover:opacity-80 shadow-none',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootSizeSm: 'px-2.5 py-1.5',
-  rootSizeMd: 'px-4 h-11',
+  rootSizeMd: 'px-4 py-2',
   rootSizeLg: 'px-6 py-3',
-  rootIconSizeSm: 'w-5 h-5 p-0.5 rounded-full',
-  rootIconSizeMd: 'w-7 h-7 p-1',
-  rootIconSizeLg: 'w-8 h-8 p-1',
+  rootIconSizeSm: 'w-6 h-6 p-0.5 rounded-full',
+  rootIconSizeMd: 'w-8 h-8 p-1',
+  rootIconSizeLg: 'w-9 h-9 p-1',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
@@ -175,9 +175,9 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   const className = tw(propClass, twClasses);
   return (
     <button type="button" className={`${className} icon-size-${size}`} {...props}>
-      {icon && !iconRight && <span className="mr-2 btn-icon">{icon}</span>}
+      {icon && !iconRight && <span className="mr-2 btn-icon flex items-center">{icon}</span>}
       {children}
-      {iconRight && <span className="ml-2 btn-icon">{icon}</span>}
+      {iconRight && <span className="ml-2 btn-icon flex items-center">{icon}</span>}
     </button>
   );
 };
