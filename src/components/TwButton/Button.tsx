@@ -2,7 +2,7 @@ import React, { PropsWithChildren } from 'react';
 // @ts-ignore
 import { style } from 'twind/style';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { resolveClasses } from '../../utils/classes/resolveClasses';
+import { resolveClasses } from '../../utils/classes';
 
 interface StyledButtonProps {
   /**
