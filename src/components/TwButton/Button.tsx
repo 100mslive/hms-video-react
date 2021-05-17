@@ -3,6 +3,7 @@ import React, { PropsWithChildren } from 'react';
 import { style } from 'twind/style';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { resolveClasses } from '../../utils/classes/resolveClasses';
+import './Button.css'
 
 interface StyledButtonProps {
   /**
@@ -84,19 +85,19 @@ const defaultClasses: ButtonClasses = {
   root:
     'inline-flex text-white items-center justify-center text-base font-medium shadow-sm focus:outline-none',
   rootFocus: 'focus:ring focus:ring-brand-tint',
-  rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
+  rootDisabled: 'opacity-50 cursor-not-allowed text', // TODO: disbaled hover state
   rootStandard: 'bg-gray-200 hover:bg-gray-300',
   rootDanger: 'bg-red-main hover:bg-red-tint',
   rootEmphasized: 'bg-brand-main hover:bg-brand-tint',
-  rootNoFill: 'text-white shadow-none',
+  rootNoFill: 'text-blue-700 shadow-none hover:text-blue-300',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootSizeSm: 'px-2.5 py-1.5',
   rootSizeMd: 'px-4 h-11',
   rootSizeLg: 'px-6 py-3',
-  rootIconSizeSm: 'w-6 h-6',
-  rootIconSizeMd: 'w-11 h-11 hover:bg-gray-100',
-  rootIconSizeLg: 'w-14 h-14',
+  rootIconSizeSm: 'w-5 h-5 p-0.5 rounded-full',
+  rootIconSizeMd: 'w-7 h-7 p-1',
+  rootIconSizeLg: 'w-8 h-8 p-1',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
@@ -173,10 +174,10 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   const propClass = 'hmsui-button';
   const className = tw(propClass, twClasses);
   return (
-    <button type="button" className={className} {...props}>
-      {icon && !iconRight && <span className="mr-2">{icon}</span>}
+    <button type="button" className={`${className} icon-size-${size}`} {...props}>
+      {icon && !iconRight && <span className="mr-2 btn-icon">{icon}</span>}
       {children}
-      {iconRight && <span className="ml-2">{icon}</span>}
+      {iconRight && <span className="ml-2 btn-icon">{icon}</span>}
     </button>
   );
 };
