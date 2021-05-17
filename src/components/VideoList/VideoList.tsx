@@ -1,7 +1,11 @@
 import React, { useMemo } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
-import { chunkStreams } from '../../utils';
+import {
+  chunkStreams,
+  getModeAspectRatio,
+  calculateLayoutSizes,
+} from '../../utils';
 import { Carousel } from '../Carousel';
 import { useResizeDetector } from 'react-resize-detector';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
@@ -175,30 +179,68 @@ export const VideoList = ({
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
-  //Split a method that just calculates aspectRatio on the basis of streams, if needed
+  const finalAspectRatio = useMemo(() => {
+    if (aspectRatio) {
+      return aspectRatio;
+    } else {
+      const modeAspectRatio = getModeAspectRatio(streams);
+      //Default to 1 if there are no video tracks
+      return {
+        width: !isNaN(modeAspectRatio) && modeAspectRatio ? modeAspectRatio : 1,
+        height: 1,
+      };
+    }
+  }, [aspectRatio, streams]);
 
-  //Flooring since there's a bug in react-slick where it converts widdh into a number
-
-  const chunkedStreams = useMemo(() => {
-    return chunkStreams({
-      streams,
+  const count = streams.length;
+  const {
+    tilesInFirstPage,
+    defaultWidth,
+    defaultHeight,
+    lastPageWidth,
+    lastPageHeight,
+    isLastPageDifferentFromFirstPage,
+  } = useMemo(() => {
+    //Flooring since there's a bug in react-slick where it converts widdh into a number
+    return calculateLayoutSizes({
+      count,
       parentWidth: Math.floor(width),
       parentHeight: Math.floor(height),
       maxTileCount,
       maxRowCount,
       maxColCount,
-      aspectRatio,
-      onlyOnePage: overflow === 'hidden',
+      aspectRatio: finalAspectRatio,
     });
   }, [
-    streams,
+    count,
     width,
     height,
     maxTileCount,
     maxRowCount,
     maxColCount,
-    aspectRatio,
+    finalAspectRatio,
+  ]);
+
+  const chunkedStreams = useMemo(() => {
+    return chunkStreams({
+      streams,
+      tilesInFirstPage,
+      onlyOnePage: overflow === 'hidden',
+      isLastPageDifferentFromFirstPage,
+      defaultWidth,
+      defaultHeight,
+      lastPageWidth,
+      lastPageHeight,
+    });
+  }, [
+    streams,
+    tilesInFirstPage,
     overflow,
+    width,
+    height,
+    maxColCount,
+    maxRowCount,
+    finalAspectRatio,
   ]);
 
   return (
