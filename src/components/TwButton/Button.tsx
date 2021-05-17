@@ -3,7 +3,6 @@ import React, { PropsWithChildren } from 'react';
 import { style } from 'twind/style';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { resolveClasses } from '../../utils/classes';
-import './Button.css'
 
 interface StyledButtonProps {
   /**

@@ -1,5 +1,7 @@
 import React from 'react';
-import './Select.css';
+import {
+  DownCaratIcon,
+} from '../Icons';
 interface StyledSelect {}
 
 type NativeAttrs = Omit<React.DetailsHTMLAttributes<any>, keyof StyledSelect>;
@@ -11,15 +13,16 @@ const defaultClasses = {};
 
 export const Select: React.FC<SelectProps> = ({ ...props }) => {
   return (
-    <div className="dropdown-select-arrow relative h-auto w-auto">
+    <div className="relative h-auto w-auto hover:opacity-80">
       <select
       name="Pets"
-      className="py-2 px-3 cursor-pointer hover:opacity-90 appearance-none ring-blue-300 placeholder-blueGray-300 relative bg-gray-200 text-white text-lg rounded-lg border-0 shadow outline-none focus:outline-none focus:ring w-full"
+      className="py-2 pl-3 pr-4 cursor-pointer appearance-none ring-blue-300 placeholder-blueGray-300 relative bg-gray-200 text-white text-lg rounded-lg border-0 shadow outline-none focus:outline-none focus:ring w-full"
       >
       <option value="dog">Duma</option>
       <option value="bird">Danillo</option>
       <option value="cat">Guilia</option>
     </select>
+    <DownCaratIcon className='h-3 w-3 absolute cursor-pointer fill-current top-1/2 transform -translate-y-1/2 text-white right-3' />
     </div>
   );
 };
