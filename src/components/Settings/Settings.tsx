@@ -8,7 +8,7 @@ import { Button as TwButton } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { groupBy, Dictionary } from 'lodash';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { resolveClasses } from '../../utils/classes/resolveClasses';
+import { resolveClasses } from '../../utils/classes';
 // @ts-ignore
 import { apply } from 'twind';
 

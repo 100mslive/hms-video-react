@@ -34,75 +34,6 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
   tracks.forEach(track => track.stop());
 };
 
-const colToRowTransform = (page: JSX.Element[], maxColCount: number) => {
-  let cols = maxColCount;
-  let rows = Math.ceil(page.length / cols);
-  let remLastRowElem = page.length % cols;
-  let grid: JSX.Element[][] = [];
-  let newArray: JSX.Element[] = [];
-
-  let last = 0;
-  for (let i = 0; i < cols && last < page.length; i++) {
-    for (let j = 0; j < rows && last < page.length; j++) {
-      if (j === rows - 1 && page.length % cols !== 0) {
-        if (remLastRowElem === 0) {
-          continue;
-        }
-        remLastRowElem--;
-      }
-      if (!grid[j]) {
-        grid[j] = [];
-      }
-      grid[j][i] = page[last];
-      last++;
-    }
-  }
-  last = 0;
-  for (let i = 0; i < rows; i++) {
-    for (let j = 0; j < cols; j++) {
-      if (grid[i] && grid[i][j]) {
-        newArray[last++] = grid[i][j];
-      }
-    }
-  }
-  return newArray;
-};
-
-const rowToColTransform = (page: JSX.Element[], maxRowCount: number) => {
-  let rows = maxRowCount;
-  let cols = Math.ceil(page.length / rows);
-  let remLastColElem = page.length % rows;
-  let grid: JSX.Element[][] = [];
-  let newArray: JSX.Element[] = [];
-
-  let last = 0;
-  for (let i = 0; i < rows && last < page.length; i++) {
-    for (let j = 0; j < cols && last < page.length; j++) {
-      if (j === cols - 1 && page.length % rows !== 0) {
-        if (remLastColElem === 0) {
-          continue;
-        }
-        remLastColElem--;
-      }
-      if (!grid[i]) {
-        grid[i] = [];
-      }
-      grid[i][j] = page[last];
-      last++;
-    }
-  }
-  last = 0;
-  for (let i = 0; i < cols; i++) {
-    for (let j = 0; j < rows; j++) {
-      if (grid[j][i]) {
-        newArray[last++] = grid[j][i];
-      }
-    }
-  }
-
-  return newArray;
-};
-
 const chunk = <T>(elements: T[], chunkSize: number, onlyOnePage: boolean) => {
   return elements.reduce((resultArray: T[][], tile: T, index: number) => {
     const chunkIndex = Math.floor(index / chunkSize);
@@ -119,31 +50,20 @@ const chunk = <T>(elements: T[], chunkSize: number, onlyOnePage: boolean) => {
 };
 
 interface GetTileSizesInList {
-  streams: MediaStreamWithInfo[];
+  count: number;
   parentWidth: number;
   parentHeight: number;
   maxTileCount?: number;
   maxRowCount?: number;
   maxColCount?: number;
-  aspectRatio?: {
+  aspectRatio: {
     width: number;
     height: number;
   };
-  onlyOnePage: boolean;
 }
 
-function chunkStreams({
-  streams,
-  parentWidth,
-  parentHeight,
-  maxTileCount,
-  maxRowCount,
-  maxColCount,
-  aspectRatio,
-  onlyOnePage,
-}: GetTileSizesInList) {
-  //TODO needs massive refactoring
-  const modeAspectRatio = mode(
+const getModeAspectRatio = (streams: MediaStreamWithInfo[]) => {
+  return mode(
     streams
       .filter(
         stream =>
@@ -158,7 +78,23 @@ function chunkStreams({
         return (width ? width : 1) / (height ? height : 1);
       }),
   );
+};
 
+interface GetTileSizes {
+  parentWidth: number;
+  parentHeight: number;
+  count: number;
+  maxCount: number;
+  aspectRatio: { width: number; height: number };
+}
+
+const getTileSizesWithPageConstraint = ({
+  parentWidth,
+  parentHeight,
+  count,
+  maxCount,
+  aspectRatio,
+}: GetTileSizes) => {
   let defaultWidth = 0;
   let defaultHeight = 0;
   let lastPageWidth = 0;
@@ -166,120 +102,255 @@ function chunkStreams({
   let isLastPageDifferentFromFirstPage = false;
   let tilesInFirstPage = 0;
   let tilesinLastPage = 0;
-  //Default to 1 if there are no video tracks
-  const finalAspectRatio = aspectRatio
-    ? aspectRatio
-    : {
-        width: !isNaN(modeAspectRatio) && modeAspectRatio ? modeAspectRatio : 1,
-        height: 1,
-      };
-  if (maxTileCount) {
-    const { width: initialWidth, height: initialHeight } = largestRect(
+  const { width: initialWidth, height: initialHeight } = largestRect(
+    parentWidth,
+    parentHeight,
+    Math.min(count, maxCount),
+    aspectRatio.width,
+    aspectRatio.height,
+  );
+  defaultWidth = initialWidth;
+  defaultHeight = initialHeight;
+  tilesInFirstPage = Math.min(count, maxCount);
+  tilesinLastPage = count % maxCount;
+  isLastPageDifferentFromFirstPage = tilesinLastPage > 0 && count > maxCount;
+  if (isLastPageDifferentFromFirstPage) {
+    const { width: remWidth, height: remHeight } = largestRect(
       parentWidth,
       parentHeight,
-      Math.min(streams.length, maxTileCount),
-      finalAspectRatio.width,
-      finalAspectRatio.height,
+      tilesinLastPage,
+      aspectRatio.width,
+      aspectRatio.height,
     );
-    defaultWidth = initialWidth;
-    defaultHeight = initialHeight;
-    tilesInFirstPage = Math.min(streams.length, maxTileCount);
-    tilesinLastPage = streams.length % maxTileCount;
-    isLastPageDifferentFromFirstPage =
-      tilesinLastPage > 0 && streams.length > maxTileCount;
-    if (isLastPageDifferentFromFirstPage) {
-      const { width: remWidth, height: remHeight } = largestRect(
-        parentWidth,
-        parentHeight,
-        tilesinLastPage,
-        finalAspectRatio.width,
-        finalAspectRatio.height,
-      );
-      lastPageWidth = remWidth;
-      lastPageHeight = remHeight;
-    }
-  } else if (maxRowCount) {
+    lastPageWidth = remWidth;
+    lastPageHeight = remHeight;
+  }
+  return {
+    tilesInFirstPage,
+    defaultWidth,
+    defaultHeight,
+    lastPageWidth,
+    lastPageHeight,
+    isLastPageDifferentFromFirstPage,
+  };
+};
+
+const getTileSizesWithRowConstraint = ({
+  parentWidth,
+  parentHeight,
+  count,
+  maxCount,
+  aspectRatio,
+}: GetTileSizes) => {
+  let defaultWidth = 0;
+  let defaultHeight = 0;
+  let lastPageWidth = 0;
+  let lastPageHeight = 0;
+  let isLastPageDifferentFromFirstPage = false;
+  let tilesInFirstPage = 0;
+  let tilesinLastPage = 0;
+  const rows = Math.min(
+    Math.ceil(
+      Math.sqrt(
+        (count * (aspectRatio.width / aspectRatio.height)) /
+          (parentWidth / parentHeight),
+      ),
+    ),
+    maxCount,
+  );
+  const height = parentHeight / rows;
+  const width = height * (aspectRatio.width / aspectRatio.height);
+  const cols = Math.floor(parentWidth / width);
+  defaultWidth = width;
+  defaultHeight = height;
+  tilesInFirstPage = Math.min(count, rows * cols);
+  tilesinLastPage = count % (rows * cols);
+  isLastPageDifferentFromFirstPage = tilesinLastPage > 0 && count > rows * cols;
+  if (isLastPageDifferentFromFirstPage) {
     const rows = Math.min(
       Math.ceil(
         Math.sqrt(
-          (streams.length *
-            (finalAspectRatio.width / finalAspectRatio.height)) /
+          (tilesinLastPage * (aspectRatio.width / aspectRatio.height)) /
             (parentWidth / parentHeight),
         ),
       ),
-      maxRowCount,
+      maxCount,
     );
     const height = parentHeight / rows;
-    const width = height * (finalAspectRatio.width / finalAspectRatio.height);
-    const cols = Math.floor(parentWidth / width);
-    defaultWidth = width;
-    defaultHeight = height;
-    tilesInFirstPage = Math.min(streams.length, rows * cols);
-    tilesinLastPage = streams.length % (rows * cols);
-    isLastPageDifferentFromFirstPage =
-      tilesinLastPage > 0 && streams.length > rows * cols;
-    if (isLastPageDifferentFromFirstPage) {
-      const rows = Math.min(
-        Math.ceil(
-          Math.sqrt(
-            (tilesinLastPage *
-              (finalAspectRatio.width / finalAspectRatio.height)) /
-              (parentWidth / parentHeight),
-          ),
-        ),
-        maxRowCount,
-      );
-      const height = parentHeight / rows;
-      const width = height * (finalAspectRatio.width / finalAspectRatio.height);
-      lastPageHeight = height;
-      lastPageWidth = width;
-    }
-  } else if (maxColCount) {
+    const width = height * (aspectRatio.width / aspectRatio.height);
+    lastPageHeight = height;
+    lastPageWidth = width;
+  }
+  return {
+    tilesInFirstPage,
+    defaultWidth,
+    defaultHeight,
+    lastPageWidth,
+    lastPageHeight,
+    isLastPageDifferentFromFirstPage,
+  };
+};
+
+const getTileSizesWithColConstraint = ({
+  parentWidth,
+  parentHeight,
+  count,
+  maxCount,
+  aspectRatio,
+}: GetTileSizes) => {
+  let defaultWidth = 0;
+  let defaultHeight = 0;
+  let lastPageWidth = 0;
+  let lastPageHeight = 0;
+  let isLastPageDifferentFromFirstPage = false;
+  let tilesInFirstPage = 0;
+  let tilesinLastPage = 0;
+  const cols = Math.min(
+    Math.ceil(
+      Math.sqrt(
+        (count * (parentWidth / parentHeight)) /
+          (aspectRatio.width / aspectRatio.height),
+      ),
+    ),
+    maxCount,
+  );
+  const width = parentWidth / cols;
+  const height = width / (aspectRatio.width / aspectRatio.height);
+  const rows = Math.floor(parentHeight / height);
+  defaultHeight = height;
+  defaultWidth = width;
+  tilesInFirstPage = Math.min(count, rows * cols);
+  tilesinLastPage = count % (rows * cols);
+  isLastPageDifferentFromFirstPage = tilesinLastPage > 0 && count > rows * cols;
+  if (isLastPageDifferentFromFirstPage) {
     const cols = Math.min(
       Math.ceil(
         Math.sqrt(
-          (streams.length * (parentWidth / parentHeight)) /
-            (finalAspectRatio.width / finalAspectRatio.height),
+          (tilesinLastPage * (parentWidth / parentHeight)) /
+            (aspectRatio.width / aspectRatio.height),
         ),
       ),
-      maxColCount,
+      maxCount,
     );
     const width = parentWidth / cols;
-    const height = width / (finalAspectRatio.width / finalAspectRatio.height);
-    const rows = Math.floor(parentHeight / height);
-    defaultHeight = height;
-    defaultWidth = width;
-    tilesInFirstPage = Math.min(streams.length, rows * cols);
-    tilesinLastPage = streams.length % (rows * cols);
-    isLastPageDifferentFromFirstPage =
-      tilesinLastPage > 0 && streams.length > rows * cols;
-    if (isLastPageDifferentFromFirstPage) {
-      const cols = Math.min(
-        Math.ceil(
-          Math.sqrt(
-            (tilesinLastPage * (parentWidth / parentHeight)) /
-              (finalAspectRatio.width / finalAspectRatio.height),
-          ),
-        ),
-        maxColCount,
-      );
-      const width = parentWidth / cols;
-      const height = width / (finalAspectRatio.width / finalAspectRatio.height);
-      lastPageHeight = height;
-      lastPageWidth = width;
-    }
+    const height = width / (aspectRatio.width / aspectRatio.height);
+    lastPageHeight = height;
+    lastPageWidth = width;
+  }
+  return {
+    tilesInFirstPage,
+    defaultWidth,
+    defaultHeight,
+    lastPageWidth,
+    lastPageHeight,
+    isLastPageDifferentFromFirstPage,
+  };
+};
+
+function calculateLayoutSizes({
+  count,
+  parentWidth,
+  parentHeight,
+  maxTileCount,
+  maxRowCount,
+  maxColCount,
+  aspectRatio,
+}: GetTileSizesInList) {
+  let defaultWidth = 0;
+  let defaultHeight = 0;
+  let lastPageWidth = 0;
+  let lastPageHeight = 0;
+  let isLastPageDifferentFromFirstPage = false;
+  let tilesInFirstPage = 0;
+
+  if (maxTileCount) {
+    ({
+      tilesInFirstPage,
+      defaultWidth,
+      defaultHeight,
+      lastPageWidth,
+      lastPageHeight,
+      isLastPageDifferentFromFirstPage,
+    } = getTileSizesWithPageConstraint({
+      parentWidth,
+      parentHeight,
+      count,
+      maxCount: maxTileCount,
+      aspectRatio,
+    }));
+  } else if (maxRowCount) {
+    ({
+      tilesInFirstPage,
+      defaultWidth,
+      defaultHeight,
+      lastPageWidth,
+      lastPageHeight,
+      isLastPageDifferentFromFirstPage,
+    } = getTileSizesWithRowConstraint({
+      parentWidth,
+      parentHeight,
+      count,
+      maxCount: maxRowCount,
+      aspectRatio,
+    }));
+  } else if (maxColCount) {
+    ({
+      tilesInFirstPage,
+      defaultWidth,
+      defaultHeight,
+      lastPageWidth,
+      lastPageHeight,
+      isLastPageDifferentFromFirstPage,
+    } = getTileSizesWithColConstraint({
+      parentWidth,
+      parentHeight,
+      count,
+      maxCount: maxColCount,
+      aspectRatio,
+    }));
   } else {
     const { width, height } = largestRect(
       parentWidth,
       parentHeight,
-      streams.length,
-      finalAspectRatio.width,
-      finalAspectRatio.height,
+      count,
+      aspectRatio.width,
+      aspectRatio.height,
     );
     defaultWidth = width;
     defaultHeight = height;
-    tilesInFirstPage = streams.length;
+    tilesInFirstPage = count;
   }
+  return {
+    tilesInFirstPage,
+    defaultWidth,
+    defaultHeight,
+    lastPageWidth,
+    lastPageHeight,
+    isLastPageDifferentFromFirstPage,
+  };
+}
+
+interface ChunkStreams {
+  streams: MediaStreamWithInfo[];
+  tilesInFirstPage: number;
+  onlyOnePage: boolean;
+  isLastPageDifferentFromFirstPage: boolean;
+  defaultWidth: number;
+  defaultHeight: number;
+  lastPageWidth: number;
+  lastPageHeight: number;
+}
+
+const chunkStreams = ({
+  streams,
+  tilesInFirstPage,
+  onlyOnePage,
+  isLastPageDifferentFromFirstPage,
+  defaultWidth,
+  defaultHeight,
+  lastPageWidth,
+  lastPageHeight,
+}: ChunkStreams) => {
   const chunks = chunk(streams, tilesInFirstPage, onlyOnePage);
   return chunks.map((chunk, page) => {
     return chunk.map(stream => {
@@ -295,7 +366,7 @@ function chunkStreams({
       return { ...stream, width, height };
     });
   });
-}
+};
 
 function mode(array: any[]) {
   if (array.length === 0) {
@@ -393,58 +464,6 @@ const largestRect = (
   return best;
 };
 
-export interface getTileContainerDimensionsProps {
-  videoTrack: MediaStreamTrack;
-  parentWidth: number;
-  parentHeight: number;
-  objectFit?: 'contain' | 'cover';
-  aspectRatio?: {
-    width: number;
-    height: number;
-  };
-  isSquareOrCircle?: boolean;
-}
-
-const getTileContainerDimensions = ({
-  videoTrack,
-  objectFit,
-  aspectRatio,
-  parentWidth,
-  parentHeight,
-  isSquareOrCircle,
-}: getTileContainerDimensionsProps) => {
-  const { width: selfWidth, height: selfHeight } = videoTrack
-    ? videoTrack.getSettings()
-    : { width: parentWidth, height: parentHeight };
-
-  const containerAspectRatio =
-    objectFit === 'cover'
-      ? { width: parentWidth, height: parentHeight }
-      : { width: selfWidth, height: selfHeight };
-
-  const containerAspectRatioAfterUserOverride =
-    aspectRatio && objectFit === 'cover' ? aspectRatio : containerAspectRatio;
-
-  const containerAspectRatioAfterShapeOverride = {
-    width: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.width,
-    height: isSquareOrCircle ? 1 : containerAspectRatioAfterUserOverride.height,
-  };
-
-  const { width, height } =
-    containerAspectRatioAfterShapeOverride.width &&
-    containerAspectRatioAfterShapeOverride.height
-      ? largestRect(
-          parentWidth,
-          parentHeight,
-          1,
-          containerAspectRatioAfterShapeOverride.width,
-          containerAspectRatioAfterShapeOverride.height,
-        )
-      : { width: parentWidth, height: parentHeight };
-
-  return { width, height };
-};
-
 interface GenerateClassNameProps {
   seed: string;
   componentName: string;
@@ -515,17 +534,54 @@ function combineClasses(
     : defaultClasses;
 }
 
+const generateRandomString = () =>
+  Math.random()
+    .toString(36)
+    .substring(7);
+
+const mergeRefs = (
+  ...refs: (React.MutableRefObject<any> | ((node?: Element | null) => void))[]
+) => {
+  const filteredRefs = refs.filter(Boolean);
+  if (!filteredRefs.length) {
+    return null;
+  }
+  if (filteredRefs.length === 0) {
+    return filteredRefs[0];
+  }
+  return (inst: Element | null) => {
+    for (const ref of filteredRefs) {
+      if (typeof ref === 'function') {
+        ref(inst);
+      } else if (ref) {
+        ref.current = inst;
+      }
+    }
+  };
+};
+
+const scrollTo = (element: React.MutableRefObject<any>) => () => {
+  element.current.scrollIntoView();
+};
+
+const sigmoid = (z:number) => {
+  return 1 / (1 + Math.exp(-z));
+}
+
 export {
   closeMediaStream,
   getVideoTileLabel,
-  colToRowTransform,
-  rowToColTransform,
   getInitialsFromName,
   largestRect,
-  getTileContainerDimensions,
   generateClassName,
   addGlobalCss,
   combineClasses,
   chunkStreams,
   mode,
+  generateRandomString,
+  mergeRefs,
+  scrollTo,
+  getModeAspectRatio,
+  calculateLayoutSizes,
+  sigmoid
 };

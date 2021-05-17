@@ -9,7 +9,7 @@ import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { SettingsFormProps } from '../Settings/Settings';
 import { useHMSTheme } from '../..';
-import { resolveClasses } from '../../utils/classes/resolveClasses';
+import { resolveClasses } from '../../utils/classes';
 // @ts-ignore
 import { apply } from 'twind';
 

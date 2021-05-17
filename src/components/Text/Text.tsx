@@ -1,6 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import { tw, style, apply } from 'twind/style';
-import { camelize, resolveClasses } from '../../utils/classes/resolveClasses';
+import { camelize, resolveClasses } from '../../utils/classes';
 
 type TextTags =
   | 'h1'

@@ -4,27 +4,11 @@ import { AudioLevelDisplayType } from '../../types';
 import { DisplayShapes } from '../Video';
 import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
-import { AudioLevelBorder } from './Border';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
+import { AudioLevelBorder, AudioLevelIndicatorClasses } from './Border';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 
-export interface AudioLevelIndicatorClasses {
-  /**
-   * Style attached to avatar
-   */
-  root?: string;
-  /**
-   * Style attached when display shape is circle
-   */
-  videoCircle?: string;
-}
 
-const defaultClasses: AudioLevelIndicatorClasses = {
-  root: 'w-full h-full absolute left-0 top-0 rounded-lg',
-  videoCircle: 'rounded-full',
-};
-export interface StyledAudioLevelIndicatorProps {
+export interface AudioLevelIndicatorProps {
   peerId?: string;
   audioLevelEmitter?: EventEmitter;
   type: AudioLevelDisplayType;
@@ -33,10 +17,9 @@ export interface StyledAudioLevelIndicatorProps {
   color?: string;
   displayShape?: DisplayShapes;
   classes?: AudioLevelIndicatorClasses;
-  defaultClasses?: AudioLevelIndicatorClasses;
 }
 
-const StyledAudioLevelIndicator = ({
+export const AudioLevelIndicator = ({
   peerId,
   audioLevelEmitter,
   type,
@@ -44,11 +27,8 @@ const StyledAudioLevelIndicator = ({
   level = 0,
   color,
   displayShape = 'rectangle',
-  classes: extraClasses,
-  defaultClasses,
-}: StyledAudioLevelIndicatorProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  classes,
+}: AudioLevelIndicatorProps) => {
   const [peerAudioLevel, setPeerAudioLevel] = useState(0);
   useEffect(() => {
     const handleAudioLevelUpdate = (speaker: HMSSpeaker) => {
@@ -73,22 +53,10 @@ const StyledAudioLevelIndicator = ({
           level={audioLevel}
           displayShape={displayShape}
           color={color}
-          classes={combinedClasses}
+          classes={classes}
         />
       );
     default:
       return null;
   }
 };
-
-export type AudioLevelIndicatorProps = Omit<
-  StyledAudioLevelIndicatorProps,
-  'defaultClasses'
->;
-
-export const AudioLevelIndicator = withClasses<
-  AudioLevelIndicatorClasses | undefined
->(
-  defaultClasses,
-  'audioLevelIndicator',
-)<StyledAudioLevelIndicatorProps>(StyledAudioLevelIndicator);

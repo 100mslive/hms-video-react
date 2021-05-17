@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { resolveClasses } from '../../utils/classes/resolveClasses';
+import { resolveClasses } from '../../utils/classes';
 //@ts-ignore
 import { apply } from 'twind';
 import { Button } from '../TwButton';
