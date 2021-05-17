@@ -48,7 +48,7 @@ export const hmsUiClassParserGenerator = <T extends {}>({
   const finalClasses = resolveClasses(classes || {}, defaultClasses);
   return tw(
     `${tag}-${s}`,
-    (customClasses![s] as unknown) as string,
+    (customClasses && customClasses[s] as unknown) as string,
     apply(finalClasses[s]),
   );
 };
