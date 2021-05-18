@@ -11955,8 +11955,8 @@
     "object-assign" "^4.1.1"
     "prop-types" "^15.6.2"
 
-"react@file:../../100ms-web-v2/node_modules/react":
-  "resolved" "file:../../100ms-web-v2/node_modules/react"
+"react@file:../100ms-web-v2/node_modules/react":
+  "resolved" "file:../100ms-web-v2/node_modules/react"
   "version" "17.0.2"
   dependencies:
     "loose-envify" "^1.1.0"

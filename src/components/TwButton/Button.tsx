@@ -95,7 +95,7 @@ const defaultClasses: ButtonClasses = {
   rootSizeMd: 'px-4 py-2',
   rootSizeLg: 'px-6 py-3',
   rootIconSizeSm: 'w-7 h-7 p-0.5 rounded-full',
-  rootIconSizeMd: 'w-9 h-9 p-1',
+  rootIconSizeMd: 'w-8 h-8 p-1',
   rootIconSizeLg: 'w-10 h-10 p-1',
 };
 

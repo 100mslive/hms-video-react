@@ -10,7 +10,8 @@
     width: 24px;
 }
 
-.icon-size-sm>.btn-icon {
+.icon-size-sm>.btn-icon,
+.icon-size-sm>svg {
     height: 20px;
     width: 20px;
 }
