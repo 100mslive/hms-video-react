@@ -8,7 +8,7 @@ export interface HMSPeer {
   name: string;
   role?: string;
   isLocal: boolean;
-  isStarred: boolean;
+  isStarred?: boolean;
   audioLevel: number;
   videoTrack?: HMSTrackID;
   audioTrack?: HMSTrackID;
@@ -19,5 +19,5 @@ export interface HMSTrack {
   id: HMSTrackID;
   source?: HMSTrackSource;
   type: HMSTrackType;
-  nativeTrack: MediaStreamTrack;
+  muted: boolean;
 }
