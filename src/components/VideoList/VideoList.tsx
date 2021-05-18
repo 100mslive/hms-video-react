@@ -129,7 +129,7 @@ interface StyledVideoListProps {
 
 const defaultClasses: VideoListClasses = {
   root:
-    'relative h-full w-full flex flex-wrap justify-center content-evenly justify-items-center',
+    'relative h-full w-full flex flex-wrap justify-center content-evenly justify-items-center bg-white dark:bg-black',
   sliderRoot: 'w-full h-full',
   sliderInner: 'w-full h-full',
   listContainer:

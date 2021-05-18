@@ -1,6 +1,5 @@
 import React,{useCallback} from 'react';
 import { Participant, Peer } from '../../types';
-import { Button } from '../TwButton';
 import { VolumeIcon, Logo } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
