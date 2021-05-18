@@ -104,7 +104,7 @@ const defaultClasses: ButtonClasses = {
   rootIconOnlyStandard:'text-black hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
   rootIconOnlyDanger:'text-black hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
   rootIconOnlyStandardActive:'dark:bg-white dark:text-black bg-gray-200 text-white',
-  rootIconOnlyDangerActive:'bg-red-main hover:bg-red-tint text-white',
+  rootIconOnlyDangerActive:'bg-red-main hover:bg-red-tint dark:hover:bg-red-tint text-white dark:text-white',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({

@@ -1,12 +1,9 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import { AudioLevelDisplayType } from '../../../types';
 import { Button } from '../../TwButton';
 import { MicOffIcon } from '../../Icons';
 import '../index.css';
-//@ts-ignore
-import { apply } from 'twind';
-import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
-import { resolveClasses } from '../../../utils/classes';
+import { hmsUiClassParserGenerator } from '../../../utils/classes';
 
 export interface VideoTileControlsClasses {
   root?: string;
@@ -17,7 +14,7 @@ export interface VideoTileControlsClasses {
   hoverHide?: string;
   label?: string;
 }
-interface StyledVideoTileControlsProps {
+export interface VideoTileControlsProps {
   label?: string;
   isAudioMuted?: boolean;
   showGradient?: boolean;
@@ -26,7 +23,6 @@ interface StyledVideoTileControlsProps {
   showAudioLevel?: boolean;
   audioLevelDisplayType?: AudioLevelDisplayType;
   audioLevel?: number;
-  defaultClasses?: VideoTileControlsClasses;
   classes?: VideoTileControlsClasses;
 }
 
@@ -43,6 +39,10 @@ const defaultClasses: VideoTileControlsClasses = {
   label: 'mt-1 mx-1',
 };
 
+const customClasses: VideoTileControlsClasses = {
+  controls:'hmsui-videoTile-showControlsOnHoverChild'
+}
+
 export const VideoTileControls = ({
   label = '',
   isAudioMuted = false,
@@ -53,30 +53,29 @@ export const VideoTileControls = ({
   audioLevelDisplayType = 'inline-wave',
   audioLevel,
   classes,
-}: StyledVideoTileControlsProps) => {
-  const finalClasses: VideoTileControlsClasses = resolveClasses(
-    classes || {},
-    defaultClasses,
+}: VideoTileControlsProps) => {
+  const parseClass = useCallback(
+    hmsUiClassParserGenerator<VideoTileControlsClasses>({
+      classes,
+      customClasses,
+      defaultClasses,
+      tag: 'hmsui-videoTileControls',
+    }),
+    [],
   );
-  const { tw } = useHMSTheme();
-  const parseClass = (s: keyof VideoTileControlsClasses) => {
-    return tw(`hmsui-videocontrols-${s}`, apply(finalClasses[s]));
-  };
   return (
     <div className={`${parseClass('root')}`}>
       <div className={`${showGradient ? parseClass('gradient') : ''}`} />
       <div className={`${parseClass('controlsInner')}`}>
         <div className="flex justify-center">
-          {showAudioMuteStatus && isAudioMuted && !allowRemoteMute && (
-            <MicOffIcon />
-          )}
-          {isAudioMuted && allowRemoteMute && (
+          {isAudioMuted && (
             <Button
               iconOnly
-              active={true}
+              active
               size={'md'}
               shape="circle"
-              classes={{ root: 'to-be-overridden' }}
+              variant="danger"
+              classes={{root:"dark"}}
             >
               <MicOffIcon />
             </Button>
@@ -85,7 +84,8 @@ export const VideoTileControls = ({
         <div className={`${parseClass('label')}`}>{label}</div>
         <div className={`${parseClass('controls')}`}>
           {!isAudioMuted && allowRemoteMute && (
-            <Button iconOnly size={'md'}>
+            <Button iconOnly size={'md'}               classes={{root:"dark"}}
+            >
               <MicOffIcon />
             </Button>
           )}
@@ -94,8 +94,3 @@ export const VideoTileControls = ({
     </div>
   );
 };
-
-export type VideoTileControlsProps = Omit<
-  StyledVideoTileControlsProps,
-  'defaultClasses'
->;
