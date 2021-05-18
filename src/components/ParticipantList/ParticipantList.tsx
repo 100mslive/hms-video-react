@@ -10,7 +10,7 @@ import {
 import { Participant } from '../../types';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-import { Button } from '../Button';
+import { Button } from '../TwButton';
 import { groupBy } from 'lodash';
 import './ParticipantList.css';
 
@@ -148,7 +148,7 @@ export const StyledParticipantList = ({
                           className={`${combinedClasses?.menuIconContainer}`}
                         >
                           <Button
-                            variant={'icon-only'}
+                            iconOnly
                             shape={'circle'}
                             size={'sm'}
                             classes={{
@@ -163,7 +163,7 @@ export const StyledParticipantList = ({
                             )}
                           </Button>
                           <Button
-                            variant={'icon-only'}
+                            iconOnly
                             shape={'circle'}
                             size={'sm'}
                             active={participant.isStarMarked}

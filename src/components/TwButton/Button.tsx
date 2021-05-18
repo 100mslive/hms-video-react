@@ -82,21 +82,21 @@ export interface ButtonClasses {
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex text-white items-center justify-center text-base font-medium shadow-sm focus:outline-none',
-  rootFocus: 'focus:ring focus:ring-brand-tint',
-  rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
+    'inline-flex items-center justify-center text-base font-medium shadow-sm focus:outline-none',
+  rootFocus: 'focus:ring-brand-tint',
+  rootDisabled: 'opacity-50 cursor-not-allowed text', // TODO: disbaled hover state
   rootStandard: 'bg-gray-200 hover:bg-gray-300',
   rootDanger: 'bg-red-main hover:bg-red-tint',
   rootEmphasized: 'bg-brand-main hover:bg-brand-tint',
-  rootNoFill: 'text-white shadow-none',
+  rootNoFill: 'hover:opacity-80 shadow-none',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootSizeSm: 'px-2.5 py-1.5',
-  rootSizeMd: 'px-4 h-11',
+  rootSizeMd: 'px-4 py-2',
   rootSizeLg: 'px-6 py-3',
-  rootIconSizeSm: 'w-6 h-6',
-  rootIconSizeMd: 'w-11 h-11 hover:bg-gray-100',
-  rootIconSizeLg: 'w-14 h-14',
+  rootIconSizeSm: 'w-7 h-7 p-0.5 rounded-full',
+  rootIconSizeMd: 'w-9 h-9 p-1',
+  rootIconSizeLg: 'w-10 h-10 p-1',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
@@ -173,10 +173,10 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   const propClass = 'hmsui-button';
   const className = tw(propClass, twClasses);
   return (
-    <button type="button" className={className} {...props}>
-      {icon && !iconRight && <span className="mr-2">{icon}</span>}
+    <button type="button" className={`${className} icon-size-${size} ${active ? "bg-white text-black" :"text-white hover:bg-gray-200"} ${iconOnly ? "focus:ring-0":"focus:ring"}`} {...props}>
+      {icon && !iconRight && <span className="mr-2 btn-icon flex items-center">{icon}</span>}
       {children}
-      {iconRight && <span className="ml-2">{icon}</span>}
+      {iconRight && <span className="ml-2 btn-icon flex items-center">{icon}</span>}
     </button>
   );
 };

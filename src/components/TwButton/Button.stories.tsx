@@ -32,7 +32,7 @@ const config = {
 
 const Basic: Story<ButtonProps> = args => {
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
+    <div className="w-full h-1/2 flex justify-center py-4">
       <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
         <Button {...args}>Leave Room</Button>
       </HMSThemeProvider>
@@ -42,7 +42,7 @@ const Basic: Story<ButtonProps> = args => {
 
 const WithIcon: Story<ButtonProps> = args => {
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
+    <div className="w-full h-1/2 flex justify-center py-4">
       <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
         <Button icon={<MicOffIcon />} {...args}>
           Leave Room
@@ -54,7 +54,7 @@ const WithIcon: Story<ButtonProps> = args => {
 
 const IconRight: Story<ButtonProps> = args => {
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
+    <div className="w-full h-1/2 flex justify-center py-4">
       <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
         <Button icon={<MicOffIcon />} iconRight={true} {...args}>
           Leave Room
@@ -66,7 +66,7 @@ const IconRight: Story<ButtonProps> = args => {
 
 const Classes: Story<ButtonProps> = args => {
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
+    <div className="w-full h-1/2 flex justify-center py-4">
       <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
         <Button
           classes={{
@@ -86,10 +86,10 @@ const Classes: Story<ButtonProps> = args => {
 
 const IconOnly: Story<ButtonProps> = args => {
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+    <div className="w-full h-1/2 flex justify-center py-4">
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
         <Button iconOnly iconSize="sm" {...args}>
-          <MicOffIcon />
+          <MicOffIcon fill="white" />
         </Button>
       </HMSThemeProvider>
     </div>
@@ -98,7 +98,7 @@ const IconOnly: Story<ButtonProps> = args => {
 
 const Custom: Story<ButtonProps> = args => {
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
+    <div className="w-full h-1/2 flex justify-center py-4">
       <HMSThemeProvider config={config} appBuilder={{ theme: 'dark' }}>
         <Button {...args}>Custom Config</Button>
       </HMSThemeProvider>

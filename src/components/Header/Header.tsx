@@ -2,7 +2,7 @@ import React from 'react';
 import { Participant, Peer } from '../../types';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-import { Button } from '../Button';
+import { Button } from '../TwButton';
 import { VolumeIcon, Logo } from '../Icons';
 
 export interface HeaderClasses {
