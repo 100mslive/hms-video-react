@@ -1,41 +1,41 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { InputField, InputFieldProps } from './index';
+import { Input, InputProps } from './index';
 
 const meta: Meta = {
   title: 'Input Field',
-  component: InputField,
+  component: Input,
 };
 
 export default meta;
 
 const placeHolder = `Enter Your Email Id`;
 
-const BasicInputField: Story<InputFieldProps> = args => {
+const BasicInputField: Story<InputProps> = args => {
   return (
     <div className="w-full bg-black py-10">
       <div className="w-1/3 mx-auto">
-        <InputField placeHolder={placeHolder} {...args} />
+        <Input placeHolder={placeHolder} {...args} />
       </div>
     </div>
   );
 };
 
-const CompactInputField: Story<InputFieldProps> = args => {
+const CompactInputField: Story<InputProps> = args => {
   return (
     <div className="w-full bg-black py-10">
       <div className="w-1/3 mx-auto">
-        <InputField compact placeHolder={placeHolder} {...args} />
+        <Input compact placeHolder={placeHolder} {...args} />
       </div>
     </div>
   );
 };
 
-const ValidationInputField: Story<InputFieldProps> = args => {
+const ValidationInputField: Story<InputProps> = args => {
   return (
     <div className="w-full bg-black py-10">
       <div className="w-1/3 mx-auto">
-        <InputField
+        <Input
           validation="Please Enter a Valid Email Address"
           placeHolder={placeHolder}
           {...args}
@@ -45,12 +45,12 @@ const ValidationInputField: Story<InputFieldProps> = args => {
   );
 };
 
-const SetStateInputField: Story<InputFieldProps> = args => {
+const SetStateInputField: Story<InputProps> = args => {
   const [input, setInput] = React.useState<string>(``);
   return (
     <div className="w-full bg-black py-10">
       <div className="w-1/3 mx-auto">
-        <InputField
+        <Input
           validation={
             input.includes('@') ? '' : 'Please Enter a Valid Email Address'
           }
