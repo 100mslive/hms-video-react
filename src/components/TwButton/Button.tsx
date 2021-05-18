@@ -101,8 +101,8 @@ const defaultClasses: ButtonClasses = {
   rootIconSizeSm: 'w-7 h-7 p-0.5 rounded-full',
   rootIconSizeMd: 'w-8 h-8 p-1',
   rootIconSizeLg: 'w-10 h-10 p-1',
-  rootIconOnlyStandard:'text-black dark:hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
-  rootIconOnlyDanger:'text-black dark:hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
+  rootIconOnlyStandard:'text-black hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
+  rootIconOnlyDanger:'text-black hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
   rootIconOnlyStandardActive:'dark:bg-white dark:text-black bg-gray-200 text-white',
   rootIconOnlyDangerActive:'bg-red-main hover:bg-red-tint text-white',
 };
