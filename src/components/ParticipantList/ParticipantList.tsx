@@ -12,17 +12,6 @@ import { groupBy } from 'lodash';
 import './index.css';
 import { Avatar } from '../TwAvatar';
 
-const ParticipantAvatar = React.memo(
-  ({ label = '', width = '20px' }: { label: string; width?: string }) => {
-    return (
-      <img
-        src={`https://ui-avatars.com/api/?name=${label}&background=random&rounded=true&font-size=0.53`}
-        alt={`${label}'s Avatar`}
-        style={{ width, height: width }}
-      />
-    );
-  },
-);
 interface ParticipantListClasses {
   root?: string;
   buttonRoot?: string;
