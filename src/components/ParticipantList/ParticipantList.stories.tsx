@@ -28,10 +28,31 @@ const Template: Story<ParticipantListProps> = args => (
   </HMSThemeProvider>
 );
 
+const DarkTemplate: Story<ParticipantListProps> = args => (
+  <HMSThemeProvider
+    config={{}}
+    appBuilder={{ theme: 'dark' }}
+  >
+    <ParticipantList {...args} />
+  </HMSThemeProvider>
+);
+
+const LightTemplate: Story<ParticipantListProps> = args => (
+  <HMSThemeProvider
+    config={{}}
+    appBuilder={{ theme: 'light' }}
+  >
+    <ParticipantList {...args} />
+  </HMSThemeProvider>
+);
+
+
 export const Default = Template.bind({});
 export const Real = Template.bind({});
+export const Dark = DarkTemplate.bind({});
+export const Light = LightTemplate.bind({});
 
-Default.args = {
+const defaultArgs = {
   participantList: [
     {
       peer: { id: '123', displayName: 'Alex Tinmayson', role: 'Teacher' },
@@ -121,6 +142,8 @@ Default.args = {
   ],
 };
 
+Default.args = defaultArgs;
+
 Real.args = {
   participantList: [
     {
@@ -138,3 +161,6 @@ Real.args = {
     },
   ],
 };
+
+Light.args = defaultArgs;
+Dark.args = defaultArgs;
