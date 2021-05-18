@@ -1,6 +1,6 @@
 .hmsui-participantList-scrollbar::-webkit-scrollbar {
   background: none;
-  width: 10px;
+  width: 4px;
 }
 
 .hmsui-participantList-scrollbar::-webkit-scrollbar-thumb {
