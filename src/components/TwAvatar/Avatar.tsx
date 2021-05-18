@@ -1,8 +1,7 @@
-import React, { PropsWithChildren } from 'react';
-import { getInitialsFromName, combineClasses } from '../../utils';
-import { withClasses } from '../../utils/styles';
-
-interface StyledAvatarProps {
+import React, { useCallback, PropsWithChildren } from 'react';
+import { getInitialsFromName } from '../../utils';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+interface AvatarPropsWithoutNativeAttrs {
   /**
    * Image URL to be displayed
    */
@@ -33,19 +32,21 @@ interface StyledAvatarProps {
   classes?: AvatarClasses;
 }
 
+export type AvatarProps = AvatarPropsWithoutNativeAttrs & React.HTMLAttributes<HTMLImageElement>
+
 export interface AvatarClasses {
-  root: string;
-  rootSizeSm: string;
-  rootSizeMd: string;
-  rootSizeLg: string;
-  rootSizeXl: string;
-  rootShapeCircle: string;
-  rootShapeSquare: string;
-  rootDivWrapper: string;
+  root?: string;
+  rootSizeSm?: string;
+  rootSizeMd?: string;
+  rootSizeLg?: string;
+  rootSizeXl?: string;
+  rootShapeCircle?: string;
+  rootShapeSquare?: string;
+  rootDivWrapper?: string;
 }
 
 const defaultClasses: AvatarClasses = {
-  root: 'object-cover',
+  root: 'object-cover text-white',
   rootSizeSm: 'w-8 h-8 ',
   rootSizeMd: 'w-12 h-12',
   rootSizeLg: 'w-16 h-16 text-xl',
@@ -55,34 +56,39 @@ const defaultClasses: AvatarClasses = {
   rootDivWrapper: 'flex text-center items-center justify-center',
 };
 
-export const StyledAvatar: React.FC<PropsWithChildren<StyledAvatarProps>> = ({
+export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   size = 'sm',
   label,
   icon,
   image,
   shape = 'circle',
-  defaultClasses,
-  classes: extraClasses,
+  classes,
   ...props
 }) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  const hu = useCallback(
+    hmsUiClassParserGenerator<AvatarClasses>({
+      classes,
+      defaultClasses,
+      tag: 'hmsui-avatar',
+    }),
+    [],
+  );
   const tempDisplay = image || getInitialsFromName(label);
-  const classList = [`${combinedClasses?.root}`];
+  const classList = [`${hu('root')}`];
   shape === 'circle'
-    ? classList.push(`${combinedClasses?.rootShapeCircle}`)
-    : classList.push(`${combinedClasses?.rootShapeSquare}`);
+    ? classList.push(`${hu('rootShapeCircle')}`)
+    : classList.push(`${hu('rootShapeSquare')}`);
   if (!image) {
-    classList.push(`${combinedClasses?.rootDivWrapper}`);
+    classList.push(`${hu('rootDivWrapper')}`);
   }
   if (size === 'sm') {
-    classList.push(`${combinedClasses?.rootSizeSm}`);
+    classList.push(`${hu('rootSizeSm')}`);
   } else if (size === 'md') {
-    classList.push(`${combinedClasses?.rootSizeMd}`);
+    classList.push(`${hu('rootSizeMd')}`);
   } else if (size === 'lg') {
-    classList.push(`${combinedClasses?.rootSizeLg}`);
+    classList.push(`${hu('rootSizeLg')}`);
   } else if (size === 'xl') {
-    classList.push(`${combinedClasses?.rootSizeXl}`);
+    classList.push(`${hu('rootSizeXl')}`);
   }
   return (
     <>
@@ -109,16 +115,3 @@ export const StyledAvatar: React.FC<PropsWithChildren<StyledAvatarProps>> = ({
     </>
   );
 };
-
-type NativeAttrs = Omit<
-  React.DetailsHTMLAttributes<any>,
-  keyof StyledAvatarProps
->;
-
-export type AvatarProps = Omit<StyledAvatarProps, 'defaultClasses'> &
-  NativeAttrs;
-
-export const Avatar = withClasses<AvatarClasses | undefined>(
-  defaultClasses,
-  'avatar',
-)<StyledAvatarProps>(StyledAvatar);

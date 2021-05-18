@@ -31,7 +31,7 @@ const defaultClasses: PreviewClasses = {
   header: 'w-22.5 h-22.5 mt-1.875 mb-7',
   helloDiv: 'text-2xl font-medium mb-12',
 };
-interface PreviewProps {
+export interface PreviewProps {
   name: string;
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
   onChange: (values: SettingsFormProps) => void;
