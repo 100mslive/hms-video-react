@@ -11,7 +11,6 @@ import {
 } from '../Icons';
 import { Button as TwButton } from '../TwButton';
 import { Settings } from '../Settings/Settings';
-import { withClasses } from '../../utils/styles';
 import {VerticalDivider} from '../VerticalDivider'
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
