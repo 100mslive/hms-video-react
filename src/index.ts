@@ -16,6 +16,7 @@ export * from './components/Join';
 export * from './components/Icons';
 export * from './components/Button';
 export * from './components/Carousel';
+export * from './components/VerticalDivider';
 export { Button as TwButton } from './components/TwButton';
 export { HMSRoomProvider, useHMSRoom } from './hooks/HMSRoomProvider';
 export { useHMSMessage } from './hooks/MessageProvider';

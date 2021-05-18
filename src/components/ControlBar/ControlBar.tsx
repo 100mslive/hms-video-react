@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useCallback} from 'react';
 import { ButtonDisplayType } from '../../types';
 import {
   HangUpIcon,
@@ -12,8 +12,8 @@ import {
 import { Button as TwButton } from '../TwButton';
 import { Settings } from '../Settings/Settings';
 import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import {VerticalDivider} from '../VerticalDivider'
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 export interface ControlBarClasses {
   root?: string;
@@ -21,7 +21,7 @@ export interface ControlBarClasses {
   centerRoot?: string;
   rightRoot?: string;
 }
-interface StyledControlBarProps {
+export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   isChatOpen?: boolean;
@@ -36,7 +36,6 @@ interface StyledControlBarProps {
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
   rightComponents: Array<React.ReactNode>;
-  defaultClasses?: ControlBarClasses;
   classes?: ControlBarClasses;
 }
 
@@ -51,14 +50,7 @@ const defaultClasses: ControlBarClasses = {
     'flex md:flex-none gap-x-4 md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
 };
 
-function VerticleDevider(){
-  return (
-    <div className="w-px bg-gray-200 h-6">
-    </div>
-  )
-}
-
-export const StyledControlBar = ({
+export const ControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
   isChatOpen = false,
@@ -75,7 +67,7 @@ export const StyledControlBar = ({
       }}
       key={0}
     />,
-    <VerticleDevider />
+    <VerticalDivider key={1}/>
     ,
     <TwButton
       iconOnly
@@ -83,11 +75,11 @@ export const StyledControlBar = ({
       iconSize="md"
       shape={buttonDisplay}
       onClick={screenshareButtonOnClick}
-      key={1}
+      key={2}
     >
       <ShareScreenIcon />
     </TwButton>,
-    <VerticleDevider />
+    <VerticalDivider key={4}/>
     ,
     <TwButton
       iconOnly
@@ -96,7 +88,7 @@ export const StyledControlBar = ({
       shape={buttonDisplay}
       onClick={chatButtonOnClick}
       active={isChatOpen}
-      key={2}
+      key={5}
     >
       <ChatIcon />
     </TwButton>,
@@ -134,11 +126,17 @@ export const StyledControlBar = ({
       Leave room
     </TwButton>,
   ],
-  defaultClasses,
-  classes: extraClasses,
-}: StyledControlBarProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  classes,
+}: ControlBarProps) => {
+  const combinedClasses = useCallback(
+    hmsUiClassParserGenerator<ControlBarClasses>({
+      classes,
+      defaultClasses,
+      tag: 'hmsui-controlbar',
+    }),
+    [],
+  );
+
   const leftItems = Array<React.ReactNode>();
   const centerItems = Array<React.ReactNode>();
   const rightItems = Array<React.ReactNode>();
@@ -150,39 +148,15 @@ export const StyledControlBar = ({
     rightItems.push(comp);
   });
 
-  try {
-    let context = useHMSTheme();
-    leftItems.push(leftComponents[0]);
+  leftComponents.forEach(comp => {
+    leftItems.push(comp);
+  })
 
-    if (
-      context.appBuilder.enableScreenShare === undefined ||
-      context.appBuilder.enableScreenShare
-    ) {
-      leftItems.push(leftComponents[1]);
-    }
-    if (
-      context.appBuilder.enableChat === undefined ||
-      Boolean(context.appBuilder.enableChat)
-    ) {
-      leftItems.push(leftComponents[2]);
-    }
-  } catch (e) {
-    leftComponents.forEach(comp => {
-      leftItems.push(comp);
-    });
-  }
   return (
-    <div className={combinedClasses?.root}>
-      <div className={combinedClasses?.leftRoot}>{leftItems}</div>
-      <div className={combinedClasses?.centerRoot}>{centerItems}</div>
-      <div className={combinedClasses?.rightRoot}>{rightItems}</div>
+    <div className={combinedClasses('root')}>
+      <div className={combinedClasses('leftRoot')}>{leftItems}</div>
+      <div className={combinedClasses('centerRoot')}>{centerItems}</div>
+      <div className={combinedClasses('rightRoot')}>{rightItems}</div>
     </div>
   );
 };
-
-export type ControlBarProps = Omit<StyledControlBarProps, 'defaultClasses'>;
-
-export const ControlBar = withClasses<ControlBarClasses | undefined>(
-  defaultClasses,
-  'controlbar',
-)<StyledControlBarProps>(StyledControlBar);
