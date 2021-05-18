@@ -2,6 +2,7 @@ import './components/Button/Button.css';
 import './components/VideoTile/index.css';
 import './components/Carousel/index.css';
 import './components/TwButton/Button.css';
+import './components/ParticipantList/index.css';
 export { Silence } from './components/Silence';
 export { VideoTile, VideoTileProps } from './components/VideoTile/index';
 export { Avatar } from './components/Avatar/index';
