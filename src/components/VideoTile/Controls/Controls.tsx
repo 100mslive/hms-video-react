@@ -1,6 +1,6 @@
 import React from 'react';
 import { AudioLevelDisplayType } from '../../../types';
-import { Button } from '../../Button';
+import { Button } from '../../TwButton';
 import { MicOffIcon } from '../../Icons';
 import '../index.css';
 //@ts-ignore
@@ -72,7 +72,7 @@ export const VideoTileControls = ({
           )}
           {isAudioMuted && allowRemoteMute && (
             <Button
-              variant={'icon-only'}
+              iconOnly
               active={true}
               size={'md'}
               shape="circle"
@@ -85,7 +85,7 @@ export const VideoTileControls = ({
         <div className={`${parseClass('label')}`}>{label}</div>
         <div className={`${parseClass('controls')}`}>
           {!isAudioMuted && allowRemoteMute && (
-            <Button variant={'icon-only'} size={'md'}>
+            <Button iconOnly size={'md'}>
               <MicOffIcon />
             </Button>
           )}

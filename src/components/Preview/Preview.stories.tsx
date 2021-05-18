@@ -12,7 +12,7 @@ export default meta;
 
 const Template: Story<PreviewProps> = args => {
   return (
-    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
       <div>
         <Preview {...args} />
       </div>
@@ -22,6 +22,24 @@ const Template: Story<PreviewProps> = args => {
 
 export const Default = Template.bind({});
 Default.args = {
+  name: 'Aditya Gupta',
+  joinOnClick: ({ audioMuted, videoMuted }) =>
+    alert(`Join Clicked, audio and video mute are ${audioMuted} ${videoMuted}`),
+  goBackOnClick: () => alert('Go Back Clicked'),
+};
+
+const LightThemeTemplate: Story<PreviewProps> = args => {
+  return (
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div>
+        <Preview {...args} />
+      </div>
+    </HMSThemeProvider>
+  );
+};
+
+export const LightTheme = LightThemeTemplate.bind({});
+LightTheme.args = {
   name: 'Aditya Gupta',
   joinOnClick: ({ audioMuted, videoMuted }) =>
     alert(`Join Clicked, audio and video mute are ${audioMuted} ${videoMuted}`),

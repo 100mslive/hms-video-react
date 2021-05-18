@@ -252,10 +252,9 @@ export const Logo = (props: React.SVGProps<SVGSVGElement>) => (
 );
 export const MicOffIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
+    width="24"
+    height="24"
     viewBox="0 0 24 24"
-    width="30"
-    height="30"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -270,10 +269,9 @@ export const MicOffIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const MicOnIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="30"
-    height="30"
+    width="24"
+    height="24"
     viewBox="0 0 36 36"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -288,10 +286,10 @@ export const MicOnIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const CamOnIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="30"
-    height="30"
+    width="24"
+    height="24"
+    fill="currentColor"
     viewBox="0 0 36 36"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -306,10 +304,10 @@ export const CamOnIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const CamOffIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="30"
-    height="30"
+    width="24"
+    height="24"
+    fill="currentColor"
     viewBox="0 0 24 24"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -324,10 +322,9 @@ export const CamOffIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const HangUpIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="30"
-    height="30"
+    width="24"
+    height="24"
     viewBox="0 0 22 10"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -361,7 +358,6 @@ export const DownCaratIcon = (props: React.SVGProps<SVGSVGElement>) => (
     width="24"
     height="24"
     viewBox="0 0 16 10"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
   >
@@ -442,8 +438,8 @@ export const ClockIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const ShareScreenIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="32"
-    height="32"
+    width="24"
+    height="24"
     viewBox="0 0 36 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -522,8 +518,8 @@ export const CloseIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const SettingsIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="30"
-    height="30"
+    width="24"
+    height="24"
     viewBox="0 0 36 36"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -593,8 +589,8 @@ export const SendIcon = (props: React.SVGProps<SVGSVGElement>) => (
 
 export const ChatIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
-    width="24"
-    height="24"
+    height="18"
+    width="18"
     viewBox="0 0 28 28"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
@@ -623,3 +619,9 @@ export const DotIcon = (props: React.SVGProps<SVGSVGElement>) => (
     />
   </svg>
 );
+
+export const DoorIcon = (props:React.SVGProps<SVGSVGElement>) => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M7.125 2.8125C6.72718 2.8125 6.34564 2.97054 6.06434 3.25184C5.78304 3.53314 5.625 3.91467 5.625 4.3125V19.6875H4.125C3.71079 19.6875 3.375 20.0233 3.375 20.4375C3.375 20.8517 3.71079 21.1875 4.125 21.1875H6.375H17.625H19.875C20.2892 21.1875 20.625 20.8517 20.625 20.4375C20.625 20.0233 20.2892 19.6875 19.875 19.6875H18.375V4.3125C18.375 3.91468 18.217 3.53315 17.9357 3.25184C17.6544 2.97053 17.2728 2.8125 16.875 2.8125H7.125ZM16.875 19.6875V4.3125H7.125V19.6875H16.875ZM15.5417 12.7292C15.7351 12.5358 15.8438 12.2735 15.8438 12C15.8438 11.7265 15.7351 11.4642 15.5417 11.2708C15.3483 11.0774 15.086 10.9688 14.8125 10.9688C14.539 10.9688 14.2767 11.0774 14.0833 11.2708C13.8899 11.4642 13.7812 11.7265 13.7812 12C13.7812 12.2735 13.8899 12.5358 14.0833 12.7292C14.2767 12.9226 14.539 13.0312 14.8125 13.0312C15.086 13.0312 15.3483 12.9226 15.5417 12.7292Z" fill="currentColor"/>
+</svg>
+)

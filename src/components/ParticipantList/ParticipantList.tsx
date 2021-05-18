@@ -8,11 +8,10 @@ import {
   StarIcon,
 } from '../Icons';
 import { Participant } from '../../types';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
-import { Button } from '../Button';
+import { Button } from '../TwButton';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { groupBy } from 'lodash';
-import './ParticipantList.css';
+import './index.css';
 
 const ParticipantAvatar = React.memo(
   ({ label = '', width = '24px' }: { label: string; width?: string }) => {
@@ -25,8 +24,7 @@ const ParticipantAvatar = React.memo(
     );
   },
 );
-
-export interface ParticipantListClasses {
+interface ParticipantListClasses {
   root?: string;
   buttonRoot?: string;
   buttonOpen?: string;
@@ -41,9 +39,8 @@ export interface ParticipantListClasses {
   menuIconContainer?: string;
 }
 
-interface StyledParticipantListProps {
+export interface ParticipantListProps {
   participantList?: Array<Participant>;
-  defaultClasses?: ParticipantListClasses;
   classes?: ParticipantListClasses;
 }
 
@@ -67,15 +64,25 @@ const defaultClasses: ParticipantListClasses = {
   menuIconContainer: 'flex flex-grow justify-self-end justify-end',
 };
 
+const customClasses:ParticipantListClasses = {
+  menuRoot:'hmsui-participantList-scrollbar'
+}
+
 type RoleMap = Map<string, Participant[]>;
 
-export const StyledParticipantList = ({
+export const ParticipantList = ({
   participantList,
-  defaultClasses,
-  classes: extraClasses,
-}: StyledParticipantListProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+  classes,
+}: ParticipantListProps) => {
+  const hu = useCallback(
+    hmsUiClassParserGenerator<ParticipantListClasses>({
+      classes,
+      customClasses,
+      defaultClasses,
+      tag: 'hmsui-participantList',
+    }),
+    [],
+  );
   const [listOpen, setListOpen] = useState(false);
   const handleClick = useCallback(() => setListOpen(open => !open), []);
   const rolesMap = groupBy(
@@ -85,32 +92,31 @@ export const StyledParticipantList = ({
   const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
 
   return (
-    <div className={`${combinedClasses?.root}`}>
+    <div className={`${hu('root')}`}>
       <button
         type="button"
-        className={`${combinedClasses?.buttonRoot}
+        className={`${hu('buttonRoot')}
           ${
             listOpen
-              ? combinedClasses?.buttonOpen
-              : combinedClasses?.buttonClosed
+              ? hu('buttonOpen')
+              : hu('buttonClosed')
           }`}
         onClick={handleClick}
       >
-        <div className={`${combinedClasses?.buttonInner}`}>
+        <div className={`${hu('buttonInner')}`}>
           {participantList?.length} in room
-          <span className={`${combinedClasses?.buttonText}`}>
+          <span className={`${hu('buttonText')}`}>
             {listOpen ? (
-              <UpCaratIcon className={combinedClasses?.carat} />
+              <UpCaratIcon className={hu('carat')} />
             ) : (
-              <DownCaratIcon className={combinedClasses?.carat} />
+              <DownCaratIcon className={hu('carat')} />
             )}
           </span>
         </div>
       </button>
       {listOpen && (
         <div
-          id="HMSui-components-participant-list"
-          className={`${combinedClasses?.menuRoot}`}
+          className={`${hu('menuRoot')}`}
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="menu-button"
@@ -122,7 +128,7 @@ export const StyledParticipantList = ({
               <div key={index}>
                 <div>
                   <span
-                    className={`${combinedClasses?.menuSection}`}
+                    className={`${hu('menuSection')}`}
                     role="menuitem"
                   >
                     {role === 'undefined' ? 'Unknown' : role}
@@ -134,21 +140,21 @@ export const StyledParticipantList = ({
                   {rolesMap[role] &&
                     rolesMap[role].map((participant, index) => (
                       <span
-                        className={`${combinedClasses?.menuItem}`}
+                        className={`${hu('menuItem')}`}
                         role="menuitem"
                         key={index}
                       >
                         <ParticipantAvatar
                           label={participant.peer.displayName}
                         />
-                        <div className={`${combinedClasses?.menuText}`}>
+                        <div className={`${hu('menuText')}`}>
                           {participant.peer.displayName}
                         </div>
                         <div
-                          className={`${combinedClasses?.menuIconContainer}`}
+                          className={`${hu('menuIconContainer')}`}
                         >
                           <Button
-                            variant={'icon-only'}
+                            iconOnly
                             shape={'circle'}
                             size={'sm'}
                             classes={{
@@ -163,7 +169,7 @@ export const StyledParticipantList = ({
                             )}
                           </Button>
                           <Button
-                            variant={'icon-only'}
+                            iconOnly
                             shape={'circle'}
                             size={'sm'}
                             active={participant.isStarMarked}
@@ -185,13 +191,3 @@ export const StyledParticipantList = ({
     </div>
   );
 };
-
-export type ParticipantListProps = Omit<
-  StyledParticipantListProps,
-  'defaultClasses'
->;
-
-export const ParticipantList = withClasses<ParticipantListClasses | undefined>(
-  defaultClasses,
-  'participantList',
-)<StyledParticipantListProps>(StyledParticipantList);

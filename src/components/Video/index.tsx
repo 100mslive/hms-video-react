@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
 import { useInView } from 'react-intersection-observer';
 import HMSVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSVideoTrack';
 import HMSLogger from '../../utils/ui-logger';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -35,7 +34,7 @@ export interface VideoClasses {
    */
   borderAudioRoot?: string;
 }
-interface StyledVideoProps {
+export interface VideoProps {
   //TODO make one of audioTrack and videoTrack mandatory instead of both
   /**
    * Video Track to be displayed.
@@ -91,10 +90,6 @@ interface StyledVideoProps {
    */
   audioLevelDisplayColor?: string;
   /**
-   * default classes
-   */
-  defaultClasses?: VideoClasses;
-  /**
    * extra classes added  by user
    */
   classes?: VideoClasses;
@@ -105,13 +100,13 @@ interface StyledVideoProps {
 const defaultClasses: VideoClasses = {
   video: 'h-full w-full rounded-lg absolute left-0 top-0',
   videoCircle: 'rounded-full',
-  videoLocal: 'transform -scale-x-100', //apply`${css({ transform: 'scaleX(-1)' })}`
+  videoLocal: 'transform -scale-x-100',
   videoCover: 'object-cover',
   videoContain: 'object-contain',
   borderAudioRoot: 'w-full h-full absolute left-0 top-0 rounded-lg',
 };
 
-export const StyledVideo = ({
+export const Video = ({
   peerId,
   videoTrack,
   hmsVideoTrack,
@@ -124,16 +119,22 @@ export const StyledVideo = ({
   audioLevelDisplayType,
   audioLevelDisplayColor,
   displayShape,
-  classes: extraClasses,
-  defaultClasses,
+  classes,
   audioLevelEmitter,
-}: StyledVideoProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+}: VideoProps) => {
+  const hu = useCallback(
+    hmsUiClassParserGenerator<VideoClasses>({
+      classes,
+      defaultClasses,
+      tag: 'hmsui-video',
+    }),
+    [],
+  );
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const { ref: inViewRef, inView } = useInView({ threshold: 0.5 });
 
+  //TODO replace with mergeRefs
   /**
    * Callback to assign multiple refs(containerRef, inViewRef) to a single component.
    * Refer: [https://github.com/thebuilder/react-intersection-observer#how-can-i-assign-multiple-refs-to-a-component]
@@ -172,15 +173,15 @@ export const StyledVideo = ({
         muted={true}
         autoPlay
         playsInline
-        className={`${combinedClasses?.video} 
-          ${displayShape === 'circle' ? combinedClasses?.videoCircle : ''}
+        className={`${hu('video')} 
+          ${displayShape === 'circle' ? hu('videoCircle') : ''}
           ${
             isLocal && videoSource === 'camera'
-              ? combinedClasses?.videoLocal
+              ? hu('videoLocal')
               : ''
           }
-          ${objectFit === 'contain' ? combinedClasses?.videoContain : ''}
-          ${objectFit === 'cover' ? combinedClasses?.videoCover : ''}
+          ${objectFit === 'contain' ? hu('videoContain') : ''}
+          ${objectFit === 'cover' ? hu('videoCover') : ''}
         `}
       ></video>
       {showAudioLevel && audioLevelDisplayType === 'border' && (
@@ -192,8 +193,8 @@ export const StyledVideo = ({
           level={audioLevel}
           displayShape={displayShape}
           classes={{
-            videoCircle: combinedClasses?.videoCircle,
-            root: combinedClasses?.borderAudioRoot,
+            videoCircle: hu('videoCircle'),
+            root: hu('borderAudioRoot'),
           }}
           color={audioLevelDisplayColor}
         />
@@ -201,10 +202,3 @@ export const StyledVideo = ({
     </>
   );
 };
-
-export type VideoProps = Omit<StyledVideoProps, 'defaultClasses'>;
-
-export const Video = withClasses<VideoClasses | undefined>(
-  defaultClasses,
-  'video',
-)<StyledVideoProps>(StyledVideo);

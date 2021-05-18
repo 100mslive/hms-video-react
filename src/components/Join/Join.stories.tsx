@@ -12,6 +12,16 @@ export default meta;
 
 const Template: Story<JoinProps> = args => {
   return (
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+      <div>
+        <Join {...args} />
+      </div>
+    </HMSThemeProvider>
+  );
+};
+
+const LightTemplate: Story<JoinProps> = args => {
+  return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
       <div>
         <Join {...args} />
@@ -37,6 +47,11 @@ Default.args = {
 };
 
 export const OverrideClasses = OverrideClass.bind({});
+Default.args = {
+  submitOnClick: params =>
+    alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`),
+};
+export const Light = LightTemplate.bind({});
 Default.args = {
   submitOnClick: params =>
     alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`),

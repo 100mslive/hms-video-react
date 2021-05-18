@@ -1,9 +1,14 @@
-import React, { useEffect, useState, ChangeEventHandler } from 'react';
+import React, {
+  useEffect,
+  useState,
+  ChangeEventHandler,
+  useCallback,
+} from 'react';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
-import { withClasses } from '../../utils/styles';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Button as TwButton } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { groupBy, Dictionary } from 'lodash';
@@ -43,11 +48,10 @@ export interface SettingsFormProps {
   selectedAudioOutput?: string;
   maxTileCount?: number;
 }
-interface StyledSettingsProps {
+export interface SettingsProps {
   buttonClases?: ButtonClasses;
   initialValues?: SettingsFormProps;
   onChange?: (values: SettingsFormProps) => void;
-  defaultClasses?: SettingsClasses;
   classes?: SettingsClasses;
 }
 
@@ -55,7 +59,7 @@ const defaultClasses: SettingsClasses = {
   iconContainer: 'focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg',
   dialogRoot: 'rounded-lg',
   dialogContainer:
-    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto no-scrollbar  divide-solid',
+    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto divide-solid',
   dialogInner: 'text-2xl mb-3 p-2 border-b-2 flex justify-between',
   titleContainer: 'flex items-center',
   titleIcon: 'pr-4',
@@ -76,7 +80,11 @@ const defaultClasses: SettingsClasses = {
   errorContainer: 'flex justify-center items-center w-full px-8 py-4',
 };
 
-//TODO figure out how to expose this outside
+const customClasses: SettingsClasses = {
+  dialogContainer: 'no-scrollbar ',
+};
+
+//TODO replce with own slider
 const HMSSlider = withStyles({
   root: {
     color: 'white',
@@ -95,18 +103,22 @@ const HMSSlider = withStyles({
   },
 })(Slider);
 
-//TODO replace with unpkg
-const StyledSettings = ({
+//TODO split button and settings dialog
+
+export const Settings = ({
   onChange,
   initialValues,
   classes,
   buttonClases,
-}: StyledSettingsProps) => {
-  //TODO accept initial entry values
-  const { tw } = useHMSTheme();
-  const finalClasses: SettingsClasses = resolveClasses(
-    classes || {},
-    defaultClasses,
+}: SettingsProps) => {
+  const parseClass = useCallback(
+    hmsUiClassParserGenerator<SettingsClasses>({
+      classes,
+      customClasses,
+      defaultClasses,
+      tag: 'hmsui-settings',
+    }),
+    [],
   );
 
   const [open, setOpen] = useState(false);
@@ -183,14 +195,11 @@ const StyledSettings = ({
   // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
   // videoInput.length > 0 && videoInput.findIndex(device => device.deviceId===values?.selectedVideoInput)===-1 && setValues({selectedVideoInput:videoInput[0].deviceId});
 
-  const parseClass = (s: keyof SettingsClasses) => {
-    return tw(`hmsui-settings-${s}`, apply(finalClasses[s]));
-  };
-
   return (
     <>
       <TwButton
         iconOnly
+        active={open}
         variant={'no-fill'}
         iconSize="md"
         onClick={handleClickOpen}
@@ -496,11 +505,3 @@ const StyledSettings = ({
     </>
   );
 };
-
-export type SettingsProps = Omit<StyledSettingsProps, 'defaultClasses'>;
-
-//TODO replace with theme context
-export const Settings = withClasses<SettingsClasses | undefined>(
-  defaultClasses,
-  'settings',
-)<StyledSettingsProps>(StyledSettings);

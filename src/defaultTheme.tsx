@@ -8,8 +8,8 @@ export const theme: { theme: ThemeConfiguration } = {
         body: ['Inter', 'sans-serif'],
       },
       boxShadow: {
-        sm: '0px 11px 26px rgba(0, 0, 0, 0.2)',
-        DEFAULT: '0px 2px 9px rgba(0, 0, 0, 0.18)',
+        1: '0px 2px 9px rgba(0, 0, 0, 0.18)',
+        2: '0px 11px 26px rgba(0, 0, 0, 0.2)',
       },
       colors: {
         brand: {

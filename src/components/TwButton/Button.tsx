@@ -82,23 +82,23 @@ export interface ButtonClasses {
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex dark:text-white text-black items-center justify-center text-base font-medium shadow-sm focus:outline-none',
+    'inline-flex dark:text-white text-black items-center justify-center text-base font-medium shadow-2 focus:outline-none',
   rootFocus: 'focus:ring focus:ring-brand-tint', //''
-  rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
+  rootDisabled: 'opacity-50 cursor-not-allowed text', // TODO: disbaled hover state
   rootStandard:
-    'text-gray-100 dark:text-white bg-gray-600 dark:bg-gray-200 hover:gray-500 dark:hovergray-300 focus:gray-600  dark:focus:gray-200',
+    'text-gray-100 dark:text-white bg-gray-600 dark:bg-gray-200 hover:gray-500 dark:hover:gray-300 focus:gray-600  dark:focus:gray-200',
   rootDanger: 'bg-red-main hover:bg-red-tint text-white',
   rootEmphasized: 'bg-brand-main hover:bg-brand-tint',
   rootNoFill:
-    'light:text-brand-main light:hover:text-brand-tint dark:text-white shadow-none',
+    'light:text-brand-main light:hover:text-brand-tint dark:text-white hover:opacity-80 shadow-none',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootSizeSm: 'px-2.5 py-1.5',
-  rootSizeMd: 'px-4 h-11',
+  rootSizeMd: 'px-4 py-2',
   rootSizeLg: 'px-6 py-3',
-  rootIconSizeSm: 'w-6 h-6',
-  rootIconSizeMd: 'w-11 h-11 ',
-  rootIconSizeLg: 'w-14 h-14',
+  rootIconSizeSm: 'w-7 h-7 p-0.5 rounded-full',
+  rootIconSizeMd: 'w-9 h-9 p-1',
+  rootIconSizeLg: 'w-10 h-10 p-1',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
@@ -176,10 +176,22 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   const propClass = 'hmsui-button';
   const className = tw(propClass, twClasses);
   return (
-    <button type="button" className={className} {...props}>
-      {icon && !iconRight && <span className="mr-2">{icon}</span>}
+    <button
+      type="button"
+      className={`${className} icon-size-${size} ${
+        active
+          ? 'dark:bg-white dark:text-black text-white '
+          : 'text-white hover:bg-gray-200'
+      } ${iconOnly ? 'focus:ring-0' : 'focus:ring'}`}
+      {...props}
+    >
+      {icon && !iconRight && (
+        <span className="mr-2 btn-icon flex items-center">{icon}</span>
+      )}
       {children}
-      {iconRight && <span className="ml-2">{icon}</span>}
+      {iconRight && (
+        <span className="ml-2 btn-icon flex items-center">{icon}</span>
+      )}
     </button>
   );
 };
