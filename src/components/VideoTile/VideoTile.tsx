@@ -187,6 +187,7 @@ export const VideoTile = ({
           ) : (
             // TODO circle controls are broken now
             <VideoTileControls
+              isLocal={isLocal}
               label={label}
               isAudioMuted={isAudioMuted}
               showAudioMuteStatus={showAudioMuteStatus}

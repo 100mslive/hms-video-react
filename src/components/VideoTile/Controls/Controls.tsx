@@ -24,6 +24,7 @@ export interface VideoTileControlsProps {
   audioLevelDisplayType?: AudioLevelDisplayType;
   audioLevel?: number;
   classes?: VideoTileControlsClasses;
+  isLocal?:boolean;
 }
 
 //TODO group hover is not working
@@ -48,10 +49,8 @@ export const VideoTileControls = ({
   isAudioMuted = false,
   showGradient = true,
   showAudioMuteStatus = true,
+  isLocal=false,
   allowRemoteMute = false,
-  showAudioLevel = false,
-  audioLevelDisplayType = 'inline-wave',
-  audioLevel,
   classes,
 }: VideoTileControlsProps) => {
   const parseClass = useCallback(
@@ -68,7 +67,7 @@ export const VideoTileControls = ({
       <div className={`${showGradient ? parseClass('gradient') : ''}`} />
       <div className={`${parseClass('controlsInner')}`}>
         <div className="flex justify-center">
-          {isAudioMuted && (
+          {showAudioMuteStatus && isAudioMuted && (
             <Button
               iconOnly
               active
@@ -83,8 +82,9 @@ export const VideoTileControls = ({
         </div>
         <div className={`${parseClass('label')}`}>{label}</div>
         <div className={`${parseClass('controls')}`}>
-          {!isAudioMuted && allowRemoteMute && (
-            <Button iconOnly size={'md'}               classes={{root:"dark"}}
+          {!isLocal && showAudioMuteStatus && !isAudioMuted && allowRemoteMute && (
+            <Button iconOnly size={'md'}               
+            classes={{root:"dark"}}
             >
               <MicOffIcon />
             </Button>

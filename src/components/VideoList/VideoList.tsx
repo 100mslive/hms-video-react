@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile/index';
 import {
@@ -10,9 +10,7 @@ import { Carousel } from '../Carousel';
 import { useResizeDetector } from 'react-resize-detector';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { resolveClasses } from '../../utils/classes';
-// @ts-ignore
-import { apply } from 'twind';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 export interface VideoListClasses extends VideoTileClasses {
   /**
@@ -44,7 +42,7 @@ export interface VideoListClasses extends VideoTileClasses {
    */
   video?: string;
 }
-interface StyledVideoListProps {
+export interface VideoListProps {
   /**
     MediaStream to be displayed.
     */
@@ -110,10 +108,6 @@ interface StyledVideoListProps {
    */
   allowRemoteMute?: boolean;
   /**
-   * default classes
-   */
-  defaultClasses?: VideoListClasses;
-  /**
    * extra classes added  by user
    */
   classes?: VideoListClasses;
@@ -154,16 +148,16 @@ export const VideoList = ({
   classes,
   videoTileClasses,
   audioLevelEmitter,
-}: StyledVideoListProps) => {
-  const finalClasses: VideoListClasses = resolveClasses(
-    classes || {},
-    defaultClasses,
+  allowRemoteMute,
+}: VideoListProps) => {
+  const parseClass = useCallback(
+    hmsUiClassParserGenerator<VideoListClasses>({
+      classes,
+      defaultClasses,
+      tag: 'hmsui-videoList',
+    }),
+    [],
   );
-  const { tw } = useHMSTheme();
-
-  const parseClass = (s: keyof VideoListClasses) => {
-    return tw(`hmsui-videolist-${s}`, apply(finalClasses[s]));
-  };
 
   const { width = 0, height = 0, ref } = useResizeDetector();
 
@@ -271,6 +265,7 @@ export const VideoList = ({
                           objectFit={objectFit}
                           displayShape={displayShape}
                           audioLevelDisplayType={audioLevelDisplayType}
+                          allowRemoteMute={allowRemoteMute}
                           showAudioLevel={showAudioLevel}
                           showAudioMuteStatus={showAudioMuteStatus}
                           aspectRatio={aspectRatio}
@@ -292,5 +287,3 @@ export const VideoList = ({
     </div>
   );
 };
-
-export type VideoListProps = Omit<StyledVideoListProps, 'defaultClasses'>;
