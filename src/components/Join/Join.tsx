@@ -1,9 +1,11 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { resolveClasses } from '../../utils/classes';
-//@ts-ignore
-import { apply } from 'twind';
+import { Select } from '../Select';
+import { Input } from '../Input';
 import { Button } from '../TwButton';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { DoorIcon } from '../Icons';
 
 interface Fields {
   username: string;
@@ -26,18 +28,20 @@ interface JoinClasses {
 
 const defaultClasses: JoinClasses = {
   root:
-    'flex dark:bg-black dark:text-white bg-gray-700 justify-center items-center w-screen h-screen text-gray-100 ',
+    'flex bg-white dark:bg-black justify-center items-center w-screen h-screen ',
   containerRoot:
-    'bg-gray-600 dark:bg-gray-100 bg-gray-500 w-1/2 m-2 p-3 rounded-lg divide-solid',
-  header: 'text-2xl mb-3 p-3 border-b-2',
+    'bg-white dark:bg-gray-100 text-gray-100 dark:text-white w-1/2 m-2 p-3 rounded-xl divide-solid shadow-2 dark:shadow-none',
+  header:
+    'text-2xl mb-3 p-3 border-b-2 border-gray-600 dark:border-gray-200 flex items-center',
   inputRoot: 'flex flex-wrap text-lg',
-  inputName: 'w-1/3 flex justify-end items-center',
+  inputName:
+    'w-1/3 flex justify-end items-center text-gray-100 dark:text-gray-500 pr-8',
   inputFieldRoot: 'p-2 w-2/3',
   inputField: 'rounded-lg bg-gray-700 dark:bg-gray-200 w-full p-1',
   joinRoot: 'w-full flex justify-end m-2',
   joinButton: 'bg-brand-main  rounded-lg px-5 py-2 focus:outline-none',
 };
-interface StyledJoinProps {
+export interface JoinProps extends React.DetailsHTMLAttributes<any> {
   /**
    * Initial values to be filled in the form.
    */
@@ -52,19 +56,21 @@ interface StyledJoinProps {
   classes?: { [key: string]: string } | JoinClasses;
 }
 
-type NativeAttrs = Omit<
-  React.DetailsHTMLAttributes<any>,
-  keyof StyledJoinProps
->;
-
-export type JoinProps = StyledJoinProps & NativeAttrs;
-
 export const Join = ({
   initialValues,
   submitOnClick,
   classes,
   ...props
-}: StyledJoinProps) => {
+}: JoinProps) => {
+  const parseClass = useCallback(
+    hmsUiClassParserGenerator<JoinClasses>({
+      classes,
+      defaultClasses,
+      tag: 'hmsui-join',
+    }),
+    [],
+  );
+
   const finalClasses: JoinClasses = resolveClasses(
     classes || {},
     defaultClasses,
@@ -85,46 +91,44 @@ export const Join = ({
     initialValues?.endpoint && setEndpoint(initialValues.endpoint);
   }, [initialValues]);
 
-  const parseClass = (s: keyof JoinClasses) => {
-    return tw(`hmsui-join-${s}`, apply(finalClasses[s]));
-  };
-
   return (
     <div className={parseClass('root')} {...props}>
       <div className={parseClass('containerRoot')}>
-        <div className={parseClass('header')}>Join your class</div>
+        <div className={parseClass('header')}>
+          <DoorIcon className="mr-2" />
+          Join your class
+        </div>
         <div className={parseClass('inputRoot')}>
           <div className={parseClass('inputName')}>
-            <span>Username:</span>
+            <span>Username</span>
           </div>
           <div className={parseClass('inputFieldRoot')}>
-            <input
-              className={parseClass('inputField')}
+            <Input
+              compact
               defaultValue={initialValues?.username || username}
               onChange={event => {
                 setUserName(event.target.value);
               }}
-            ></input>
+            ></Input>
           </div>
           <div className={parseClass('inputName')}>
-            <span>RoomId:</span>
+            <span>RoomId</span>
           </div>
           <div className={parseClass('inputFieldRoot')}>
-            <input
-              className={parseClass('inputField')}
+            <Input
+              compact
               defaultValue={initialValues?.roomId || roomId}
               onChange={event => {
                 setRoomId(event.target.value);
               }}
-            ></input>
+            ></Input>
           </div>
           <div className={parseClass('inputName')}>
-            <span>Role:</span>
+            <span>Role</span>
           </div>
           <div className={parseClass('inputFieldRoot')}>
-            <select
+            <Select
               name="role"
-              className={parseClass('inputField')}
               defaultValue={initialValues?.role || role}
               onChange={event => {
                 setRole(event.target.value);
@@ -134,15 +138,14 @@ export const Join = ({
               <option value="Student">Student</option>
               <option value="Admin">Admin</option>
               <option value="Viewer">Viewer</option>
-            </select>
+            </Select>
           </div>
           <div className={parseClass('inputName')}>
-            <span>Environment:</span>
+            <span>Environment</span>
           </div>
           <div className={parseClass('inputFieldRoot')}>
-            <select
+            <Select
               name="endpoint"
-              className={parseClass('inputField')}
               defaultValue={initialValues?.endpoint || endpoint}
               onChange={event => {
                 setEndpoint(event.target.value);
@@ -151,7 +154,7 @@ export const Join = ({
               <option value="qa">qa</option>
               <option value="prod">prod</option>
               <option value="dev">dev</option>
-            </select>
+            </Select>
           </div>
           <div className={parseClass('joinRoot')}>
             <Button
