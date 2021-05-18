@@ -8,7 +8,7 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
-interface VideoClasses {
+export interface VideoClasses {
   /** The actual video element
    *
    */
