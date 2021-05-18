@@ -5,6 +5,7 @@ import {Input} from '../Input';
 import { Button } from '../TwButton';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { DoorIcon } from '../Icons';
 
 interface Fields {
   username: string;
@@ -30,7 +31,7 @@ const defaultClasses: JoinClasses = {
     'flex bg-white dark:bg-black justify-center items-center w-screen h-screen ',
   containerRoot:
     'bg-white dark:bg-gray-100 text-gray-100 dark:text-white w-1/2 m-2 p-3 rounded-xl divide-solid shadow-2 dark:shadow-none',
-  header: 'text-2xl mb-3 p-3 border-b-2 border-gray-600 dark:border-gray-200',
+  header: 'text-2xl mb-3 p-3 border-b-2 border-gray-600 dark:border-gray-200 flex items-center',
   inputRoot: 'flex flex-wrap text-lg',
   inputName: 'w-1/3 flex justify-end items-center text-gray-100 dark:text-gray-500 pr-8',
   inputFieldRoot: 'p-2 w-2/3',
@@ -91,7 +92,7 @@ export const Join = ({
   return (
     <div className={parseClass('root')} {...props}>
       <div className={parseClass('containerRoot')}>
-        <div className={parseClass('header')}>Join your class</div>
+        <div className={parseClass('header')}><DoorIcon className='mr-2'/>Join your class</div>
         <div className={parseClass('inputRoot')}>
           <div className={parseClass('inputName')}>
             <span>Username</span>
