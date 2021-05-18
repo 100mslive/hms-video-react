@@ -5,5 +5,5 @@ export const messagesMapSelector = (store: HMSStore) => store.messages;
 
 export const messagesCountSelector = createSelector(
   messagesMapSelector,
-  (messages) => messages.allIDs.length
-)
+  messages => messages.allIDs.length,
+);

@@ -1,13 +1,11 @@
-import {
-  HMSPeer,
-  HMSMessage,
-  HMSTrack,
-} from '../schema';
+import { HMSPeer, HMSMessage, HMSTrack } from '../schema';
 
 import * as sdkTypes from './sdkTypes';
 
 export class SDKToHMS {
-  static convertPeer(sdkPeer: sdkTypes.HMSPeer): Partial<HMSPeer> & Pick<HMSPeer, 'id'> {
+  static convertPeer(
+    sdkPeer: sdkTypes.HMSPeer,
+  ): Partial<HMSPeer> & Pick<HMSPeer, 'id'> {
     return {
       id: sdkPeer.peerId,
       name: sdkPeer.name,
@@ -16,7 +14,7 @@ export class SDKToHMS {
       videoTrack: sdkPeer.videoTrack?.trackId,
       audioTrack: sdkPeer.audioTrack?.trackId,
       auxiliaryTracks: sdkPeer.auxiliaryTracks.map(t => t.trackId),
-    }
+    };
   }
 
   static convertTrack(sdkTrack: sdkTypes.HMSTrack): HMSTrack {
@@ -25,15 +23,17 @@ export class SDKToHMS {
       source: sdkTrack.source,
       type: sdkTrack.type,
       enabled: sdkTrack.enabled,
-    }
+    };
   }
 
-  static convertMessage(sdkMessage: sdkTypes.HMSMessage): Partial<HMSMessage> & Pick<HMSMessage, 'sender'> {
+  static convertMessage(
+    sdkMessage: sdkTypes.HMSMessage,
+  ): Partial<HMSMessage> & Pick<HMSMessage, 'sender'> {
     return {
       sender: sdkMessage.sender,
       time: sdkMessage.time,
       type: sdkMessage.type,
       message: sdkMessage.message,
-    }
+    };
   }
 }

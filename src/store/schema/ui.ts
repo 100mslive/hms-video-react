@@ -1,11 +1,11 @@
 export interface HMSComponentsStyle {
   videoTile: {
-    showAudioLevel?: boolean,
-  },
+    showAudioLevel?: boolean;
+  };
   chatBox: {
-    autoScroll: false,
-  },
+    autoScroll: false;
+  };
   videoList: {
-    maxTiles?: number,
-  }
+    maxTiles?: number;
+  };
 }

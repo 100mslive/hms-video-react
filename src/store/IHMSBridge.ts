@@ -15,7 +15,6 @@ export default interface IHMSBridge {
 }
 
 export interface HMSError {
-  code: number,
-  message: string
+  code: number;
+  message: string;
 }
-
