@@ -8,37 +8,30 @@ import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { SettingsFormProps } from '../Settings/Settings';
-import { useHMSTheme } from '../..';
-import { resolveClasses } from '../../utils/classes';
-// @ts-ignore
-import { apply } from 'twind';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 interface MuteStatus {
   audioMuted?: boolean;
   videoMuted?: boolean;
 }
-interface PreviewClasses {
+export interface PreviewClasses {
   root?: string;
   containerRoot?: string;
   header?: string;
   messageModal?: string;
-
   helloDiv?: string;
   joinButton?: string;
   goBackButton?: string;
 }
 const defaultClasses: PreviewClasses = {
   root:
-    'flex h-screen w-screen bg-gray-600 dark:bg-black justify-center items-center',
+    'flex h-screen w-screen bg-white dark:bg-black justify-center items-center',
   containerRoot:
-    'flex flex-col items-center w-37.5 h-400 box-border bg-white dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
+    'flex flex-col items-center w-37.5 h-400 box-border bg-gray-600 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
   header: 'w-22.5 h-22.5 mt-1.875 mb-7',
   helloDiv: 'text-2xl font-medium mb-12',
-  joinButton:
-    'flex justify-center items-center w-8.75 h-3.25 mb-1.625 py-3.5 px-5 text-white bg-brand-main rounded-xl text-lg font-semibold cursor-pointer',
-  goBackButton: 'text-brand-main text-lg font-semibold cursor-pointer',
 };
-interface StyledPreviewProps {
+interface PreviewProps {
   name: string;
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
   onChange: (values: SettingsFormProps) => void;
@@ -46,10 +39,6 @@ interface StyledPreviewProps {
   toggleMute: (type: 'audio' | 'video') => void;
   videoTileProps: Partial<VideoTileProps>;
   videoTileClasses?: VideoTileClasses;
-  /**
-   * default classes
-   */
-  defaultClasses?: PreviewClasses;
   /**
    * extra classes added  by user
    */
@@ -64,11 +53,14 @@ export const Preview = ({
   videoTileProps,
   classes,
   videoTileClasses,
-}: StyledPreviewProps) => {
-  const { tw } = useHMSTheme();
-  const finalClasses: PreviewClasses = resolveClasses(
-    classes || {},
-    defaultClasses,
+}: PreviewProps) => {
+  const parseClass = useCallback(
+    hmsUiClassParserGenerator<PreviewClasses>({
+      classes,
+      defaultClasses,
+      tag: 'hmsui-preview',
+    }),
+    [],
   );
   const [mediaStream, setMediaStream] = useState(new MediaStream());
   const [errorState, setErrorState] = useState(false);
@@ -232,10 +224,6 @@ export const Preview = ({
     onChange(values);
   }, []);
 
-  const parseClass = (s: keyof PreviewClasses) => {
-    return tw(`hmsui-preview-${s}`, apply(finalClasses[s]));
-  };
-
   return (
     // root
     <div className={parseClass('root')}>
@@ -293,7 +281,7 @@ export const Preview = ({
           Join
         </Button>
         <Button
-          classes={{ rootNoFill: 'mt-4' }}
+          classes={{ rootNoFill: 'mt-4 text-brand-main' }}
           variant={'no-fill'}
           onClick={() => {
             closeMediaStream(mediaStream);
@@ -306,5 +294,3 @@ export const Preview = ({
     </div>
   );
 };
-
-export type PreviewProps = Omit<StyledPreviewProps, 'defaultClasses'>;

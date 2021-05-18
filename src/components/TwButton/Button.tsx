@@ -82,7 +82,7 @@ export interface ButtonClasses {
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex items-center justify-center text-base font-medium shadow-2 focus:outline-none',
+    'inline-flex items-center justify-center text-base font-medium focus:outline-none',
   rootFocus: 'focus:ring-brand-tint',
   rootDisabled: 'opacity-50 cursor-not-allowed text', // TODO: disbaled hover state
   rootStandard: 'bg-gray-200 hover:bg-gray-300',
