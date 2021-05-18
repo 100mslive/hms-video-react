@@ -1,4 +1,4 @@
-import React,{useCallback} from 'react';
+import React, { useCallback } from 'react';
 import { ButtonDisplayType } from '../../types';
 import {
   HangUpIcon,
@@ -11,7 +11,7 @@ import {
 } from '../Icons';
 import { Button as TwButton } from '../TwButton';
 import { Settings } from '../Settings/Settings';
-import {VerticalDivider} from '../VerticalDivider'
+import { VerticalDivider } from '../VerticalDivider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 export interface ControlBarClasses {
@@ -66,8 +66,7 @@ export const ControlBar = ({
       }}
       key={0}
     />,
-    <VerticalDivider key={1}/>
-    ,
+    <VerticalDivider key={1} />,
     <TwButton
       iconOnly
       variant={'no-fill'}
@@ -78,8 +77,7 @@ export const ControlBar = ({
     >
       <ShareScreenIcon />
     </TwButton>,
-    <VerticalDivider key={4}/>
-    ,
+    <VerticalDivider key={4} />,
     <TwButton
       iconOnly
       variant={'no-fill'}
@@ -149,7 +147,7 @@ export const ControlBar = ({
 
   leftComponents.forEach(comp => {
     leftItems.push(comp);
-  })
+  });
 
   return (
     <div className={combinedClasses('root')}>

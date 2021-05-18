@@ -1,6 +1,5 @@
-import React,{useCallback} from 'react';
+import React, { useCallback } from 'react';
 import { Participant, Peer } from '../../types';
-import { Button } from '../TwButton';
 import { VolumeIcon, Logo } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
@@ -22,11 +21,11 @@ export interface HeaderProps {
 
 const defaultClasses: HeaderClasses = {
   root:
-    'flex flex-grow bg-white dark:bg-black h-7.5 items-center p-2 relative gap-x-4 self-center justify-center ',
+    'flex flex-grow bg-white text-gray-100 dark:bg-black dark:text-gray-500 h-7.5 items-center p-2 relative gap-x-4 self-center justify-center ',
   leftRoot:
-    'flex md:flex-none md:self-center md:justify-center md:left-0 md:ml-2 md:absolute',
+    'flex md:flex-none text-black dark:text-white md:self-center md:justify-center md:left-0 md:ml-2 md:absolute',
   centerRoot:
-    'md:flex md:flex-grow md:mr-2 md:self-center md:justify-center hidden md:visible dark:text-white text-gray-100',
+    'md:flex md:flex-grow md:mr-2 md:self-center md:justify-center hidden md:visible',
   rightRoot:
     'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-5',
 };
@@ -35,16 +34,21 @@ export const Header = ({
   peer,
   time,
   speaker,
-  leftComponents = [
-    <Button variant={'no-fill'} size={'lg'}>
-      <Logo />{' '}
-    </Button>,
-  ],
+  leftComponents = [<Logo />],
   centerComponents = [
-    <Button variant={'no-fill'}>
-      <VolumeIcon className="mr-2" />
-      {speaker}
-    </Button>,
+    speaker ? (
+      <div
+        className={`self-center focus:outline-none text-lg flex items-center`}
+      >
+        <div className="inline-block">
+          <VolumeIcon />
+        </div>
+        {/* TODO figure out why xs:hidden is needed */}
+        <div className="md:pl-1 xs:hidden md:inline-block">{speaker}</div>
+      </div>
+    ) : (
+      <></>
+    ),
   ],
   rightComponents = [],
   classes,

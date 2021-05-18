@@ -7,7 +7,6 @@ import InlineWave from './InlineWave';
 import { AudioLevelBorder, AudioLevelIndicatorClasses } from './Border';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 
-
 export interface AudioLevelIndicatorProps {
   peerId?: string;
   audioLevelEmitter?: EventEmitter;

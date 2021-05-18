@@ -71,18 +71,12 @@ export const Join = ({
     [],
   );
 
-  const finalClasses: JoinClasses = resolveClasses(
-    classes || {},
-    defaultClasses,
-  );
   const [username, setUserName] = useState(initialValues?.username || '');
   const [role, setRole] = useState(initialValues?.role || 'Student');
   const [roomId, setRoomId] = useState(
     initialValues?.roomId || '607d781cdcee704ca43cafb9',
   );
   const [endpoint, setEndpoint] = useState(initialValues?.endpoint || 'qa');
-
-  const { tw } = useHMSTheme();
 
   useEffect(() => {
     initialValues?.username && setUserName(initialValues.username);

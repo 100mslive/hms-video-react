@@ -1,29 +1,12 @@
 import React, { useCallback, useState } from 'react';
-import {
-  DownCaratIcon,
-  UpCaratIcon,
-  MicOffIcon,
-  MicOnIcon,
-  StarFillIcon,
-  StarIcon,
-} from '../Icons';
+import { DownCaratIcon, UpCaratIcon, MicOffIcon, MicOnIcon } from '../Icons';
 import { Participant } from '../../types';
 import { Button } from '../TwButton';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { groupBy } from 'lodash';
 import './index.css';
+import { Avatar } from '../TwAvatar';
 
-const ParticipantAvatar = React.memo(
-  ({ label = '', width = '24px' }: { label: string; width?: string }) => {
-    return (
-      <img
-        src={`https://ui-avatars.com/api/?name=${label}&background=random&rounded=true&font-size=0.53`}
-        alt={`${label}'s Avatar`}
-        style={{ width, height: width }}
-      />
-    );
-  },
-);
 interface ParticipantListClasses {
   root?: string;
   buttonRoot?: string;
@@ -37,6 +20,8 @@ interface ParticipantListClasses {
   menuItem?: string;
   menuText?: string;
   menuIconContainer?: string;
+  offIcon?: string;
+  onIcon?: string;
 }
 
 export interface ParticipantListProps {
@@ -49,24 +34,30 @@ const defaultClasses: ParticipantListClasses = {
     'flex flex-grow justify-content:center border-opacity-0 sm:hidden md:inline-block relative',
   buttonRoot:
     'text-gray-300 dark:text-gray-500 flex border-opacity-0 focus:outline-none w-60 py-1.5 bg-white',
-  buttonOpen: 'rounded-t-lg dark:bg-gray-100',
-  buttonClosed: 'rounded-lg dark:bg-black',
-  buttonInner: 'flex flex-grow justify-center px-3 tracking-wide self-center',
+  buttonOpen: 'rounded-t-xl dark:bg-gray-100 shadow-1 dark:shadow-none',
+  buttonClosed: 'rounded-xl dark:bg-black',
+  buttonInner:
+    'flex flex-grow justify-center px-3 m-0 my-1 tracking-wide self-center',
   buttonText: 'pl-2 self-center',
   carat: 'w-3 h-3',
+  // TODO fix shadow border
   menuRoot:
-    'w-60 max-h-100 overflow-y-auto rounded-b-lg bg-white dark:bg-gray-100 focus:outline-none z-50 absolute',
+    'w-60 max-h-116 pb-2 overflow-y-auto rounded-b-xl bg-white shadow-1 dark:shadow-none dark:bg-gray-100 focus:outline-none z-50 absolute',
   menuSection:
-    'text-gray-300 dark:text-gray-500 group flex items-center px-3 py-2 text-base',
+    'text-gray-200 dark:text-gray-500 group flex items-center px-3 pt-3 pb-2 text-base',
   menuItem:
     'text-gray-100 dark:text-white group flex items-center flex-nowrap px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
-  menuText: 'max-w-xs mx-2 overflow-ellipsis',
+  menuText:
+    'w-52 whitespace-nowrap overflow-hidden overflow-ellipsis flex items-center',
   menuIconContainer: 'flex flex-grow justify-self-end justify-end',
+  onIcon: '',
+  offIcon: '',
 };
 
-const customClasses:ParticipantListClasses = {
-  menuRoot:'hmsui-participantList-scrollbar'
-}
+const customClasses: ParticipantListClasses = {
+  menuRoot: 'hmsui-participantList-scrollbar',
+  onIcon: 'hmsui-participantList-show-on-group-hover',
+};
 
 type RoleMap = Map<string, Participant[]>;
 
@@ -96,11 +87,7 @@ export const ParticipantList = ({
       <button
         type="button"
         className={`${hu('buttonRoot')}
-          ${
-            listOpen
-              ? hu('buttonOpen')
-              : hu('buttonClosed')
-          }`}
+          ${listOpen ? hu('buttonOpen') : hu('buttonClosed')}`}
         onClick={handleClick}
       >
         <div className={`${hu('buttonInner')}`}>
@@ -127,10 +114,7 @@ export const ParticipantList = ({
             roles.map((role, index) => (
               <div key={index}>
                 <div>
-                  <span
-                    className={`${hu('menuSection')}`}
-                    role="menuitem"
-                  >
+                  <span className={`${hu('menuSection')}`} role="menuitem">
                     {role === 'undefined' ? 'Unknown' : role}
                     {rolesMap[role].length > 1 ? 's' : ''}{' '}
                     {rolesMap[role].length}
@@ -144,42 +128,34 @@ export const ParticipantList = ({
                         role="menuitem"
                         key={index}
                       >
-                        <ParticipantAvatar
-                          label={participant.peer.displayName}
-                        />
                         <div className={`${hu('menuText')}`}>
+                          <Avatar
+                            label={participant.peer.displayName}
+                            shape="square"
+                            classes={{ root: 'mr-2' }}
+                          />
                           {participant.peer.displayName}
                         </div>
-                        <div
-                          className={`${hu('menuIconContainer')}`}
-                        >
-                          <Button
-                            iconOnly
-                            shape={'circle'}
-                            size={'sm'}
-                            classes={{
-                              root: 'to-be-overridden',
-                            }}
-                            active={participant.isAudioMuted}
-                          >
-                            {participant.isAudioMuted ? (
-                              <MicOffIcon />
-                            ) : (
-                              <MicOnIcon />
-                            )}
-                          </Button>
-                          <Button
-                            iconOnly
-                            shape={'circle'}
-                            size={'sm'}
-                            active={participant.isStarMarked}
-                          >
-                            {participant.isStarMarked ? (
-                              <StarIcon />
-                            ) : (
-                              <StarFillIcon />
-                            )}
-                          </Button>
+                        <div className={`${hu('menuIconContainer')}`}>
+                          {participant.isAudioMuted ? (
+                            <div className={`${hu('offIcon')}`}>
+                              <Button
+                                iconOnly
+                                shape={'circle'}
+                                variant={'danger'}
+                                size={'sm'}
+                                active={participant.isAudioMuted}
+                              >
+                                <MicOffIcon />
+                              </Button>
+                            </div>
+                          ) : (
+                            <div className={`${hu('onIcon')}`}>
+                              <Button iconOnly shape={'circle'} size={'sm'}>
+                                <MicOnIcon />
+                              </Button>
+                            </div>
+                          )}
                         </div>
                       </span>
                     ))}
