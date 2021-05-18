@@ -318,8 +318,10 @@ export const ChatBox = ({
           />
           {/* sendButton */}
           <Button
-            variant={'icon-only'}
-            size={'sm'}
+            iconOnly
+            variant={'no-fill'}
+            iconSize={'sm'}
+            size="sm"
             onClick={() => {
               onSend(message);
               setMessage('');
