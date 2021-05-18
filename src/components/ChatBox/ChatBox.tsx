@@ -4,8 +4,9 @@ import './index.css';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
-import { Button } from '../Button';
+import { Button } from '../TwButton';
 import { useInView } from 'react-intersection-observer';
+import { TwButton } from '../..';
 
 interface ChatBoxClasses {
   root?: string;
@@ -190,9 +191,20 @@ export const ChatBox = ({
             </div>
             <div>
               {/* headerCloseButton */}
-              <Button
+              {/* <Button
                 variant={'icon-only'}
                 size={'sm'}
+                onClick={() => {
+                  if (onClose) {
+                    onClose();
+                  }
+                }}
+              ></Button> */}
+              <Button
+                iconOnly
+                variant={'no-fill'}
+                iconSize={'sm'}
+                size="sm"
                 onClick={() => {
                   if (onClose) {
                     onClose();

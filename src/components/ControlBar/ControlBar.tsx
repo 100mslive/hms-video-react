@@ -96,20 +96,20 @@ export const ControlBar = ({
       variant={'no-fill'}
       iconSize="md"
       shape={buttonDisplay}
-      active={isVideoMuted}
-      onClick={videoButtonOnClick}
+      active={isAudioMuted}
+      onClick={audioButtonOnClick}
     >
-      {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </TwButton>,
     <TwButton
       iconOnly
       variant={'no-fill'}
       iconSize="md"
       shape={buttonDisplay}
-      active={isAudioMuted}
-      onClick={audioButtonOnClick}
+      active={isVideoMuted}
+      onClick={videoButtonOnClick}
     >
-      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+      {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
     </TwButton>,
   ],
   rightComponents = [
