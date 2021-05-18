@@ -24,7 +24,7 @@ interface ChatBoxClasses {
   notificationInfo?: string;
   notificationText?: string;
   notificationTime?: string;
-  time?:string;
+  time?: string;
   noMessageRoot?: string;
   footer?: string;
   chatInput?: string;
@@ -62,10 +62,10 @@ const defaultClasses: ChatBoxClasses = {
   unreadIcon: 'ml-2 w-3 h-3',
 };
 
-const customClasses:ChatBoxClasses = {
-  messageBox:'hmsui-chatBox-no-scrollbar',
-  chatInput:'hmsui-chatBox-no-scrollbar',
-}
+const customClasses: ChatBoxClasses = {
+  messageBox: 'hmsui-chatBox-no-scrollbar',
+  chatInput: 'hmsui-chatBox-no-scrollbar',
+};
 export interface Message {
   message: string;
   sender?: string;
@@ -216,10 +216,7 @@ export const ChatBox = ({
         </div>
         {/* messageBox */}
         {/* TODO: move no scroll bar css logic to tailwind */}
-        <div
-          className={`${hu('messageBox')}`}
-          ref={messagesRef}
-        >
+        <div className={`${hu('messageBox')}`} ref={messagesRef}>
           {localMessages.map(message => {
             return message.notification ? (
               /* notificationRoot */
@@ -243,9 +240,7 @@ export const ChatBox = ({
                 {/* messageInfo */}
                 <div className={hu('messageInfo')}>
                   {/* messageSender */}
-                  <span className={hu('messageSender')}>
-                    {message.sender}
-                  </span>
+                  <span className={hu('messageSender')}>{message.sender}</span>
                   {/* messageTime */}
                   <span className={hu('messageTime')}>
                     {timeFormatter(message.time)}

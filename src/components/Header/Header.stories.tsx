@@ -28,7 +28,25 @@ const Template: Story<HeaderProps> = args => {
   );
 };
 
+const LightTemplate: Story<HeaderProps> = args => {
+  return (
+    <div className="w-full h-screen">
+      <HMSThemeProvider
+        config={{}}
+        appBuilder={{
+          theme: 'light',
+          // logo:
+          //   'https://image.shutterstock.com/image-illustration/gold-stack-overflow-icon-on-260nw-1113780074.jpg',
+        }}
+      >
+        <Header {...args} rightComponents={[]} />
+      </HMSThemeProvider>
+    </div>
+  );
+};
+
 export const Default = Template.bind({});
+export const Light = LightTemplate.bind({});
 
 const participants = [
   {
@@ -64,6 +82,13 @@ const participants = [
 ];
 
 Default.args = {
+  peer: { id: '123', displayName: 'Siddhant' },
+  time: 1865,
+  speaker: 'Siddhant',
+  rightComponents: [<ParticipantList participantList={participants} />],
+};
+
+Light.args = {
   peer: { id: '123', displayName: 'Siddhant' },
   time: 1865,
   speaker: 'Siddhant',

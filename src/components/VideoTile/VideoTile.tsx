@@ -1,15 +1,13 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import './index.css';
 import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
 import { getVideoTileLabel } from '../../utils';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { resolveClasses } from '../../utils/classes';
-// @ts-ignore
-import { apply } from 'twind';
-interface StyledVideoTileProps extends Omit<VideoProps, 'peerId'> {
+export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
    */
@@ -46,10 +44,6 @@ interface StyledVideoTileProps extends Omit<VideoProps, 'peerId'> {
    * Default is VideoTileControls.
    */
   controlsComponent?: React.ReactNode;
-  /**
-   * default classes
-   */
-  defaultClasses?: VideoTileClasses;
   /**
    * extra classes added  by user
    */
@@ -88,6 +82,10 @@ const defaultClasses: VideoTileClasses = {
   videoContainerCircle: 'rounded-full',
 };
 
+const customClasses: VideoTileClasses = {
+  root: 'hmsui-videoTile-showControlsOnHoverParent',
+};
+
 export const VideoTile = ({
   videoTrack,
   hmsVideoTrack,
@@ -109,15 +107,17 @@ export const VideoTile = ({
   controlsComponent,
   classes,
   audioLevelEmitter,
-}: StyledVideoTileProps) => {
-  const finalClasses: VideoTileClasses = resolveClasses(
-    classes || {},
-    defaultClasses,
+}: VideoTileProps) => {
+  const { appBuilder } = useHMSTheme();
+  const parseClass = useCallback(
+    hmsUiClassParserGenerator<VideoTileClasses>({
+      classes,
+      customClasses,
+      defaultClasses,
+      tag: 'hmsui-videoTile',
+    }),
+    [],
   );
-  const { tw, appBuilder } = useHMSTheme();
-  const parseClass = (s: keyof VideoTileClasses) => {
-    return tw(`hmsui-videotile-${s}`, apply(finalClasses[s]));
-  };
   const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
   try {
     if (aspectRatio === undefined) {
@@ -187,6 +187,7 @@ export const VideoTile = ({
           ) : (
             // TODO circle controls are broken now
             <VideoTileControls
+              isLocal={isLocal}
               label={label}
               isAudioMuted={isAudioMuted}
               showAudioMuteStatus={showAudioMuteStatus}
@@ -204,5 +205,3 @@ export const VideoTile = ({
     </div>
   );
 };
-
-export type VideoTileProps = Omit<StyledVideoTileProps, 'defaultClasses'>;

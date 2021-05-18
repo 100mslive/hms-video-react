@@ -78,25 +78,37 @@ export interface ButtonClasses {
   rootIconSizeSm: string;
   rootIconSizeMd: string;
   rootIconSizeLg: string;
+  rootIconOnlyStandard: string;
+  rootIconOnlyDanger: string;
+  rootIconOnlyStandardActive: string;
+  rootIconOnlyDangerActive: string;
 }
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex items-center justify-center text-base font-medium shadow-2 focus:outline-none',
+    'inline-flex items-center justify-center text-base font-medium focus:outline-none',
   rootFocus: 'focus:ring-brand-tint',
-  rootDisabled: 'opacity-50 cursor-not-allowed text', // TODO: disbaled hover state
-  rootStandard: 'bg-gray-200 hover:bg-gray-300',
-  rootDanger: 'bg-red-main hover:bg-red-tint',
-  rootEmphasized: 'bg-brand-main hover:bg-brand-tint',
-  rootNoFill: 'hover:opacity-80 shadow-none',
+  rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
+  rootStandard: 'bg-gray-200 hover:bg-gray-300 text-white',
+  rootDanger: 'bg-red-main hover:bg-red-tint text-white',
+  rootEmphasized: 'bg-brand-main hover:bg-brand-tint text-white',
+  rootNoFill: 'hover:opacity-80 shadow-none text-white',
   rootCircle: 'rounded-full',
   rootRectangle: 'rounded-lg',
   rootSizeSm: 'px-2.5 py-1.5',
   rootSizeMd: 'px-4 py-2',
   rootSizeLg: 'px-6 py-3',
   rootIconSizeSm: 'w-7 h-7 p-0.5 rounded-full',
-  rootIconSizeMd: 'w-9 h-9 p-1',
+  rootIconSizeMd: 'w-8 h-8 p-1',
   rootIconSizeLg: 'w-10 h-10 p-1',
+  rootIconOnlyStandard:
+    'text-black hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
+  rootIconOnlyDanger:
+    'text-black hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
+  rootIconOnlyStandardActive:
+    'dark:bg-white dark:text-black bg-gray-200 text-white',
+  rootIconOnlyDangerActive:
+    'bg-red-main hover:bg-red-tint dark:hover:bg-red-tint text-white dark:text-white',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
@@ -127,6 +139,8 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
         danger: `${finalClasses.rootDanger}`,
         emphasized: `${finalClasses.rootEmphasized}`,
         'no-fill': `${finalClasses.rootNoFill}`,
+        iconOnlyStandard: `${finalClasses.rootIconOnlyStandard}`,
+        iconOnlyDanger: `${finalClasses.rootIconOnlyDanger}`,
       },
       disabled: {
         true: `${finalClasses.rootDisabled}`,
@@ -148,6 +162,11 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
         md: `${finalClasses.rootIconSizeMd}`,
         lg: `${finalClasses.rootIconSizeLg}`,
       },
+      active: {
+        false: '',
+        standard: `${finalClasses.rootIconOnlyStandardActive}`,
+        danger: `${finalClasses.rootIconOnlyDangerActive}`,
+      },
     },
   });
   const twClasses = !iconOnly
@@ -162,21 +181,32 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
       )
     : tw(
         button({
-          variant: variant,
+          variant: variant === 'danger' ? 'iconOnlyDanger' : 'iconOnlyStandard',
           disabled: disabled,
           focus: focus,
           shape: shape,
           iconSize: iconSize,
+          active:
+            (variant === 'danger' && active && 'danger') ||
+            (variant !== 'danger' && active && 'standard'),
         }),
       );
   // TODO: chaining descriptive classNames so that user knows which to override
   const propClass = 'hmsui-button';
   const className = tw(propClass, twClasses);
   return (
-    <button type="button" className={`${className} icon-size-${size} ${active ? "bg-white text-black" :"text-white hover:bg-gray-200"} ${iconOnly ? "focus:ring-0":"focus:ring"}`} {...props}>
-      {icon && !iconRight && <span className="mr-2 btn-icon flex items-center">{icon}</span>}
+    <button
+      type="button"
+      className={`${className} icon-size-${size}`}
+      {...props}
+    >
+      {icon && !iconRight && (
+        <span className="mr-2 btn-icon flex items-center">{icon}</span>
+      )}
       {children}
-      {iconRight && <span className="ml-2 btn-icon flex items-center">{icon}</span>}
+      {iconRight && (
+        <span className="ml-2 btn-icon flex items-center">{icon}</span>
+      )}
     </button>
   );
 };

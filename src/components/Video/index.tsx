@@ -175,11 +175,7 @@ export const Video = ({
         playsInline
         className={`${hu('video')} 
           ${displayShape === 'circle' ? hu('videoCircle') : ''}
-          ${
-            isLocal && videoSource === 'camera'
-              ? hu('videoLocal')
-              : ''
-          }
+          ${isLocal && videoSource === 'camera' ? hu('videoLocal') : ''}
           ${objectFit === 'contain' ? hu('videoContain') : ''}
           ${objectFit === 'cover' ? hu('videoCover') : ''}
         `}
