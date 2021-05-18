@@ -74,7 +74,7 @@ export const Join = ({
   const [roomId, setRoomId] = useState(
     initialValues?.roomId || '607d781cdcee704ca43cafb9',
   );
-  const [endpoint, setEndpoint] = useState(initialValues?.endpoint || 'qa2-us');
+  const [endpoint, setEndpoint] = useState(initialValues?.endpoint || 'qa');
 
   const { tw } = useHMSTheme();
 
@@ -100,7 +100,7 @@ export const Join = ({
           <div className={parseClass('inputFieldRoot')}>
             <input
               className={parseClass('inputField')}
-              value={initialValues?.username || username}
+              defaultValue={initialValues?.username || username}
               onChange={event => {
                 setUserName(event.target.value);
               }}
@@ -112,7 +112,7 @@ export const Join = ({
           <div className={parseClass('inputFieldRoot')}>
             <input
               className={parseClass('inputField')}
-              value={initialValues?.roomId || roomId}
+              defaultValue={initialValues?.roomId || roomId}
               onChange={event => {
                 setRoomId(event.target.value);
               }}
@@ -125,7 +125,7 @@ export const Join = ({
             <select
               name="role"
               className={parseClass('inputField')}
-              value={initialValues?.role || role}
+              defaultValue={initialValues?.role || role}
               onChange={event => {
                 setRole(event.target.value);
               }}
@@ -143,16 +143,14 @@ export const Join = ({
             <select
               name="endpoint"
               className={parseClass('inputField')}
-              value={initialValues?.endpoint || endpoint}
+              defaultValue={initialValues?.endpoint || endpoint}
               onChange={event => {
                 setEndpoint(event.target.value);
               }}
             >
-              <option value="qa2-us">qa2-us</option>
-              <option value="qa-in2">qa-in2</option>
-              <option value="prod-in2">prod-in2</option>
-              <option value="dev-in2">dev-in2</option>
-              <option value="100ms-grpc">100ms-grpc</option>
+              <option value="qa">qa</option>
+              <option value="prod">prod</option>
+              <option value="dev">dev</option>
             </select>
           </div>
           <div className={parseClass('joinRoot')}>
@@ -163,7 +161,7 @@ export const Join = ({
                   username,
                   roomId,
                   role,
-                  endpoint: `https://${endpoint}.100ms.live/init`,
+                  endpoint: `https://${endpoint}-init.100ms.live/init`,
                 })
               }
             >

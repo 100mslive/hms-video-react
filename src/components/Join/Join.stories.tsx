@@ -32,12 +32,14 @@ const OverrideClass: Story<JoinProps> = args => {
 
 export const Default = Template.bind({});
 Default.args = {
-  submitOnClick: params =>
-    alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`),
+  submitOnClick: params => {
+    alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`);
+  },
 };
 
 export const OverrideClasses = OverrideClass.bind({});
-Default.args = {
-  submitOnClick: params =>
-    alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`),
+OverrideClasses.args = {
+  submitOnClick: params => {
+    alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`);
+  },
 };
