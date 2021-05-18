@@ -6,6 +6,7 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { groupBy } from 'lodash';
 import './index.css';
 import { Avatar } from '../TwAvatar';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 interface ParticipantListClasses {
   root?: string;
@@ -83,87 +84,90 @@ export const ParticipantList = ({
   const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
 
   return (
-    <div className={`${hu('root')}`}>
-      <button
-        type="button"
-        className={`${hu('buttonRoot')}
+    <ClickAwayListener onClickAway={handleClick}>
+      <div className={`${hu('root')}`}>
+        <button
+          type="button"
+          className={`${hu('buttonRoot')}
           ${listOpen ? hu('buttonOpen') : hu('buttonClosed')}`}
-        onClick={handleClick}
-      >
-        <div className={`${hu('buttonInner')}`}>
-          {participantList?.length} in room
-          <span className={`${hu('buttonText')}`}>
-            {listOpen ? (
-              <UpCaratIcon className={hu('carat')} />
-            ) : (
-              <DownCaratIcon className={hu('carat')} />
-            )}
-          </span>
-        </div>
-      </button>
-      {listOpen && (
-        <div
-          className={`${hu('menuRoot')}`}
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="menu-button"
-          tabIndex={-1}
+          onClick={handleClick}
         >
-          {roles &&
-            //@ts-expect-error
-            roles.map((role, index) => (
-              <div key={index}>
-                <div>
-                  <span className={`${hu('menuSection')}`} role="menuitem">
-                    {role === 'undefined' ? 'Unknown' : role}
-                    {rolesMap[role].length > 1 ? 's' : ''}{' '}
-                    {rolesMap[role].length}
-                  </span>
+          <div className={`${hu('buttonInner')}`}>
+            {participantList?.length} in room
+            <span className={`${hu('buttonText')}`}>
+              {listOpen ? (
+                <UpCaratIcon className={hu('carat')} />
+              ) : (
+                <DownCaratIcon className={hu('carat')} />
+              )}
+            </span>
+          </div>
+        </button>
+
+        {listOpen && (
+          <div
+            className={`${hu('menuRoot')}`}
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="menu-button"
+            tabIndex={-1}
+          >
+            {roles &&
+              //@ts-expect-error
+              roles.map((role, index) => (
+                <div key={index}>
+                  <div>
+                    <span className={`${hu('menuSection')}`} role="menuitem">
+                      {role === 'undefined' ? 'Unknown' : role}
+                      {rolesMap[role].length > 1 ? 's' : ''}{' '}
+                      {rolesMap[role].length}
+                    </span>
+                  </div>
+                  <div>
+                    {rolesMap[role] &&
+                      rolesMap[role].map((participant, index) => (
+                        <span
+                          className={`${hu('menuItem')}`}
+                          role="menuitem"
+                          key={index}
+                        >
+                          <div className={`${hu('menuText')}`}>
+                            <Avatar
+                              label={participant.peer.displayName}
+                              shape="square"
+                              classes={{ root: 'mr-2' }}
+                            />
+                            {participant.peer.displayName}
+                          </div>
+                          <div className={`${hu('menuIconContainer')}`}>
+                            {participant.isAudioMuted ? (
+                              <div className={`${hu('offIcon')}`}>
+                                <Button
+                                  iconOnly
+                                  shape={'circle'}
+                                  variant={'danger'}
+                                  size={'sm'}
+                                  active={participant.isAudioMuted}
+                                >
+                                  <MicOffIcon />
+                                </Button>
+                              </div>
+                            ) : (
+                              <div className={`${hu('onIcon')}`}>
+                                <Button iconOnly shape={'circle'} size={'sm'}>
+                                  <MicOnIcon />
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </span>
+                      ))}
+                  </div>
                 </div>
-                <div>
-                  {rolesMap[role] &&
-                    rolesMap[role].map((participant, index) => (
-                      <span
-                        className={`${hu('menuItem')}`}
-                        role="menuitem"
-                        key={index}
-                      >
-                        <div className={`${hu('menuText')}`}>
-                          <Avatar
-                            label={participant.peer.displayName}
-                            shape="square"
-                            classes={{ root: 'mr-2' }}
-                          />
-                          {participant.peer.displayName}
-                        </div>
-                        <div className={`${hu('menuIconContainer')}`}>
-                          {participant.isAudioMuted ? (
-                            <div className={`${hu('offIcon')}`}>
-                              <Button
-                                iconOnly
-                                shape={'circle'}
-                                variant={'danger'}
-                                size={'sm'}
-                                active={participant.isAudioMuted}
-                              >
-                                <MicOffIcon />
-                              </Button>
-                            </div>
-                          ) : (
-                            <div className={`${hu('onIcon')}`}>
-                              <Button iconOnly shape={'circle'} size={'sm'}>
-                                <MicOnIcon />
-                              </Button>
-                            </div>
-                          )}
-                        </div>
-                      </span>
-                    ))}
-                </div>
-              </div>
-            ))}
-        </div>
-      )}
-    </div>
+              ))}
+          </div>
+        )}
+      </div>
+    </ClickAwayListener>
   );
 };
