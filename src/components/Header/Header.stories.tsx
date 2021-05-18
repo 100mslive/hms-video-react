@@ -17,7 +17,7 @@ const Template: Story<HeaderProps> = args => {
       <HMSThemeProvider
         config={{}}
         appBuilder={{
-          theme: 'dark',
+          theme: 'light',
           logo: '',
           // 'https://image.shutterstock.com/image-illustration/gold-stack-overflow-icon-on-260nw-1113780074.jpg',
         }}

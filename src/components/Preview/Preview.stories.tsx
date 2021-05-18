@@ -12,7 +12,7 @@ export default meta;
 
 const Template: Story<PreviewProps> = args => {
   return (
-    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
       <div>
         <Preview {...args} />
       </div>
