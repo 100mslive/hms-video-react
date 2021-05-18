@@ -1,9 +1,9 @@
-#HMSui-components-participant-list::-webkit-scrollbar {
+.hmsui-participantList-scrollbar::-webkit-scrollbar {
   background: none;
-  width: 10px;
+  width: 4px;
 }
 
-#HMSui-components-participant-list::-webkit-scrollbar-thumb {
+.hmsui-participantList-scrollbar::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #5e5e5e;
