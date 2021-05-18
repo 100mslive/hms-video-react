@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
 import { Button } from '../Button';
 import { useInView } from 'react-intersection-observer';
 
@@ -25,6 +24,7 @@ interface ChatBoxClasses {
   notificationInfo?: string;
   notificationText?: string;
   notificationTime?: string;
+  time?:string;
   noMessageRoot?: string;
   footer?: string;
   chatInput?: string;
@@ -62,6 +62,10 @@ const defaultClasses: ChatBoxClasses = {
   unreadIcon: 'ml-2 w-3 h-3',
 };
 
+const customClasses:ChatBoxClasses = {
+  messageBox:'hmsui-chatBox-no-scrollbar',
+  chatInput:'hmsui-chatBox-no-scrollbar',
+}
 export interface Message {
   message: string;
   sender?: string;
@@ -69,19 +73,13 @@ export interface Message {
   notification?: boolean;
   direction?: 'left' | 'right' | 'center';
 }
-interface StyledChatProps {
+export interface ChatProps {
   messages: Message[];
   onSend: (message: string) => void;
   onClose?: () => void;
   willScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
   messageFormatter?: (message: string) => React.ReactNode;
-
-  /**
-   * default classes
-   */
-  defaultClasses?: ChatBoxClasses;
-
   /**
    * extra classes added  by user
    */
@@ -89,7 +87,7 @@ interface StyledChatProps {
   timeFormatter?: (date: Date) => string;
 }
 
-export const StyledChatBox = ({
+export const ChatBox = ({
   messages,
   onSend,
   onClose,
@@ -106,16 +104,22 @@ export const StyledChatBox = ({
       <div className="whitespace-pre-wrap">{ReactHtmlParser(text.trim())}</div>
     );
   },
-  classes: extraClasses,
-  defaultClasses,
+  classes,
   timeFormatter = (date: Date) => {
     const min = date.getMinutes();
     const minString = min < 10 ? `0${min}` : min;
     return `${date.getHours()}:${minString}`;
   },
-}: StyledChatProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
+}: ChatProps) => {
+  const hu = useCallback(
+    hmsUiClassParserGenerator<ChatBoxClasses>({
+      classes,
+      customClasses,
+      defaultClasses,
+      tag: 'hmsui-participantList',
+    }),
+    [],
+  );
   const [message, setMessage] = useState('');
   const [localMessages, setLocalMessages] = useState<Message[]>([]);
   const [toScroll, setToScroll] = useState<ScrollBehavior | 'none'>('none');
@@ -170,15 +174,15 @@ export const StyledChatBox = ({
   return (
     <React.Fragment>
       {/* root */}
-      <div className={combinedClasses?.root}>
+      <div className={hu('root')}>
         {/* header */}
-        <div className={combinedClasses?.header}>
+        <div className={hu('header')}>
           {/* header-line */}
-          <div className={combinedClasses?.headerLine}></div>
+          <div className={hu('headerLine')}></div>
           {/* header-root */}
-          <div className={combinedClasses?.headerRoot}>
+          <div className={hu('headerRoot')}>
             {/* header-text */}
-            <div className={combinedClasses?.headerText}>
+            <div className={hu('headerText')}>
               <span>
                 <PeopleIcon />
               </span>
@@ -203,7 +207,7 @@ export const StyledChatBox = ({
                     onClose();
                   }
                 }}
-                className={combinedClasses?.headerCloseButton}
+                className={hu('headerCloseButton}
               >
                 <CloseIcon />
               </button> */}
@@ -213,42 +217,42 @@ export const StyledChatBox = ({
         {/* messageBox */}
         {/* TODO: move no scroll bar css logic to tailwind */}
         <div
-          className={`${combinedClasses?.messageBox} no-scrollbar`}
+          className={`${hu('messageBox')}`}
           ref={messagesRef}
         >
           {localMessages.map(message => {
             return message.notification ? (
               /* notificationRoot */
-              <div className={combinedClasses?.notificationRoot}>
+              <div className={hu('notificationRoot')}>
                 {/* notificationInfo*/}
-                <div className={combinedClasses?.notificationInfo}>
+                <div className={hu('notificationInfo')}>
                   {/*notificationText*/}
-                  <span className={combinedClasses?.notificationText}>
+                  <span className={hu('notificationText')}>
                     {messageFormatter
                       ? messageFormatter(message.message)
                       : message.message}
                   </span>
-                  <span className={combinedClasses?.time}>
+                  <span className={hu('time')}>
                     {timeFormatter(message.time)}
                   </span>
                 </div>
               </div>
             ) : (
               /* messageRoot */
-              <div className={combinedClasses?.messageRoot}>
+              <div className={hu('messageRoot')}>
                 {/* messageInfo */}
-                <div className={combinedClasses?.messageInfo}>
+                <div className={hu('messageInfo')}>
                   {/* messageSender */}
-                  <span className={combinedClasses?.messageSender}>
+                  <span className={hu('messageSender')}>
                     {message.sender}
                   </span>
                   {/* messageTime */}
-                  <span className={combinedClasses?.messageTime}>
+                  <span className={hu('messageTime')}>
                     {timeFormatter(message.time)}
                   </span>
                 </div>
                 {/* messageText */}
-                <div className={combinedClasses?.messageText}>
+                <div className={hu('messageText')}>
                   {/* {ReactHtmlParser(
                       Autolinker.link(message.message, { sanitizeHtml: true }),
                     )} */}
@@ -262,24 +266,24 @@ export const StyledChatBox = ({
           })}
           {localMessages.length === 0 && (
             /* NoMessageRoot */
-            <div className={combinedClasses?.noMessageRoot}>
+            <div className={hu('noMessageRoot')}>
               There are no messages here.
             </div>
           )}
           <div ref={messagesEndRef}></div>
         </div>
         {/* footer */}
-        <div className={combinedClasses?.footer}>
+        <div className={hu('footer')}>
           {unreadMessagesCount !== 0 && (
-            <div className={combinedClasses?.unreadMessagesContainer}>
+            <div className={hu('unreadMessagesContainer')}>
               <div
-                className={combinedClasses?.unreadMessagesInner}
+                className={hu('unreadMessagesInner')}
                 onClick={() => {
                   scrollToBottom({ behavior: scrollAnimation });
                 }}
               >
                 {`New message${unreadMessagesCount > 1 ? 's' : ''}`}
-                <DownCaratIcon className={combinedClasses?.unreadIcon} />
+                <DownCaratIcon className={hu('unreadIcon')} />
               </div>
             </div>
           )}
@@ -287,7 +291,7 @@ export const StyledChatBox = ({
           {/* TODO: move no scrollbar logic to tailwind */}
           <textarea
             rows={2}
-            className={`${combinedClasses?.chatInput} no-scrollbar`}
+            className={`${hu('chatInput')}`}
             placeholder="Write something here"
             value={message}
             onKeyPress={event => {
@@ -321,10 +325,3 @@ export const StyledChatBox = ({
     </React.Fragment>
   );
 };
-
-export type ChatProps = Omit<StyledChatProps, 'defaultClasses'>;
-
-export const ChatBox = withClasses<ChatBoxClasses | undefined>(
-  defaultClasses,
-  'chatBox',
-)<StyledChatProps>(StyledChatBox);
