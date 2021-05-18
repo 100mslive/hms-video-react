@@ -1,15 +1,13 @@
 import {
   HMSPeer,
-  HMSRoom,
   HMSMessage,
   HMSTrack,
 } from '../schema';
 
 import * as sdkTypes from './sdkTypes';
-import { HMSError } from '../IHMSBridge';
 
 export class SDKToHMS {
-  static convertPeer(sdkPeer: sdkTypes.HMSPeer): Partial<HMSPeer> {
+  static convertPeer(sdkPeer: sdkTypes.HMSPeer): Partial<HMSPeer> & Pick<HMSPeer, 'id'> {
     return {
       id: sdkPeer.peerId,
       name: sdkPeer.name,
@@ -21,56 +19,21 @@ export class SDKToHMS {
     }
   }
 
-  static convertSpeaker(sdkSpeaker: sdkTypes.HMSSpeaker): Partial<HMSPeer> {
-    return {
-      id: sdkSpeaker.peerId,
-      audioLevel: sdkSpeaker.audioLevel
-    }
-  }
-
-  static convertRoom(sdkRoom: sdkTypes.HMSRoom): HMSRoom {
-    return {
-      id: sdkRoom.id,
-      name: sdkRoom.name,
-      peers: sdkRoom.peers?.map(p => p.peerId),
-      shareableLink: sdkRoom.shareableLink,
-      hasWaitingRoom: sdkRoom.hasWaitingRoom
-    }
-  }
-
   static convertTrack(sdkTrack: sdkTypes.HMSTrack): HMSTrack {
     return {
       id: sdkTrack.trackId,
       source: sdkTrack.source,
       type: sdkTrack.type,
-      muted: !sdkTrack.enabled,
+      enabled: sdkTrack.enabled,
     }
   }
 
-  static convertMessage(sdkMessage: sdkTypes.HMSMessage): Partial<HMSMessage> {
+  static convertMessage(sdkMessage: sdkTypes.HMSMessage): Partial<HMSMessage> & Pick<HMSMessage, 'sender'> {
     return {
       sender: sdkMessage.sender,
       time: sdkMessage.time,
       type: sdkMessage.type,
       message: sdkMessage.message,
-    }
-  }
-
-  static convertError(sdkHMSError: sdkTypes.HMSException): HMSError {
-    return {
-      code: sdkHMSError.code,
-      message: sdkHMSError.message
-    }
-  }
-}
-
-export class HMSToSDK {
-  static convertMessage(hmsMessage: HMSMessage): sdkTypes.HMSMessage {
-    return {
-      sender: hmsMessage.sender,
-      time: hmsMessage.time,
-      type: hmsMessage.type,
-      message: hmsMessage.message
     }
   }
 }

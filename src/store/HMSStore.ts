@@ -1,16 +1,41 @@
-import create, { SetState, StateCreator } from 'zustand';
-import {HMSStore} from './schema';
-import produce, { Draft } from 'immer';
+import create, { StateCreator } from 'zustand';
+import { devtools  } from 'zustand/middleware';
+import { HMSStore } from './schema';
+import produce, { Immutable, Draft } from 'immer';
+
+type ImmutableHMSStore = Immutable<HMSStore>;
+
+const log = <T extends ImmutableHMSStore>(config: StateCreator<T>): StateCreator<T> => {
+  return (set, get, api) => {
+    return config(args => {
+      console.log("  applying", args)
+      set(args)
+      console.log("  new state", get())
+    }, get, api)
+  }
+}
 
 // immer middleware for all set operations
-const immer = <T extends HMSStore>(
-  config: StateCreator<T, (fn: (draft: Draft<T>) => void) => void>
-): StateCreator<T> => (set, get, api) =>
-  config((fn) => set(produce(fn) as (state: T) => T), get, api)
+type immerConfigType<T extends ImmutableHMSStore> = StateCreator<T, (fn: (draft: Draft<T>) => void) => void>;
+const immer = <T extends ImmutableHMSStore>(config: immerConfigType<T>): StateCreator<T> => {
+  return (set, get, api) =>{
+    return config((fn) => set(produce(fn) as (state: T) => T), get, api);
+  }
+}
 
-const useStore = create<HMSStore>(immer((set) => ({
-  rooms: {byID: {}, allIDs: []},
-  peers: {byID: {}, allIDs: []},
-  tracks: {byID: {}, allIDs: []},
-  messages: {byID: {}, allIDs: []},
-})))
+const useStore = create<ImmutableHMSStore>(
+  log(devtools(
+    immer((_set) => ({
+      room: {
+        id: "",
+        name: "",
+        peers: [],
+        shareableLink: "",
+        hasWaitingRoom: false
+      },
+      peers: {},
+      tracks: {},
+      messages: {byID: {}, allIDs: []},
+    }))
+  ))
+)

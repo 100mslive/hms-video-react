@@ -9,6 +9,7 @@ export declare enum HMSMessageType {
 export interface HMSMessage {
   id: HMSMessageID;
   sender: HMSPeerID;
+  senderName?: string;  // recorded at the time of message received
   time: Date;
   read: boolean;
   type: HMSMessageType;
