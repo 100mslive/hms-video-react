@@ -30,7 +30,6 @@ const LightTemplate: Story<PreviewProps> = args => {
   );
 };
 
-
 export const Default = DarkTemplate.bind({});
 Default.args = {
   name: 'Aditya Gupta',

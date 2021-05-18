@@ -29,23 +29,16 @@ const Template: Story<ParticipantListProps> = args => (
 );
 
 const DarkTemplate: Story<ParticipantListProps> = args => (
-  <HMSThemeProvider
-    config={{}}
-    appBuilder={{ theme: 'dark' }}
-  >
+  <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
     <ParticipantList {...args} />
   </HMSThemeProvider>
 );
 
 const LightTemplate: Story<ParticipantListProps> = args => (
-  <HMSThemeProvider
-    config={{}}
-    appBuilder={{ theme: 'light' }}
-  >
+  <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
     <ParticipantList {...args} />
   </HMSThemeProvider>
 );
-
 
 export const Default = Template.bind({});
 export const Real = Template.bind({});

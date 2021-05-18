@@ -12,30 +12,29 @@ export default meta;
 
 const BasicSelectField: Story<SelectProps> = args => {
   return (
-  <HMSThemeProvider config={{}} appBuilder={{theme:'dark'}}>
-  <div className="w-full bg-black py-10">
-      <div className="w-1/3 mx-auto">
-        <Select {...args} />
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+      <div className="w-full bg-black py-10">
+        <div className="w-1/3 mx-auto">
+          <Select {...args} />
+        </div>
       </div>
-    </div>
-  </HMSThemeProvider>
+    </HMSThemeProvider>
   );
 };
 
 const Light: Story<SelectProps> = args => {
   return (
-  <HMSThemeProvider config={{}} appBuilder={{theme:'light'}}>
-  <div className="w-full bg-white py-10">
-      <div className="w-1/3 mx-auto">
-        <Select {...args} />
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div className="w-full bg-white py-10">
+        <div className="w-1/3 mx-auto">
+          <Select {...args} />
+        </div>
       </div>
-    </div>
-  </HMSThemeProvider>
+    </HMSThemeProvider>
   );
 };
-
 
 export const Default = BasicSelectField.bind({});
 BasicSelectField.args = {};
 
-export const LightSelect = Light.bind({})
+export const LightSelect = Light.bind({});

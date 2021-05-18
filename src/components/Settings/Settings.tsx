@@ -1,4 +1,9 @@
-import React, { useEffect, useState, ChangeEventHandler, useCallback } from 'react';
+import React, {
+  useEffect,
+  useState,
+  ChangeEventHandler,
+  useCallback,
+} from 'react';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
@@ -68,9 +73,9 @@ const defaultClasses: SettingsClasses = {
   errorContainer: 'flex justify-center items-center w-full px-8 py-4',
 };
 
-const customClasses:SettingsClasses = {
-  dialogContainer:'no-scrollbar '
-}
+const customClasses: SettingsClasses = {
+  dialogContainer: 'no-scrollbar ',
+};
 
 //TODO replce with own slider
 const HMSSlider = withStyles({

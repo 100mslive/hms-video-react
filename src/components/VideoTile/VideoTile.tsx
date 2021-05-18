@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import './index.css';
 import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
@@ -82,9 +82,9 @@ const defaultClasses: VideoTileClasses = {
   videoContainerCircle: 'rounded-full',
 };
 
-const customClasses:VideoTileClasses = {
-  root:'hmsui-videoTile-showControlsOnHoverParent'
-}
+const customClasses: VideoTileClasses = {
+  root: 'hmsui-videoTile-showControlsOnHoverParent',
+};
 
 export const VideoTile = ({
   videoTrack,
@@ -108,7 +108,7 @@ export const VideoTile = ({
   classes,
   audioLevelEmitter,
 }: VideoTileProps) => {
-  const {appBuilder} = useHMSTheme();
+  const { appBuilder } = useHMSTheme();
   const parseClass = useCallback(
     hmsUiClassParserGenerator<VideoTileClasses>({
       classes,

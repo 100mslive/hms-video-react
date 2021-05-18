@@ -27,25 +27,20 @@ const tempUrl = `https://vercel.com/api/www/avatar/?u=evilrabbit&s=180`;
 
 const Basic: Story<AvatarProps> = args => {
   return (
-    <HMSThemeProvider
-    config={{}}
-    appBuilder={{ theme: 'light' }}
-  >
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Avatar image={tempUrl} {...args} />
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div className="w-full h-1/2 flex justify-center bg-white py-4">
+        <Avatar image={tempUrl} {...args} />
+      </div>
     </HMSThemeProvider>
   );
 };
 
 const LabelAvatar: Story<AvatarProps> = args => {
   return (
-    <HMSThemeProvider     config={{}}
-    appBuilder={{ theme: 'dark' }}
->
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Avatar label="Hello World" shape="square" {...args} />
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+      <div className="w-full h-1/2 flex justify-center bg-white py-4">
+        <Avatar label="Hello World" shape="square" {...args} />
+      </div>
     </HMSThemeProvider>
   );
 };

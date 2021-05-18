@@ -26,7 +26,9 @@ export const HMSThemeProvider = ({
     document.documentElement.classList.remove('dark');
   }
   const twConfig = merge(defaultTailwindConfig, config);
-  const { tw } = create({ ...twConfig, darkMode: 'class', mode: 'silent' } || {});
+  const { tw } = create(
+    { ...twConfig, darkMode: 'class', mode: 'silent' } || {},
+  );
   return (
     <HMSThemeContext.Provider
       value={{

@@ -30,7 +30,6 @@ const LightTemplate: Story<JoinProps> = args => {
   );
 };
 
-
 const OverrideClass: Story<JoinProps> = args => {
   return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>

@@ -1,4 +1,4 @@
-import React, {useCallback} from 'react';
+import React, { useCallback } from 'react';
 import { AudioLevelDisplayType } from '../../../types';
 import { Button } from '../../TwButton';
 import { MicOffIcon } from '../../Icons';
@@ -24,7 +24,7 @@ export interface VideoTileControlsProps {
   audioLevelDisplayType?: AudioLevelDisplayType;
   audioLevel?: number;
   classes?: VideoTileControlsClasses;
-  isLocal?:boolean;
+  isLocal?: boolean;
 }
 
 //TODO group hover is not working
@@ -41,15 +41,15 @@ const defaultClasses: VideoTileControlsClasses = {
 };
 
 const customClasses: VideoTileControlsClasses = {
-  controls:'hmsui-videoTile-showControlsOnHoverChild'
-}
+  controls: 'hmsui-videoTile-showControlsOnHoverChild',
+};
 
 export const VideoTileControls = ({
   label = '',
   isAudioMuted = false,
   showGradient = true,
   showAudioMuteStatus = true,
-  isLocal=false,
+  isLocal = false,
   allowRemoteMute = false,
   classes,
 }: VideoTileControlsProps) => {
@@ -74,7 +74,7 @@ export const VideoTileControls = ({
               size={'md'}
               shape="circle"
               variant="danger"
-              classes={{root:"dark"}}
+              classes={{ root: 'dark' }}
             >
               <MicOffIcon />
             </Button>
@@ -83,9 +83,7 @@ export const VideoTileControls = ({
         <div className={`${parseClass('label')}`}>{label}</div>
         <div className={`${parseClass('controls')}`}>
           {!isLocal && showAudioMuteStatus && !isAudioMuted && allowRemoteMute && (
-            <Button iconOnly size={'md'}               
-            classes={{root:"dark"}}
-            >
+            <Button iconOnly size={'md'} classes={{ root: 'dark' }}>
               <MicOffIcon />
             </Button>
           )}

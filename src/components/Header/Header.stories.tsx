@@ -45,7 +45,6 @@ const LightTemplate: Story<HeaderProps> = args => {
   );
 };
 
-
 export const Default = Template.bind({});
 export const Light = LightTemplate.bind({});
 
@@ -94,4 +93,4 @@ Light.args = {
   time: 1865,
   speaker: 'Siddhant',
   rightComponents: [<ParticipantList participantList={participants} />],
-}
+};

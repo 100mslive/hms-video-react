@@ -1,4 +1,4 @@
-import React,{useCallback} from 'react';
+import React, { useCallback } from 'react';
 import { Participant, Peer } from '../../types';
 import { VolumeIcon, Logo } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -34,11 +34,9 @@ export const Header = ({
   peer,
   time,
   speaker,
-  leftComponents = [
-      <Logo />
-  ],
+  leftComponents = [<Logo />],
   centerComponents = [
-    (speaker ? (
+    speaker ? (
       <div
         className={`self-center focus:outline-none text-lg flex items-center`}
       >
@@ -46,13 +44,11 @@ export const Header = ({
           <VolumeIcon />
         </div>
         {/* TODO figure out why xs:hidden is needed */}
-        <div className="md:pl-1 xs:hidden md:inline-block">
-          {speaker}
-        </div>
+        <div className="md:pl-1 xs:hidden md:inline-block">{speaker}</div>
       </div>
     ) : (
       <></>
-    )),
+    ),
   ],
   rightComponents = [],
   classes,

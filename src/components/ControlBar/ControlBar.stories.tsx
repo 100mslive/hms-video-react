@@ -64,4 +64,4 @@ const defaultArgs = {
 export const Default = Template.bind({});
 Default.args = defaultArgs;
 export const LightControlBar = LightTemplate.bind({});
-LightControlBar.args=defaultArgs;
+LightControlBar.args = defaultArgs;

@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-interface InputPropsWithoutNativeAttrs{
+interface InputPropsWithoutNativeAttrs {
   /**
    * Smaller Width for InputField
    */
@@ -48,7 +48,7 @@ export const Input = ({
   classes,
   children,
   ...props
-}:InputProps) => {
+}: InputProps) => {
   const hu = useCallback(
     hmsUiClassParserGenerator<InputClasses>({
       classes,
@@ -57,12 +57,14 @@ export const Input = ({
     }),
     [],
   );
-  
+
   return (
     <>
       <input
         placeholder={placeHolder}
-        className={`${hu('root')} ${compact?hu('rootCompact'):hu('rootNonCompact')} ${validation?hu('rootValidationRing'):hu('rootRing')}`}
+        className={`${hu('root')} ${
+          compact ? hu('rootCompact') : hu('rootNonCompact')
+        } ${validation ? hu('rootValidationRing') : hu('rootRing')}`}
         {...props}
       >
         {children}

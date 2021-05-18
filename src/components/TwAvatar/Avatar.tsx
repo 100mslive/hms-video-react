@@ -32,7 +32,8 @@ interface AvatarPropsWithoutNativeAttrs {
   classes?: AvatarClasses;
 }
 
-export type AvatarProps = AvatarPropsWithoutNativeAttrs & React.HTMLAttributes<HTMLImageElement>
+export type AvatarProps = AvatarPropsWithoutNativeAttrs &
+  React.HTMLAttributes<HTMLImageElement>;
 
 export interface AvatarClasses {
   root?: string;
