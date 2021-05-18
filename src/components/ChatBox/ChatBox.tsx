@@ -116,7 +116,7 @@ export const ChatBox = ({
       classes,
       customClasses,
       defaultClasses,
-      tag: 'hmsui-participantList',
+      tag: 'hmsui-chatBox',
     }),
     [],
   );
