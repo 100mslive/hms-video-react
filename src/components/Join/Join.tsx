@@ -29,7 +29,7 @@ const defaultClasses: JoinClasses = {
   root:
     'flex bg-white dark:bg-black justify-center items-center w-screen h-screen ',
   containerRoot:
-    'bg-white dark:bg-gray-100 text-gray-100 dark:text-white w-1/2 m-2 p-3 rounded-xl divide-solid shadow-xl dark:shadow-none',
+    'bg-white dark:bg-gray-100 text-gray-100 dark:text-white w-1/2 m-2 p-3 rounded-xl divide-solid shadow-2 dark:shadow-none',
   header: 'text-2xl mb-3 p-3 border-b-2 border-gray-600 dark:border-gray-200',
   inputRoot: 'flex flex-wrap text-lg',
   inputName: 'w-1/3 flex justify-end items-center text-gray-100 dark:text-gray-500 pr-8',

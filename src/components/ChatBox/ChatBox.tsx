@@ -34,7 +34,7 @@ interface ChatBoxClasses {
 }
 
 const defaultClasses: ChatBoxClasses = {
-  root: 'w-full h-full  rounded-2xl flex flex-col shadow-sm',
+  root: 'w-full h-full  rounded-2xl flex flex-col shadow-2',
   header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500`,
   headerLine: 'w-8 h-1 rounded bg-white dark:bg-gray-400 m-2',
   headerRoot: 'flex w-full justify-between',
