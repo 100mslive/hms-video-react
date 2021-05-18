@@ -5,16 +5,11 @@ import {
   HMSTrack,
 } from '../schema';
 
-import sdkHMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
-import sdkHMSRoom from '@100mslive/100ms-web-sdk/dist/interfaces/room';
-import sdkHMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
-import sdkHMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
-import sdkHMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
-import sdkHMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
+import * as sdkTypes from './sdkTypes';
 import { HMSError } from '../IHMSBridge';
 
 export class SDKToHMS {
-  static convertPeer(sdkPeer: sdkHMSPeer): Partial<HMSPeer> {
+  static convertPeer(sdkPeer: sdkTypes.HMSPeer): Partial<HMSPeer> {
     return {
       id: sdkPeer.peerId,
       name: sdkPeer.name,
@@ -26,14 +21,14 @@ export class SDKToHMS {
     }
   }
 
-  static convertSpeaker(sdkSpeaker: sdkHMSSpeaker): Partial<HMSPeer> {
+  static convertSpeaker(sdkSpeaker: sdkTypes.HMSSpeaker): Partial<HMSPeer> {
     return {
       id: sdkSpeaker.peerId,
       audioLevel: sdkSpeaker.audioLevel
     }
   }
 
-  static convertRoom(sdkRoom: sdkHMSRoom): HMSRoom {
+  static convertRoom(sdkRoom: sdkTypes.HMSRoom): HMSRoom {
     return {
       id: sdkRoom.id,
       name: sdkRoom.name,
@@ -43,7 +38,7 @@ export class SDKToHMS {
     }
   }
 
-  static convertTrack(sdkTrack: sdkHMSTrack): HMSTrack {
+  static convertTrack(sdkTrack: sdkTypes.HMSTrack): HMSTrack {
     return {
       id: sdkTrack.trackId,
       source: sdkTrack.source,
@@ -52,7 +47,7 @@ export class SDKToHMS {
     }
   }
 
-  static convertMessage(sdkMessage: sdkHMSMessage): Partial<HMSMessage> {
+  static convertMessage(sdkMessage: sdkTypes.HMSMessage): Partial<HMSMessage> {
     return {
       sender: sdkMessage.sender,
       time: sdkMessage.time,
@@ -61,7 +56,7 @@ export class SDKToHMS {
     }
   }
 
-  static convertError(sdkHMSError: sdkHMSException): HMSError {
+  static convertError(sdkHMSError: sdkTypes.HMSException): HMSError {
     return {
       code: sdkHMSError.code,
       message: sdkHMSError.message
@@ -70,7 +65,7 @@ export class SDKToHMS {
 }
 
 export class HMSToSDK {
-  static convertMessage(hmsMessage: HMSMessage): sdkHMSMessage {
+  static convertMessage(hmsMessage: HMSMessage): sdkTypes.HMSMessage {
     return {
       sender: hmsMessage.sender,
       time: hmsMessage.time,
