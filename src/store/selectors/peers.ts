@@ -20,6 +20,6 @@ export const localPeerSelector = createSelector(
 export const remotePeersSelector = createSelector(
   peersSelector,
   (peers) => {
-    peers.filter(p => !p.isLocal)[0];
+    peers.filter(p => !p.isLocal);
   }
 )
