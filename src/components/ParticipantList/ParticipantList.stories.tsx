@@ -66,7 +66,7 @@ const defaultArgs = {
     },
     {
       peer: { id: '123', displayName: 'Anshul Kumar', role: 'Student' },
-      isAudioMuted: false,
+      isAudioMuted: true,
       isStarMarked: false,
     },
     {

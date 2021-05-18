@@ -25,6 +25,8 @@ interface ParticipantListClasses {
   menuItem?: string;
   menuText?: string;
   menuIconContainer?: string;
+  offIcon?:string;
+  onIcon?:string;
 }
 
 export interface ParticipantListProps {
@@ -51,10 +53,13 @@ const defaultClasses: ParticipantListClasses = {
     'text-gray-100 dark:text-white group flex items-center flex-nowrap px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
   menuText: 'w-52 whitespace-nowrap overflow-hidden overflow-ellipsis flex items-center',
   menuIconContainer: 'flex flex-grow justify-self-end justify-end',
+  onIcon:'',
+  offIcon:'',
 };
 
 const customClasses:ParticipantListClasses = {
-  menuRoot:'hmsui-participantList-scrollbar'
+  menuRoot:'hmsui-participantList-scrollbar',
+  onIcon:'hmsui-participantList-show-on-group-hover',
 }
 
 type RoleMap = Map<string, Participant[]>;
@@ -144,18 +149,28 @@ export const ParticipantList = ({
                         <div
                           className={`${hu('menuIconContainer')}`}
                         >
+                            {participant.isAudioMuted ? (
+                              <div className={`${hu('offIcon')}`}>
+                          <Button
+                            iconOnly
+                            shape={'circle'}
+                            variant={'danger'}
+                            size={'sm'}
+                            active={participant.isAudioMuted}
+                          >
+                              <MicOffIcon/></Button></div>
+            ) : (                              <div className={`${hu('onIcon')}`}>
                           <Button
                             iconOnly
                             shape={'circle'}
                             size={'sm'}
-                            active={participant.isAudioMuted}
                           >
-                            {participant.isAudioMuted ? (
-                              <MicOffIcon />
-                            ) : (
+
                               <MicOnIcon />
+                              </Button>
+                              </div>
                             )}
-                          </Button>
+
                         </div>
                       </span>
                     ))}
