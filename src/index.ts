@@ -1,6 +1,9 @@
 import './components/Button/Button.css';
 import './components/VideoTile/index.css';
 import './components/Carousel/index.css';
+import './components/TwButton/Button.css';
+import './components/ParticipantList/index.css';
+import './components/ChatBox/index.css';
 export { Silence } from './components/Silence';
 export { VideoTile, VideoTileProps } from './components/VideoTile/index';
 export { Avatar } from './components/Avatar/index';
@@ -15,6 +18,7 @@ export * from './components/Join';
 export * from './components/Icons';
 export * from './components/Button';
 export * from './components/Carousel';
+export * from './components/VerticalDivider';
 export { Button as TwButton } from './components/TwButton';
 export { HMSRoomProvider, useHMSRoom } from './hooks/HMSRoomProvider';
 export { useHMSMessage } from './hooks/MessageProvider';

@@ -1,4 +1,4 @@
-.hmsui-videoTile-root:hover .hmsui-videoTileControls-controls {
+.hmsui-videoTile-showControlsOnHoverParent:hover .hmsui-videoTile-showControlsOnHoverChild {
   visibility: visible;
   max-height: 60px;  
 }

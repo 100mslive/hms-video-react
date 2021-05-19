@@ -180,7 +180,7 @@ export const HMSRoomProvider: React.FC = props => {
           localPeer?.audioTrack && localPeer?.audioTrack?.enabled
         ) as boolean,
         videoMuted: !(
-          localPeer?.audioTrack && localPeer?.videoTrack?.enabled
+          localPeer?.videoTrack && localPeer?.videoTrack?.enabled
         ) as boolean,
         join,
         leave,

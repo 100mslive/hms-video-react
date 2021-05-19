@@ -25,8 +25,22 @@ const Template: Story<ControlBarProps> = args => {
   );
 };
 
-export const Default = Template.bind({});
-Default.args = {
+const LightTemplate: Story<ControlBarProps> = args => {
+  return (
+    <div>
+      <HMSThemeProvider
+        config={{}}
+        appBuilder={{
+          theme: 'light',
+        }}
+      >
+        <ControlBar {...args} />
+      </HMSThemeProvider>
+    </div>
+  );
+};
+
+const defaultArgs = {
   audioButtonOnClick: (e: React.MouseEvent) => {
     alert('audio toggled');
   },
@@ -46,3 +60,8 @@ Default.args = {
   isVideoMuted: true,
   isChatOpen: true,
 };
+
+export const Default = Template.bind({});
+Default.args = defaultArgs;
+export const LightControlBar = LightTemplate.bind({});
+LightControlBar.args = defaultArgs;

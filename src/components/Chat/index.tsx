@@ -2,7 +2,7 @@ import React from 'react';
 import Popover from '@material-ui/core/Popover';
 import { ChatIcon } from '../Icons';
 import { ChatBox, ChatProps } from '../ChatBox/ChatBox';
-import { Button } from '../Button';
+import { Button } from '../TwButton';
 
 //TODO: Expose Popover material-ui props
 //TODO: Allow developer some way to control width and height of chatbox
