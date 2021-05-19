@@ -1,43 +1,43 @@
 import { HMSStore, HMSTrack, HMSTrackID } from '../schema';
-import { localPeerSelector, peerByIDSelector } from './peerSelectors';
+import { selectLocalPeer, selectPeerByID } from './peerSelectors';
 import { createSelector } from 'reselect';
 
-export const tracksMapSelector = (store: HMSStore) => store.tracks;
+export const selectTracksMap = (store: HMSStore) => store.tracks;
 export const trackIDSelector = (store: HMSStore, trackID: HMSTrackID) =>
   trackID;
 
-export const localAudioTrackIDSelector = createSelector(
-  localPeerSelector,
+export const selectLocalAudioTrackID = createSelector(
+  selectLocalPeer,
   peer => peer.audioTrack,
 );
 
-export const localVideoTrackIDSelector = createSelector(
-  localPeerSelector,
+export const selectLocalVideoTrackID = createSelector(
+  selectLocalPeer,
   peer => peer.videoTrack,
 );
 
-export const isLocalAudioEnabledSelector = (store: HMSStore) => {
-  const localPeer = localPeerSelector(store);
+export const selectIsLocalAudioEnabled = (store: HMSStore) => {
+  const localPeer = selectLocalPeer(store);
   return isTrackEnabled(store, localPeer?.audioTrack);
 };
 
-export const isLocalVideoEnabledSelector = (store: HMSStore) => {
-  const localPeer = localPeerSelector(store);
+export const selectIsLocalVideoEnabled = (store: HMSStore) => {
+  const localPeer = selectLocalPeer(store);
   return isTrackEnabled(store, localPeer?.videoTrack);
 };
 
-export const isPeerAudioEnabledSelector = (store: HMSStore, peerID: string) => {
-  const peer = peerByIDSelector(store, peerID);
+export const selectIsPeerAudioEnabled = (store: HMSStore, peerID: string) => {
+  const peer = selectPeerByID(store, peerID);
   return isTrackEnabled(store, peer?.audioTrack);
 };
 
-export const isPeerVideoEnabledSelector = (store: HMSStore, peerID: string) => {
-  const peer = peerByIDSelector(store, peerID);
+export const selectIsPeerVideoEnabled = (store: HMSStore, peerID: string) => {
+  const peer = selectPeerByID(store, peerID);
   return isTrackEnabled(store, peer?.videoTrack);
 };
 
-export const isLocalScreenSharedSelector = (store: HMSStore): boolean => {
-  const localPeer = localPeerSelector(store);
+export const selectIsLocalScreenShared = (store: HMSStore): boolean => {
+  const localPeer = selectLocalPeer(store);
   return localPeer.auxiliaryTracks.some(trackID => {
     return isScreenShare(store.tracks[trackID]);
   });

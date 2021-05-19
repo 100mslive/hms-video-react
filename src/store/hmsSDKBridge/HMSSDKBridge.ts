@@ -13,15 +13,15 @@ import { IHMSBridge } from '../IHMSBridge';
 import * as sdkTypes from './sdkTypes';
 import { SDKToHMS } from './adapter';
 import {
-  isLocalAudioEnabledSelector,
-  isLocalScreenSharedSelector,
-  isLocalVideoEnabledSelector,
-  localAudioTrackIDSelector,
-  localVideoTrackIDSelector,
-  messagesCountSelector,
-  peerNameByIDSelector,
-  peersMapSelector,
-  tracksMapSelector,
+  selectIsLocalAudioEnabled,
+  selectIsLocalScreenShared,
+  selectIsLocalVideoEnabled,
+  selectLocalAudioTrackID,
+  selectLocalVideoTrackID,
+  selectMessagesCount,
+  selectPeerNameByID,
+  selectPeersMap,
+  selectTracksMap,
 } from '../selectors';
 import HMSLogger from '../../utils/ui-logger';
 
@@ -57,7 +57,7 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   async toggleScreenShare() {
-    const isScreenShared = this.store(isLocalScreenSharedSelector);
+    const isScreenShared = this.store(selectIsLocalScreenShared);
     if (!isScreenShared) {
       await this.sdk.startScreenShare(this.syncPeers.bind(this));
     } else {
@@ -67,10 +67,10 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   async setLocalAudioEnabled(enabled: boolean) {
-    const trackID = this.store(localAudioTrackIDSelector);
+    const trackID = this.store(selectLocalAudioTrackID);
     // useHMSStore(localAudioTrackIDSelector)
     if (trackID) {
-      const isCurrentEnabled = this.store(isLocalAudioEnabledSelector);
+      const isCurrentEnabled = this.store(selectIsLocalAudioEnabled);
       if (isCurrentEnabled == enabled) {
         // why would same value will be set again?
         this.logPossibleInconsistency('local audio track muted states.');
@@ -81,9 +81,9 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   async setLocalVideoEnabled(enabled: boolean) {
-    const trackID = this.store(localVideoTrackIDSelector);
+    const trackID = this.store(selectLocalVideoTrackID);
     if (trackID) {
-      const isCurrentEnabled = this.store(isLocalVideoEnabledSelector);
+      const isCurrentEnabled = this.store(selectIsLocalVideoEnabled);
       if (isCurrentEnabled == enabled) {
         // why would same value will be set again?
         this.logPossibleInconsistency('local video track muted states.');
@@ -106,8 +106,8 @@ export class HMSSDKBridge implements IHMSBridge {
     const hmsPeers: Record<HMSPeerID, HMSPeer> = {};
     const hmsPeerIDs: HMSPeerID[] = [];
     const hmsTracks: Record<HMSTrackID, HMSTrack> = {};
-    const oldHMSPeers = this.store(peersMapSelector);
-    const oldHMSTracks = this.store(tracksMapSelector);
+    const oldHMSPeers = this.store(selectPeersMap);
+    const oldHMSTracks = this.store(selectTracksMap);
     this.hmsSDKTracks = {};
     this.store.setState(store => {
       for (let sdkPeer of sdkPeers) {
@@ -200,7 +200,7 @@ export class HMSSDKBridge implements IHMSBridge {
   protected onMessageReceived(sdkMessage: sdkTypes.HMSMessage) {
     const hmsMessage = SDKToHMS.convertMessage(sdkMessage) as HMSMessage;
     hmsMessage.read = false;
-    hmsMessage.senderName = peerNameByIDSelector(
+    hmsMessage.senderName = selectPeerNameByID(
       this.store.getState(),
       hmsMessage.sender,
     );
@@ -209,7 +209,7 @@ export class HMSSDKBridge implements IHMSBridge {
 
   protected onHMSMessage(hmsMessage: HMSMessage) {
     this.store.setState(store => {
-      hmsMessage.id = String(this.store(messagesCountSelector) + 1);
+      hmsMessage.id = String(this.store(selectMessagesCount) + 1);
       store.messages.byID[hmsMessage.id] = hmsMessage;
       store.messages.allIDs.push(hmsMessage.id);
     });

@@ -1,9 +1,9 @@
 import { HMSStore } from '../schema';
 import { createSelector } from 'reselect';
 
-export const messagesMapSelector = (store: HMSStore) => store.messages;
+export const selectMessagesMap = (store: HMSStore) => store.messages;
 
-export const messagesCountSelector = createSelector(
-  messagesMapSelector,
+export const selectMessagesCount = createSelector(
+  selectMessagesMap,
   messages => messages.allIDs.length,
 );
