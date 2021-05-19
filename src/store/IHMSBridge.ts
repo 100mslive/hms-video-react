@@ -1,6 +1,4 @@
-import { IHMSStore } from './IHMSStore';
-
-export default interface IHMSBridge {
+export interface IHMSBridge {
   join(...args: any[]): void;
   leave(): void;
 
@@ -8,10 +6,8 @@ export default interface IHMSBridge {
 
   sendMessage(message: string): void;
 
-  toggleLocalAudio(mute: boolean): void;
-  toggleLocalVideo(mute: boolean): void;
-
-  getStore(): IHMSStore;
+  setLocalAudioEnabled(enabled: boolean): void;
+  setLocalVideoEnabled(enabled: boolean): void;
 }
 
 export interface HMSError {

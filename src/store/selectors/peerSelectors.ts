@@ -1,4 +1,4 @@
-import { HMSPeerID, HMSStore, HMSTrack } from '../schema';
+import { HMSPeerID, HMSStore } from '../schema';
 import { createSelector } from 'reselect';
 
 const roomSelector = (store: HMSStore) => store.room;
@@ -24,13 +24,6 @@ export const remotePeersSelector = createSelector(peersSelector, peers => {
   return peers.filter(p => !p.isLocal);
 });
 
-export const isLocalScreenSharedSelector = (store: HMSStore): boolean => {
-  const localPeer = localPeerSelector(store);
-  return localPeer.auxiliaryTracks.some(trackID => {
-    return isScreenShare(store.tracks[trackID]);
-  });
-};
-
 export const dominantPeerSelector = createSelector(peersSelector, peers => {
   const dominantSpeakers = peers.filter(p => p.isDominantSpeaker);
   if (dominantSpeakers.length > 0) {
@@ -49,7 +42,3 @@ export const peerNameByIDSelector = createSelector(
   peerByIDSelector,
   peer => peer.name,
 );
-
-function isScreenShare(track: HMSTrack) {
-  return track.type === 'video' && track.source === 'screen';
-}

@@ -9,7 +9,7 @@ import {
 } from '../schema';
 import { HMSSdk } from '@100mslive/100ms-web-sdk/dist';
 import { UseStore } from 'zustand';
-import IHMSBridge from '../IHMSBridge';
+import { IHMSBridge } from '../IHMSBridge';
 import * as sdkTypes from './sdkTypes';
 import { SDKToHMS } from './adapter';
 import {
@@ -25,7 +25,7 @@ import {
 } from '../selectors';
 import HMSLogger from '../../utils/ui-logger';
 
-export default class HMSSDKBridge implements IHMSBridge {
+export class HMSSDKBridge implements IHMSBridge {
   private hmsSDKTracks: Record<string, sdkTypes.HMSTrack> = {};
   private readonly sdk: HMSSdk;
   private readonly store: UseStore<HMSStore>;
@@ -66,20 +66,29 @@ export default class HMSSDKBridge implements IHMSBridge {
     this.syncPeers();
   }
 
-  async toggleLocalAudio() {
+  async setLocalAudioEnabled(enabled: boolean) {
     const trackID = this.store(localAudioTrackIDSelector);
+    // useHMSStore(localAudioTrackIDSelector)
     if (trackID) {
-      const isEnabled = this.store(isLocalAudioEnabledSelector);
-      await this.hmsSDKTracks[trackID].setEnabled(!isEnabled);
+      const isCurrentEnabled = this.store(isLocalAudioEnabledSelector);
+      if (isCurrentEnabled == enabled) {
+        // why would same value will be set again?
+        this.logPossibleInconsistency('local audio track muted states.');
+      }
+      await this.setEnabledTrack(trackID, enabled);
       this.syncPeers();
     }
   }
 
-  async toggleLocalVideo() {
+  async setLocalVideoEnabled(enabled: boolean) {
     const trackID = this.store(localVideoTrackIDSelector);
     if (trackID) {
-      const isEnabled = this.store(isLocalVideoEnabledSelector);
-      await this.hmsSDKTracks[trackID].setEnabled(!isEnabled);
+      const isCurrentEnabled = this.store(isLocalVideoEnabledSelector);
+      if (isCurrentEnabled == enabled) {
+        // why would same value will be set again?
+        this.logPossibleInconsistency('local video track muted states.');
+      }
+      await this.setEnabledTrack(trackID, enabled);
       this.syncPeers();
     }
   }
@@ -92,11 +101,7 @@ export default class HMSSDKBridge implements IHMSBridge {
     this.onHMSMessage(hmsMessage);
   }
 
-  getStore(): UseStore<HMSStore> {
-    return this.store;
-  }
-
-  private syncPeers() {
+  protected syncPeers() {
     const sdkPeers: sdkTypes.HMSPeer[] = this.sdk.getPeers();
     const hmsPeers: Record<HMSPeerID, HMSPeer> = {};
     const hmsPeerIDs: HMSPeerID[] = [];
@@ -159,15 +164,15 @@ export default class HMSSDKBridge implements IHMSBridge {
     return true;
   }
 
-  private onJoin(_room: sdkTypes.HMSRoom) {
+  protected onJoin(_room: sdkTypes.HMSRoom) {
     this.syncPeers();
   }
 
-  private onRoomUpdate() {
+  protected onRoomUpdate() {
     this.syncPeers();
   }
 
-  private onPeerUpdate(
+  protected onPeerUpdate(
     type: sdkTypes.HMSPeerUpdate,
     sdkPeer: sdkTypes.HMSPeer,
   ) {
@@ -188,11 +193,11 @@ export default class HMSSDKBridge implements IHMSBridge {
     }
   }
 
-  private onTrackUpdate() {
+  protected onTrackUpdate() {
     this.syncPeers();
   }
 
-  private onMessageReceived(sdkMessage: sdkTypes.HMSMessage) {
+  protected onMessageReceived(sdkMessage: sdkTypes.HMSMessage) {
     const hmsMessage = SDKToHMS.convertMessage(sdkMessage) as HMSMessage;
     hmsMessage.read = false;
     hmsMessage.senderName = peerNameByIDSelector(
@@ -202,7 +207,7 @@ export default class HMSSDKBridge implements IHMSBridge {
     this.onHMSMessage(hmsMessage);
   }
 
-  private onHMSMessage(hmsMessage: HMSMessage) {
+  protected onHMSMessage(hmsMessage: HMSMessage) {
     this.store.setState(store => {
       hmsMessage.id = String(this.store(messagesCountSelector) + 1);
       store.messages.byID[hmsMessage.id] = hmsMessage;
@@ -210,15 +215,39 @@ export default class HMSSDKBridge implements IHMSBridge {
     });
   }
 
-  private onAudioLevelUpdate(speakers: sdkTypes.HMSSpeaker[]) {
+  /*
+  note: speakers array contain the value only for peers who have audioLevel != 0
+   */
+  protected onAudioLevelUpdate(speakers: sdkTypes.HMSSpeaker[]) {
     this.store.setState(store => {
+      const peerIDAudioLevelMap: Record<HMSPeerID, number> = {};
       speakers.forEach(speaker => {
-        store.peers[speaker.peerId].audioLevel = speaker.audioLevel;
+        peerIDAudioLevelMap[speaker.peerId] = speaker.audioLevel;
       });
+      for (let [peerID, peer] of Object.entries(store.peers)) {
+        peer.audioLevel = peerIDAudioLevelMap[peerID] || 0;
+      }
     });
   }
 
-  private onError(error: sdkTypes.HMSException) {
+  protected onError(error: sdkTypes.HMSException) {
     HMSLogger.e('sdkError', 'received error from sdk', error);
+  }
+
+  private async setEnabledTrack(trackID: string, enabled: boolean) {
+    const track = this.hmsSDKTracks[trackID];
+    if (track) {
+      await track.setEnabled(enabled);
+    } else {
+      HMSLogger.e(
+        'sdk',
+        'track not present, unable to enabled/disable',
+        trackID,
+      );
+    }
+  }
+
+  private logPossibleInconsistency(a: string) {
+    HMSLogger.w('store', 'possible inconsistency detected between', a);
   }
 }

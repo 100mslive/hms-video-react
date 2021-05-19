@@ -34,21 +34,24 @@ const immer = <T extends ImmutableHMSStore>(
   };
 };
 
-export const useStore = create<ImmutableHMSStore>(
-  log(
-    devtools(
-      immer(_set => ({
-        room: {
-          id: '',
-          name: '',
-          peers: [],
-          shareableLink: '',
-          hasWaitingRoom: false,
-        },
-        peers: {},
-        tracks: {},
-        messages: { byID: {}, allIDs: [] },
-      })),
+// One store is required per room
+export const createNewStore = () => {
+  return create<HMSStore>(
+    log(
+      devtools(
+        immer(_set => ({
+          room: {
+            id: '',
+            name: '',
+            peers: [],
+            shareableLink: '',
+            hasWaitingRoom: false,
+          },
+          peers: {},
+          tracks: {},
+          messages: { byID: {}, allIDs: [] },
+        })),
+      ),
     ),
-  ),
-);
+  );
+};

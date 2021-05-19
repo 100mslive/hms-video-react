@@ -20,7 +20,5 @@ export * from './components/Button';
 export * from './components/Carousel';
 export * from './components/VerticalDivider';
 export { Button as TwButton } from './components/TwButton';
-export { HMSRoomProvider, useHMSRoom } from './hooks/HMSRoomProvider';
-export { useHMSMessage } from './hooks/MessageProvider';
-export { useHMSSpeaker, audioLevelEmitter } from './hooks/SpeakerProvider';
+export { HMSRoomProvider, useHMSStore, useHMSActions } from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';

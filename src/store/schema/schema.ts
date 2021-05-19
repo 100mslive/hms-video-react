@@ -4,7 +4,7 @@ import { HMSRoom } from './room';
 
 /*
 Defines the schema of the central store. UI Components are aware of the presence
-of this central store.
+of this central store. This is the global state - the single source of immutable truth.
  */
 export interface HMSStore {
   room: HMSRoom;

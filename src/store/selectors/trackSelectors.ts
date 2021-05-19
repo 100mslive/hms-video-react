@@ -1,4 +1,4 @@
-import { HMSStore, HMSTrackID } from '../schema';
+import { HMSStore, HMSTrack, HMSTrackID } from '../schema';
 import { localPeerSelector, peerByIDSelector } from './peerSelectors';
 import { createSelector } from 'reselect';
 
@@ -35,6 +35,17 @@ export const isPeerVideoEnabledSelector = (store: HMSStore, peerID: string) => {
   const peer = peerByIDSelector(store, peerID);
   return isTrackEnabled(store, peer?.videoTrack);
 };
+
+export const isLocalScreenSharedSelector = (store: HMSStore): boolean => {
+  const localPeer = localPeerSelector(store);
+  return localPeer.auxiliaryTracks.some(trackID => {
+    return isScreenShare(store.tracks[trackID]);
+  });
+};
+
+function isScreenShare(track: HMSTrack) {
+  return track.type === 'video' && track.source === 'screen';
+}
 
 function isTrackEnabled(store: HMSStore, trackID?: string) {
   if (trackID && store.tracks[trackID]) {
