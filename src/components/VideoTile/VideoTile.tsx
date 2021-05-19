@@ -3,7 +3,7 @@ import './index.css';
 import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video';
 import { VideoTileControls } from './Controls';
-import { Avatar } from '../Avatar';
+import { Avatar } from '../TwAvatar';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
@@ -48,6 +48,8 @@ export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
    * extra classes added  by user
    */
   classes?: VideoTileClasses;
+
+  avatarType?: 'initial' | 'peeble' | 'icon' | 'image';
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -107,6 +109,7 @@ export const VideoTile = ({
   controlsComponent,
   classes,
   audioLevelEmitter,
+  avatarType,
 }: VideoTileProps) => {
   const { appBuilder } = useHMSTheme();
   const parseClass = useCallback(
@@ -123,11 +126,15 @@ export const VideoTile = ({
     if (aspectRatio === undefined) {
       aspectRatio = appBuilder.videoTileAspectRatio;
     }
+    if (avatarType === undefined) {
+      avatarType = appBuilder.avatarType;
+    }
     //TODO this is the wrong prop
     if (showAudioMuteStatus === undefined) {
       showAudioMuteStatus = appBuilder.showAvatar;
     }
   } catch (e) {}
+  avatarType = avatarType || 'initial';
 
   const { width, height } = videoTrack
     ? videoTrack.getSettings()
@@ -179,7 +186,11 @@ export const VideoTile = ({
                   : ''
               }`}
             >
-              <Avatar label={peer.displayName} />
+              <Avatar
+                label={peer.displayName}
+                size="xl"
+                avatarType={avatarType}
+              />
             </div>
           )}
           {controlsComponent ? (

@@ -10,6 +10,7 @@ export interface appBuilder {
   };
   enableScreenShare?: boolean;
   enableChat?: boolean;
+  avatarType?: 'initial' | 'peeble';
 }
 
 export default interface HMSThemeProps {

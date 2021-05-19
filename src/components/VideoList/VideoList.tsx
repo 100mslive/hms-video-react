@@ -119,6 +119,8 @@ export interface VideoListProps {
    *
    */
   audioLevelEmitter?: any;
+
+  avatarType?: 'initial' | 'peeble';
 }
 
 const defaultClasses: VideoListClasses = {
@@ -149,6 +151,7 @@ export const VideoList = ({
   videoTileClasses,
   audioLevelEmitter,
   allowRemoteMute,
+  avatarType,
 }: VideoListProps) => {
   const parseClass = useCallback(
     hmsUiClassParserGenerator<VideoListClasses>({
@@ -274,6 +277,7 @@ export const VideoList = ({
                             videoTileControls && videoTileControls[index]
                           }
                           audioLevelEmitter={audioLevelEmitter}
+                          avatarType={avatarType}
                         />
                       </div>
                     );

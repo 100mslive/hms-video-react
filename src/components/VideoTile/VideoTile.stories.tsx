@@ -81,7 +81,10 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   }, [args.videoSource, args.isLocal]);
 
   return (
-    <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+    <HMSThemeProvider
+      config={{}}
+      appBuilder={{ theme: 'dark', avatarType: 'peeble' }}
+    >
       <div className="flex items-center justify-center h-full sm:h-80">
         <video
           crossOrigin="anonymous"
