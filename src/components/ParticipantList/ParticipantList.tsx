@@ -6,7 +6,7 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { groupBy } from 'lodash';
 import './index.css';
 import { Avatar } from '../TwAvatar';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import ClickAwayListener from 'react-click-away-listener';
 
 interface ParticipantListClasses {
   root?: string;
