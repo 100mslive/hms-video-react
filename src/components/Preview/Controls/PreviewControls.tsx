@@ -29,7 +29,7 @@ export const VideoTileControls = ({
   onChange,
   classes = {
     root:
-      'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-50 rounded-lg focus:outline-none',
+      'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg focus:outline-none',
     controls:
       'dark flex flex-grow self-center justify-center inline-block hover-hide space-x-1',
     rightcontrols:
