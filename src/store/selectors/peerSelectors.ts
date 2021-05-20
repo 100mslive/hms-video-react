@@ -5,6 +5,10 @@ const selectRoom = (store: HMSStore) => store.room;
 export const selectPeersMap = (store: HMSStore) => store.peers;
 const selectPeerID = (store: HMSStore, peerID: HMSPeerID | undefined) => peerID;
 
+const selectSpeakerByID = (store: HMSStore, peerID: HMSPeerID | undefined) => {
+  return peerID ? store.speakers[peerID] : null;
+};
+
 export const selectPeers = createSelector(
   [selectRoom, selectPeersMap],
   (room, storePeers) => {
@@ -44,6 +48,6 @@ export const selectPeerNameByID = createSelector(
 );
 
 export const selectPeerAudioByID = createSelector(
-  selectPeerByID,
-  peer => peer?.audioLevel || 0,
+  selectSpeakerByID,
+  speaker => speaker?.audioLevel || 0,
 );

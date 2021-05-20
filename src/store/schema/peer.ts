@@ -9,7 +9,6 @@ export interface HMSPeer {
   role?: string;
   isLocal: boolean;
   isStarred?: boolean;
-  audioLevel?: number;
   isDominantSpeaker?: boolean;
   videoTrack?: HMSTrackID;
   audioTrack?: HMSTrackID;
@@ -21,4 +20,10 @@ export interface HMSTrack {
   source?: HMSTrackSource;
   type: HMSTrackType;
   enabled: boolean;
+}
+
+// HMS Speaker is separated as it could have high frequency updates
+export interface HMSSpeaker {
+  id: HMSPeerID;
+  audioLevel?: number;
 }

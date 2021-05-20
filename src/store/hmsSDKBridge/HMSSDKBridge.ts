@@ -240,8 +240,8 @@ export class HMSSDKBridge implements IHMSBridge {
       speakers.forEach(speaker => {
         peerIDAudioLevelMap[speaker.peerId] = speaker.audioLevel;
       });
-      for (let [peerID, peer] of Object.entries(store.peers)) {
-        peer.audioLevel = peerIDAudioLevelMap[peerID] || 0;
+      for (let [peerID, speaker] of Object.entries(store.speakers)) {
+        speaker.audioLevel = peerIDAudioLevelMap[peerID] || 0;
       }
     });
   }

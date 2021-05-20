@@ -1,4 +1,4 @@
-import { HMSPeer, HMSPeerID, HMSTrackID, HMSTrack } from './peer';
+import { HMSPeer, HMSPeerID, HMSTrackID, HMSTrack, HMSSpeaker } from './peer';
 import { HMSMessage, HMSMessageID } from './message';
 import { HMSRoom } from './room';
 
@@ -9,6 +9,7 @@ of this central store. This is the global state - the single source of immutable
 export interface HMSStore {
   room: HMSRoom;
   peers: Record<HMSPeerID, HMSPeer>;
+  speakers: Record<HMSPeerID, HMSSpeaker>;
   tracks: Record<HMSTrackID, HMSTrack>;
   messages: {
     byID: Record<HMSMessageID, HMSMessage>;
