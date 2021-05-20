@@ -9,10 +9,12 @@ import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { SettingsFormProps } from '../Settings/Settings';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-
-interface MuteStatus {
+import { Text } from '../Text/index';
+import { Input } from '../Input';
+interface JoinInfo {
   audioMuted?: boolean;
   videoMuted?: boolean;
+  name?: string;
 }
 export interface PreviewClasses {
   root?: string;
@@ -20,6 +22,8 @@ export interface PreviewClasses {
   header?: string;
   messageModal?: string;
   helloDiv?: string;
+  nameDiv?: string;
+  inputRoot?: string;
   joinButton?: string;
   goBackButton?: string;
 }
@@ -27,13 +31,14 @@ const defaultClasses: PreviewClasses = {
   root:
     'flex h-screen w-screen bg-white dark:bg-black justify-center items-center',
   containerRoot:
-    'flex flex-col items-center w-37.5 h-400 box-border bg-gray-600 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
+    'flex flex-col items-center w-37.5 h-400 box-border bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
   header: 'w-22.5 h-22.5 mt-1.875 mb-7',
-  helloDiv: 'text-2xl font-medium mb-12',
+  helloDiv: 'text-2xl font-medium mb-2',
+  nameDiv: 'text-lg leading-6 mb-2',
+  inputRoot: 'w-1/3 p-2 mb-3 ',
 };
 export interface PreviewProps {
-  name: string;
-  joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
+  joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
   onChange: (values: SettingsFormProps) => void;
   goBackOnClick: () => void;
   toggleMute: (type: 'audio' | 'video') => void;
@@ -46,7 +51,6 @@ export interface PreviewProps {
 }
 
 export const Preview = ({
-  name,
   joinOnClick,
   goBackOnClick,
   onChange,
@@ -74,6 +78,7 @@ export const Preview = ({
   const [videoMuted, setVideoMuted] = useState(false);
   const [selectedAudioInput, setSelectedAudioInput] = useState('default');
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
+  const [name, setName] = useState('');
 
   const toggleMediaState = (type: string) => {
     if (type === 'audio') {
@@ -268,20 +273,34 @@ export const Preview = ({
           />
         </div>
         {/* helloDiv */}
-        <div className={parseClass('helloDiv')}>Hello, {name}</div>
+        <div className={parseClass('helloDiv')}>Hi There</div>
+        {/* nameDiv */}
+        <div className={parseClass('nameDiv')}>What's your name?</div>
+        {/* inputFieldRoot */}
+        <div className={parseClass('inputRoot')}>
+          <Input
+            compact
+            onChange={e => {
+              setName(e.target.value);
+            }}
+            value={name}
+            required
+          ></Input>
+        </div>
+
         {/* joinButton */}
         <Button
           variant={'emphasized'}
           size={'lg'}
           onClick={() => {
             closeMediaStream(mediaStream);
-            joinOnClick({ audioMuted, videoMuted });
+            joinOnClick({ audioMuted, videoMuted, name });
           }}
         >
           Join
         </Button>
         <Button
-          classes={{ rootNoFill: 'mt-4 text-brand-main' }}
+          classes={{ rootNoFill: 'mt-3 text-brand-main' }}
           variant={'no-fill'}
           onClick={() => {
             closeMediaStream(mediaStream);

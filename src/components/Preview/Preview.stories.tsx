@@ -32,7 +32,6 @@ const LightTemplate: Story<PreviewProps> = args => {
 
 export const Default = DarkTemplate.bind({});
 Default.args = {
-  name: 'Aditya Gupta',
   joinOnClick: ({ audioMuted, videoMuted }) =>
     alert(`Join Clicked, audio and video mute are ${audioMuted} ${videoMuted}`),
   goBackOnClick: () => alert('Go Back Clicked'),
@@ -40,7 +39,6 @@ Default.args = {
 
 export const Light = LightTemplate.bind({});
 Default.args = {
-  name: 'Aditya Gupta',
   joinOnClick: ({ audioMuted, videoMuted }) =>
     alert(`Join Clicked, audio and video mute are ${audioMuted} ${videoMuted}`),
   goBackOnClick: () => alert('Go Back Clicked'),
