@@ -111,6 +111,8 @@ export interface VideoListProps {
    * videoTileClasses
    */
   videoTileClasses?: VideoTileClasses;
+
+  avatarType?: 'initial' | 'pebble';
 }
 
 const defaultClasses: VideoListClasses = {
@@ -140,6 +142,7 @@ export const VideoList = ({
   classes,
   videoTileClasses,
   allowRemoteMute,
+  avatarType,
 }: VideoListProps) => {
   const parseClass = useCallback(
     hmsUiClassParserGenerator<VideoListClasses>({
@@ -156,9 +159,6 @@ export const VideoList = ({
     let context = useHMSTheme();
     if (aspectRatio === undefined) {
       aspectRatio = context.appBuilder.videoTileAspectRatio;
-    }
-    if (showAudioMuteStatus === undefined) {
-      showAudioMuteStatus = context.appBuilder.showAvatar;
     }
   } catch (e) {}
   aspectRatio =
@@ -268,6 +268,7 @@ export const VideoList = ({
                           controlsComponent={
                             videoTileControls && videoTileControls[index]
                           }
+                          avatarType={avatarType}
                         />
                       </div>
                     );
