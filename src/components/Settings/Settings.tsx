@@ -229,7 +229,7 @@ export const Settings = ({
               iconSize="md"
               onClick={handleClose}
             >
-              <CloseIcon className="fill-current text-gray-400" />
+              <CloseIcon className="text-gray-400" />
             </TwButton>
           </div>
 
