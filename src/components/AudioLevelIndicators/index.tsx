@@ -1,6 +1,6 @@
 import React from 'react';
 import { AudioLevelDisplayType } from '../../types';
-import { DisplayShapes } from '../Video';
+import { DisplayShapes } from '../Video/Video';
 import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 import { AudioLevelBorder, AudioLevelIndicatorClasses } from './Border';

@@ -117,19 +117,19 @@ export class HMSSDKBridge implements IHMSBridge {
     this.onHMSMessage(hmsMessage);
   }
 
-  addSink(trackID: string, videoElement: HTMLVideoElement) {
+  async addSink(trackID: string, videoElement: HTMLVideoElement) {
     const sdkTrack = this.hmsSDKTracks[trackID];
     if (sdkTrack && sdkTrack.type === sdkTypes.HMSTrackType.VIDEO) {
-      (sdkTrack as sdkTypes.HMSVideoTrack).addSink(videoElement);
+      await (sdkTrack as sdkTypes.HMSVideoTrack).addSink(videoElement);
     } else {
       this.logPossibleInconsistency("no video track found to add sink");
     }
   }
 
-  removeSink(trackID: string, videoElement: HTMLVideoElement) {
+  async removeSink(trackID: string, videoElement: HTMLVideoElement) {
     const sdkTrack = this.hmsSDKTracks[trackID];
     if (sdkTrack && sdkTrack.type === sdkTypes.HMSTrackType.VIDEO) {
-      (sdkTrack as sdkTypes.HMSVideoTrack).removeSink(videoElement);
+      await (sdkTrack as sdkTypes.HMSVideoTrack).removeSink(videoElement);
     } else {
       this.logPossibleInconsistency("no video track found to remove sink");
     }
