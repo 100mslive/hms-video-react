@@ -52,8 +52,8 @@ const defaultClasses: SettingsClasses = {
   iconContainer: 'focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg',
   dialogRoot: 'rounded-lg',
   dialogContainer:
-    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto divide-solid',
-  dialogInner: 'text-2xl mb-3 p-2 border-b-2 flex justify-between',
+    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto',
+  dialogInner: 'text-2xl mb-3 p-2 flex justify-between',
   titleContainer: 'flex items-center',
   titleIcon: 'pr-4',
   titleText: 'text-2xl leading-7',
@@ -64,7 +64,7 @@ const defaultClasses: SettingsClasses = {
   select:
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   selectInner: 'p-4',
-  divider: 'bg-gray-200 h-px w-full my-4',
+  divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
   sliderContainer: 'w-full my-1.5',
   sliderInner: 'w-full flex',
   sliderLabelContainer: 'w-1/3 flex justify-end items-center ',
@@ -229,9 +229,11 @@ export const Settings = ({
               iconSize="md"
               onClick={handleClose}
             >
-              <CloseIcon />
+              <CloseIcon className="text-gray-400" />
             </TwButton>
           </div>
+
+          <div className={parseClass('divider')}></div>
 
           <div className={`${parseClass('formContainer')}`}>
             {error === '' ? (
