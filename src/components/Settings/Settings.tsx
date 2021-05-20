@@ -1,17 +1,18 @@
 import React, {
-  useEffect,
-  useState,
   ChangeEventHandler,
   useCallback,
+  useEffect,
+  useState,
 } from 'react';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
+import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { getLocalDevices, getLocalStream } from '@100mslive/100ms-web-sdk';
 import { Button as TwButton } from '../TwButton';
-import HMSLogger from '../../utils/ui-logger';
-import { groupBy, Dictionary } from 'lodash';
+
 interface SettingsClasses {
   root?: string;
   iconContainer?: string;
@@ -122,9 +123,15 @@ export const Settings = ({
   );
 
   const [open, setOpen] = useState(false);
-  const [deviceGroups, setDeviceGroups] = useState<
-    Dictionary<MediaDeviceInfo[]>
-  >({});
+  const [deviceGroups, setDeviceGroups] = useState<{
+    audioinput: MediaDeviceInfo[];
+    audiooutput: MediaDeviceInfo[];
+    videoinput: MediaDeviceInfo[];
+  }>({
+    audioinput: [],
+    audiooutput: [],
+    videoinput: [],
+  });
   const [error, setError] = useState('');
 
   const [values, setValues] = useState<SettingsFormProps>({
@@ -167,17 +174,12 @@ export const Settings = ({
 
   useEffect(() => {
     if (open) {
-      navigator.mediaDevices.enumerateDevices().then(
-        devices => {
-          const deviceGroups = groupBy(devices, 'kind');
-          HMSLogger.d('Groups:', deviceGroups);
-          setDeviceGroups(deviceGroups);
-        },
-        error => {
-          //TODO this is not working right now
-          setError(error);
-        },
-      );
+      getLocalStream({ video: true, audio: true })
+        .then(stream => {
+          closeMediaStream(stream);
+          getLocalDevices().then(deviceGroups => setDeviceGroups(deviceGroups));
+        })
+        .catch(err => setError(err.message));
     }
   }, [open]);
 
