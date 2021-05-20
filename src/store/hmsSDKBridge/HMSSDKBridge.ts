@@ -39,7 +39,7 @@ export class HMSSDKBridge implements IHMSBridge {
 
   join(config: sdkTypes.HMSConfig) {
     if (this.isRoomJoined) {
-      this.logPossibleInconsistency("room join is called again")
+      this.logPossibleInconsistency('room join is called again');
       return; // ignore
     }
     this.sdk.join(config, {
@@ -58,7 +58,7 @@ export class HMSSDKBridge implements IHMSBridge {
 
   leave(): void {
     if (this.isRoomLeft) {
-      this.logPossibleInconsistency("room leave is called again")
+      this.logPossibleInconsistency('room leave is called again');
       return; // ignore
     }
     this.sdk.leave().then(() => {
@@ -83,7 +83,7 @@ export class HMSSDKBridge implements IHMSBridge {
     // useHMSStore(localAudioTrackIDSelector)
     if (trackID) {
       const isCurrentEnabled = this.store(selectIsLocalAudioEnabled);
-      if (isCurrentEnabled == enabled) {
+      if (isCurrentEnabled === enabled) {
         // why would same value will be set again?
         this.logPossibleInconsistency('local audio track muted states.');
       }
@@ -96,7 +96,7 @@ export class HMSSDKBridge implements IHMSBridge {
     const trackID = this.store(selectLocalVideoTrackID);
     if (trackID) {
       const isCurrentEnabled = this.store(selectIsLocalVideoEnabled);
-      if (isCurrentEnabled == enabled) {
+      if (isCurrentEnabled === enabled) {
         // why would same value will be set again?
         this.logPossibleInconsistency('local video track muted states.');
       }
@@ -107,7 +107,7 @@ export class HMSSDKBridge implements IHMSBridge {
 
   sendMessage(message: string) {
     if (message.trim() === '') {
-      HMSLogger.d("Ignoring empty message send");
+      HMSLogger.d('Ignoring empty message send');
       return;
     }
     const sdkMessage = this.sdk.sendMessage(HMSMessageType.CHAT, message);
@@ -122,7 +122,7 @@ export class HMSSDKBridge implements IHMSBridge {
     if (sdkTrack && sdkTrack.type === sdkTypes.HMSTrackType.VIDEO) {
       await (sdkTrack as sdkTypes.HMSVideoTrack).addSink(videoElement);
     } else {
-      this.logPossibleInconsistency("no video track found to add sink");
+      this.logPossibleInconsistency('no video track found to add sink');
     }
   }
 
@@ -131,7 +131,7 @@ export class HMSSDKBridge implements IHMSBridge {
     if (sdkTrack && sdkTrack.type === sdkTypes.HMSTrackType.VIDEO) {
       await (sdkTrack as sdkTypes.HMSVideoTrack).removeSink(videoElement);
     } else {
-      this.logPossibleInconsistency("no video track found to remove sink");
+      this.logPossibleInconsistency('no video track found to remove sink');
     }
   }
 

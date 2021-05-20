@@ -128,10 +128,9 @@ export const Join = ({
                 setRole(event.target.value);
               }}
             >
-              <option value="Teacher">Teacher</option>
-              <option value="Student">Student</option>
-              <option value="Admin">Admin</option>
-              <option value="Viewer">Viewer</option>
+              <OptionsList
+                optionValues={['Teacher', 'Student', 'Admin', 'Viewer']}
+              ></OptionsList>
             </Select>
           </div>
           <div className={parseClass('inputName')}>
@@ -145,9 +144,7 @@ export const Join = ({
                 setEndpoint(event.target.value);
               }}
             >
-              <option value="qa">qa</option>
-              <option value="prod">prod</option>
-              <option value="dev">dev</option>
+              <OptionsList optionValues={['qa', 'prod', 'dev']}></OptionsList>
             </Select>
           </div>
           <div className={parseClass('joinRoot')}>

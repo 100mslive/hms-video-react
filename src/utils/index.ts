@@ -12,7 +12,7 @@ import { HMSTrackSource } from '../store/schema';
 const getVideoTileLabel = (
   peerName: string,
   isLocal: boolean,
-  videoSource: HMSTrackSource = "regular",
+  videoSource: HMSTrackSource = 'regular',
 ) => {
   // Map [isLocal, videoSource] to the label to be displayed.
   const labelMap = new Map<string, string>([

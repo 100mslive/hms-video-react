@@ -39,7 +39,7 @@ export const selectDominantPeer = createSelector(selectPeers, peers => {
 
 export const selectPeerByID = createSelector(
   [selectPeersMap, selectPeerID],
-  (storePeers, peerID) => peerID ? storePeers[peerID] : null
+  (storePeers, peerID) => (peerID ? storePeers[peerID] : null),
 );
 
 export const selectPeerNameByID = createSelector(

@@ -146,7 +146,7 @@ export const Video = ({
         if (inView) {
           await hmsActions.addSink(hmsVideoTrack.id, videoRef.current);
         } else {
-          await hmsActions.removeSink(hmsVideoTrack.id, videoRef.current)
+          await hmsActions.removeSink(hmsVideoTrack.id, videoRef.current);
         }
       }
     })();
@@ -167,7 +167,11 @@ export const Video = ({
         playsInline
         className={`${hu('video')} 
           ${displayShape === 'circle' ? hu('videoCircle') : ''}
-          ${isLocal && hmsVideoTrack?.source === 'regular' ? hu('videoLocal') : ''}
+          ${
+            isLocal && hmsVideoTrack?.source === 'regular'
+              ? hu('videoLocal')
+              : ''
+          }
           ${objectFit === 'contain' ? hu('videoContain') : ''}
           ${objectFit === 'cover' ? hu('videoCover') : ''}
         `}

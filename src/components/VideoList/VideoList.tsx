@@ -268,7 +268,7 @@ export const VideoList = ({
                           controlsComponent={
                             videoTileControls && videoTileControls[index]
                           }
-                         />
+                        />
                       </div>
                     );
                   })}

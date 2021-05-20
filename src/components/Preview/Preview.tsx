@@ -102,7 +102,8 @@ export const Preview = ({
   const agent = navigator.userAgent.toLowerCase();
   const chrome = agent.indexOf('chrome') > -1;
   const safari = agent.indexOf('safari') !== -1 && !chrome;
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const isIOS =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   const sayswho = (function() {
     var ua = navigator.userAgent,
       tem,
@@ -191,7 +192,10 @@ export const Preview = ({
                   setSecondaryErrorMessage(errorMessage['secondaryMessage']);
                   setErrorState(true);
                 } else {
-                  errorMessage = getLocalStreamException(error.name, safari);
+                  const errorMessage = getLocalStreamException(
+                    error.name,
+                    safari,
+                  );
                   setErrorTitle(errorMessage['title']);
                   setErrorMessage(errorMessage['message']);
                   setSecondaryErrorMessage(errorMessage['secondaryMessage']);
@@ -199,7 +203,10 @@ export const Preview = ({
                 }
               })
               .catch(error => {
-                var errorMessage = getLocalStreamException(error.name, safari);
+                const errorMessage = getLocalStreamException(
+                  error.name,
+                  safari,
+                );
                 setErrorTitle(errorMessage['title']);
                 setErrorMessage(errorMessage['message']);
                 setSecondaryErrorMessage(errorMessage['secondaryMessage']);

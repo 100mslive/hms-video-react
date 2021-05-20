@@ -128,7 +128,10 @@ export const ChatBox = ({
 
   if (messages.length > 0) {
     const myOwnMessage = messages[messages.length - 1].senderName === 'You';
-    if (autoScrollToBottom && (myOwnMessage || isTotallyScrolled(messageListRef))) {
+    if (
+      autoScrollToBottom &&
+      (myOwnMessage || isTotallyScrolled(messageListRef))
+    ) {
       setToScroll(true);
     } else {
       // unread should be read/updated from/to central store
@@ -217,7 +220,9 @@ export const ChatBox = ({
                 {/* messageInfo */}
                 <div className={hu('messageInfo')}>
                   {/* messageSender */}
-                  <span className={hu('messageSender')}>{message.senderName}</span>
+                  <span className={hu('messageSender')}>
+                    {message.senderName}
+                  </span>
                   {/* messageTime */}
                   <span className={hu('messageTime')}>
                     {timeFormatter(message.time)}

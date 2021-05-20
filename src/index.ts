@@ -20,5 +20,9 @@ export * from './components/Button';
 export * from './components/Carousel';
 export * from './components/VerticalDivider';
 export { Button as TwButton } from './components/TwButton';
-export { HMSRoomProvider, useHMSStore, useHMSActions } from './hooks/HMSRoomProvider';
+export {
+  HMSRoomProvider,
+  useHMSStore,
+  useHMSActions,
+} from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';

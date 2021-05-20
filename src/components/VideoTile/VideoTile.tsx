@@ -116,7 +116,11 @@ export const VideoTile = ({
     }),
     [],
   );
-  const label = getVideoTileLabel(peer.displayName, isLocal, hmsVideoTrack?.source);
+  const label = getVideoTileLabel(
+    peer.displayName,
+    isLocal,
+    hmsVideoTrack?.source,
+  );
   try {
     if (aspectRatio === undefined) {
       aspectRatio = appBuilder.videoTileAspectRatio;
