@@ -8,6 +8,9 @@ export interface IHMSBridge {
 
   setLocalAudioEnabled(enabled: boolean): void;
   setLocalVideoEnabled(enabled: boolean): void;
+
+  addSink(trackID: string, videoElement: HTMLVideoElement): void;
+  removeSink(trackID: string, videoElement: HTMLVideoElement): void;
 }
 
 export interface HMSError {

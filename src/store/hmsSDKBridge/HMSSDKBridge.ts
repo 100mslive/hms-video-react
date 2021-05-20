@@ -107,7 +107,7 @@ export class HMSSDKBridge implements IHMSBridge {
 
   sendMessage(message: string) {
     if (message.trim() === '') {
-      HMSLogger.d("Ignoring empty message send")
+      HMSLogger.d("Ignoring empty message send");
       return;
     }
     const sdkMessage = this.sdk.sendMessage(HMSMessageType.CHAT, message);
@@ -115,6 +115,24 @@ export class HMSSDKBridge implements IHMSBridge {
     hmsMessage.read = true;
     hmsMessage.senderName = 'You';
     this.onHMSMessage(hmsMessage);
+  }
+
+  addSink(trackID: string, videoElement: HTMLVideoElement) {
+    const sdkTrack = this.hmsSDKTracks[trackID];
+    if (sdkTrack && sdkTrack.type === sdkTypes.HMSTrackType.VIDEO) {
+      (sdkTrack as sdkTypes.HMSVideoTrack).addSink(videoElement);
+    } else {
+      this.logPossibleInconsistency("no video track found to add sink");
+    }
+  }
+
+  removeSink(trackID: string, videoElement: HTMLVideoElement) {
+    const sdkTrack = this.hmsSDKTracks[trackID];
+    if (sdkTrack && sdkTrack.type === sdkTypes.HMSTrackType.VIDEO) {
+      (sdkTrack as sdkTypes.HMSVideoTrack).removeSink(videoElement);
+    } else {
+      this.logPossibleInconsistency("no video track found to remove sink");
+    }
   }
 
   protected syncPeers() {
