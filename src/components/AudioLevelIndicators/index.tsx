@@ -1,12 +1,11 @@
 import React from 'react';
-import { EventEmitter } from 'events';
 import { AudioLevelDisplayType } from '../../types';
 import { DisplayShapes } from '../Video';
 import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 import { AudioLevelBorder, AudioLevelIndicatorClasses } from './Border';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import { selectPeerAudioByID, selectPeerByID } from '../../store/selectors';
+import { selectPeerAudioByID } from '../../store/selectors';
 
 export interface AudioLevelIndicatorProps {
   peerId?: string;
@@ -26,7 +25,8 @@ export const AudioLevelIndicator = ({
   classes,
 }: AudioLevelIndicatorProps) => {
 
-  const audioLevel = useHMSStore((store) => selectPeerAudioByID(store, peerId));
+  let audioLevel = useHMSStore((store) => selectPeerAudioByID(store, peerId));
+  audioLevel = level || audioLevel;
 
   switch (type) {
     case 'inline-circle':

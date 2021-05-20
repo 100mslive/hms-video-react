@@ -29,6 +29,8 @@ export class HMSSDKBridge implements IHMSBridge {
   private hmsSDKTracks: Record<string, sdkTypes.HMSTrack> = {};
   private readonly sdk: HMSSdk;
   private readonly store: UseStore<HMSStore>;
+  private isRoomJoined: boolean = false;
+  private isRoomLeft: boolean = false;
 
   constructor(sdk: HMSSdk, store: UseStore<HMSStore>) {
     this.sdk = sdk;
@@ -36,6 +38,10 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   join(config: sdkTypes.HMSConfig) {
+    if (this.isRoomJoined) {
+      this.logPossibleInconsistency("room join is called again")
+      return; // ignore
+    }
     this.sdk.join(config, {
       onJoin: this.onJoin.bind(this),
       onRoomUpdate: this.onRoomUpdate.bind(this),
@@ -47,13 +53,19 @@ export class HMSSDKBridge implements IHMSBridge {
     this.sdk.addAudioListener({
       onAudioLevelUpdate: this.onAudioLevelUpdate.bind(this),
     });
+    this.isRoomJoined = true;
   }
 
   leave(): void {
+    if (this.isRoomLeft) {
+      this.logPossibleInconsistency("room leave is called again")
+      return; // ignore
+    }
     this.sdk.leave().then(() => {
       HMSLogger.i('sdk', 'left room');
       this.store.destroy();
     });
+    this.isRoomLeft = true;
   }
 
   async toggleScreenShare() {
@@ -94,6 +106,10 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   sendMessage(message: string) {
+    if (message.trim() === '') {
+      HMSLogger.d("Ignoring empty message send")
+      return;
+    }
     const sdkMessage = this.sdk.sendMessage(HMSMessageType.CHAT, message);
     const hmsMessage = SDKToHMS.convertMessage(sdkMessage) as HMSMessage;
     hmsMessage.read = true;
@@ -248,6 +264,6 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   private logPossibleInconsistency(a: string) {
-    HMSLogger.w('store', 'possible inconsistency detected between', a);
+    HMSLogger.w('store', 'possible inconsistency detected - ', a);
   }
 }
