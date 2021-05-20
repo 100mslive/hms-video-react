@@ -1,5 +1,7 @@
-import { MediaStreamWithInfo, VideoSource } from '../../types';
+import { MediaStreamWithInfo } from '../../types';
 import { getUserMedia } from '../../utils/preview';
+import { HMSTrackSource } from '../../store/schema';
+import React from 'react';
 const loadStream = (props: {
   videoTrack: MediaStreamTrack | undefined;
   audioTrack: MediaStreamTrack | undefined;
@@ -11,7 +13,7 @@ const loadStream = (props: {
     React.SetStateAction<MediaStreamTrack | undefined>
   >;
   isLocal?: boolean;
-  videoSource?: VideoSource;
+  passedVideoSource?: HMSTrackSource;
 }) => {
   const {
     videoTrack,
@@ -20,12 +22,14 @@ const loadStream = (props: {
     setVideoTrack,
     setAudioTrack,
     isLocal,
-    videoSource,
+    passedVideoSource,
   } = props;
   videoTrack?.stop();
   audioTrack?.stop();
 
-  if (videoSource === 'camera' && isLocal) {
+  const videoSource = passedVideoSource || 'regular';
+
+  if (videoSource === 'regular' && isLocal) {
     // window.navigator.mediaDevices
     getUserMedia({ audio: true, video: true }).then(function(
       stream: MediaStream,
@@ -78,7 +82,7 @@ const loadStreams = ({
       videoTrack: streamWithInfo.videoTrack,
       audioTrack: streamWithInfo.audioTrack,
       dummyVideoRef:
-        !streamWithInfo.isLocal && streamWithInfo.videoSource === 'screen'
+        !streamWithInfo.peer.isLocal && streamWithInfo.hmsVideoTrack?.source === 'screen'
           ? dummyScreenVideoRef
           : dummyCameraVideoRef,
       setVideoTrack: videoTrack => {
@@ -96,8 +100,7 @@ const loadStreams = ({
         }
       },
 
-      isLocal: streamWithInfo.isLocal,
-      videoSource: streamWithInfo.videoSource,
+      isLocal: streamWithInfo.peer.isLocal,
     });
   });
 };

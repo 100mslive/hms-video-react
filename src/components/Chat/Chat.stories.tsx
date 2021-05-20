@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import Chat from './index';
 import './index.css';
 import { ChatProps, Message } from '../ChatBox/ChatBox';
+import { fakeMessage, fakeMessages, makeFakeMessage } from '../../storybook/fixtures/chatFixtures';
 
 const meta: Meta = {
   title: 'Chat/ Button',
@@ -16,11 +17,7 @@ const Template: Story<ChatProps> = args => {
   const onSend = (message: string) => {
     setMesaages(prevMessages => {
       let messages = [...prevMessages];
-      messages.push({
-        message,
-        sender: 'You',
-        time: new Date(),
-      });
+      messages.push(makeFakeMessage(message, "You"));
       return messages;
     });
   };
@@ -34,35 +31,6 @@ const Template: Story<ChatProps> = args => {
 
 export const Default = Template.bind({});
 Default.args = {
-  messages: [
-    {
-      message: 'Hi guys',
-      sender: 'Yash',
-      time: new Date(),
-    },
-    {
-      message: 'Ivy L left meeting',
-      sender: 'admin',
-      time: new Date(),
-      notification: true,
-    },
-    {
-      message: 'Ping me at nikhil@100ms.live',
-      sender: 'Nikhil',
-      time: new Date(),
-    },
-    {
-      message: 'Our twiiter handle @100mslive',
-      sender: '100ms',
-      time: new Date(),
-    },
-    {
-      message: 'Nikhil left meeting',
-      sender: 'admin',
-      time: new Date(),
-      notification: true,
-    },
-  ],
-
-  willScrollToBottom: true,
+  messages: fakeMessages,
+  autoScrollToBottom: true,
 };

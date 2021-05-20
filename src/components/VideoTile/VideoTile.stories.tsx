@@ -12,9 +12,6 @@ declare global {
   interface HTMLVideoElement {
     captureStream(frameRate?: number): MediaStream;
   }
-  interface MediaDevices {
-    getDisplayMedia(constraints?: MediaStreamConstraints): Promise<MediaStream>;
-  }
 }
 
 const meta: Meta = {
@@ -69,7 +66,6 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
         videoTrack,
         audioTrack,
         isLocal: args.isLocal,
-        videoSource: args.videoSource,
         dummyVideoRef,
         setVideoTrack,
         setAudioTrack,
@@ -78,7 +74,7 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.videoSource, args.isLocal]);
+  }, [args.isLocal]);
 
   return (
     <HMSThemeProvider
@@ -145,7 +141,6 @@ const MeetTemplate: Story<VideoTileProps> = args => {
         videoTrack,
         audioTrack,
         isLocal: args.isLocal,
-        videoSource: args.videoSource,
         dummyVideoRef,
         setVideoTrack,
         setAudioTrack,
@@ -154,7 +149,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
       return;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.videoSource, args.isLocal]);
+  }, [args.isLocal]);
 
   return (
     <>
@@ -197,7 +192,6 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                     label={getVideoTileLabel(
                       args.peer.displayName,
                       args.isLocal || false,
-                      args.videoSource,
                     )}
                     isAudioMuted={args.isAudioMuted}
                     showAudioMuteStatus={args.showAudioMuteStatus}
@@ -233,7 +227,6 @@ DefaultVideoTile.args = {
   showAudioLevel: true,
   audioLevelDisplayType: 'border',
   audioLevel: 40,
-  videoSource: 'camera',
   classes: { root: 'hello' },
 };
 
@@ -245,7 +238,6 @@ GoogleMeetVideoTile.args = {
   showAudioLevel: true,
   audioLevelDisplayType: 'inline-wave',
   audioLevel: 40,
-  videoSource: 'camera',
 };
 
 CampFireVideoTile.args = {
@@ -255,7 +247,6 @@ CampFireVideoTile.args = {
   showAudioLevel: true,
   audioLevelDisplayType: 'border',
   audioLevel: 40,
-  videoSource: 'camera',
 };
 
 ClassesOverrideVideoTile.args = {
@@ -266,6 +257,5 @@ ClassesOverrideVideoTile.args = {
   showAudioLevel: true,
   audioLevelDisplayType: 'border',
   audioLevel: 40,
-  videoSource: 'camera',
   classes: { videoContainer: 'border-8 border-red-800' },
 };

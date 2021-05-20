@@ -7,15 +7,12 @@ export interface Peer {
   isLocal?: boolean;
 }
 
-export type VideoSource = 'screen' | 'camera' | 'canvas';
-
 //TODO match with HMSPeer interface
 export interface MediaStreamWithInfo {
   videoTrack: MediaStreamTrack;
   audioTrack: MediaStreamTrack;
   hmsVideoTrack?: HMSTrack;
   peer: Peer;
-  videoSource: VideoSource;
 }
 export type AudioLevelDisplayType = 'inline-wave' | 'inline-circle' | 'border';
 

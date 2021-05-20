@@ -2,6 +2,7 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { ParticipantList, ParticipantListProps } from './ParticipantList';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
+import { fakeParticipants } from '../../storybook/fixtures/peersFixtures';
 
 const meta: Meta = {
   title: 'ParticipantList',
@@ -45,96 +46,7 @@ export const Real = Template.bind({});
 export const Dark = DarkTemplate.bind({});
 export const Light = LightTemplate.bind({});
 
-const defaultArgs = {
-  participantList: [
-    {
-      peer: { id: '123', displayName: 'Alex Tinmayson', role: 'Teacher' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Ankita Bhattacharya', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Anshul Kumar', role: 'Student' },
-      isAudioMuted: true,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Ishaan Awasthi', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Ivy Loppinbug', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-  ],
-};
-
+const defaultArgs = {participantList: fakeParticipants};
 Default.args = defaultArgs;
 
 Real.args = {

@@ -3,12 +3,14 @@ import { Meta, Story } from '@storybook/react';
 import React, { useState, useRef } from 'react';
 import { VideoList, VideoListProps } from '.';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
-import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
+import { MediaStreamWithInfo, Peer } from '../../types';
 import { VideoTileControls } from '../VideoTile/Controls';
 import { MicOffIcon, MicOnIcon } from '../Icons';
 import { loadStreams } from '../../storybook/utils';
 import { getUserMedia } from '../../utils/preview';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
+import { fakeStreamsWithInfo } from '../../storybook/fixtures/streamFixtures';
+import { HMSTrack } from '../../store/schema';
 declare global {
   interface HTMLVideoElement {
     captureStream(frameRate?: number): MediaStream;
@@ -93,8 +95,8 @@ const Template: Story<VideoListStoryProps> = args => {
             if (dummyCameraVideoRef && dummyCameraVideoRef.current) {
               streamsWithInfo?.forEach((streamWithInfo, index) => {
                 if (
-                  !streamWithInfo.isLocal &&
-                  streamWithInfo.videoSource !== 'screen' &&
+                  !streamWithInfo.peer.isLocal &&
+                  streamWithInfo.hmsVideoTrack?.source !== 'screen' &&
                   dummyCameraVideoRef.current
                 ) {
                   let newStreamsWithInfo = [...streamsWithInfo];
@@ -127,8 +129,8 @@ const Template: Story<VideoListStoryProps> = args => {
             if (dummyScreenVideoRef && dummyScreenVideoRef.current) {
               streamsWithInfo?.forEach((streamWithInfo, index) => {
                 if (
-                  !streamWithInfo.isLocal &&
-                  streamWithInfo.videoSource === 'screen' &&
+                  !streamWithInfo.peer.isLocal &&
+                  streamWithInfo.hmsVideoTrack?.source === 'screen' &&
                   dummyScreenVideoRef.current
                 ) {
                   let newStreamsWithInfo = [...streamsWithInfo];
@@ -154,96 +156,7 @@ const Template: Story<VideoListStoryProps> = args => {
   );
 };
 
-const streams = [
-  {
-    peer: { id: '1', displayName: 'Nikhil1' },
-    videoSource: 'camera',
-    audioLevel: 50,
-    isLocal: true,
-  },
-  {
-    peer: { id: '2', displayName: 'Nikhil2' },
-    videoSource: 'screen',
-    audioLevel: 100,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '3', displayName: 'Nikhil3' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '4', displayName: 'Nikhil4' },
-    videoSource: 'screen',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '1235', displayName: 'Nikhil5' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: true,
-  },
-  {
-    peer: { id: '1236', displayName: 'Nikhil6' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: true,
-  },
-  {
-    peer: { id: '1237', displayName: 'Nikhil7' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '1238', displayName: 'Nikhil8' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '1239', displayName: 'Nikhil9' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '12310', displayName: 'Nikhil10' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '12311', displayName: 'Nikhil11' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '12312', displayName: 'Nikhil12' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  // {
-  //   stream: new MediaStream(),
-  //   peer: { id: '123', displayName: 'Nikhil' },
-  //   videoSource: 'screen',
-  // },
-];
+const streams = fakeStreamsWithInfo;
 
 export const DefaultList = Template.bind({});
 DefaultList.args = {
@@ -307,19 +220,19 @@ const GoogleMeetControls = ({
   isAudioMuted,
   peer,
   isLocal,
-  videoSource,
   showAudioLevel,
   showAudioMuteStatus,
   audioLevel,
+  hmsVideoTrack,
 }: {
   allowRemoteMute: boolean;
   isAudioMuted?: boolean;
   peer: Peer;
   isLocal?: boolean;
-  videoSource: VideoSource;
   showAudioLevel: boolean;
   showAudioMuteStatus: boolean;
   audioLevel?: number;
+  hmsVideoTrack?: HMSTrack;
 }) => {
   return (
     <>
@@ -334,7 +247,7 @@ const GoogleMeetControls = ({
         label={getVideoTileLabel(
           peer.displayName,
           isLocal || false,
-          videoSource,
+          hmsVideoTrack?.source,
         )}
         isAudioMuted={isAudioMuted}
         showAudioMuteStatus={showAudioMuteStatus}
@@ -359,10 +272,10 @@ const MeetTemplate: Story<VideoListStoryProps> = (
     showAudioMuteStatus = true,
   } = rest;
   const isCameraStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'camera',
+    stream => stream.hmsVideoTrack?.source === 'regular',
   );
   const isScreenStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'screen',
+    stream => stream.hmsVideoTrack?.source === 'regular',
   );
   const [cameraStream, setCameraStream] = useState<MediaStream>();
   const [screenStream, setScreenStream] = useState<MediaStream>();
@@ -418,23 +331,19 @@ const MeetTemplate: Story<VideoListStoryProps> = (
             streams={streams
               .filter(
                 item =>
-                  item.videoSource === 'screen' ||
-                  item.videoSource === 'camera',
+                  item.hmsVideoTrack?.source === 'screen' ||
+                  item.hmsVideoTrack?.source === 'regular',
               )
               .map((item): any => ({
                 ...item,
                 stream:
-                  item.videoSource === 'screen' ? screenStream : cameraStream,
+                  item.hmsVideoTrack?.source === 'screen' ? screenStream : cameraStream,
               }))}
             videoTileControls={streams.map(stream => (
               <GoogleMeetControls
                 allowRemoteMute={allowRemoteMute}
-                isAudioMuted={stream.isAudioMuted}
                 peer={stream.peer}
-                isLocal={stream.isLocal}
-                videoSource={stream.videoSource}
                 showAudioLevel={showAudioLevel}
-                audioLevel={stream.audioLevel}
                 showAudioMuteStatus={showAudioMuteStatus}
               />
             ))}
