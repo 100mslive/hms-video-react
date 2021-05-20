@@ -2,7 +2,8 @@ export interface IHMSBridge {
   join(...args: any[]): void;
   leave(): void;
 
-  toggleScreenShare(): void;
+  startScreenShare(): void;
+  stopScreenShare(): void;
 
   sendMessage(message: string): void;
 

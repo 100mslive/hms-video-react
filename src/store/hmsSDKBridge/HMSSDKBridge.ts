@@ -68,14 +68,24 @@ export class HMSSDKBridge implements IHMSBridge {
     this.isRoomLeft = true;
   }
 
-  async toggleScreenShare() {
+  async startScreenShare() {
     const isScreenShared = this.store(selectIsLocalScreenShared);
     if (!isScreenShared) {
       await this.sdk.startScreenShare(this.syncPeers.bind(this));
+      this.syncPeers();
     } else {
-      await this.sdk.stopScreenShare();
+      this.logPossibleInconsistency("start screenshare is called while it's on")
     }
-    this.syncPeers();
+  }
+
+  async stopScreenShare() {
+    const isScreenShared = this.store(selectIsLocalScreenShared);
+    if (isScreenShared) {
+      await this.sdk.stopScreenShare();
+      this.syncPeers();
+    } else {
+      this.logPossibleInconsistency("stop screenshare is called while it's not on")
+    }
   }
 
   async setLocalAudioEnabled(enabled: boolean) {
