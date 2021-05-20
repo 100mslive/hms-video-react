@@ -3,7 +3,7 @@ import { createSelector } from 'reselect';
 
 const selectRoom = (store: HMSStore) => store.room;
 export const selectPeersMap = (store: HMSStore) => store.peers;
-const selectPeerID = (store: HMSStore, peerID: HMSPeerID) => peerID;
+const selectPeerID = (store: HMSStore, peerID: HMSPeerID | undefined) => peerID;
 
 export const selectPeers = createSelector(
   [selectRoom, selectPeersMap],
@@ -35,15 +35,15 @@ export const selectDominantPeer = createSelector(selectPeers, peers => {
 
 export const selectPeerByID = createSelector(
   [selectPeersMap, selectPeerID],
-  (storePeers, peerID) => storePeers[peerID],
+  (storePeers, peerID) => peerID ? storePeers[peerID] : null
 );
 
 export const selectPeerNameByID = createSelector(
   selectPeerByID,
-  peer => peer.name,
+  peer => peer?.name,
 );
 
 export const selectPeerAudioByID = createSelector(
   selectPeerByID,
-  peer => peer.audioLevel,
+  peer => peer?.audioLevel || 0,
 );
