@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import './index.css';
 import { Peer } from '../../types';
-import { Video, VideoProps, VideoClasses } from '../Video';
+import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../Avatar';
 import { getVideoTileLabel } from '../../utils';
@@ -92,7 +92,6 @@ export const VideoTile = ({
   audioTrack,
   peer,
   isLocal = false,
-  videoSource = 'camera',
   audioLevel = 0,
   isAudioMuted = false,
   isVideoMuted = false,
@@ -106,7 +105,6 @@ export const VideoTile = ({
   allowRemoteMute = false,
   controlsComponent,
   classes,
-  audioLevelEmitter,
 }: VideoTileProps) => {
   const { appBuilder } = useHMSTheme();
   const parseClass = useCallback(
@@ -118,7 +116,7 @@ export const VideoTile = ({
     }),
     [],
   );
-  const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
+  const label = getVideoTileLabel(peer.displayName, isLocal, hmsVideoTrack?.source);
   try {
     if (aspectRatio === undefined) {
       aspectRatio = appBuilder.videoTileAspectRatio;
@@ -163,13 +161,10 @@ export const VideoTile = ({
             audioTrack={audioTrack}
             objectFit={objectFit}
             isLocal={isLocal}
-            isAudioMuted={isAudioMuted}
-            videoSource={videoSource}
             showAudioLevel={showAudioLevel}
             audioLevelDisplayType={audioLevelDisplayType}
             audioLevelDisplayColor={audioLevelDisplayColor}
             displayShape={displayShape}
-            audioLevelEmitter={audioLevelEmitter}
           />
           {isVideoMuted && (
             <div

@@ -7,18 +7,19 @@ import { useHMSTheme } from '../hooks/HMSThemeProvider';
 import { MediaStreamWithInfo } from '../types';
 
 import { theme as defaultTailwindConfig } from '../defaultTheme';
+import { HMSTrackSource } from '../store/schema';
 
 const getVideoTileLabel = (
   peerName: string,
   isLocal: boolean,
-  videoSource: 'screen' | 'camera' | 'canvas' | undefined,
+  videoSource: HMSTrackSource = "regular",
 ) => {
   // Map [isLocal, videoSource] to the label to be displayed.
   const labelMap = new Map<string, string>([
     [[true, 'screen'].toString(), 'Your Screen'],
-    [[true, 'camera'].toString(), `You (${peerName})`],
+    [[true, 'regular'].toString(), `You (${peerName})`],
     [[false, 'screen'].toString(), `${peerName}'s Screen`],
-    [[false, 'camera'].toString(), peerName],
+    [[false, 'regular'].toString(), peerName],
     [[false, undefined].toString(), peerName],
   ]);
 

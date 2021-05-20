@@ -42,7 +42,7 @@ export interface VideoProps {
    */
   videoTrack: MediaStreamTrack;
   /**
-   * 100ms's wrapper over MediaStreamTrack with additional methods.
+   * HMS Video Track is for track related metadata
    */
   hmsVideoTrack?: HMSTrack;
   /**

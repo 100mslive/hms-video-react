@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
-import { VideoTile } from '../VideoTile/index';
+import { VideoTile } from '../VideoTile';
 import {
   chunkStreams,
   getModeAspectRatio,
@@ -68,10 +68,6 @@ export interface VideoListProps {
    */
   tileArrangeDirection?: 'row' | 'col';
   /**
-   * Dominant speakers
-   */
-  dominantSpeakers?: Peer[];
-  /**
    Indicates if Audio Status will be shown or not.
    */
   showAudioMuteStatus?: boolean;
@@ -115,10 +111,6 @@ export interface VideoListProps {
    * videoTileClasses
    */
   videoTileClasses?: VideoTileClasses;
-  /**
-   *
-   */
-  audioLevelEmitter?: any;
 }
 
 const defaultClasses: VideoListClasses = {
@@ -147,7 +139,6 @@ export const VideoList = ({
   showAudioMuteStatus,
   classes,
   videoTileClasses,
-  audioLevelEmitter,
   allowRemoteMute,
 }: VideoListProps) => {
   const parseClass = useCallback(
@@ -261,7 +252,11 @@ export const VideoList = ({
                         className={`${parseClass('videoTileContainer')}`}
                       >
                         <VideoTile
-                          {...stream}
+                          audioTrack={stream.audioTrack}
+                          videoTrack={stream.videoTrack}
+                          isLocal={stream.isLocal}
+                          peer={stream.peer}
+                          hmsVideoTrack={stream.hmsVideoTrack}
                           objectFit={objectFit}
                           displayShape={displayShape}
                           audioLevelDisplayType={audioLevelDisplayType}
@@ -273,8 +268,7 @@ export const VideoList = ({
                           controlsComponent={
                             videoTileControls && videoTileControls[index]
                           }
-                          audioLevelEmitter={audioLevelEmitter}
-                        />
+                         />
                       </div>
                     );
                   })}
