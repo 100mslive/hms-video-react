@@ -62,30 +62,11 @@ export const Header = ({
     [],
   );
 
-  const teacher = Array<Participant>();
-  const student = Array<Participant>();
-  teacher.push({
-    peer: { id: '123', displayName: 'Sanjana Ma`am (You)' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  });
-  student.push({
-    peer: { id: '123', displayName: 'Alex Tinmayson' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  });
-  student.push({
-    peer: { id: '123', displayName: 'Ankita Bhattacharya ' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  });
   return (
-    <div style={{ padding: '10px 0px 0px 0px', maxHeight: '10%' }}>
-      <div className={hu('root')}>
-        <div className={hu('leftRoot')}>{leftComponents}</div>
-        <div className={hu('centerRoot')}>{centerComponents}</div>
-        <div className={hu('rightRoot')}>{rightComponents}</div>
-      </div>
+    <div className={hu('root')}>
+      <div className={hu('leftRoot')}>{leftComponents}</div>
+      <div className={hu('centerRoot')}>{centerComponents}</div>
+      <div className={hu('rightRoot')}>{rightComponents}</div>
     </div>
   );
 };

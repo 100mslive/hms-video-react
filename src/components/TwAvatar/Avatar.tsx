@@ -1,6 +1,8 @@
 import React, { useCallback, PropsWithChildren } from 'react';
 import { getInitialsFromName } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { Pebbles } from '../Icons/index';
+
 interface AvatarPropsWithoutNativeAttrs {
   /**
    * Image URL to be displayed
@@ -30,6 +32,7 @@ interface AvatarPropsWithoutNativeAttrs {
    * Extra class names
    */
   classes?: AvatarClasses;
+  avatarType?: 'initial' | 'pebble' | 'icon' | 'image';
 }
 
 export type AvatarProps = AvatarPropsWithoutNativeAttrs &
@@ -64,6 +67,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   image,
   shape = 'circle',
   classes,
+  avatarType = 'initial',
   ...props
 }) => {
   const hu = useCallback(
@@ -74,7 +78,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     }),
     [],
   );
-  const tempDisplay = image || getInitialsFromName(label);
+
   const classList = [`${hu('root')}`];
   shape === 'circle'
     ? classList.push(`${hu('rootShapeCircle')}`)
@@ -91,28 +95,54 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   } else if (size === 'xl') {
     classList.push(`${hu('rootSizeXl')}`);
   }
-  return (
-    <>
-      {image ? (
-        <img
-          {...props}
-          className={classList.join(' ')}
-          src={image}
-          alt="Profile image"
-        />
-      ) : (
-        <div
-          {...props}
-          className={classList.join(' ')}
-          style={{
-            backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(
-              16,
-            )}`,
-          }}
-        >
-          {tempDisplay}
-        </div>
-      )}
-    </>
-  );
+  const peeble =
+    Pebbles[Math.floor((label?.charCodeAt(0) || 0) % Pebbles.length)];
+  const map = {
+    initial: (
+      <div
+        {...props}
+        className={classList.join(' ')}
+        style={{
+          backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(
+            16,
+          )}`,
+        }}
+      >
+        {getInitialsFromName(label)}
+      </div>
+    ),
+    pebble: (
+      <div
+        {...props}
+        className={classList.join(' ')}
+        style={{
+          backgroundColor: 'inherit',
+        }}
+      >
+        {peeble}
+      </div>
+    ),
+    icon: (
+      <div
+        {...props}
+        className={classList.join(' ')}
+        style={{
+          backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(
+            16,
+          )}`,
+        }}
+      >
+        {icon}
+      </div>
+    ),
+    image: (
+      <img
+        {...props}
+        className={classList.join(' ')}
+        src={image}
+        alt="Profile image"
+      />
+    ),
+  };
+  return <>{map[avatarType]}</>;
 };

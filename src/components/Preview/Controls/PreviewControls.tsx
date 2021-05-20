@@ -31,9 +31,9 @@ export const VideoTileControls = ({
     root:
       'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg focus:outline-none',
     controls:
-      'dark flex flex-grow self-center justify-center inline-block hover-hide space-x-1',
+      'dark flex flex-grow self-center justify-center inline-block hover-hide space-x-1 relative',
     rightcontrols:
-      'dark flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide',
+      'dark flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide absolute right-3',
   },
 }: VideoTileControlsProps) => {
   return (

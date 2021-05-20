@@ -77,7 +77,6 @@ const Template: Story<VideoListStoryProps> = args => {
           width: 1,
           height: 1,
         },
-        showAvatar: true,
       }}
     >
       <div className="flex items-center justify-center h-screen">
