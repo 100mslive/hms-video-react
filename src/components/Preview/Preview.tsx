@@ -1,14 +1,20 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import _ from 'lodash';
 import { closeMediaStream } from '../../utils';
-import { getLocalStreamException, getUserMedia } from '../../utils/preview';
-import { VideoTile, VideoTileProps } from '../VideoTile';
-import { VideoTileControls } from './Controls';
-import { MessageModal } from '../MessageModal';
-import { VideoTileClasses } from '../VideoTile/VideoTile';
-import { Button } from '../TwButton';
-import HMSLogger from '../../utils/ui-logger';
-import { SettingsFormProps } from '../Settings/Settings';
+import { getLocalStream } from '@100mslive/100ms-web-sdk';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import {
+  BrowserOSError,
+  getLocalStreamException,
+  isBrowserOSValid,
+} from '../../utils/preview';
+import { MessageModal } from '../MessageModal';
+import { SettingsFormProps } from '../Settings/Settings';
+import { Button } from '../TwButton';
+import { VideoTile, VideoTileProps } from '../VideoTile';
+import { VideoTileClasses } from '../VideoTile/VideoTile';
+import { VideoTileControls } from './Controls';
+import HMSLogger from '../../utils/ui-logger';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -63,13 +69,10 @@ export const Preview = ({
     [],
   );
   const [mediaStream, setMediaStream] = useState(new MediaStream());
-  const [errorState, setErrorState] = useState(false);
-  const [title, setErrorTitle] = useState(String);
-  const [message, setErrorMessage] = useState(String);
-  const [secondaryMessage, setSecondaryErrorMessage] = useState(String);
-  const [videoInput, setVideoInput] = useState(Array);
-  const [audioInput, setAudioInput] = useState(Array);
-  const [audioOutput, setAudioutput] = useState(Array);
+  const [error, setError] = useState({
+    title: '',
+    message: '',
+  });
   const [audioMuted, setAudioMuted] = useState(false);
   const [videoMuted, setVideoMuted] = useState(false);
   const [selectedAudioInput, setSelectedAudioInput] = useState('default');
@@ -99,114 +102,33 @@ export const Preview = ({
       //toggleMute('video');
     }
   };
-  const agent = navigator.userAgent.toLowerCase();
-  const chrome = agent.indexOf('chrome') > -1;
-  const safari = agent.indexOf('safari') !== -1 && !chrome;
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  const sayswho = (function() {
-    var ua = navigator.userAgent,
-      tem,
-      M =
-        ua.match(
-          /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i,
-        ) || [];
-    if (/trident/i.test(M[1])) {
-      tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-      return `IE ${tem[1] || ''}`;
-    }
-    if (M[1] === 'Chrome') {
-      tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
-      if (tem != null) {
-        return tem
-          .slice(1)
-          .join(' ')
-          .replace('OPR', 'Opera');
-      }
-    }
-    M = M[2] ? [M[2]] : [navigator.appName, navigator.appVersion, '-?'];
-    if ((tem = ua.match(/version\/(\d+)/i)) != null) {
-      M.splice(1, 1, tem[1]);
-    }
-    return M;
-  })();
-  const [allow, setAllow] = useState(true);
+
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
-    setShowModal(errorState);
-  }, [errorState]);
+    setShowModal(Boolean(error.title));
+  }, [error.title]);
 
-  const startMediaStream = () => {
-    if (chrome && isIOS) {
-      var errorMessage = getLocalStreamException('iOSChromeError', true);
-      setErrorTitle(errorMessage['title']);
-      setErrorMessage(errorMessage['message']);
-      setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-      setErrorState(true);
-      setAllow(false);
-    } else if (safari && parseInt(sayswho as string) < 14) {
-      errorMessage = getLocalStreamException('iOSSafariError', true);
-      setErrorTitle(errorMessage['title']);
-      setErrorMessage(errorMessage['message']);
-      setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-      setErrorState(true);
-      setAllow(false);
-    } else {
-      // window.navigator.mediaDevices
-      getUserMedia({
-        audio: { deviceId: selectedAudioInput },
-        video: { deviceId: selectedVideoInput },
-      })
-        .then((stream: MediaStream) => setMediaStream(stream))
-        .catch((error: any) => {
-          HMSLogger.e('[Preview]', error);
-          if (
-            error.name === 'NotAllowedError' ||
-            error.error === 'NotAllowedError'
-          ) {
-            var errorMessage = getLocalStreamException(error.name, safari);
-            setErrorTitle(errorMessage['title']);
-            setErrorMessage(errorMessage['message']);
-            setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-            setErrorState(true);
-          } else {
-            navigator.mediaDevices
-              .enumerateDevices()
-              .then(devices => {
-                for (let device of devices) {
-                  if (device.kind === 'videoinput') {
-                    setVideoInput(videoDevices => [...videoDevices, device]);
-                  } else if (device.kind === 'audioinput') {
-                    setAudioInput([...audioInput, device]);
-                  } else if (device.kind === 'audiooutput') {
-                    setAudioutput([...audioOutput, device]);
-                  }
-                }
-                if (videoInput.length === 0 || audioInput.length === 0) {
-                  var errorMessage = getLocalStreamException(
-                    error.name,
-                    safari,
-                  );
-                  setErrorTitle(errorMessage['title']);
-                  setErrorMessage(errorMessage['message']);
-                  setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-                  setErrorState(true);
-                } else {
-                  errorMessage = getLocalStreamException(error.name, safari);
-                  setErrorTitle(errorMessage['title']);
-                  setErrorMessage(errorMessage['message']);
-                  setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-                  setErrorState(true);
-                }
-              })
-              .catch(error => {
-                var errorMessage = getLocalStreamException(error.name, safari);
-                setErrorTitle(errorMessage['title']);
-                setErrorMessage(errorMessage['message']);
-                setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-                setErrorState(true);
-              });
-          }
+  const startMediaStream = async () => {
+    closeMediaStream(mediaStream);
+    try {
+      if (isBrowserOSValid()) {
+        const stream = await getLocalStream({
+          audio: { deviceId: selectedAudioInput },
+          video: { deviceId: selectedVideoInput },
         });
+        setMediaStream(stream);
+      }
+    } catch (err) {
+      HMSLogger.e('[Preview]', err.name, err.message);
+      if (err instanceof BrowserOSError) {
+        const localStreamError = getLocalStreamException(err.name);
+        setError(localStreamError);
+      } else {
+        setError({
+          title: _.startCase(err.title),
+          message: err.message,
+        });
+      }
     }
   };
 
@@ -214,6 +136,9 @@ export const Preview = ({
 
   useEffect(() => {
     startMediaStream();
+    return () => {
+      closeMediaStream(mediaStream);
+    };
   }, [selectedAudioInput, selectedVideoInput]);
 
   const handleDeviceChange = useCallback((values: SettingsFormProps) => {
@@ -234,10 +159,9 @@ export const Preview = ({
           <MessageModal
             show={showModal}
             setShow={setShowModal}
-            title={title}
-            message={message}
-            secondary={secondaryMessage}
-            allow={allow}
+            title={error.title}
+            message={error.message}
+            allow={false}
             gobackOnClick={goBackOnClick}
           />
           {/* videoTile */}
