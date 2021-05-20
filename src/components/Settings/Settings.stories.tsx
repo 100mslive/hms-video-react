@@ -35,7 +35,7 @@ const LightThemeTemplate: Story<SettingsProps> = (args: SettingsProps) => {
   const [maxTileCount, setMaxTileCount] = useState(8);
   return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
-      <div className="w-full flex justify-center">
+      <div className="w-full h-screen flex justify-center bg-white pt-5">
         <Settings
           onChange={props => {
             alert(JSON.stringify(props));
