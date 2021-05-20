@@ -254,7 +254,7 @@ export const VideoList = ({
                         <VideoTile
                           audioTrack={stream.audioTrack}
                           videoTrack={stream.videoTrack}
-                          isLocal={stream.isLocal}
+                          isLocal={stream.peer.isLocal}
                           peer={stream.peer}
                           hmsVideoTrack={stream.hmsVideoTrack}
                           objectFit={objectFit}

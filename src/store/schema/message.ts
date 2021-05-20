@@ -2,7 +2,7 @@ import { HMSPeerID } from './peer';
 
 export type HMSMessageID = string;
 
-export declare enum HMSMessageType {
+export enum HMSMessageType {
   CHAT = 'chat',
 }
 

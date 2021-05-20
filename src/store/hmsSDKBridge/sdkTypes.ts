@@ -6,9 +6,5 @@ export { default as HMSVideoTrack } from '@100mslive/100ms-web-sdk/dist/media/tr
 export { default as HMSSpeaker } from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
 export { default as HMSException } from '@100mslive/100ms-web-sdk/dist/error/HMSException';
 export { HMSTrackType } from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrackType';
-export {
-  HMSRoomUpdate,
-  HMSPeerUpdate,
-  HMSTrackUpdate,
-} from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
+export { HMSPeerUpdate } from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
 export { default as HMSConfig } from '@100mslive/100ms-web-sdk/dist/interfaces/config';

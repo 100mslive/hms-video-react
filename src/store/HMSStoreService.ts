@@ -50,6 +50,7 @@ export const createNewStore = () => {
           peers: {},
           tracks: {},
           messages: { byID: {}, allIDs: [] },
+          speakers: {}
         })),
       ),
     ),
