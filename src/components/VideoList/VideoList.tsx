@@ -120,7 +120,7 @@ export interface VideoListProps {
    */
   audioLevelEmitter?: any;
 
-  avatarType?: 'initial' | 'peeble';
+  avatarType?: 'initial' | 'pebble';
 }
 
 const defaultClasses: VideoListClasses = {
@@ -168,9 +168,6 @@ export const VideoList = ({
     let context = useHMSTheme();
     if (aspectRatio === undefined) {
       aspectRatio = context.appBuilder.videoTileAspectRatio;
-    }
-    if (showAudioMuteStatus === undefined) {
-      showAudioMuteStatus = context.appBuilder.showAvatar;
     }
   } catch (e) {}
   aspectRatio =

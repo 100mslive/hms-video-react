@@ -83,7 +83,7 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   return (
     <HMSThemeProvider
       config={{}}
-      appBuilder={{ theme: 'dark', avatarType: 'peeble' }}
+      appBuilder={{ theme: 'dark', avatarType: 'pebble' }}
     >
       <div className="flex items-center justify-center h-full sm:h-80">
         <video

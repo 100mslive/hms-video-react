@@ -1,6 +1,6 @@
 import React from 'react';
-const Peebles: JSX.Element[] = [];
-Peebles[0] = (
+const Pebbles: JSX.Element[] = [];
+Pebbles[0] = (
   <svg
     width="100%"
     height="100%"
@@ -31,7 +31,7 @@ Peebles[0] = (
     </defs>
   </svg>
 );
-Peebles[1] = (
+Pebbles[1] = (
   <svg
     width="801"
     height="800"
@@ -59,7 +59,7 @@ Peebles[1] = (
     </defs>
   </svg>
 );
-Peebles[2] = (
+Pebbles[2] = (
   <svg
     width="801"
     height="800"
@@ -90,7 +90,7 @@ Peebles[2] = (
     </defs>
   </svg>
 );
-Peebles[3] = (
+Pebbles[3] = (
   <svg
     width="801"
     height="800"
@@ -118,7 +118,7 @@ Peebles[3] = (
     </defs>
   </svg>
 );
-Peebles[4] = (
+Pebbles[4] = (
   <svg
     width="801"
     height="800"
@@ -149,7 +149,7 @@ Peebles[4] = (
     </defs>
   </svg>
 );
-Peebles[5] = (
+Pebbles[5] = (
   <svg
     width="801"
     height="800"
@@ -180,4 +180,4 @@ Peebles[5] = (
     </defs>
   </svg>
 );
-export { Peebles };
+export { Pebbles };

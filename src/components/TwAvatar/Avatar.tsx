@@ -1,7 +1,7 @@
 import React, { useCallback, PropsWithChildren } from 'react';
 import { getInitialsFromName } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { Peebles } from '../Icons/index';
+import { Pebbles } from '../Icons/index';
 
 interface AvatarPropsWithoutNativeAttrs {
   /**
@@ -32,7 +32,7 @@ interface AvatarPropsWithoutNativeAttrs {
    * Extra class names
    */
   classes?: AvatarClasses;
-  avatarType?: 'initial' | 'peeble' | 'icon' | 'image';
+  avatarType?: 'initial' | 'pebble' | 'icon' | 'image';
 }
 
 export type AvatarProps = AvatarPropsWithoutNativeAttrs &
@@ -95,7 +95,8 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   } else if (size === 'xl') {
     classList.push(`${hu('rootSizeXl')}`);
   }
-  const peeble = Peebles[Math.floor(Math.random() * Peebles.length)];
+  const peeble =
+    Pebbles[Math.floor((label?.charCodeAt(0) || 0) % Pebbles.length)];
   const map = {
     initial: (
       <div
@@ -110,7 +111,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
         {getInitialsFromName(label)}
       </div>
     ),
-    peeble: (
+    pebble: (
       <div
         {...props}
         className={classList.join(' ')}

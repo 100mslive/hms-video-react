@@ -49,7 +49,7 @@ export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
    */
   classes?: VideoTileClasses;
 
-  avatarType?: 'initial' | 'peeble' | 'icon' | 'image';
+  avatarType?: 'initial' | 'pebble';
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -128,10 +128,6 @@ export const VideoTile = ({
     }
     if (avatarType === undefined) {
       avatarType = appBuilder.avatarType;
-    }
-    //TODO this is the wrong prop
-    if (showAudioMuteStatus === undefined) {
-      showAudioMuteStatus = appBuilder.showAvatar;
     }
   } catch (e) {}
   avatarType = avatarType || 'initial';
