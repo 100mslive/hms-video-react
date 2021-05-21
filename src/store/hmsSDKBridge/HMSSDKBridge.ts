@@ -1,4 +1,5 @@
 import {
+  HMSMediaSettings,
   HMSMessage,
   HMSMessageType,
   HMSPeer,
@@ -26,6 +27,8 @@ import { IHMSStore } from '../IHMSStore';
 import SDKHMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
 import SDKHMSVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSVideoTrack';
 import SDKHMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
+import HMSLocalAudioTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSLocalAudioTrack';
+import HMSLocalVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSLocalVideoTrack';
 
 export class HMSSDKBridge implements IHMSBridge {
   private hmsSDKTracks: Record<string, SDKHMSTrack> = {};
@@ -176,6 +179,13 @@ export class HMSSDKBridge implements IHMSBridge {
         hmsPeers[hmsPeer.id] = hmsPeer as HMSPeer;
         hmsPeerIDs.push(hmsPeer.id);
         this.addPeerTracks(oldHMSTracks, hmsTracks, sdkPeer);
+        if (hmsPeer.isLocal) {
+          const newSettings: HMSMediaSettings = {
+            audioInputDeviceId: (sdkPeer.audioTrack as HMSLocalAudioTrack)?.settings?.deviceId,
+            videoInputDeviceId: (sdkPeer.audioTrack as HMSLocalVideoTrack)?.settings?.deviceId,
+          }
+          Object.assign(store.settings, newSettings);
+        }
       }
       if (!this.arraysEqual(store.room.peers, hmsPeerIDs)) {
         store.room.peers = hmsPeerIDs;

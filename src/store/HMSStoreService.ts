@@ -51,7 +51,13 @@ export const createNewStore = () => {
           peers: {},
           tracks: {},
           messages: { byID: {}, allIDs: [] },
-          speakers: {}
+          speakers: {},
+          settings: {
+            audioInputDeviceId: "",
+            audioOutputDeviceId: "",
+            videoInputDeviceId: "",
+            maxTileCount: 9,
+          }
         })),
       ),
     ),

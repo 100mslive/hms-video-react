@@ -1,5 +1,6 @@
 export interface HMSMediaSettings {
   audioInputDeviceId: string;
-  audioOutputDeviceId: string;
-  videoDeviceId: string;
+  videoInputDeviceId: string;
+  audioOutputDeviceId?: string;
+  maxTileCount?: number;
 }

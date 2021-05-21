@@ -1,6 +1,7 @@
 import { HMSPeer, HMSPeerID, HMSTrackID, HMSTrack, HMSSpeaker } from './peer';
 import { HMSMessage, HMSMessageID } from './message';
 import { HMSRoom } from './room';
+import { HMSMediaSettings } from './settings';
 
 /*
 Defines the schema of the central store. UI Components are aware of the presence
@@ -15,4 +16,5 @@ export interface HMSStore {
     byID: Record<HMSMessageID, HMSMessage>;
     allIDs: HMSMessageID[];
   };
+  settings: HMSMediaSettings;
 }
