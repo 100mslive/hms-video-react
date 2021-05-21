@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@100mslive/100ms-web-sdk@0.0.12-33":
-  version "0.0.12-33"
-  resolved "https://registry.yarnpkg.com/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.12-33.tgz#c5dd3276652ade50cdd7576c25c8b41d3e86f76c"
-  integrity sha512-6wmHBdfspJiecHltJgRdp2qhBcVe463vX0qIuc3fbo9ruHI/lbKtyQ6XYPln9qdBMwSl9vrGWpYVwpGicRcsVw==
+"@100mslive/100ms-web-sdk@0.0.12-34":
+  version "0.0.12-34"
+  resolved "https://registry.yarnpkg.com/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.12-34.tgz#afe11a9e00961601e256ed8cd112171932223bb2"
+  integrity sha512-VtIVc82A3BNCcWYx1qzpBIsaVIkhSQSvguDVWXW4aVIMi63coqS9SPcGDSQ6deuBEAZ2Sy+cF5dl6firsKpVZw==
   dependencies:
     uuid "^8.3.2"
 
