@@ -42,6 +42,7 @@ export const createNewStore = () => {
         immer(_set => ({
           room: {
             id: '',
+            isConnected: false,
             name: '',
             peers: [],
             shareableLink: '',

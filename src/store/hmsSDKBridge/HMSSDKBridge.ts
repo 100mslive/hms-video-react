@@ -23,9 +23,12 @@ import {
 import HMSLogger from '../../utils/ui-logger';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import { IHMSStore } from '../IHMSStore';
+import SDKHMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
+import SDKHMSVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSVideoTrack';
+import SDKHMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 
 export class HMSSDKBridge implements IHMSBridge {
-  private hmsSDKTracks: Record<string, sdkTypes.HMSTrack> = {};
+  private hmsSDKTracks: Record<string, SDKHMSTrack> = {};
   private readonly sdk: HMSSdk;
   private readonly store: IHMSStore;
   private isRoomJoined: boolean = false;
@@ -139,7 +142,7 @@ export class HMSSDKBridge implements IHMSBridge {
   async addSink(trackID: string, videoElement: HTMLVideoElement) {
     const sdkTrack = this.hmsSDKTracks[trackID];
     if (sdkTrack && sdkTrack.type === 'video') {
-      await (sdkTrack as sdkTypes.HMSVideoTrack).addSink(videoElement);
+      await (sdkTrack as SDKHMSVideoTrack).addSink(videoElement);
     } else {
       this.logPossibleInconsistency('no video track found to add sink');
     }
@@ -148,7 +151,7 @@ export class HMSSDKBridge implements IHMSBridge {
   async removeSink(trackID: string, videoElement: HTMLVideoElement) {
     const sdkTrack = this.hmsSDKTracks[trackID];
     if (sdkTrack && sdkTrack.type === 'video') {
-      await (sdkTrack as sdkTypes.HMSVideoTrack).removeSink(videoElement);
+      await (sdkTrack as SDKHMSVideoTrack).removeSink(videoElement);
     } else {
       this.logPossibleInconsistency('no video track found to remove sink');
     }
@@ -187,7 +190,7 @@ export class HMSSDKBridge implements IHMSBridge {
     hmsTracksDraft: Record<HMSTrackID, HMSTrack>,
     sdkPeer: sdkTypes.HMSPeer,
   ) {
-    const addTrack = (sdkTrack: sdkTypes.HMSTrack) => {
+    const addTrack = (sdkTrack: SDKHMSTrack) => {
       this.hmsSDKTracks[sdkTrack.trackId] = sdkTrack;
       let hmsTrack = SDKToHMS.convertTrack(sdkTrack);
       if (hmsTrack.id in oldHmsTracks) {
@@ -217,7 +220,11 @@ export class HMSSDKBridge implements IHMSBridge {
     return true;
   }
 
-  protected onJoin(_room: sdkTypes.HMSRoom) {
+  protected onJoin(sdkRoom: sdkTypes.HMSRoom) {
+    this.store.setState(store => {
+      Object.assign(store.room, SDKToHMS.convertRoom(sdkRoom));
+      store.room.isConnected = true;
+    })
     this.syncPeers();
   }
 
@@ -283,7 +290,7 @@ export class HMSSDKBridge implements IHMSBridge {
     });
   }
 
-  protected onError(error: sdkTypes.HMSException) {
+  protected onError(error: SDKHMSException) {
     HMSLogger.e('sdkError', 'received error from sdk', error);
   }
 

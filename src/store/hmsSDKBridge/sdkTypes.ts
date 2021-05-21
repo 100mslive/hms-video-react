@@ -1,13 +1,10 @@
 import HMSPeer from '@100mslive/100ms-web-sdk/dist/interfaces/hms-peer';
 import HMSRoom from '@100mslive/100ms-web-sdk/dist/interfaces/room';
 import HMSMessage from '@100mslive/100ms-web-sdk/dist/interfaces/message';
-import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
-import HMSVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSVideoTrack';
 import HMSSpeaker from '@100mslive/100ms-web-sdk/dist/interfaces/speaker';
-import HMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
 import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
 
-export type {HMSPeer, HMSRoom, HMSMessage, HMSTrack, HMSVideoTrack, HMSSpeaker, HMSException, HMSConfig};
+export type {HMSPeer, HMSRoom, HMSMessage, HMSSpeaker, HMSConfig};
 
 // temporary solution due to below problem in sdk
 // https://lukasbehal.com/2017-05-22-enums-in-declaration-files/

@@ -1,4 +1,5 @@
-import { HMSPeer, HMSMessage, HMSTrack } from '../schema';
+import { HMSPeer, HMSMessage, HMSTrack, HMSRoom } from '../schema';
+import SDKHMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 
 import * as sdkTypes from './sdkTypes';
 
@@ -17,13 +18,22 @@ export class SDKToHMS {
     };
   }
 
-  static convertTrack(sdkTrack: sdkTypes.HMSTrack): HMSTrack {
+  static convertTrack(sdkTrack: SDKHMSTrack): HMSTrack {
     return {
       id: sdkTrack.trackId,
       source: sdkTrack.source,
       type: sdkTrack.type,
       enabled: sdkTrack.enabled,
     };
+  }
+
+  static convertRoom(sdkRoom: sdkTypes.HMSRoom): Partial<HMSRoom> {
+    return {
+      id: sdkRoom.id,
+      name: sdkRoom.name,
+      hasWaitingRoom: sdkRoom.hasWaitingRoom,
+      shareableLink: sdkRoom.shareableLink,
+    }
   }
 
   static convertMessage(

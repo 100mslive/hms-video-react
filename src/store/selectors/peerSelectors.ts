@@ -1,13 +1,18 @@
-import { HMSPeerID, HMSStore } from '../schema';
+import { HMSPeer, HMSPeerID, HMSRoom, HMSStore } from '../schema';
 import { createSelector } from 'reselect';
 
-const selectRoom = (store: HMSStore) => store.room;
-export const selectPeersMap = (store: HMSStore) => store.peers;
+const selectRoom = (store: HMSStore): HMSRoom => store.room;
+export const selectPeersMap = (store: HMSStore): Record<HMSPeerID, HMSPeer> => store.peers;
 const selectPeerID = (store: HMSStore, peerID: HMSPeerID | undefined) => peerID;
 
 const selectSpeakerByID = (store: HMSStore, peerID: HMSPeerID | undefined) => {
   return peerID ? store.speakers[peerID] : null;
 };
+
+export const selectIsConnectedToRoom = createSelector(
+  [selectRoom],
+  (room) => room && room.isConnected
+)
 
 export const selectPeers = createSelector(
   [selectRoom, selectPeersMap],
