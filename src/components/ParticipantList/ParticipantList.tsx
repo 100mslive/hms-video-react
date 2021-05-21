@@ -77,6 +77,7 @@ export const ParticipantList = ({
   );
   const [listOpen, setListOpen] = useState(false);
   const handleClick = useCallback(() => setListOpen(open => !open), []);
+  const handleClose = useCallback(() => setListOpen(false), []);
   const rolesMap = groupBy(
     participantList,
     participant => participant.peer.role,
@@ -84,7 +85,7 @@ export const ParticipantList = ({
   const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
 
   return (
-    <ClickAwayListener onClickAway={handleClick}>
+    <ClickAwayListener onClickAway={handleClose}>
       <div className={`${hu('root')}`}>
         <button
           type="button"

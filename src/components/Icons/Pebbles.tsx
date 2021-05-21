@@ -1,15 +1,22 @@
 import React from 'react';
+
 const Pebbles: JSX.Element[] = [];
+Pebbles[6] = (
+  <img
+    className="w-1/2 h-1/2"
+    src="https://bc-public-static-assets.s3.ap-south-1.amazonaws.com/dashboard/images/Pebble%20People/2.svg"
+  />
+);
 Pebbles[0] = (
   <svg
-    width="100%"
-    height="100%"
-    viewBox="0 0 801 800"
+    width="800"
+    height="800"
+    viewBox="0 0 800 800"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
   >
-    <rect x="0.890625" width="800" height="800" fill="url(#pattern0)" />
+    <rect width="800" height="800" fill="url(#pattern0)" />
     <defs>
       <pattern
         id="pattern0"

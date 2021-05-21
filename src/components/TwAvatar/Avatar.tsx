@@ -79,6 +79,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     [],
   );
 
+  if (avatarType === 'pebble') shape = 'square';
   const classList = [`${hu('root')}`];
   shape === 'circle'
     ? classList.push(`${hu('rootShapeCircle')}`)
@@ -95,8 +96,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   } else if (size === 'xl') {
     classList.push(`${hu('rootSizeXl')}`);
   }
-  const peeble =
-    Pebbles[Math.floor((label?.charCodeAt(0) || 0) % Pebbles.length)];
+  const pebble = ((label?.codePointAt(0) || 0) % 6) + 1;
   const map = {
     initial: (
       <div
@@ -112,15 +112,13 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
       </div>
     ),
     pebble: (
-      <div
+      <img
         {...props}
         className={classList.join(' ')}
-        style={{
-          backgroundColor: 'inherit',
-        }}
-      >
-        {peeble}
-      </div>
+        src={`https://bc-public-static-assets.s3.ap-south-1.amazonaws.com/dashboard/images/Pebble%20People/${
+          pebble == 5 ? 3 : pebble
+        }.svg`}
+      />
     ),
     icon: (
       <div
