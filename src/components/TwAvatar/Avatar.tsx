@@ -1,7 +1,6 @@
 import React, { useCallback, PropsWithChildren } from 'react';
 import { getInitialsFromName } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { Pebbles } from '../Icons/index';
 
 interface AvatarPropsWithoutNativeAttrs {
   /**
@@ -115,9 +114,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
       <img
         {...props}
         className={classList.join(' ')}
-        src={`https://bc-public-static-assets.s3.ap-south-1.amazonaws.com/dashboard/images/Pebble%20People/${
-          pebble == 5 ? 3 : pebble
-        }.svg`}
+        src={`https://bc-public-static-assets.s3.ap-south-1.amazonaws.com/dashboard/images/Pebble%20People/${pebble}.svg`}
       />
     ),
     icon: (
