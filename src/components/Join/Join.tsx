@@ -71,7 +71,7 @@ export const Join = ({
   const [username, setUserName] = useState(initialValues?.username || '');
   const [role, setRole] = useState(initialValues?.role || 'Student');
   const [roomId, setRoomId] = useState(
-    initialValues?.roomId || '607d781cdcee704ca43cafb9',
+    initialValues?.roomId || '',
   );
 
   useEffect(() => {
