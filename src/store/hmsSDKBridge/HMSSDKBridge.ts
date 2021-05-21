@@ -3,11 +3,9 @@ import {
   HMSMessageType,
   HMSPeer,
   HMSPeerID,
-  HMSStore,
   HMSTrack,
   HMSTrackID,
 } from '../schema';
-import { UseStore } from 'zustand';
 import { IHMSBridge } from '../IHMSBridge';
 import * as sdkTypes from './sdkTypes';
 import { SDKToHMS } from './adapter';
@@ -24,15 +22,16 @@ import {
 } from '../selectors';
 import HMSLogger from '../../utils/ui-logger';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
+import { IHMSStore } from '../IHMSStore';
 
 export class HMSSDKBridge implements IHMSBridge {
   private hmsSDKTracks: Record<string, sdkTypes.HMSTrack> = {};
   private readonly sdk: HMSSdk;
-  private readonly store: UseStore<HMSStore>;
+  private readonly store: IHMSStore;
   private isRoomJoined: boolean = false;
   private isRoomLeft: boolean = false;
 
-  constructor(sdk: HMSSdk, store: UseStore<HMSStore>) {
+  constructor(sdk: HMSSdk, store: IHMSStore) {
     this.sdk = sdk;
     this.store = store;
   }
