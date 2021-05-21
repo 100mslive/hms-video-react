@@ -59,14 +59,13 @@ const customClasses: ParticipantListClasses = {
   menuRoot: 'hmsui-participantList-scrollbar',
   onIcon: 'hmsui-participantList-show-on-group-hover',
 };
-interface IPopover extends ParticipantListProps {
-  listOpen:boolean;
-  handleClick:()=>void;
-}
 
 type RoleMap = Map<string, Participant[]>;
 
-const Popover = ({participantList, classes, listOpen, handleClick}:IPopover) => {
+export const ParticipantList = ({
+  participantList,
+  classes,
+}: ParticipantListProps) => {
   const hu = useCallback(
     hmsUiClassParserGenerator<ParticipantListClasses>({
       classes,
@@ -76,7 +75,9 @@ const Popover = ({participantList, classes, listOpen, handleClick}:IPopover) => 
     }),
     [],
   );
-
+  const [listOpen, setListOpen] = useState(false);
+  const handleClick = useCallback(() => setListOpen(open => !open), []);
+  const handleClose = useCallback(() => setListOpen(false), []);
   const rolesMap = groupBy(
     participantList,
     participant => participant.peer.role,
@@ -84,104 +85,90 @@ const Popover = ({participantList, classes, listOpen, handleClick}:IPopover) => 
   const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
 
   return (
-    <div className={`${hu('root')}`}>
-    <button
-      type="button"
-      className={`${hu('buttonRoot')}
-      ${listOpen ? hu('buttonOpen') : hu('buttonClosed')}`}
-      onClick={handleClick}
-    >
-      <div className={`${hu('buttonInner')}`}>
-        {participantList?.length} in room
-        <span className={`${hu('buttonText')}`}>
-          {listOpen ? (
-            <UpCaratIcon className={hu('carat')} />
-          ) : (
-            <DownCaratIcon className={hu('carat')} />
-          )}
-        </span>
-      </div>
-    </button>
+    <ClickAwayListener onClickAway={handleClose}>
+      <div className={`${hu('root')}`}>
+        <button
+          type="button"
+          className={`${hu('buttonRoot')}
+          ${listOpen ? hu('buttonOpen') : hu('buttonClosed')}`}
+          onClick={handleClick}
+        >
+          <div className={`${hu('buttonInner')}`}>
+            {participantList?.length} in room
+            <span className={`${hu('buttonText')}`}>
+              {listOpen ? (
+                <UpCaratIcon className={hu('carat')} />
+              ) : (
+                <DownCaratIcon className={hu('carat')} />
+              )}
+            </span>
+          </div>
+        </button>
 
-    {listOpen && (
-      <div
-        className={`${hu('menuRoot')}`}
-        role="menu"
-        aria-orientation="vertical"
-        aria-labelledby="menu-button"
-        tabIndex={-1}
-      >
-        {roles &&
-          //@ts-expect-error
-          roles.map((role, index) => (
-            <div key={index}>
-              <div>
-                <span className={`${hu('menuSection')}`} role="menuitem">
-                  {role === 'undefined' ? 'Unknown' : role}
-                  {rolesMap[role].length > 1 ? 's' : ''}{' '}
-                  {rolesMap[role].length}
-                </span>
-              </div>
-              <div>
-                {rolesMap[role] &&
-                  rolesMap[role].map((participant, index) => (
-                    <span
-                      className={`${hu('menuItem')}`}
-                      role="menuitem"
-                      key={index}
-                    >
-                      <div className={`${hu('menuText')}`}>
-                        <Avatar
-                          label={participant.peer.displayName}
-                          shape="square"
-                          classes={{ root: 'mr-2' }}
-                        />
-                        {participant.peer.displayName}
-                      </div>
-                      <div className={`${hu('menuIconContainer')}`}>
-                        {participant.isAudioMuted ? (
-                          <div className={`${hu('offIcon')}`}>
-                            <Button
-                              iconOnly
-                              shape={'circle'}
-                              variant={'danger'}
-                              size={'sm'}
-                              active={participant.isAudioMuted}
-                            >
-                              <MicOffIcon />
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className={`${hu('onIcon')}`}>
-                            <Button iconOnly shape={'circle'} size={'sm'}>
-                              <MicOnIcon />
-                            </Button>
-                          </div>
-                        )}
-                      </div>
+        {listOpen && (
+          <div
+            className={`${hu('menuRoot')}`}
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="menu-button"
+            tabIndex={-1}
+          >
+            {roles &&
+              //@ts-expect-error
+              roles.map((role, index) => (
+                <div key={index}>
+                  <div>
+                    <span className={`${hu('menuSection')}`} role="menuitem">
+                      {role === 'undefined' ? 'Unknown' : role}
+                      {rolesMap[role].length > 1 ? 's' : ''}{' '}
+                      {rolesMap[role].length}
                     </span>
-                  ))}
-              </div>
-            </div>
-          ))}
+                  </div>
+                  <div>
+                    {rolesMap[role] &&
+                      rolesMap[role].map((participant, index) => (
+                        <span
+                          className={`${hu('menuItem')}`}
+                          role="menuitem"
+                          key={index}
+                        >
+                          <div className={`${hu('menuText')}`}>
+                            <Avatar
+                              label={participant.peer.displayName}
+                              shape="square"
+                              classes={{ root: 'mr-2' }}
+                            />
+                            {participant.peer.displayName}
+                          </div>
+                          <div className={`${hu('menuIconContainer')}`}>
+                            {participant.isAudioMuted ? (
+                              <div className={`${hu('offIcon')}`}>
+                                <Button
+                                  iconOnly
+                                  shape={'circle'}
+                                  variant={'danger'}
+                                  size={'sm'}
+                                  active={participant.isAudioMuted}
+                                >
+                                  <MicOffIcon />
+                                </Button>
+                              </div>
+                            ) : (
+                              <div className={`${hu('onIcon')}`}>
+                                <Button iconOnly shape={'circle'} size={'sm'}>
+                                  <MicOnIcon />
+                                </Button>
+                              </div>
+                            )}
+                          </div>
+                        </span>
+                      ))}
+                  </div>
+                </div>
+              ))}
+          </div>
+        )}
       </div>
-    )}
-  </div>
-  )
-}
-
-export const ParticipantList = ({
-  participantList,
-  classes,
-}: ParticipantListProps) => {
-  const [listOpen, setListOpen] = useState(false);
-  const handleClick = useCallback(() => setListOpen(open=>!open), []);
-
-  //TODO refactor this
-  return (
-    listOpen?(
-    <ClickAwayListener onClickAway={handleClick}>
-      <Popover participantList={participantList} listOpen={listOpen} classes={classes} handleClick={handleClick}/>
-    </ClickAwayListener>):<Popover participantList={participantList} listOpen={listOpen} classes={classes} handleClick={handleClick}/>
+    </ClickAwayListener>
   );
 };
