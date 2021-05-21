@@ -1,9 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { resolveClasses } from '../../utils/classes';
 import { Select } from '../Select';
 import { Input } from '../Input';
 import { Button } from '../TwButton';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { DoorIcon } from '../Icons';
 
@@ -128,9 +126,10 @@ export const Join = ({
                 setRole(event.target.value);
               }}
             >
-              <OptionsList
-                optionValues={['Teacher', 'Student', 'Admin', 'Viewer']}
-              ></OptionsList>
+              <option value="Teacher">Teacher</option>
+              <option value="Student">Student</option>
+              <option value="Admin">Admin</option>
+              <option value="Viewer">Viewer</option>
             </Select>
           </div>
           <div className={parseClass('inputName')}>
@@ -144,7 +143,9 @@ export const Join = ({
                 setEndpoint(event.target.value);
               }}
             >
-              <OptionsList optionValues={['qa', 'prod', 'dev']}></OptionsList>
+              <option value="qa">qa</option>
+              <option value="prod">prod</option>
+              <option value="dev">dev</option>
             </Select>
           </div>
           <div className={parseClass('joinRoot')}>
