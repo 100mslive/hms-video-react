@@ -109,7 +109,17 @@ export class HMSSDKBridge implements IHMSBridge {
         // why would same value will be set again?
         this.logPossibleInconsistency('local video track muted states.');
       }
-      await this.setEnabledTrack(trackID, enabled);
+      this.store.setState(store => {  // show on UI immediately
+        store.tracks[trackID].enabled = enabled;
+      })
+      try {
+        await this.setEnabledTrack(trackID, enabled);
+      } catch (err) {
+        // rollback now
+        this.store.setState(store => {
+          store.tracks[trackID].enabled = !enabled;
+        })
+      }
       this.syncPeers();
     }
   }
