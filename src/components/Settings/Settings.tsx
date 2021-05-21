@@ -51,9 +51,9 @@ export interface SettingsProps {
 
 const defaultClasses: SettingsClasses = {
   iconContainer: 'focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg',
-  dialogRoot: 'rounded-lg',
+  dialogRoot: 'rounded-xl ',
   dialogContainer:
-    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto',
+    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto rounded-xl',
   dialogInner: 'text-2xl mb-3 p-2 flex justify-between',
   titleContainer: 'flex items-center',
   titleIcon: 'pr-4',
@@ -105,6 +105,12 @@ const HMSSlider = withStyles({
   },
 })(Slider);
 
+const HMSDialog = withStyles({
+  paper: {
+    borderRadius: '12px',
+    backgroundColor: 'inherit',
+  },
+})(Dialog);
 //TODO split button and settings dialog
 
 export const Settings = ({
@@ -208,7 +214,7 @@ export const Settings = ({
       >
         <SettingsIcon />
       </TwButton>
-      <Dialog
+      <HMSDialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -504,7 +510,7 @@ export const Settings = ({
             </div>
           </div>
         </div>
-      </Dialog>
+      </HMSDialog>
     </>
   );
 };
