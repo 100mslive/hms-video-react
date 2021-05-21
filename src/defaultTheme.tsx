@@ -43,16 +43,18 @@ export const theme: { theme: ThemeConfiguration } = {
         },
       },
       fontSize: {
-        //@ts-ignore
         sm: ['0.75rem', { lineHeight: '1rem' }],
-        //@ts-ignore
         base: ['0.875rem', { lineHeight: '1.25rem' }],
-        //@ts-ignore
         lg: ['1rem', { lineHeight: '1.5rem' }],
-        //@ts-ignore
         xl: ['1.25rem', { lineHeight: '1.75rem' }],
-        //@ts-ignore
         '2xl': ['1.5rem', { lineHeight: '1.75rem' }],
+        'body-xs': ['0.625rem', { lineHeight: '0.75rem' }],
+        'body-sm': ['0.8125rem', { lineHeight: '1rem' }],
+        body: ['0.9375rem', { lineHeight: '1.25rem' }],
+        button: ['1.0625rem', { lineHeight: '1.5rem' }],
+        'heading-sm': ['1.0625rem', { lineHeight: '1.5rem' }],
+        'heading-md': ['1.25rem', { lineHeight: '1.5rem' }],
+        'heading-lg': ['1.5625rem', { lineHeight: '1.75rem' }],
       },
       maxHeight: {
         100: '37.5rem',
