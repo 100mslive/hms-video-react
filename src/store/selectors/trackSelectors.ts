@@ -41,10 +41,15 @@ export const selectIsLocalScreenShared = (store: HMSStore): boolean => {
   return isScreenSharing(store, localPeer);
 };
 
-export const selectIsAnyoneScreenSharing = (store: HMSStore): boolean => {
+export const selectIsSomeoneScreenSharing = (store: HMSStore): boolean => {
   const peers = selectPeers(store);
   return peers.some(peer => isScreenSharing(store, peer))
 };
+
+export const selectPeerScreenSharing = (store: HMSStore): HMSPeer | undefined => {
+  const peers = selectPeers(store);
+  return peers.find(peer => isScreenSharing(store, peer));
+}
 
 function isScreenSharing(store: HMSStore, peer: HMSPeer) {
   return peer.auxiliaryTracks.some(trackID => {

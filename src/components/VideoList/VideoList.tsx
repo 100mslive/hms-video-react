@@ -138,7 +138,7 @@ export const VideoList = ({
   maxRowCount,
   maxColCount,
   videoTileControls,
-  showAudioMuteStatus,
+  showAudioMuteStatus=true,
   classes,
   videoTileClasses,
   allowRemoteMute,

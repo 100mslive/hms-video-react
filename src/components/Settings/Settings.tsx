@@ -12,6 +12,8 @@ import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { getLocalDevices, getLocalStream } from '@100mslive/100ms-web-sdk';
 import { Button as TwButton } from '../TwButton';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectLocalMediaSettings } from '../../store/selectors';
 
 interface SettingsClasses {
   root?: string;
@@ -121,6 +123,14 @@ export const Settings = ({
     }),
     [],
   );
+  const storeInitialValues = useHMSStore(selectLocalMediaSettings);
+
+  if (!initialValues) {
+    initialValues = {};
+  }
+  initialValues.selectedVideoInput = initialValues.selectedVideoInput || storeInitialValues.videoInputDeviceId;
+  initialValues.selectedAudioInput = initialValues.selectedAudioInput || storeInitialValues.audioInputDeviceId;
+  initialValues.selectedAudioOutput = initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
 
   const [open, setOpen] = useState(false);
   const [deviceGroups, setDeviceGroups] = useState<{

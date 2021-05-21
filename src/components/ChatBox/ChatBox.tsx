@@ -8,7 +8,8 @@ import { Button } from '../TwButton';
 import { useInView } from 'react-intersection-observer';
 import { HMSMessage } from '../../store/schema';
 import { isTotallyScrolled, scrollToBottom } from './chatBoxUtils';
-import { TwButton } from '../..';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectHMSMessages } from '../../store/selectors';
 
 interface ChatBoxClasses {
   root?: string;
@@ -74,9 +75,9 @@ export interface Message extends HMSMessage {
   direction?: 'left' | 'right' | 'center';
 }
 export interface ChatProps {
-  messages: Message[];
-  onSend: (message: string) => void;
-  onClose?: () => void;
+  messages?: Message[];
+  onSend?: (message: string) => void;
+  onClose?: () => void;  // when the chat box is closed
   autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
   messageFormatter?: (message: string) => React.ReactNode;
@@ -120,6 +121,11 @@ export const ChatBox = ({
     }),
     [],
   );
+  const storeMessages = useHMSStore(selectHMSMessages);
+  const hmsActions = useHMSActions();
+
+  messages = messages || storeMessages;
+  const sendMessage = onSend || hmsActions.sendMessage;
   const [messageDraft, setMessageDraft] = useState('');
   const [toScroll, setToScroll] = useState<boolean>(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
@@ -288,7 +294,7 @@ export const ChatBox = ({
                 if (!event.shiftKey) {
                   event.preventDefault();
                   if (messageDraft.trim() !== '') {
-                    onSend(messageDraft);
+                    sendMessage(messageDraft);
                     setMessageDraft('');
                   }
                 }
@@ -305,7 +311,7 @@ export const ChatBox = ({
             iconSize={'sm'}
             size="sm"
             onClick={() => {
-              onSend(messageDraft);
+              sendMessage(messageDraft);
               setMessageDraft('');
             }}
           >

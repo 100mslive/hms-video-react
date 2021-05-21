@@ -12,6 +12,8 @@ export interface IHMSBridge {
 
   addSink(trackID: string, videoElement: HTMLVideoElement): void;
   removeSink(trackID: string, videoElement: HTMLVideoElement): void;
+
+  // getMediaStreamTrack(trackID)
 }
 
 export interface HMSError {

@@ -6,7 +6,8 @@ import { groupBy } from 'lodash';
 import './index.css';
 import { Avatar } from '../TwAvatar';
 import ClickAwayListener from 'react-click-away-listener';
-import { HMSPeerWithMuteStatus } from '../../store/selectors';
+import { HMSPeerWithMuteStatus, selectPeersWithMuteStatus } from '../../store/selectors';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
 
 interface ParticipantListClasses {
   root?: string;
@@ -75,7 +76,9 @@ export const ParticipantList = ({
     }),
     [],
   );
+  const participantsFromStore = useHMSStore(selectPeersWithMuteStatus);
   const [listOpen, setListOpen] = useState(false);
+  participantList = participantList || participantsFromStore;
   const handleClick = useCallback(() => setListOpen(open => !open), []);
   const rolesMap = groupBy(
     participantList,

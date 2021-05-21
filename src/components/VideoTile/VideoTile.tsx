@@ -97,7 +97,7 @@ export const VideoTile = ({
   audioLevel = 0,
   isAudioMuted = false,
   isVideoMuted = false,
-  showAudioMuteStatus,
+  showAudioMuteStatus = true,
   showAudioLevel = true,
   objectFit = 'cover',
   aspectRatio,

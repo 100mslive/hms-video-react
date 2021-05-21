@@ -16,7 +16,7 @@ import {
   selectIsLocalVideoEnabled,
   selectLocalAudioTrackID,
   selectLocalVideoTrackID,
-  selectMessagesCount,
+  selectHMSMessagesCount,
   selectPeerNameByID,
   selectPeersMap,
   selectTracksMap,
@@ -279,7 +279,7 @@ export class HMSSDKBridge implements IHMSBridge {
 
   protected onHMSMessage(hmsMessage: HMSMessage) {
     this.store.setState(store => {
-      hmsMessage.id = String(this.store(selectMessagesCount) + 1);
+      hmsMessage.id = String(this.store(selectHMSMessagesCount) + 1);
       store.messages.byID[hmsMessage.id] = hmsMessage;
       store.messages.allIDs.push(hmsMessage.id);
     });
