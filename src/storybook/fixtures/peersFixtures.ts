@@ -1,11 +1,12 @@
+import { HMSPeerWithMuteStatus } from '../../store/selectors';
+import { HMSPeer } from '../../store/schema';
 
 let counter = 1;
 export const makeFakeParticipant = (name: string, role='Student') => {
   return {
-    peer: { id: String(counter++), displayName: name, role: role },
+    peer: { id: String(counter++), name, role: role } as HMSPeer,
     isAudioMuted: false,
-    isStarMarked: false,
-  }
+  } as HMSPeerWithMuteStatus;
 }
 
 export const fakeParticipants = [

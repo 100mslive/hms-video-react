@@ -1,17 +1,17 @@
 import React, { useCallback } from 'react';
 import './index.css';
-import { Peer } from '../../types';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../TwAvatar';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { HMSPeer } from '../../store/schema';
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
    */
-  peer: Peer;
+  peer: HMSPeer;
 
   /**
    * Indicates if the stream's audio is muted or not. Ignored if showAudioMuteStatus is false.
@@ -120,7 +120,7 @@ export const VideoTile = ({
     [],
   );
   const label = getVideoTileLabel(
-    peer.displayName,
+    peer.name,
     isLocal,
     hmsVideoTrack?.source,
   );
@@ -182,7 +182,7 @@ export const VideoTile = ({
               }`}
             >
               <Avatar
-                label={peer.displayName}
+                label={peer.name}
                 size="xl"
                 avatarType={avatarType}
               />

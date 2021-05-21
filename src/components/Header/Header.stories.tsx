@@ -1,7 +1,7 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Header, HeaderProps } from './index';
-import { ParticipantList } from '../ParticipantList/ParticipantList';
+import { ParticipantList } from '../ParticipantList';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 import { fakeParticipants } from '../../storybook/fixtures/peersFixtures';
 
@@ -50,14 +50,12 @@ export const Default = Template.bind({});
 export const Light = LightTemplate.bind({});
 
 Default.args = {
-  peer: { id: '123', displayName: 'Siddhant' },
   time: 1865,
   speaker: 'Siddhant',
   rightComponents: [<ParticipantList participantList={fakeParticipants} />],
 };
 
 Light.args = {
-  peer: { id: '123', displayName: 'Siddhant' },
   time: 1865,
   speaker: 'Siddhant',
   rightComponents: [<ParticipantList participantList={fakeParticipants} />],

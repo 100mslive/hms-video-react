@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { DownCaratIcon, UpCaratIcon, MicOffIcon, MicOnIcon } from '../Icons';
-import { Participant } from '../../types';
 import { Button } from '../TwButton';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { groupBy } from 'lodash';
 import './index.css';
 import { Avatar } from '../TwAvatar';
 import ClickAwayListener from 'react-click-away-listener';
+import { HMSPeerWithMuteStatus } from '../../store/selectors';
 
 interface ParticipantListClasses {
   root?: string;
@@ -26,7 +26,7 @@ interface ParticipantListClasses {
 }
 
 export interface ParticipantListProps {
-  participantList?: Array<Participant>;
+  participantList?: HMSPeerWithMuteStatus[];
   classes?: ParticipantListClasses;
 }
 
@@ -60,7 +60,7 @@ const customClasses: ParticipantListClasses = {
   onIcon: 'hmsui-participantList-show-on-group-hover',
 };
 
-type RoleMap = Map<string, Participant[]>;
+type RoleMap = Map<string, HMSPeerWithMuteStatus[]>;
 
 export const ParticipantList = ({
   participantList,
@@ -133,11 +133,11 @@ export const ParticipantList = ({
                         >
                           <div className={`${hu('menuText')}`}>
                             <Avatar
-                              label={participant.peer.displayName}
+                              label={participant.peer.name}
                               shape="square"
                               classes={{ root: 'mr-2' }}
                             />
-                            {participant.peer.displayName}
+                            {participant.peer.name}
                           </div>
                           <div className={`${hu('menuIconContainer')}`}>
                             {participant.isAudioMuted ? (

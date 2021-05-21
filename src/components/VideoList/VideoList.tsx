@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
+import { AudioLevelDisplayType, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile';
 import {
   chunkStreams,

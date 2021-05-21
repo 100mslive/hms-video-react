@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import { ParticipantList, ParticipantListProps } from './ParticipantList';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 import { fakeParticipants } from '../../storybook/fixtures/peersFixtures';
+import { HMSPeerWithMuteStatus } from '../../store/selectors';
 
 const meta: Meta = {
   title: 'ParticipantList',
@@ -54,16 +55,14 @@ Real.args = {
     {
       peer: {
         id: '123',
-        displayName: 'Sudhanshu Kumar asdasdasdasdasdasdasdasdas',
+        name: 'Sudhanshu Kumar asdasdasdasdasdasdasdasdas',
       },
       isAudioMuted: false,
-      isStarMarked: false,
-    },
+    } as HMSPeerWithMuteStatus,
     {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
+      peer: { id: '123', name: 'Sudhanshu Kumar', role: 'Student' },
       isAudioMuted: false,
-      isStarMarked: false,
-    },
+    } as HMSPeerWithMuteStatus,
   ],
 };
 

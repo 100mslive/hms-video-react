@@ -3,14 +3,14 @@ import { Meta, Story } from '@storybook/react';
 import React, { useState, useRef } from 'react';
 import { VideoList, VideoListProps } from '.';
 import { closeMediaStream, getVideoTileLabel } from '../../utils';
-import { MediaStreamWithInfo, Peer } from '../../types';
+import { MediaStreamWithInfo } from '../../types';
 import { VideoTileControls } from '../VideoTile/Controls';
 import { MicOffIcon, MicOnIcon } from '../Icons';
 import { loadStreams } from '../../storybook/utils';
 import { getUserMedia } from '../../utils/preview';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 import { fakeStreamsWithInfo } from '../../storybook/fixtures/streamFixtures';
-import { HMSTrack } from '../../store/schema';
+import { HMSPeer, HMSTrack } from '../../store/schema';
 declare global {
   interface HTMLVideoElement {
     captureStream(frameRate?: number): MediaStream;
@@ -227,7 +227,7 @@ const GoogleMeetControls = ({
 }: {
   allowRemoteMute: boolean;
   isAudioMuted?: boolean;
-  peer: Peer;
+  peer: HMSPeer;
   isLocal?: boolean;
   showAudioLevel: boolean;
   showAudioMuteStatus: boolean;
@@ -245,7 +245,7 @@ const GoogleMeetControls = ({
       )}
       <VideoTileControls
         label={getVideoTileLabel(
-          peer.displayName,
+          peer.name,
           isLocal || false,
           hmsVideoTrack?.source,
         )}

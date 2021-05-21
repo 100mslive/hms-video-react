@@ -7,6 +7,7 @@ import { loadStream } from '../../storybook/utils';
 import { VideoTileControls } from './Controls';
 import { MicOffIcon, MicOnIcon } from '../Icons';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
+import { HMSPeer } from '../../store/schema';
 
 declare global {
   interface HTMLVideoElement {
@@ -190,7 +191,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                   )}
                   <VideoTileControls
                     label={getVideoTileLabel(
-                      args.peer.displayName,
+                      args.peer.name,
                       args.isLocal || false,
                     )}
                     isAudioMuted={args.isAudioMuted}
@@ -221,7 +222,7 @@ export const ClassesOverrideVideoTile = Template.bind({});
 
 DefaultVideoTile.args = {
   isLocal: true,
-  peer: { id: '123', displayName: 'Eswar' },
+  peer: { id: '123', name: 'Eswar' } as HMSPeer,
   aspectRatio: { width: 16, height: 9 },
   displayShape: 'rectangle',
   showAudioLevel: true,
@@ -232,7 +233,7 @@ DefaultVideoTile.args = {
 
 GoogleMeetVideoTile.args = {
   isLocal: true,
-  peer: { id: '123', displayName: 'Eswar' },
+  peer: { id: '123', name: 'Eswar' } as HMSPeer,
   aspectRatio: { width: 16, height: 9 },
   displayShape: 'rectangle',
   showAudioLevel: true,
@@ -242,7 +243,7 @@ GoogleMeetVideoTile.args = {
 
 CampFireVideoTile.args = {
   isLocal: true,
-  peer: { id: '123', displayName: 'Eswar' },
+  peer: { id: '123', name: 'Eswar' } as HMSPeer,
   displayShape: 'circle',
   showAudioLevel: true,
   audioLevelDisplayType: 'border',
@@ -251,7 +252,7 @@ CampFireVideoTile.args = {
 
 ClassesOverrideVideoTile.args = {
   isLocal: true,
-  peer: { id: '123', displayName: 'Eswar' },
+  peer: { id: '123', name: 'Eswar' } as HMSPeer,
   aspectRatio: { width: 16, height: 9 },
   displayShape: 'rectangle',
   showAudioLevel: true,

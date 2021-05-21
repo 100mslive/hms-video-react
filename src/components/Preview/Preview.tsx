@@ -15,6 +15,7 @@ import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { VideoTileControls } from './Controls';
 import HMSLogger from '../../utils/ui-logger';
+import { HMSPeer } from '../../store/schema';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -42,8 +43,7 @@ export interface PreviewProps {
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
   onChange: (values: SettingsFormProps) => void;
   goBackOnClick: () => void;
-  toggleMute: (type: 'audio' | 'video') => void;
-  videoTileProps: Partial<VideoTileProps>;
+  videoTileProps?: Partial<VideoTileProps>;
   videoTileClasses?: VideoTileClasses;
   /**
    * extra classes added  by user
@@ -80,26 +80,11 @@ export const Preview = ({
 
   const toggleMediaState = (type: string) => {
     if (type === 'audio') {
-      if (!audioMuted) {
-        mediaStream.getAudioTracks()[0].enabled = false;
-        //TODO add handling for green light later
-        //mediaStream.getAudioTracks()[0].stop();
-      } else {
-        mediaStream.getAudioTracks()[0].enabled = true;
-        //startMediaStream();
-      }
+      mediaStream.getAudioTracks()[0].enabled = audioMuted;
       setAudioMuted(prevMuted => !prevMuted);
-      //toggleMute('audio');
     } else if (type === 'video') {
-      if (!videoMuted) {
-        mediaStream.getVideoTracks()[0].enabled = false;
-        //mediaStream.getVideoTracks()[0].stop();
-      } else {
-        mediaStream.getVideoTracks()[0].enabled = true;
-        //startMediaStream();
-      }
+      mediaStream.getVideoTracks()[0].enabled = videoMuted;
       setVideoMuted(prevMuted => !prevMuted);
-      //toggleMute('video');
     }
   };
 
@@ -171,8 +156,8 @@ export const Preview = ({
             audioTrack={mediaStream.getAudioTracks()[0]}
             peer={{
               id: name,
-              displayName: name,
-            }}
+              name: name,
+            } as HMSPeer}
             objectFit="cover"
             isLocal={true}
             aspectRatio={{

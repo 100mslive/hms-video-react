@@ -26,3 +26,4 @@ export {
   useHMSActions,
 } from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';
+export * from './store/selectors';

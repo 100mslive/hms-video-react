@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { Participant, Peer } from '../../types';
 import { VolumeIcon, Logo } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
@@ -10,7 +9,6 @@ export interface HeaderClasses {
   rightRoot?: string;
 }
 export interface HeaderProps {
-  peer: Peer;
   time: number;
   speaker: string;
   leftComponents: Array<React.ReactNode>;
@@ -31,8 +29,6 @@ const defaultClasses: HeaderClasses = {
 };
 
 export const Header = ({
-  peer,
-  time,
   speaker,
   leftComponents = [<Logo />],
   centerComponents = [

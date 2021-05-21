@@ -3,7 +3,7 @@ import { selectPeersMap } from './peerSelectors';
 import { createSelector } from 'reselect';
 import { selectTracksMap } from './trackSelectors';
 
-export interface PeerWithMuteStatus {
+export interface HMSPeerWithMuteStatus {
   peer: HMSPeer;
   isAudioMuted?: boolean;
 }
@@ -11,7 +11,7 @@ export interface PeerWithMuteStatus {
 export const selectPeersWithMuteStatus = createSelector(
   [selectPeersMap, selectTracksMap],
   (peersMap, tracksMap) => {
-    const participants: PeerWithMuteStatus[] = Object.values(peersMap).map(
+    const participants: HMSPeerWithMuteStatus[] = Object.values(peersMap).map(
       peer => {
         return {
           peer: peer,
