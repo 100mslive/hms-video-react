@@ -27,7 +27,7 @@ const defaultClasses:PreviewControlsClasses = {
     root:
       'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg focus:outline-none',
     controls:
-      'dark flex flex-grow self-center justify-center inline-block hover-hide space-x-1 relative',
+      'dark flex flex-grow self-center justify-center hover-hide space-x-1 relative',
     rightControls:
       'dark flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide absolute right-3',
 }
