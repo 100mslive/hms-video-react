@@ -7,7 +7,6 @@ import {
   HMSTrack,
   HMSTrackID,
 } from '../schema';
-import { HMSSdk } from '@100mslive/100ms-web-sdk/dist';
 import { UseStore } from 'zustand';
 import { IHMSBridge } from '../IHMSBridge';
 import * as sdkTypes from './sdkTypes';
@@ -24,6 +23,7 @@ import {
   selectTracksMap,
 } from '../selectors';
 import HMSLogger from '../../utils/ui-logger';
+import { HMSSdk } from '@100mslive/100ms-web-sdk';
 
 export class HMSSDKBridge implements IHMSBridge {
   private hmsSDKTracks: Record<string, sdkTypes.HMSTrack> = {};
@@ -129,7 +129,7 @@ export class HMSSDKBridge implements IHMSBridge {
 
   async addSink(trackID: string, videoElement: HTMLVideoElement) {
     const sdkTrack = this.hmsSDKTracks[trackID];
-    if (sdkTrack && sdkTrack.type === sdkTypes.HMSTrackType.VIDEO) {
+    if (sdkTrack && sdkTrack.type === 'video') {
       await (sdkTrack as sdkTypes.HMSVideoTrack).addSink(videoElement);
     } else {
       this.logPossibleInconsistency('no video track found to add sink');
@@ -138,7 +138,7 @@ export class HMSSDKBridge implements IHMSBridge {
 
   async removeSink(trackID: string, videoElement: HTMLVideoElement) {
     const sdkTrack = this.hmsSDKTracks[trackID];
-    if (sdkTrack && sdkTrack.type === sdkTypes.HMSTrackType.VIDEO) {
+    if (sdkTrack && sdkTrack.type === 'video') {
       await (sdkTrack as sdkTypes.HMSVideoTrack).removeSink(videoElement);
     } else {
       this.logPossibleInconsistency('no video track found to remove sink');
