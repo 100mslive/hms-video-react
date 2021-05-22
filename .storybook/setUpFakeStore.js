@@ -12,6 +12,6 @@ export function setUpFakeStore() {
     storyBookSDK.addTestPeerAndSpeaker(peerWithMute.peer);
   })
   fakeMessages.map(msg => {
-    storyBookSDK.sendMessage(msg.message);
+    storyBookSDK.sendMessage(msg.message, true);
   })
 }

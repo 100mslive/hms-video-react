@@ -1,47 +1,28 @@
-import create, { StateCreator } from 'zustand';
+import create, { SetState } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { createDefaultStoreState, HMSStore } from './schema';
-import produce, { Immutable, Draft } from 'immer';
+import produce from 'immer';
+import { GetState, StoreApi } from 'zustand/vanilla';
 
-type ImmutableHMSStore = Immutable<HMSStore>;
-
-const log = <T extends ImmutableHMSStore>(
-  config: StateCreator<T>,
-): StateCreator<T> => {
-  return (set, get, api) => {
-    return config(
-      args => {
-        console.log('  applying', args);
-        set(args);
-        console.log('  new state', get());
-      },
-      get,
-      api,
-    );
+const immer = <T extends HMSStore>(outerFn: (set: SetState<T>, get: GetState<T>, api: StoreApi<T>) => T) => {
+  return (
+    set: SetState<T>,
+    get: GetState<T>,
+    api: StoreApi<T>,
+  ): T => {
+    // wrap set methods to use immer curry for immutability
+    const newSet = (fn: any) => set(produce<T>(fn));
+    return outerFn(newSet, get, api);
   };
-};
-
-// immer middleware for all set operations
-type immerConfigType<T extends ImmutableHMSStore> = StateCreator<
-  T,
-  (fn: (draft: Draft<T>) => void) => void
->;
-const immer = <T extends ImmutableHMSStore>(
-  config: immerConfigType<T>,
-): StateCreator<T> => {
-  return (set, get, api) => {
-    return config(fn => set(produce(fn) as (state: T) => T), get, api);
-  };
-};
+}
 
 // One store is required per room
 export const createNewStore = () => {
-  return create<HMSStore>(
-    log(
-      devtools(
-        immer(_set => (createDefaultStoreState())),
-        "HMSStore",
-      ),
-    ),
+  const hmsStore = create<HMSStore>(
+    devtools(immer(() => (createDefaultStoreState()))),
   );
+  // make set state immutable
+  const prevSetState = hmsStore.setState;
+  hmsStore.setState = (fn: any ) => prevSetState(produce(fn));
+  return hmsStore;
 };

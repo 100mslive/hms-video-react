@@ -36,9 +36,10 @@ export class StoryBookSDK implements IHMSBridge {
     this.log("video removed");
   }
 
-  sendMessage(message: string): void {
+  sendMessage(message: string, randomUser?: boolean): void {
     this.store.setState(store => {
-      const newMsg = makeFakeMessage(message, this.randomUser());
+      const user = randomUser ? this.randomUser() : "You";
+      const newMsg = makeFakeMessage(message, user);
       store.messages.byID[newMsg.id] = newMsg;
       store.messages.allIDs.push(newMsg.id);
     })
@@ -79,7 +80,7 @@ export class StoryBookSDK implements IHMSBridge {
   }
 
   private randomUser() {
-    return this.randomFromArray(["You", "Tushar", "Eswar", "Anniket", "Kshitiz", "Sagar"]);
+    return this.randomFromArray(["You", "Tushar", "Eswar", "Aniket", "Kshitiz", "Sagar"]);
   }
 
   private randomFromArray(arr: any[]) {
