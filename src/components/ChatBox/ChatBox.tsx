@@ -127,34 +127,28 @@ export const ChatBox = ({
   messages = messages || storeMessages;
   const sendMessage = onSend || hmsActions.sendMessage;
   const [messageDraft, setMessageDraft] = useState('');
-  const [toScroll, setToScroll] = useState<boolean>(false);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   // a dummy element with messagesEndRef is created and put in the end
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
   const messageListRef = useRef<HTMLDivElement>(null);
 
-  if (messages.length > 0) {
-    const myOwnMessage = messages[messages.length - 1].senderName === 'You';
-    if (
-      autoScrollToBottom &&
-      (myOwnMessage || isTotallyScrolled(messageListRef))
-    ) {
-      setToScroll(true);
-    } else {
-      // unread should be read/updated from/to central store
-      setUnreadMessagesCount(unreadMessagesCount => unreadMessagesCount + 1);
-    }
-  }
-
   useEffect(() => {
-    if (toScroll) {
-      scrollToBottom(messageListRef, scrollAnimation);
-      setToScroll(false);
-      setUnreadMessagesCount(0);
+    if (messages && messages.length > 0) {
+      const myOwnMessage = messages[messages.length - 1].senderName === 'You';
+      if (
+        autoScrollToBottom &&
+        (myOwnMessage || isTotallyScrolled(messageListRef))
+      ) {
+        scrollToBottom(messageListRef, scrollAnimation);
+        setUnreadMessagesCount(0);
+      } else {
+        // unread should be read/updated from/to central store
+        setUnreadMessagesCount(unreadMessagesCount => unreadMessagesCount + 1);
+      }
     }
-  }, [toScroll]);
+  }, [messages])
 
-  if (messagesEndInView) {
+  if (messagesEndInView && unreadMessagesCount != 0) {
     setUnreadMessagesCount(0);
   }
 
@@ -215,10 +209,10 @@ export const ChatBox = ({
         {/* messageBox */}
         {/* TODO: move no scroll bar css logic to tailwind */}
         <div className={`${hu('messageBox')}`} ref={messageListRef}>
-          {messages.map(message => {
+          {messages.map((message, index) => {
             return message.notification ? (
               /* notificationRoot */
-              <div className={hu('notificationRoot')}>
+              <div className={hu('notificationRoot')} key={index}>
                 {/* notificationInfo*/}
                 <div className={hu('notificationInfo')}>
                   {/*notificationText*/}
@@ -234,7 +228,7 @@ export const ChatBox = ({
               </div>
             ) : (
               /* messageRoot */
-              <div className={hu('messageRoot')}>
+              <div className={hu('messageRoot')} key={index}>
                 {/* messageInfo */}
                 <div className={hu('messageInfo')}>
                   {/* messageSender */}

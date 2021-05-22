@@ -11,8 +11,11 @@ export function scrollToBottom(
 }
 
 export function isTotallyScrolled(refHavingScroll: RefObject<HTMLDivElement>) {
-  const fullScrollHeight = refHavingScroll.current!.scrollHeight;
-  const heightVisibleAtOnce = refHavingScroll.current!.clientHeight;
-  const heightScrolledFromTop = refHavingScroll.current!.scrollTop;
-  return fullScrollHeight - heightScrolledFromTop === heightVisibleAtOnce;
+  const fullScrollHeight = refHavingScroll.current?.scrollHeight;
+  const heightVisibleAtOnce = refHavingScroll.current?.clientHeight;
+  const heightScrolledFromTop = refHavingScroll.current?.scrollTop;
+  if (fullScrollHeight && heightScrolledFromTop && heightVisibleAtOnce) {
+    return fullScrollHeight - heightScrolledFromTop === heightVisibleAtOnce;
+  }
+  return false;
 }

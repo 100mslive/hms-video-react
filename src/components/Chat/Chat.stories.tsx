@@ -4,6 +4,7 @@ import Chat from './index';
 import './index.css';
 import { ChatProps, Message } from '../ChatBox/ChatBox';
 import { fakeMessages, makeFakeMessage } from '../../storybook/fixtures/chatFixtures';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
   title: 'Chat/ Button',
@@ -13,24 +14,17 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<ChatProps> = args => {
-  const [messages, setMessages] = useState<Message[]>(args.messages || []);
-  const onSend = (message: string) => {
-    setMessages(prevMessages => {
-      let messages = [...prevMessages];
-      messages.push(makeFakeMessage(message, "You"));
-      return messages;
-    });
-  };
-
   return (
-    <div className="w-full h-1/2 flex justify-center">
-      <Chat {...args} messages={messages} onSend={onSend} />
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div className="w-full h-1/2 flex justify-center">
+        <Chat {...args} />
+      </div>
+    </HMSThemeProvider>
   );
 };
 
 export const Default = Template.bind({});
 Default.args = {
-  messages: fakeMessages,
   autoScrollToBottom: true,
+  onSend: undefined,  // use from hmsActions
 };

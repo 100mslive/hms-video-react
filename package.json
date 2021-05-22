@@ -96,6 +96,7 @@
     "react-resize-detector": "^6.6.5",
     "remark-gfm": "^1.0.0",
     "reselect": "^4.0.0",
+    "reselect-tools": "^0.0.7",
     "tailwind-percentage-heights-plugin": "^0.1.4",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
     "twind": "^0.16.12",

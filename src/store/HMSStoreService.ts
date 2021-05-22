@@ -2,6 +2,7 @@ import create, { StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
 import { createDefaultStoreState, HMSStore } from './schema';
 import produce, { Immutable, Draft } from 'immer';
+import { setupReselectDevTools } from './selectors/setupReselectDevtools';
 
 type ImmutableHMSStore = Immutable<HMSStore>;
 
@@ -40,7 +41,10 @@ export const createNewStore = () => {
     log(
       devtools(
         immer(_set => (createDefaultStoreState())),
+        "HMSStore",
       ),
     ),
   );
 };
+
+setupReselectDevTools();

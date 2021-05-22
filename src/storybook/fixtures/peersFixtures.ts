@@ -4,7 +4,7 @@ import { HMSPeer } from '../../store/schema';
 let counter = 1;
 export const makeFakeParticipant = (name: string, role='Student') => {
   return {
-    peer: { id: String(counter++), name, role: role } as HMSPeer,
+    peer: { id: String(counter++), name, role: role, auxiliaryTracks:[], isLocal: counter===1},
     isAudioMuted: false,
   } as HMSPeerWithMuteStatus;
 }
