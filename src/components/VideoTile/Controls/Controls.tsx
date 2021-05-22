@@ -4,7 +4,7 @@ import { Button } from '../../TwButton';
 import { MicOffIcon } from '../../Icons';
 import '../index.css';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import {useHMSTheme} from '../../../hooks/HMSThemeProvider'
 
 export interface VideoTileControlsClasses {
   root?: string;
