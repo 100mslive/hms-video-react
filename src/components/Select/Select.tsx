@@ -1,4 +1,5 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 import { DownCaratIcon } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
@@ -27,21 +28,21 @@ export const Select: React.FC<SelectProps> = ({
   children,
   ...props
 }) => {
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<SelectClasses>({
+      tw,
       classes,
       defaultClasses,
       tag: 'hmsui-select',
-    }),
-    [],
-  );
+    }),[]);
 
   return (
-    <div className={`${hu('container')}`}>
-      <select className={`${hu('select')}`} {...props}>
+    <div className={`${styler('container')}`}>
+      <select className={`${styler('select')}`} {...props}>
         {children}
       </select>
-      <DownCaratIcon className={`${hu('icon')}`} />
+      <DownCaratIcon className={`${styler('icon')}`} />
     </div>
   );
 };
