@@ -144,9 +144,9 @@ export const Video = ({
       if (videoRef.current && hmsVideoTrack) {
         HMSLogger.d('Video InView', videoTrack, inView);
         if (inView) {
-          await hmsActions.addSink(hmsVideoTrack.id, videoRef.current);
+          await hmsActions.attachVideo(hmsVideoTrack.id, videoRef.current);
         } else {
-          await hmsActions.removeSink(hmsVideoTrack.id, videoRef.current);
+          await hmsActions.removeVideo(hmsVideoTrack.id, videoRef.current);
         }
       }
     })();
