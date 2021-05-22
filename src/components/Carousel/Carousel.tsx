@@ -76,6 +76,7 @@ export const Carousel = ({
     hmsUiClassParserGenerator<CarouselClasses>({
       tw,
       classes,
+      customClasses,
       defaultClasses,
       tag: 'hmsui-carousel',
     }),[]);

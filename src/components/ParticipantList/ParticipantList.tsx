@@ -73,6 +73,7 @@ export const ParticipantList = ({
     hmsUiClassParserGenerator<ParticipantListClasses>({
       tw,
       classes,
+      customClasses,
       defaultClasses,
       tag: 'hmsui-participantList',
     }),[]);

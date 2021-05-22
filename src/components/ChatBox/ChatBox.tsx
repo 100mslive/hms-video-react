@@ -118,6 +118,7 @@ export const ChatBox = ({
     hmsUiClassParserGenerator<ChatBoxClasses>({
       tw,
       classes,
+      customClasses,
       defaultClasses,
       tag: 'hmsui-chatBox',
     }),[]);

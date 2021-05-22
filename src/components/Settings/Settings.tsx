@@ -120,6 +120,7 @@ export const Settings = ({
     hmsUiClassParserGenerator<SettingsClasses>({
       tw,
       classes,
+      customClasses,
       defaultClasses,
       tag: 'hmsui-settings',
     }),[]);
