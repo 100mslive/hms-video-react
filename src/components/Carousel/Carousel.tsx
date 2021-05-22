@@ -1,7 +1,7 @@
 import React, {
   useState,
   useEffect,
-  useCallback,
+  useMemo,
   MouseEventHandler,
   useRef,
 } from 'react';
@@ -13,6 +13,7 @@ import {
   DotIcon,
 } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 import './index.css';
 
 export interface CarouselProps {
@@ -70,22 +71,22 @@ export const Carousel = ({
   const pages = Array.isArray(children) ? children : [children];
   const carouselRef = useRef(null);
 
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<CarouselClasses>({
+      tw,
       classes,
       customClasses,
       defaultClasses,
       tag: 'hmsui-carousel',
-    }),
-    [],
-  );
+    }),[]);
 
   const showNav = showNavigation && pages.length > 1;
 
-  const navClassName = `${hu('navContainer')} ${
+  const navClassName = `${styler('navContainer')} ${
     direction === 'horizontal'
-      ? hu('navContainerHorizontal')
-      : hu('navContainerVertical')
+      ? styler('navContainerHorizontal')
+      : styler('navContainerVertical')
   }`;
 
   useEffect(() => {
@@ -103,8 +104,8 @@ export const Carousel = ({
   return (
     <>
       <div
-        className={`${hu('root')} ${
-          direction === 'horizontal' ? hu('rootHorizontal') : hu('rootVertical')
+        className={`${styler('root')} ${
+          direction === 'horizontal' ? styler('rootHorizontal') : styler('rootVertical')
         }`}
       >
         <div className="overflow-hidden w-full h-full" ref={carouselRef}>
@@ -130,7 +131,7 @@ export const Carousel = ({
                 setCurrentPageIndex(currentPageIndex - 1);
               }
             }}
-            hu={hu}
+            styler={styler}
           />
 
           {pages.map((page, index) => (
@@ -143,9 +144,9 @@ export const Carousel = ({
               <DotIcon
                 className={`${
                   index === currentPageIndex
-                    ? hu('dotActive')
-                    : hu('dotInactive')
-                } ${hu('dot')}`}
+                    ? styler('dotActive')
+                    : styler('dotInactive')
+                } ${styler('dot')}`}
               />
             </button>
           ))}
@@ -158,7 +159,7 @@ export const Carousel = ({
                 setCurrentPageIndex(currentPageIndex + 1);
               }
             }}
-            hu={hu}
+            styler={styler}
           />
         </div>
       ) : null}
@@ -170,11 +171,11 @@ interface ButtonProps {
   direction: 'horizontal' | 'vertical';
   isActive: boolean;
   onClick: MouseEventHandler;
-  hu: Function;
+  styler: Function;
 }
 
-function NextButton({ direction, isActive, onClick, hu }: ButtonProps) {
-  const className = `${isActive ? hu('caratActive') : hu('caratInactive')} ${hu(
+function NextButton({ direction, isActive, onClick, styler }: ButtonProps) {
+  const className = `${isActive ? styler('caratActive') : styler('caratInactive')} ${styler(
     'carat',
   )}`;
 
@@ -192,8 +193,8 @@ function NextButton({ direction, isActive, onClick, hu }: ButtonProps) {
   );
 }
 
-function PrevButton({ direction, isActive, onClick, hu }: ButtonProps) {
-  const className = `${isActive ? hu('caratActive') : hu('caratInactive')} ${hu(
+function PrevButton({ direction, isActive, onClick, styler }: ButtonProps) {
+  const className = `${isActive ? styler('caratActive') : styler('caratInactive')} ${styler(
     'carat',
   )}`;
 

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -112,15 +113,15 @@ export const ChatBox = ({
     return `${date.getHours()}:${minString}`;
   },
 }: ChatProps) => {
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<ChatBoxClasses>({
+      tw,
       classes,
       customClasses,
       defaultClasses,
       tag: 'hmsui-chatBox',
-    }),
-    [],
-  );
+    }),[]);
   const storeMessages = useHMSStore(selectHMSMessages);
   const hmsActions = useHMSActions();
 
@@ -155,15 +156,15 @@ export const ChatBox = ({
   return (
     <React.Fragment>
       {/* root */}
-      <div className={hu('root')}>
+      <div className={styler('root')}>
         {/* header */}
-        <div className={hu('header')}>
+        <div className={styler('header')}>
           {/* header-line */}
-          <div className={hu('headerLine')}></div>
+          <div className={styler('headerLine')}></div>
           {/* header-root */}
-          <div className={hu('headerRoot')}>
+          <div className={styler('headerRoot')}>
             {/* header-text */}
-            <div className={hu('headerText')}>
+            <div className={styler('headerText')}>
               <span>
                 <PeopleIcon />
               </span>
@@ -199,7 +200,7 @@ export const ChatBox = ({
                     onClose();
                   }
                 }}
-                className={hu('headerCloseButton}
+                className={styler('headerCloseButton}
               >
                 <CloseIcon />
               </button> */}
@@ -208,40 +209,40 @@ export const ChatBox = ({
         </div>
         {/* messageBox */}
         {/* TODO: move no scroll bar css logic to tailwind */}
-        <div className={`${hu('messageBox')}`} ref={messageListRef}>
-          {messages.map((message, index) => {
+        <div className={`${styler('messageBox')}`} ref={messageListRef}>
+          {messages.map(message => {
             return message.notification ? (
               /* notificationRoot */
-              <div className={hu('notificationRoot')} key={index}>
+              <div className={styler('notificationRoot')}>
                 {/* notificationInfo*/}
-                <div className={hu('notificationInfo')}>
+                <div className={styler('notificationInfo')}>
                   {/*notificationText*/}
-                  <span className={hu('notificationText')}>
+                  <span className={styler('notificationText')}>
                     {messageFormatter
                       ? messageFormatter(message.message)
                       : message.message}
                   </span>
-                  <span className={hu('time')}>
+                  <span className={styler('time')}>
                     {timeFormatter(message.time)}
                   </span>
                 </div>
               </div>
             ) : (
               /* messageRoot */
-              <div className={hu('messageRoot')} key={index}>
+              <div className={styler('messageRoot')}>
                 {/* messageInfo */}
-                <div className={hu('messageInfo')}>
+                <div className={styler('messageInfo')}>
                   {/* messageSender */}
-                  <span className={hu('messageSender')}>
+                  <span className={styler('messageSender')}>
                     {message.senderName}
                   </span>
                   {/* messageTime */}
-                  <span className={hu('messageTime')}>
+                  <span className={styler('messageTime')}>
                     {timeFormatter(message.time)}
                   </span>
                 </div>
                 {/* messageText */}
-                <div className={hu('messageText')}>
+                <div className={styler('messageText')}>
                   {/* {ReactHtmlParser(
                       Autolinker.link(message.message, { sanitizeHtml: true }),
                     )} */}
@@ -255,24 +256,24 @@ export const ChatBox = ({
           })}
           {messages.length === 0 && (
             /* NoMessageRoot */
-            <div className={hu('noMessageRoot')}>
+            <div className={styler('noMessageRoot')}>
               There are no messages here.
             </div>
           )}
           <div ref={messagesEndRef}></div>
         </div>
         {/* footer */}
-        <div className={hu('footer')}>
+        <div className={styler('footer')}>
           {unreadMessagesCount !== 0 && (
-            <div className={hu('unreadMessagesContainer')}>
+            <div className={styler('unreadMessagesContainer')}>
               <div
-                className={hu('unreadMessagesInner')}
+                className={styler('unreadMessagesInner')}
                 onClick={() => {
                   scrollToBottom(messageListRef, scrollAnimation);
                 }}
               >
                 {`New message${unreadMessagesCount > 1 ? 's' : ''}`}
-                <DownCaratIcon className={hu('unreadIcon')} />
+                <DownCaratIcon className={styler('unreadIcon')} />
               </div>
             </div>
           )}
@@ -280,7 +281,7 @@ export const ChatBox = ({
           {/* TODO: move no scrollbar logic to tailwind */}
           <textarea
             rows={2}
-            className={`${hu('chatInput')}`}
+            className={`${styler('chatInput')}`}
             placeholder="Write something here"
             value={messageDraft}
             onKeyPress={event => {

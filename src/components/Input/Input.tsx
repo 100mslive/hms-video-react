@@ -1,5 +1,6 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 interface InputPropsWithoutNativeAttrs {
   /**
    * Smaller Width for InputField
@@ -49,28 +50,28 @@ export const Input = ({
   children,
   ...props
 }: InputProps) => {
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<InputClasses>({
+      tw,
       classes,
       defaultClasses,
       tag: 'hmsui-input',
-    }),
-    [],
-  );
+    }),[]);
 
   return (
     <>
       <input
         placeholder={placeHolder}
-        className={`${hu('root')} ${
-          compact ? hu('rootCompact') : hu('rootNonCompact')
-        } ${validation ? hu('rootValidationRing') : hu('rootRing')}`}
+        className={`${styler('root')} ${
+          compact ? styler('rootCompact') : styler('rootNonCompact')
+        } ${validation ? styler('rootValidationRing') : styler('rootRing')}`}
         {...props}
       >
         {children}
       </input>
       {validation && (
-        <p className={`${defaultClasses?.rootValidationText}`}>{validation}</p>
+        <p className={`${styler('rootValidationText')}`}>{validation}</p>
       )}
     </>
   );

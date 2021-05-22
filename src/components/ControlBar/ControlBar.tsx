@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { ButtonDisplayType } from '../../types';
 import {
   HangUpIcon,
@@ -13,6 +13,7 @@ import { Button as TwButton } from '../TwButton';
 import { Settings } from '../Settings/Settings';
 import { VerticalDivider } from '../VerticalDivider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export interface ControlBarClasses {
   root?: string;
@@ -128,14 +129,14 @@ export const ControlBar = ({
   ],
   classes,
 }: ControlBarProps) => {
-  const combinedClasses = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<ControlBarClasses>({
+      tw,
       classes,
       defaultClasses,
       tag: 'hmsui-controlbar',
-    }),
-    [],
-  );
+    }),[]);
 
   const leftItems = Array<React.ReactNode>();
   const centerItems = Array<React.ReactNode>();
@@ -153,10 +154,10 @@ export const ControlBar = ({
   });
 
   return (
-    <div className={combinedClasses('root')}>
-      <div className={combinedClasses('leftRoot')}>{leftItems}</div>
-      <div className={combinedClasses('centerRoot')}>{centerItems}</div>
-      <div className={combinedClasses('rightRoot')}>{rightItems}</div>
+    <div className={styler('root')}>
+      <div className={styler('leftRoot')}>{leftItems}</div>
+      <div className={styler('centerRoot')}>{centerItems}</div>
+      <div className={styler('rightRoot')}>{rightItems}</div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import './index.css';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
@@ -109,17 +109,17 @@ export const VideoTile = ({
   classes,
   avatarType,
 }: VideoTileProps) => {
-  const { appBuilder } = useHMSTheme();
-  const parseClass = useCallback(
+  const { appBuilder, tw } = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<VideoTileClasses>({
+      tw,
       classes,
       customClasses,
       defaultClasses,
       tag: 'hmsui-videoTile',
-    }),
-    [],
-  );
-  const label = getVideoTileLabel(
+    }),[]);
+
+    const label = getVideoTileLabel(
     peer.name,
     isLocal,
     hmsVideoTrack?.source,
@@ -140,12 +140,12 @@ export const VideoTile = ({
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
-    <div className={parseClass('root')}>
+    <div className={styler('root')}>
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
         objectFit === 'contain') && (
         <div
-          className={`${parseClass('videoContainer')} ${
-            displayShape === 'circle' ? parseClass('videoContainerCircle') : ''
+          className={`${styler('videoContainer')} ${
+            displayShape === 'circle' ? styler('videoContainerCircle') : ''
           } `}
           style={
             objectFit !== 'contain'
@@ -175,9 +175,9 @@ export const VideoTile = ({
           />
           {isVideoMuted && (
             <div
-              className={`${parseClass('avatarContainer')} ${
+              className={`${styler('avatarContainer')} ${
                 displayShape === 'circle'
-                  ? parseClass('avatarContainerCircle')
+                  ? styler('avatarContainerCircle')
                   : ''
               }`}
             >

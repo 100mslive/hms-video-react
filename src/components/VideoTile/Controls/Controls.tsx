@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { AudioLevelDisplayType } from '../../../types';
 import { Button } from '../../TwButton';
 import { MicOffIcon } from '../../Icons';
 import '../index.css';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
+import {useHMSTheme} from '../../../hooks/HMSThemeProvider'
 
 export interface VideoTileControlsClasses {
   root?: string;
@@ -53,19 +54,19 @@ export const VideoTileControls = ({
   allowRemoteMute = false,
   classes,
 }: VideoTileControlsProps) => {
-  const parseClass = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<VideoTileControlsClasses>({
+      tw,
       classes,
       customClasses,
       defaultClasses,
       tag: 'hmsui-videoTileControls',
-    }),
-    [],
-  );
+    }),[]);
   return (
-    <div className={`${parseClass('root')}`}>
-      <div className={`${showGradient ? parseClass('gradient') : ''}`} />
-      <div className={`${parseClass('controlsInner')}`}>
+    <div className={`${styler('root')}`}>
+      <div className={`${showGradient ? styler('gradient') : ''}`} />
+      <div className={`${styler('controlsInner')}`}>
         <div className="flex justify-center">
           {showAudioMuteStatus && isAudioMuted && (
             <Button
@@ -80,8 +81,8 @@ export const VideoTileControls = ({
             </Button>
           )}
         </div>
-        <div className={`${parseClass('label')}`}>{label}</div>
-        <div className={`${parseClass('controls')}`}>
+        <div className={`${styler('label')}`}>{label}</div>
+        <div className={`${styler('controls')}`}>
           {!isLocal && showAudioMuteStatus && !isAudioMuted && allowRemoteMute && (
             <Button iconOnly size={'md'} classes={{ root: 'dark' }}>
               <MicOffIcon />
