@@ -1,4 +1,3 @@
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 // @ts-ignore
 import { apply, TW } from 'twind';
 
