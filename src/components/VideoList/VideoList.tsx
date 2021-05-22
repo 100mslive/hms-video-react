@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { AudioLevelDisplayType, MediaStreamWithInfo } from '../../types';
 import { VideoTile } from '../VideoTile';
 import {
@@ -144,14 +144,14 @@ export const VideoList = ({
   allowRemoteMute,
   avatarType,
 }: VideoListProps) => {
-  const parseClass = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<VideoListClasses>({
+      tw,
       classes,
       defaultClasses,
       tag: 'hmsui-videoList',
-    }),
-    [],
-  );
+    }),[]);
 
   const { width = 0, height = 0, ref } = useResizeDetector();
 
@@ -229,14 +229,14 @@ export const VideoList = ({
   ]);
 
   return (
-    <div className={`${parseClass('root')}`} ref={ref}>
+    <div className={`${styler('root')}`} ref={ref}>
       {chunkedStreams && chunkedStreams.length > 0 && (
         <Carousel>
           {chunkedStreams.map((streams, page) => {
             return (
-              <div className={`${parseClass('sliderInner')}`} key={page}>
+              <div className={`${styler('sliderInner')}`} key={page}>
                 <div
-                  className={` ${parseClass('listContainer')}   flex-${
+                  className={` ${styler('listContainer')}   flex-${
                     maxRowCount
                       ? 'col'
                       : maxColCount
@@ -249,7 +249,7 @@ export const VideoList = ({
                       <div
                         style={{ height: stream.height, width: stream.width }}
                         key={stream.peer.id}
-                        className={`${parseClass('videoTileContainer')}`}
+                        className={`${styler('videoTileContainer')}`}
                       >
                         <VideoTile
                           audioTrack={stream.audioTrack}
