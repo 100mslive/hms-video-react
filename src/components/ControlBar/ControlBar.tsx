@@ -130,7 +130,7 @@ export const ControlBar = ({
   classes,
 }: ControlBarProps) => {
   const {tw} = useHMSTheme();
-  const combinedClasses = useMemo(()=>
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<ControlBarClasses>({
       tw,
       classes,
@@ -154,10 +154,10 @@ export const ControlBar = ({
   });
 
   return (
-    <div className={combinedClasses('root')}>
-      <div className={combinedClasses('leftRoot')}>{leftItems}</div>
-      <div className={combinedClasses('centerRoot')}>{centerItems}</div>
-      <div className={combinedClasses('rightRoot')}>{rightItems}</div>
+    <div className={styler('root')}>
+      <div className={styler('leftRoot')}>{leftItems}</div>
+      <div className={styler('centerRoot')}>{centerItems}</div>
+      <div className={styler('rightRoot')}>{rightItems}</div>
     </div>
   );
 };

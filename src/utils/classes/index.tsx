@@ -39,6 +39,10 @@ interface ParseClassProps<T> {
   tag: string;
 }
 
+const defaultStyler = <T extends {}>(defaultClasses:T, s:keyof T) =>{
+  return defaultClasses[s]?defaultClasses[s]:'';
+}
+
 export const hmsUiClassParserGenerator = <T extends {}>({
   tw,
   classes,
@@ -48,14 +52,14 @@ export const hmsUiClassParserGenerator = <T extends {}>({
 }: ParseClassProps<T>) => (s: keyof T) => {
   const finalClasses = resolveClasses(classes || {}, defaultClasses);
   if(tw){
-  return tw(
-    `${tag}-${s}`,
-    (customClasses && (customClasses[s] as unknown)) as string,
-    apply(finalClasses[s]),
-  );
+    return tw(
+      `${tag}-${s}`,
+      (customClasses && (customClasses[s] as unknown)) as string,
+      apply(finalClasses[s]),
+    );
   }
   //handle edge case of tw not being present
   else {
-    return (s:keyof T)=>defaultClasses[s]?defaultClasses[s]:''
+    return defaultStyler(defaultClasses, s)
   }
 };
