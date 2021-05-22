@@ -75,10 +75,9 @@ export class HMSSDKBridge implements IHMSBridge {
 
   async setScreenShareEnabled(enabled:boolean){
     if(enabled){
-      this.startScreenShare();
-    }
-    else{
-      this.stopScreenShare();
+      await this.startScreenShare();
+    } else{
+      await this.stopScreenShare();
     }
   }
 

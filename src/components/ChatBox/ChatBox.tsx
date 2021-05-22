@@ -125,7 +125,7 @@ export const ChatBox = ({
   const hmsActions = useHMSActions();
 
   messages = messages || storeMessages;
-  const sendMessage = onSend || hmsActions.sendMessage;
+  const sendMessage = (msg: string) => onSend ? onSend(msg) : hmsActions.sendMessage(msg);
   const [messageDraft, setMessageDraft] = useState('');
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   // a dummy element with messagesEndRef is created and put in the end
