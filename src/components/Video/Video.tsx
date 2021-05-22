@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useMemo } from 'react';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
 import { useInView } from 'react-intersection-observer';
@@ -6,6 +6,7 @@ import HMSLogger from '../../utils/ui-logger';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions } from '../../hooks/HMSRoomProvider';
 import { HMSTrack } from '../../store/schema';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -112,14 +113,14 @@ export const Video = ({
   displayShape,
   classes,
 }: VideoProps) => {
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<VideoClasses>({
+      tw,
       classes,
       defaultClasses,
       tag: 'hmsui-video',
-    }),
-    [],
-  );
+    }),[]);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const hmsActions = useHMSActions();
@@ -165,15 +166,15 @@ export const Video = ({
         muted={true}
         autoPlay
         playsInline
-        className={`${hu('video')} 
-          ${displayShape === 'circle' ? hu('videoCircle') : ''}
+        className={`${styler('video')} 
+          ${displayShape === 'circle' ? styler('videoCircle') : ''}
           ${
             isLocal && hmsVideoTrack?.source === 'regular'
-              ? hu('videoLocal')
+              ? styler('videoLocal')
               : ''
           }
-          ${objectFit === 'contain' ? hu('videoContain') : ''}
-          ${objectFit === 'cover' ? hu('videoCover') : ''}
+          ${objectFit === 'contain' ? styler('videoContain') : ''}
+          ${objectFit === 'cover' ? styler('videoCover') : ''}
         `}
       ></video>
       {showAudioLevel && audioLevelDisplayType === 'border' && (
@@ -183,8 +184,8 @@ export const Video = ({
           level={audioLevel}
           displayShape={displayShape}
           classes={{
-            videoCircle: hu('videoCircle'),
-            root: hu('borderAudioRoot'),
+            videoCircle: styler('videoCircle'),
+            root: styler('borderAudioRoot'),
           }}
           color={audioLevelDisplayColor}
         />
