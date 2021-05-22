@@ -3,7 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import Chat from './index';
 import './index.css';
 import { ChatProps, Message } from '../ChatBox/ChatBox';
-import { fakeMessage, fakeMessages, makeFakeMessage } from '../../storybook/fixtures/chatFixtures';
+import { fakeMessages, makeFakeMessage } from '../../storybook/fixtures/chatFixtures';
 
 const meta: Meta = {
   title: 'Chat/ Button',
@@ -13,9 +13,9 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<ChatProps> = args => {
-  const [messages, setMesaages] = useState<Message[]>(args.messages);
+  const [messages, setMessages] = useState<Message[]>(args.messages || []);
   const onSend = (message: string) => {
-    setMesaages(prevMessages => {
+    setMessages(prevMessages => {
       let messages = [...prevMessages];
       messages.push(makeFakeMessage(message, "You"));
       return messages;

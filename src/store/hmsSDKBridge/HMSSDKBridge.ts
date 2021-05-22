@@ -310,6 +310,7 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   protected onError(error: SDKHMSException) {
+    // send notification
     HMSLogger.e('sdkError', 'received error from sdk', error);
   }
 
@@ -318,11 +319,7 @@ export class HMSSDKBridge implements IHMSBridge {
     if (track) {
       await track.setEnabled(enabled);
     } else {
-      HMSLogger.e(
-        'sdk',
-        'track not present, unable to enabled/disable',
-        trackID,
-      );
+      this.logPossibleInconsistency(`track ${trackID} not present, unable to enabled/disable`);
     }
   }
 

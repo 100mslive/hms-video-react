@@ -14,7 +14,7 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<ChatProps> = args => {
-  const [messages, setMesaages] = useState<Message[]>(args.messages);
+  const [messages, setMesaages] = useState<Message[]>(args.messages || []);
   const onSend = (message: string) => {
     setMesaages(prevMessages => {
       let messages = [...prevMessages];

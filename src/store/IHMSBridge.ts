@@ -11,7 +11,6 @@ export interface IHMSBridge {
   attachVideo(trackID: string, videoElement: HTMLVideoElement): void;
   removeVideo(trackID: string, videoElement: HTMLVideoElement): void;
 
-  // getMediaStreamTrack(trackID)
 }
 
 export interface HMSError {
