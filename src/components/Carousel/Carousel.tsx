@@ -28,12 +28,15 @@ interface CarouselClasses {
   rootHorizontal?: string;
   rootVertical?: string;
   pageContainer?: string;
+  carouselContainer?:string;
+  carouselInner?:string;
   videoTileContainer?: string;
   navContainer?: string;
   navContainerHorizontal?: string;
   navContainerVertical?: string;
   caratActive?: string;
   caratInactive?: string;
+  dotButton?:string;
   dotActive?: string;
   dotInactive?: string;
   carat?: string;
@@ -44,7 +47,9 @@ const defaultClasses: CarouselClasses = {
   root: `w-full h-full`,
   rootHorizontal: 'overflow-x-auto pb-6',
   rootVertical: 'overflow-y-auto flex-col pr-6',
-  pageContainer: 'flex-shrink-0 w-full h-full',
+  pageContainer: 'inline-block align-top w-full h-full',
+  carouselContainer:'overflow-hidden w-full h-full',
+  carouselInner:'w-full h-full whitespace-nowrap',
   videoTileContainer: 'flex justify-center',
   navContainer: 'absolute w-full flex justify-center items-center',
   navContainerHorizontal: 'bottom-0 left-0',
@@ -55,6 +60,7 @@ const defaultClasses: CarouselClasses = {
   dotInactive: 'text-transparent-700 dark:text-transparent-300 cursor-pointer',
   carat: 'w-4 h-4 m-1',
   dot: 'w-2 h-2 m-1',
+  dotButton:'inline-block focus:outline-none focus-visible:ring-4 focus-visible:blue-tint'
 };
 
 const customClasses: CarouselClasses = {
@@ -108,11 +114,11 @@ export const Carousel = ({
           direction === 'horizontal' ? styler('rootHorizontal') : styler('rootVertical')
         }`}
       >
-        <div className="overflow-hidden w-full h-full" ref={carouselRef}>
-          <div className="w-full h-full whitespace-nowrap">
+        <div className={`${styler('carouselContainer')}`} ref={carouselRef}>
+          <div className={`${styler('carouselInner')}`}>
             {pages.map((page, index) => (
               <div
-                className="inline-block align-top w-full h-full"
+                className={`${styler('pageContainer')}`}
                 key={`slide=${index}`}
               >
                 {pages[index]}
@@ -136,7 +142,7 @@ export const Carousel = ({
 
           {pages.map((page, index) => (
             <button
-              className="inline-block focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+              className={`${styler('dotButton')}`}
               onClick={e => {
                 setCurrentPageIndex(index);
               }}

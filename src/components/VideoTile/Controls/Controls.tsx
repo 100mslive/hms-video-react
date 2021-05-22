@@ -14,6 +14,7 @@ export interface VideoTileControlsClasses {
   controlsStatus?: string;
   hoverHide?: string;
   label?: string;
+  controlsWrapper?:string;
 }
 export interface VideoTileControlsProps {
   label?: string;
@@ -39,6 +40,7 @@ const defaultClasses: VideoTileControlsClasses = {
     'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
   controlsStatus: 'transition-all opacity-1 mx-1',
   label: 'mt-1 mx-1',
+  controlsWrapper:'flex justify-center',
 };
 
 const customClasses: VideoTileControlsClasses = {
@@ -67,7 +69,7 @@ export const VideoTileControls = ({
     <div className={`${styler('root')}`}>
       <div className={`${showGradient ? styler('gradient') : ''}`} />
       <div className={`${styler('controlsInner')}`}>
-        <div className="flex justify-center">
+        <div className={`${styler('controlsWrapper')}`}>
           {showAudioMuteStatus && isAudioMuted && (
             <Button
               iconOnly

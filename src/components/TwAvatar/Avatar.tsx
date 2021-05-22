@@ -1,7 +1,6 @@
 import React, { useMemo, PropsWithChildren } from 'react';
 import { getInitialsFromName } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { Pebbles } from '../Icons/index';
 import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 
 interface AvatarPropsWithoutNativeAttrs {
@@ -80,6 +79,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
       tag: 'hmsui-avatar',
     }),[]);
 
+  if (avatarType === 'pebble') shape = 'square';
   const classList = [`${styler('root')}`];
   shape === 'circle'
     ? classList.push(`${styler('rootShapeCircle')}`)
@@ -96,8 +96,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   } else if (size === 'xl') {
     classList.push(`${styler('rootSizeXl')}`);
   }
-  const peeble =
-    Pebbles[Math.floor((label?.charCodeAt(0) || 0) % Pebbles.length)];
+  const pebble = ((label?.codePointAt(0) || 0) % 6) + 1;
   const map = {
     initial: (
       <div
@@ -113,15 +112,11 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
       </div>
     ),
     pebble: (
-      <div
+      <img
         {...props}
         className={classList.join(' ')}
-        style={{
-          backgroundColor: 'inherit',
-        }}
-      >
-        {peeble}
-      </div>
+        src={`https://bc-public-static-assets.s3.ap-south-1.amazonaws.com/dashboard/images/Pebble%20People/${pebble}.svg`}
+      />
     ),
     icon: (
       <div

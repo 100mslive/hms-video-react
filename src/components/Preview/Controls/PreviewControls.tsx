@@ -23,13 +23,19 @@ export interface VideoTileControlsProps {
   buttonDisplay?: ButtonDisplayType;
 }
 
-const defaultClasses = {
-  root:
-    'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg focus:outline-none',
-  controls:
-    'dark flex flex-grow self-center justify-center inline-block hover-hide space-x-1 relative',
-  rightcontrols:
-    'dark flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide absolute right-3',
+interface PreviewControlsClasses  {
+  root?:string;
+  controls?:string;
+  rightControls?:string;
+}
+
+const defaultClasses:PreviewControlsClasses = {
+    root:
+      'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg focus:outline-none',
+    controls:
+      'dark flex flex-grow self-center justify-center hover-hide space-x-1 relative',
+    rightControls:
+      'dark flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide absolute right-3',
 }
 
 export const VideoTileControls = ({
@@ -47,8 +53,8 @@ export const VideoTileControls = ({
       tw,
       classes,
       defaultClasses,
-      tag: 'hmsui-previewControls',
-    }),[]);  
+      tag: 'hmsui-preview',
+    }),[]);
   return (
     <div className={`${styler('root')}`}>
       <div className={`${styler('controls')}`}>
@@ -71,7 +77,7 @@ export const VideoTileControls = ({
           {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
         </Button>
       </div>
-      <div className={`${styler('rightcontrols')}`}>
+      <div className={`${styler('rightControls')}`}>
         <Settings onChange={onChange} key={0} />
       </div>
     </div>

@@ -10,7 +10,6 @@ interface Fields {
   username: string;
   roomId: string;
   role: string;
-  endpoint: string;
 }
 
 interface JoinClasses {
@@ -48,7 +47,7 @@ export interface JoinProps extends React.DetailsHTMLAttributes<any> {
   /**
    * Event handler for join button click.
    */
-  submitOnClick: ({ username, roomId, role, endpoint }: Fields) => void;
+  submitOnClick: ({ username, roomId, role }: Fields) => void;
   /**
    * extra classes added  by user
    */
@@ -73,15 +72,13 @@ export const Join = ({
   const [username, setUserName] = useState(initialValues?.username || '');
   const [role, setRole] = useState(initialValues?.role || 'Student');
   const [roomId, setRoomId] = useState(
-    initialValues?.roomId || '607d781cdcee704ca43cafb9',
+    initialValues?.roomId || '',
   );
-  const [endpoint, setEndpoint] = useState(initialValues?.endpoint || 'qa');
 
   useEffect(() => {
     initialValues?.username && setUserName(initialValues.username);
     initialValues?.role && setRole(initialValues.role);
     initialValues?.roomId && setRoomId(initialValues.roomId);
-    initialValues?.endpoint && setEndpoint(initialValues.endpoint);
   }, [initialValues]);
 
   return (
@@ -133,22 +130,6 @@ export const Join = ({
               <option value="Viewer">Viewer</option>
             </Select>
           </div>
-          <div className={styler('inputName')}>
-            <span>Environment</span>
-          </div>
-          <div className={styler('inputFieldRoot')}>
-            <Select
-              name="endpoint"
-              defaultValue={initialValues?.endpoint || endpoint}
-              onChange={event => {
-                setEndpoint(event.target.value);
-              }}
-            >
-              <option value="qa">qa</option>
-              <option value="prod">prod</option>
-              <option value="dev">dev</option>
-            </Select>
-          </div>
           <div className={styler('joinRoot')}>
             <Button
               variant={'emphasized'}
@@ -156,8 +137,7 @@ export const Join = ({
                 submitOnClick({
                   username,
                   roomId,
-                  role,
-                  endpoint: `https://${endpoint}-init.100ms.live/init`,
+                  role
                 })
               }
             >
