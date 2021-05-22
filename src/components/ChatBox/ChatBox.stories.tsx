@@ -3,7 +3,6 @@ import { Meta, Story } from '@storybook/react';
 import { ChatBox, ChatProps } from './ChatBox';
 import ReactMarkdown from 'react-markdown';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
-import { fakeMessages } from '../../storybook/fixtures/chatFixtures';
 const gfm = require('remark-gfm');
 
 const meta: Meta = {
@@ -43,8 +42,6 @@ Default.args = {
 
 export const MarkDownChat = Template.bind({});
 MarkDownChat.args = {
-  messages: fakeMessages,
-
   autoScrollToBottom: true,
   messageFormatter: (message: string) => {
     return <ReactMarkdown remarkPlugins={[gfm]}>{message}</ReactMarkdown>;

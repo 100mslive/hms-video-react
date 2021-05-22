@@ -1,7 +1,7 @@
-import { IHMSBridge } from '../src/store';
-import { IHMSStore } from '../src/store';
-import { makeFakeMessage } from '../src/storybook/fixtures/chatFixtures';
-import { HMSPeer, HMSRoom } from '../src/store/schema';
+import { IHMSBridge } from '../../store';
+import { IHMSStore } from '../../store';
+import { makeFakeMessage } from '../fixtures/chatFixtures';
+import { HMSPeer, HMSRoom } from '../../store/schema';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
@@ -15,9 +15,24 @@ export class StoryBookSDK implements IHMSBridge {
   }
 
   join(...args: any[]): void {
-    this.log("User joined room");
+    const joinParams = args[0];
+    if (!(joinParams.username && joinParams.role && joinParams.roomId)) {
+      this.log("invalid params");
+      return;
+    }
+    this.log("User joining room");
     this.store.setState(store => {
       store.room.isConnected = true;
+      store.room.id = joinParams.roomId;
+      const newPeer: HMSPeer = {
+        name: joinParams?.username,
+        role: joinParams?.role,
+        isLocal: true,
+        id: String(this.randomNumber()),
+        auxiliaryTracks: []
+      }
+      store.room.peers.push(newPeer.id);
+      store.peers[newPeer.id] = newPeer;
     })
   }
 
@@ -81,6 +96,10 @@ export class StoryBookSDK implements IHMSBridge {
 
   private randomUser() {
     return this.randomFromArray(["You", "Tushar", "Eswar", "Aniket", "Kshitiz", "Sagar"]);
+  }
+
+  private randomNumber() {
+    return Number(Math.floor(Math.random() * 100000));
   }
 
   private randomFromArray(arr: any[]) {

@@ -19,7 +19,7 @@ const immer = <T extends HMSStore>(outerFn: (set: SetState<T>, get: GetState<T>,
 // One store is required per room
 export const createNewStore = () => {
   const hmsStore = create<HMSStore>(
-    devtools(immer(() => (createDefaultStoreState()))),
+    devtools(immer(() => (createDefaultStoreState())), "HMSStore"),
   );
   // make set state immutable
   const prevSetState = hmsStore.setState;
