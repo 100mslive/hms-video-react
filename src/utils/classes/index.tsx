@@ -1,6 +1,6 @@
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 // @ts-ignore
-import { apply } from 'twind';
+import { apply, TW } from 'twind';
 
 export const resolveClasses = (obj1: any, obj2: any) => {
   const hash: any = {};
@@ -23,6 +23,7 @@ export const camelize = (str: string): string => {
 };
 
 interface ParseClassProps<T> {
+  tw:TW;
   /**
    * Classes passed by user
    */
@@ -39,16 +40,22 @@ interface ParseClassProps<T> {
 }
 
 export const hmsUiClassParserGenerator = <T extends {}>({
+  tw,
   classes,
   customClasses,
   defaultClasses,
   tag,
 }: ParseClassProps<T>) => (s: keyof T) => {
-  const { tw } = useHMSTheme();
   const finalClasses = resolveClasses(classes || {}, defaultClasses);
+  if(tw){
   return tw(
     `${tag}-${s}`,
     (customClasses && (customClasses[s] as unknown)) as string,
     apply(finalClasses[s]),
   );
+  }
+  //handle edge case of tw not being present
+  else {
+    return (s:keyof T)=>defaultClasses[s]?defaultClasses[s]:''
+  }
 };
