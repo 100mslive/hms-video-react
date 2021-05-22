@@ -1,7 +1,8 @@
-import React, { useCallback, PropsWithChildren } from 'react';
+import React, { useMemo, PropsWithChildren } from 'react';
 import { getInitialsFromName } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Pebbles } from '../Icons/index';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 
 interface AvatarPropsWithoutNativeAttrs {
   /**
@@ -70,30 +71,30 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   avatarType = 'initial',
   ...props
 }) => {
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<AvatarClasses>({
+      tw,
       classes,
       defaultClasses,
       tag: 'hmsui-avatar',
-    }),
-    [],
-  );
+    }),[]);
 
-  const classList = [`${hu('root')}`];
+  const classList = [`${styler('root')}`];
   shape === 'circle'
-    ? classList.push(`${hu('rootShapeCircle')}`)
-    : classList.push(`${hu('rootShapeSquare')}`);
+    ? classList.push(`${styler('rootShapeCircle')}`)
+    : classList.push(`${styler('rootShapeSquare')}`);
   if (!image) {
-    classList.push(`${hu('rootDivWrapper')}`);
+    classList.push(`${styler('rootDivWrapper')}`);
   }
   if (size === 'sm') {
-    classList.push(`${hu('rootSizeSm')}`);
+    classList.push(`${styler('rootSizeSm')}`);
   } else if (size === 'md') {
-    classList.push(`${hu('rootSizeMd')}`);
+    classList.push(`${styler('rootSizeMd')}`);
   } else if (size === 'lg') {
-    classList.push(`${hu('rootSizeLg')}`);
+    classList.push(`${styler('rootSizeLg')}`);
   } else if (size === 'xl') {
-    classList.push(`${hu('rootSizeXl')}`);
+    classList.push(`${styler('rootSizeXl')}`);
   }
   const peeble =
     Pebbles[Math.floor((label?.charCodeAt(0) || 0) % Pebbles.length)];
