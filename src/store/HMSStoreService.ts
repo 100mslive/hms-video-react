@@ -1,6 +1,6 @@
 import create, { StateCreator } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { HMSStore } from './schema';
+import { createDefaultStoreState, HMSStore } from './schema';
 import produce, { Immutable, Draft } from 'immer';
 
 type ImmutableHMSStore = Immutable<HMSStore>;
@@ -39,26 +39,7 @@ export const createNewStore = () => {
   return create<HMSStore>(
     log(
       devtools(
-        immer(_set => ({
-          room: {
-            id: '',
-            isConnected: false,
-            name: '',
-            peers: [],
-            shareableLink: '',
-            hasWaitingRoom: false,
-          },
-          peers: {},
-          tracks: {},
-          messages: { byID: {}, allIDs: [] },
-          speakers: {},
-          settings: {
-            audioInputDeviceId: "",
-            audioOutputDeviceId: "",
-            videoInputDeviceId: "",
-            maxTileCount: 9,
-          }
-        })),
+        immer(_set => (createDefaultStoreState())),
       ),
     ),
   );

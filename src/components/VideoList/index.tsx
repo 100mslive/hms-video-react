@@ -1,2 +1,2 @@
 export { VideoList } from './VideoList';
-export type { VideoListProps } from './VideoList';
+export { VideoListProps } from './VideoList';

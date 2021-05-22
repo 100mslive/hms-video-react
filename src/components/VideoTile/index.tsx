@@ -1,2 +1,2 @@
 export { VideoTile } from './VideoTile';
-export type { VideoTileProps } from './VideoTile';
+export { VideoTileProps } from './VideoTile';

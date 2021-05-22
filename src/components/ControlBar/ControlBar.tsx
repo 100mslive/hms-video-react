@@ -77,7 +77,7 @@ export const ControlBar = ({
     >
       <ShareScreenIcon />
     </TwButton>,
-    <VerticalDivider key={4} />,
+    <VerticalDivider key={3} />,
     <TwButton
       iconOnly
       variant={'no-fill'}
@@ -85,7 +85,7 @@ export const ControlBar = ({
       shape={buttonDisplay}
       onClick={chatButtonOnClick}
       active={isChatOpen}
-      key={5}
+      key={4}
     >
       <ChatIcon />
     </TwButton>,
@@ -98,6 +98,7 @@ export const ControlBar = ({
       shape={buttonDisplay}
       active={isAudioMuted}
       onClick={audioButtonOnClick}
+      key={0}
     >
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </TwButton>,
@@ -108,6 +109,7 @@ export const ControlBar = ({
       shape={buttonDisplay}
       active={isVideoMuted}
       onClick={videoButtonOnClick}
+      key={1}
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
     </TwButton>,
@@ -119,6 +121,7 @@ export const ControlBar = ({
       variant={'danger'}
       onClick={leaveButtonOnClick}
       icon={<HangUpIcon />}
+      key={0}
     >
       Leave room
     </TwButton>,

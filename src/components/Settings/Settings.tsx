@@ -125,13 +125,6 @@ export const Settings = ({
   );
   const storeInitialValues = useHMSStore(selectLocalMediaSettings);
 
-  if (!initialValues) {
-    initialValues = {};
-  }
-  initialValues.selectedVideoInput = initialValues.selectedVideoInput || storeInitialValues.videoInputDeviceId;
-  initialValues.selectedAudioInput = initialValues.selectedAudioInput || storeInitialValues.audioInputDeviceId;
-  initialValues.selectedAudioOutput = initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
-
   const [open, setOpen] = useState(false);
   const [deviceGroups, setDeviceGroups] = useState<{
     audioinput: MediaDeviceInfo[];
@@ -143,6 +136,13 @@ export const Settings = ({
     videoinput: [],
   });
   const [error, setError] = useState('');
+
+  if (!initialValues) {
+    initialValues = {};
+  }
+  initialValues.selectedVideoInput = initialValues.selectedVideoInput || storeInitialValues.videoInputDeviceId;
+  initialValues.selectedAudioInput = initialValues.selectedAudioInput || storeInitialValues.audioInputDeviceId;
+  initialValues.selectedAudioOutput = initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
 
   const [values, setValues] = useState<SettingsFormProps>({
     selectedAudioInput: initialValues?.selectedAudioInput
@@ -156,6 +156,17 @@ export const Settings = ({
       : 'default',
     maxTileCount: initialValues?.maxTileCount ? initialValues?.maxTileCount : 9,
   });
+
+  useEffect(() => {
+    if (open) {
+      getLocalStream({ video: true, audio: true })
+        .then(stream => {
+          closeMediaStream(stream);
+          getLocalDevices().then(deviceGroups => setDeviceGroups(deviceGroups));
+        })
+        .catch(err => setError(err.message));
+    }
+  }, [open]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -181,17 +192,6 @@ export const Settings = ({
     }
     setValues(newValues);
   };
-
-  useEffect(() => {
-    if (open) {
-      getLocalStream({ video: true, audio: true })
-        .then(stream => {
-          closeMediaStream(stream);
-          getLocalDevices().then(deviceGroups => setDeviceGroups(deviceGroups));
-        })
-        .catch(err => setError(err.message));
-    }
-  }, [open]);
 
   const videoInput = deviceGroups['videoinput']
     ? deviceGroups['videoinput']
