@@ -73,7 +73,16 @@ export class HMSSDKBridge implements IHMSBridge {
     this.isRoomLeft = true;
   }
 
-  async startScreenShare() {
+  async setScreenShareEnabled(enabled:boolean){
+    if(enabled){
+      this.startScreenShare();
+    }
+    else{
+      this.stopScreenShare();
+    }
+  }
+
+  private async startScreenShare() {
     const isScreenShared = this.store(selectIsLocalScreenShared);
     if (!isScreenShared) {
       await this.sdk.startScreenShare(this.syncPeers.bind(this));
@@ -83,7 +92,7 @@ export class HMSSDKBridge implements IHMSBridge {
     }
   }
 
-  async stopScreenShare() {
+  private async stopScreenShare() {
     const isScreenShared = this.store(selectIsLocalScreenShared);
     if (isScreenShared) {
       await this.sdk.stopScreenShare();
@@ -142,7 +151,7 @@ export class HMSSDKBridge implements IHMSBridge {
     this.onHMSMessage(hmsMessage);
   }
 
-  async addSink(trackID: string, videoElement: HTMLVideoElement) {
+  async attachVideo(trackID: string, videoElement: HTMLVideoElement) {
     const sdkTrack = this.hmsSDKTracks[trackID];
     if (sdkTrack && sdkTrack.type === 'video') {
       await (sdkTrack as SDKHMSVideoTrack).addSink(videoElement);
@@ -151,7 +160,7 @@ export class HMSSDKBridge implements IHMSBridge {
     }
   }
 
-  async removeSink(trackID: string, videoElement: HTMLVideoElement) {
+  async removeVideo(trackID: string, videoElement: HTMLVideoElement) {
     const sdkTrack = this.hmsSDKTracks[trackID];
     if (sdkTrack && sdkTrack.type === 'video') {
       await (sdkTrack as SDKHMSVideoTrack).removeSink(videoElement);

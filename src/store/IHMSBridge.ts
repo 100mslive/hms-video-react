@@ -2,16 +2,15 @@ export interface IHMSBridge {
   join(...args: any[]): void;
   leave(): void;
 
-  startScreenShare(): void;
-  stopScreenShare(): void;
-
+  setScreenShareEnabled(enabled: boolean): void;
   sendMessage(message: string): void;
 
   setLocalAudioEnabled(enabled: boolean): void;
   setLocalVideoEnabled(enabled: boolean): void;
 
-  addSink(trackID: string, videoElement: HTMLVideoElement): void;
-  removeSink(trackID: string, videoElement: HTMLVideoElement): void;
+  attachVideo(trackID: string, videoElement: HTMLVideoElement): void;
+  removeVideo(trackID: string, videoElement: HTMLVideoElement): void;
+
 }
 
 export interface HMSError {
