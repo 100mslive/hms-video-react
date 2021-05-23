@@ -34,8 +34,8 @@ export class HMSSDKBridge implements IHMSBridge {
   private hmsSDKTracks: Record<string, SDKHMSTrack> = {};
   private readonly sdk: HMSSdk;
   private readonly store: IHMSStore;
-  private isRoomJoined: boolean = false;
-  private isRoomLeft: boolean = false;
+  private isRoomJoinCalled: boolean = false;
+  private isRoomLeaveCalled: boolean = false;
 
   constructor(sdk: HMSSdk, store: IHMSStore) {
     this.sdk = sdk;
@@ -43,34 +43,33 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   join(config: sdkTypes.HMSConfig) {
-    if (this.isRoomJoined) {
+    if (this.isRoomJoinCalled) {
       this.logPossibleInconsistency('room join is called again');
       return; // ignore
     }
-    this.sdk.join(config, {
-      onJoin: this.onJoin.bind(this),
-      onRoomUpdate: this.onRoomUpdate.bind(this),
-      onPeerUpdate: this.onPeerUpdate.bind(this),
-      onTrackUpdate: this.onTrackUpdate.bind(this),
-      onMessageReceived: this.onMessageReceived.bind(this),
-      onError: this.onError.bind(this),
-    });
-    this.sdk.addAudioListener({
-      onAudioLevelUpdate: this.onAudioLevelUpdate.bind(this),
-    });
-    this.isRoomJoined = true;
+    try {
+      this.sdkJoinWithListeners(config);
+      this.isRoomJoinCalled = true;
+    } catch (err) {
+      this.isRoomJoinCalled = false; // so it can be called again if needed
+      HMSLogger.e("Failed to connect to room - ", err);
+      return;
+    }
   }
 
-  leave(): void {
-    if (this.isRoomLeft) {
+  async leave() {
+    if (this.isRoomLeaveCalled) {
       this.logPossibleInconsistency('room leave is called again');
       return; // ignore
     }
-    this.sdk.leave().then(() => {
+    return this.sdk.leave().then(() => {
+      this.isRoomLeaveCalled = true;
       HMSLogger.i('sdk', 'left room');
+      this.store.setState(store => {
+        store.room.isConnected = false;
+      })
       this.store.destroy();
     });
-    this.isRoomLeft = true;
   }
 
   async setScreenShareEnabled(enabled:boolean){
@@ -78,26 +77,6 @@ export class HMSSDKBridge implements IHMSBridge {
       await this.startScreenShare();
     } else{
       await this.stopScreenShare();
-    }
-  }
-
-  private async startScreenShare() {
-    const isScreenShared = this.store(selectIsLocalScreenShared);
-    if (!isScreenShared) {
-      await this.sdk.startScreenShare(this.syncPeers.bind(this));
-      this.syncPeers();
-    } else {
-      this.logPossibleInconsistency("start screenshare is called while it's on")
-    }
-  }
-
-  private async stopScreenShare() {
-    const isScreenShared = this.store(selectIsLocalScreenShared);
-    if (isScreenShared) {
-      await this.sdk.stopScreenShare();
-      this.syncPeers();
-    } else {
-      this.logPossibleInconsistency("stop screenshare is called while it's not on")
     }
   }
 
@@ -111,7 +90,6 @@ export class HMSSDKBridge implements IHMSBridge {
         this.logPossibleInconsistency('local audio track muted states.');
       }
       await this.setEnabledTrack(trackID, enabled);
-      this.syncPeers();
     }
   }
 
@@ -123,18 +101,7 @@ export class HMSSDKBridge implements IHMSBridge {
         // why would same value will be set again?
         this.logPossibleInconsistency('local video track muted states.');
       }
-      this.store.setState(store => {  // show on UI immediately
-        store.tracks[trackID].enabled = enabled;
-      })
-      try {
-        await this.setEnabledTrack(trackID, enabled);
-      } catch (err) {
-        // rollback now
-        this.store.setState(store => {
-          store.tracks[trackID].enabled = !enabled;
-        })
-      }
-      this.syncPeers();
+      await this.setEnabledTrack(trackID, enabled);
     }
   }
 
@@ -166,6 +133,59 @@ export class HMSSDKBridge implements IHMSBridge {
     } else {
       this.logPossibleInconsistency('no video track found to remove sink');
     }
+  }
+
+  private sdkJoinWithListeners(config: sdkTypes.HMSConfig) {
+    this.sdk.join(config, {
+      onJoin: this.onJoin.bind(this),
+      onRoomUpdate: this.onRoomUpdate.bind(this),
+      onPeerUpdate: this.onPeerUpdate.bind(this),
+      onTrackUpdate: this.onTrackUpdate.bind(this),
+      onMessageReceived: this.onMessageReceived.bind(this),
+      onError: this.onError.bind(this),
+    });
+    this.sdk.addAudioListener({
+      onAudioLevelUpdate: this.onAudioLevelUpdate.bind(this),
+    });
+  }
+
+  private async startScreenShare() {
+    const isScreenShared = this.store(selectIsLocalScreenShared);
+    if (!isScreenShared) {
+      await this.sdk.startScreenShare(this.syncPeers.bind(this));
+      this.syncPeers();
+    } else {
+      this.logPossibleInconsistency("start screenshare is called while it's on")
+    }
+  }
+
+  private async stopScreenShare() {
+    const isScreenShared = this.store(selectIsLocalScreenShared);
+    if (isScreenShared) {
+      await this.sdk.stopScreenShare();
+      this.syncPeers();
+    } else {
+      this.logPossibleInconsistency("stop screenshare is called while it's not on")
+    }
+  }
+
+  private async setEnabledTrack(trackID: string, enabled: boolean) {
+    this.store.setState(store => {  // show on UI immediately
+      if (!store.tracks[trackID]) {
+        this.logPossibleInconsistency("track id not found for setEnabled");
+      } else {
+        store.tracks[trackID].enabled = enabled;
+      }
+    })
+    try {
+      await this.setEnabledSDKTrack(trackID, enabled); // do the operation
+    } catch (err) {
+      // rollback on failure
+      this.store.setState(store => {
+        store.tracks[trackID].enabled = !enabled;
+      })
+    }
+    this.syncPeers();
   }
 
   protected syncPeers() {
@@ -313,7 +333,7 @@ export class HMSSDKBridge implements IHMSBridge {
     HMSLogger.e('sdkError', 'received error from sdk', error);
   }
 
-  private async setEnabledTrack(trackID: string, enabled: boolean) {
+  private async setEnabledSDKTrack(trackID: string, enabled: boolean) {
     const track = this.hmsSDKTracks[trackID];
     if (track) {
       await track.setEnabled(enabled);

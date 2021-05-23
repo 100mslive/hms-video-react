@@ -31,7 +31,7 @@ const defaultClasses: HeaderClasses = {
 
 export const Header = ({
   speaker,
-  leftComponents = [<Logo />],
+  leftComponents = [<Logo key={0}/>],
   centerComponents = [
     speaker ? (
       <div

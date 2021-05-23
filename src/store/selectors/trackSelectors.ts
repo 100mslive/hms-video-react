@@ -8,12 +8,12 @@ export const trackIDSelector = (store: HMSStore, trackID: HMSTrackID) =>
 
 export const selectLocalAudioTrackID = createSelector(
   selectLocalPeer,
-  peer => peer.audioTrack,
+  peer => peer?.audioTrack,
 );
 
 export const selectLocalVideoTrackID = createSelector(
   selectLocalPeer,
-  peer => peer.videoTrack,
+  peer => peer?.videoTrack,
 );
 
 export const selectIsLocalAudioEnabled = (store: HMSStore) => {
@@ -52,7 +52,7 @@ export const selectPeerScreenSharing = (store: HMSStore): HMSPeer | undefined =>
 }
 
 function isScreenSharing(store: HMSStore, peer: HMSPeer) {
-  return peer.auxiliaryTracks.some(trackID => {
+  return peer && peer.auxiliaryTracks.some(trackID => {
     if (trackID && store.tracks[trackID]) {
       const track = store.tracks[trackID];
       return track.type === 'video' && track.source === 'screen';
