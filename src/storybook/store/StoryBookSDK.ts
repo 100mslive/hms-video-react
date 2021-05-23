@@ -9,6 +9,9 @@ storybook or writing functional tests.
  */
 export class StoryBookSDK implements IHMSBridge {
   private readonly store: IHMSStore;
+  private videoURLs: string[] = [];
+  private dummyTrackURLs: Record<string, string> = {};
+  private counter: number = 0;
 
   constructor(store: IHMSStore) {
     this.store = store;
@@ -37,6 +40,9 @@ export class StoryBookSDK implements IHMSBridge {
   }
 
   attachVideo(trackID: string, videoElement: HTMLVideoElement): void {
+    if (this.dummyTrackURLs[trackID]) {
+      videoElement.src = this.dummyTrackURLs[trackID];
+    }
     this.log("video attached");
   }
 
@@ -48,6 +54,7 @@ export class StoryBookSDK implements IHMSBridge {
   }
 
   removeVideo(trackID: string, videoElement: HTMLVideoElement): void {
+    videoElement.srcObject = null;
     this.log("video removed");
   }
 
@@ -80,6 +87,12 @@ export class StoryBookSDK implements IHMSBridge {
   }
 
   addTestPeerAndSpeaker(peer: HMSPeer) {
+    const randomURL = this.randomFromArray(this.videoURLs);
+    const videoTrackID = String(this.videoURLs.indexOf(randomURL) || this.counter++);
+    const audioTrackID = String(this.counter++);
+    this.dummyTrackURLs[videoTrackID] = randomURL;
+    peer.audioTrack = audioTrackID;
+    peer.videoTrack = videoTrackID;
     this.store.setState(store => {
       store.peers[peer.id] = peer;
       store.room.peers.push(peer.id);
@@ -87,7 +100,29 @@ export class StoryBookSDK implements IHMSBridge {
         id: peer.id,
         audioLevel: this.randomFromArray([0, 10, 20, 50, 70, 80, 100])
       }
+      if (peer.audioTrack) {
+        store.tracks[videoTrackID] = {
+          enabled: true, id: audioTrackID, type: "audio"
+        };
+      }
+      if (peer.videoTrack) {
+        store.tracks[videoTrackID] = {
+          enabled: true, id: videoTrackID, type: "video"
+        };
+      }
     })
+  }
+
+  addTestVideoURLs(urls: string[]) {
+    this.videoURLs = urls;
+  }
+
+  getRandomPeer(): HMSPeer {
+    return this.randomFromArray(this.getPeers());
+  }
+
+  getPeers(): HMSPeer[] {
+    return Object.values(this.store(store => store.peers));
   }
 
   private log(...args: any[]) {
@@ -102,7 +137,7 @@ export class StoryBookSDK implements IHMSBridge {
     return Number(Math.floor(Math.random() * 100000));
   }
 
-  private randomFromArray(arr: any[]) {
+  private randomFromArray<T>(arr: T[]) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 

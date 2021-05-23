@@ -3,11 +3,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { VideoTile, VideoTileProps } from '.';
 import VideoTileDocs from './VideoTile.mdx';
 import { getVideoTileLabel } from '../../utils';
-import { loadStream } from '../../storybook/utils';
 import { VideoTileControls } from './Controls';
 import { MicOffIcon, MicOnIcon } from '../Icons';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
-import { HMSPeer } from '../../store/schema';
+import { storyBookSDK } from '../../storybook/store/SetUpFakeStore';
 
 declare global {
   interface HTMLVideoElement {
@@ -55,28 +54,6 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, [args.isAudioMuted]);
 
-  // useEffect(() => {
-  //   // if (testVideoRef.current && stream) {
-  //   //   testVideoRef.current.srcObject = stream;
-  //   // }
-  // }, [stream]);
-
-  useEffect(() => {
-    if (dummyVideoRef) {
-      return loadStream({
-        videoTrack,
-        audioTrack,
-        isLocal: args.isLocal,
-        dummyVideoRef,
-        setVideoTrack,
-        setAudioTrack,
-      });
-    } else {
-      return;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.isLocal]);
-
   return (
     <HMSThemeProvider
       config={{}}
@@ -103,13 +80,12 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
           }}
         ></video>
         {/* <video width="400" height="225" loop autoPlay muted ref={testVideoRef}/> */}
-        {videoTrack && audioTrack && (
-          <VideoTile
-            {...args}
-            videoTrack={videoTrack}
-            audioTrack={audioTrack}
-          />
-        )}
+        <VideoTile
+          {...args}
+          peer={(() => storyBookSDK.getRandomPeer())()}
+          videoTrack={videoTrack}
+          audioTrack={audioTrack}
+        />
       </div>
     </HMSThemeProvider>
   );
@@ -119,38 +95,6 @@ const MeetTemplate: Story<VideoTileProps> = args => {
   const [videoTrack, setVideoTrack] = useState<MediaStreamTrack>();
   const [audioTrack, setAudioTrack] = useState<MediaStreamTrack>();
   const dummyVideoRef = useRef<HTMLVideoElement>(null);
-
-  // useEffect(() => {
-  //   const track = stream?.getVideoTracks()[0];
-  //   if (track) {
-  //     track.enabled = !args.isVideoMuted;
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [args.isVideoMuted]);
-
-  // useEffect(() => {
-  //   const track = stream?.getAudioTracks()[0];
-  //   if (track) {
-  //     track.enabled = !args.isAudioMuted;
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [args.isAudioMuted]);
-
-  useEffect(() => {
-    if (dummyVideoRef) {
-      return loadStream({
-        videoTrack,
-        audioTrack,
-        isLocal: args.isLocal,
-        dummyVideoRef,
-        setVideoTrack,
-        setAudioTrack,
-      });
-    } else {
-      return;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [args.isLocal]);
 
   return (
     <>
@@ -175,9 +119,10 @@ const MeetTemplate: Story<VideoTileProps> = args => {
               }
             }}
           ></video>
-          {videoTrack && audioTrack && (
+          {
             <VideoTile
               {...args}
+              peer={(() => storyBookSDK.getRandomPeer())()}
               videoTrack={videoTrack}
               audioTrack={audioTrack}
               controlsComponent={
@@ -191,7 +136,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                   )}
                   <VideoTileControls
                     label={getVideoTileLabel(
-                      args.peer.name,
+                      "Tushar",
                       args.isLocal || false,
                     )}
                     isAudioMuted={args.isAudioMuted}
@@ -205,7 +150,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                 </>
               }
             />
-          )}
+          }
         </div>
       </HMSThemeProvider>
     </>
@@ -222,7 +167,6 @@ export const ClassesOverrideVideoTile = Template.bind({});
 
 DefaultVideoTile.args = {
   isLocal: true,
-  peer: { id: '123', name: 'Eswar' } as HMSPeer,
   aspectRatio: { width: 16, height: 9 },
   displayShape: 'rectangle',
   showAudioLevel: true,
@@ -233,7 +177,6 @@ DefaultVideoTile.args = {
 
 GoogleMeetVideoTile.args = {
   isLocal: true,
-  peer: { id: '123', name: 'Eswar' } as HMSPeer,
   aspectRatio: { width: 16, height: 9 },
   displayShape: 'rectangle',
   showAudioLevel: true,
@@ -243,7 +186,6 @@ GoogleMeetVideoTile.args = {
 
 CampFireVideoTile.args = {
   isLocal: true,
-  peer: { id: '123', name: 'Eswar' } as HMSPeer,
   displayShape: 'circle',
   showAudioLevel: true,
   audioLevelDisplayType: 'border',
@@ -252,7 +194,6 @@ CampFireVideoTile.args = {
 
 ClassesOverrideVideoTile.args = {
   isLocal: true,
-  peer: { id: '123', name: 'Eswar' } as HMSPeer,
   aspectRatio: { width: 16, height: 9 },
   displayShape: 'rectangle',
   showAudioLevel: true,

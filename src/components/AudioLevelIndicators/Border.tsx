@@ -36,7 +36,7 @@ export const AudioLevelBorder = ({
       tag: 'hmsui-audioLevelIndicator',
     }),[]);
 
-    const borderStyle = {
+  const borderStyle = {
     transition: 'box-shadow 0.4s ease-in-out',
     boxShadow: level
       ? `0px 0px ${24 * sigmoid(level)}px ${color}, 0px 0px ${16 *
