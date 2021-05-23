@@ -20,6 +20,9 @@ import {
   selectPeerNameByID,
   selectPeersMap,
   selectTracksMap,
+  selectRoom,
+  selectPeerByID,
+  selectTrackByID,
 } from '../selectors';
 import HMSLogger from '../../utils/ui-logger';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
@@ -29,6 +32,8 @@ import SDKHMSVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSVide
 import SDKHMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import HMSLocalAudioTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSLocalAudioTrack';
 import HMSLocalVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSLocalVideoTrack';
+import { INotificationsManager } from '../IHMSNotification';
+import { NotificationsManager } from './NotificationsManager'
 
 export class HMSSDKBridge implements IHMSBridge {
   private hmsSDKTracks: Record<string, SDKHMSTrack> = {};
@@ -36,6 +41,7 @@ export class HMSSDKBridge implements IHMSBridge {
   private readonly store: IHMSStore;
   private isRoomJoined: boolean = false;
   private isRoomLeft: boolean = false;
+  private readonly notificationsManager:INotificationsManager = new NotificationsManager();
 
   constructor(sdk: HMSSdk, store: IHMSStore) {
     this.sdk = sdk;
@@ -169,6 +175,10 @@ export class HMSSDKBridge implements IHMSBridge {
     }
   }
 
+  addEventListener(callback:(event:CustomEventInit) => void) {
+    this.notificationsManager.addNotificationListener(callback);
+  }
+
   protected syncPeers() {
     const sdkPeers: sdkTypes.HMSPeer[] = this.sdk.getPeers();
     const hmsPeers: Record<HMSPeerID, HMSPeer> = {};
@@ -245,10 +255,15 @@ export class HMSSDKBridge implements IHMSBridge {
       store.room.isConnected = true;
     })
     this.syncPeers();
+    //TODO Should we move these statements to callback of setState?
+    const storeRoom = this.store(selectRoom);
+    this.notificationsManager.sendNotification({id:'23',type:'join',data:{room:storeRoom}})
   }
 
-  protected onRoomUpdate() {
+  protected onRoomUpdate(type:sdkTypes.HMSRoomUpdate, sdkRoom:sdkTypes.HMSRoom) {
     this.syncPeers();
+    const storeRoom = this.store(selectRoom);    
+    this.notificationsManager.sendNotification({id:'23',type:'room-update',data:{room:storeRoom, updateType:type}})
   }
 
   protected onPeerUpdate(
@@ -270,10 +285,15 @@ export class HMSSDKBridge implements IHMSBridge {
     } else {
       this.syncPeers();
     }
+    const storePeer = selectPeerByID(this.store.getState(),sdkPeer.peerId);
+    this.notificationsManager.sendNotification({id:'23',type:'peer-update',data:{peer:storePeer, updateType:type}})
   }
 
-  protected onTrackUpdate() {
+  protected onTrackUpdate(type:sdkTypes.HMSTrackUpdate, sdkTrack:SDKHMSTrack, sdkPeer:sdkTypes.HMSPeer) {
     this.syncPeers();
+    const storePeer = selectPeerByID(this.store.getState(),sdkPeer.peerId);
+    const storeTrack = selectTrackByID(this.store.getState(),sdkTrack.trackId);
+    this.notificationsManager.sendNotification({id:'23',type:'track-update',data:{track:storeTrack, peer:storePeer, updateType:type}})
   }
 
   protected onMessageReceived(sdkMessage: sdkTypes.HMSMessage) {
@@ -312,6 +332,7 @@ export class HMSSDKBridge implements IHMSBridge {
   protected onError(error: SDKHMSException) {
     // send notification
     HMSLogger.e('sdkError', 'received error from sdk', error);
+    this.notificationsManager.sendNotification({id:'23',type:'error',data:{error:SDKToHMS.convertError(error)}})
   }
 
   private async setEnabledTrack(trackID: string, enabled: boolean) {

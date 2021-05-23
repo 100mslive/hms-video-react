@@ -18,3 +18,26 @@ export enum HMSPeerUpdate {
   STARTED_SPEAKING,
   STOPPED_SPEAKING,
 }
+
+export enum HMSTrackUpdate {
+  TRACK_ADDED,
+  TRACK_REMOVED,
+  TRACK_MUTED,
+  TRACK_UNMUTED,
+  TRACK_DESCRIPTION_CHANGED,
+}
+
+export enum HMSRoomUpdate {
+  PEER_ADDED,
+  PEER_REMOVED,
+  PEER_KNOCKED,
+  ROOM_TYPE_CHANGED,
+  METADATA_UPDATED,
+  SCREENSHARE_STARTED,
+  SCREENSHARE_STOPPED,
+  DEFAULT_UPDATE,
+}
+
+//TODO temporary solutio till HMSException is exported from interfaces in SDK
+export interface HMSException extends Error{
+};

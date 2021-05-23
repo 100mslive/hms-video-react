@@ -10,3 +10,14 @@ export interface HMSRoom {
   shareableLink: string;
   hasWaitingRoom: boolean;
 }
+
+export enum HMSRoomUpdate {
+  PEER_ADDED,
+  PEER_REMOVED,
+  PEER_KNOCKED,
+  ROOM_TYPE_CHANGED,
+  METADATA_UPDATED,
+  SCREENSHARE_STARTED,
+  SCREENSHARE_STOPPED,
+  DEFAULT_UPDATE,
+}

@@ -27,3 +27,22 @@ export interface HMSSpeaker {
   id: HMSPeerID;
   audioLevel?: number;
 }
+
+export enum HMSPeerUpdate {
+  PEER_JOINED,
+  PEER_LEFT,
+  AUDIO_TOGGLED,
+  VIDEO_TOGGLED,
+  BECAME_DOMINANT_SPEAKER,
+  RESIGNED_DOMINANT_SPEAKER,
+  STARTED_SPEAKING,
+  STOPPED_SPEAKING,
+}
+
+export enum HMSTrackUpdate {
+  TRACK_ADDED,
+  TRACK_REMOVED,
+  TRACK_MUTED,
+  TRACK_UNMUTED,
+  TRACK_DESCRIPTION_CHANGED,
+}

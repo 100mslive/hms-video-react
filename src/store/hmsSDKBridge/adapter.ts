@@ -1,4 +1,4 @@
-import { HMSPeer, HMSMessage, HMSTrack, HMSRoom } from '../schema';
+import { HMSPeer, HMSMessage, HMSTrack, HMSRoom, HMSException } from '../schema';
 import SDKHMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 
 import * as sdkTypes from './sdkTypes';
@@ -45,5 +45,11 @@ export class SDKToHMS {
       type: sdkMessage.type,
       message: sdkMessage.message,
     };
+  }
+
+  static convertError(
+    sdkError:sdkTypes.HMSException
+  ): HMSException {
+    return sdkError
   }
 }

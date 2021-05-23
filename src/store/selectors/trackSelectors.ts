@@ -2,6 +2,7 @@ import { HMSPeer, HMSStore, HMSTrackID } from '../schema';
 import { selectLocalPeer, selectPeerByID, selectPeers } from './peerSelectors';
 import { createSelector } from 'reselect';
 
+const selectTrackID = (store: HMSStore, trackID: HMSTrackID | undefined) => trackID;
 export const selectTracksMap = (store: HMSStore) => store.tracks;
 export const trackIDSelector = (store: HMSStore, trackID: HMSTrackID) =>
   trackID;
@@ -14,6 +15,11 @@ export const selectLocalAudioTrackID = createSelector(
 export const selectLocalVideoTrackID = createSelector(
   selectLocalPeer,
   peer => peer.videoTrack,
+);
+
+export const selectTrackByID = createSelector(
+  [selectTracksMap, selectTrackID],
+  (storeTracks, trackID) => (trackID ? storeTracks[trackID] : null),
 );
 
 export const selectIsLocalAudioEnabled = (store: HMSStore) => {

@@ -54,3 +54,14 @@ export const useHMSActions = () => {
   }
   return HMSContextConsumer.sdk;
 };
+
+/**
+ * useHMSNotifications is a hook which can be used to attach an event listener to all events
+ */
+export const useHMSNotifications = (callback:(event:CustomEventInit) => void) => {
+  const HMSContextConsumer = useContext(HMSContext);
+  if (!HMSContextConsumer) {
+    throw new Error('HMSContext state variables are not set');
+  }
+  HMSContextConsumer.sdk.addEventListener(callback);
+}
