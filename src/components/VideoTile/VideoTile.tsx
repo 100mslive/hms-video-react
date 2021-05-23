@@ -18,7 +18,7 @@ export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * If showScreen is true, user's screenshare will be shown instead of camera
    */
-  showScreen: false,
+  showScreen?: boolean,
 
   /**
    * Indicates if the stream's audio is muted or not. Ignored if showAudioMuteStatus is false.
@@ -96,9 +96,10 @@ const customClasses: VideoTileClasses = {
 };
 
 export const VideoTile = ({
+  videoTrack,
   peer,
+  hmsVideoTrack,
   showScreen = false,
-  isLocal = false,
   audioLevel = 0,
   isAudioMuted = false,
   isVideoMuted = false,
@@ -125,9 +126,10 @@ export const VideoTile = ({
     }),[]);
 
     const selectVideoByPeerID = showScreen ? selectScreenShareByPeerID : selectCameraStreamByPeerID;
-
-    const hmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
+    const storeHmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
     const storeIsAudioMuted = !useHMSStore(store => selectIsPeerAudioEnabled(store, peer.id));
+
+    hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
 
     if (isAudioMuted === undefined || isAudioMuted ===  null) {
       isAudioMuted = storeIsAudioMuted;
@@ -135,7 +137,7 @@ export const VideoTile = ({
 
     const label = getVideoTileLabel(
       peer.name,
-      isLocal,
+      peer.isLocal,
       hmsVideoTrack?.source,
     );
   try {
@@ -149,9 +151,15 @@ export const VideoTile = ({
   avatarType = avatarType || 'initial';
 
   let { width, height } = { width: 1, height: 1 };
-  if (hmsVideoTrack?.width && hmsVideoTrack.height) {
-    width = hmsVideoTrack.width;
-    height = hmsVideoTrack.height;
+  if (hmsVideoTrack) {
+    if (hmsVideoTrack?.width && hmsVideoTrack.height) {
+      width = hmsVideoTrack.width;
+      height = hmsVideoTrack.height;
+    }
+  } else if (videoTrack) {
+    let trackSettings = videoTrack.getSettings();
+    width = trackSettings.width || width;
+    height = trackSettings.height || width;
   }
 
   const impliedAspectRatio =
@@ -181,9 +189,11 @@ export const VideoTile = ({
           <Video
             peerId={peer.id}
             hmsVideoTrack={hmsVideoTrack}
+            videoTrack={videoTrack}
             objectFit={objectFit}
-            isLocal={isLocal}
+            isLocal={peer.isLocal}
             showAudioLevel={showAudioLevel}
+            audioLevel={audioLevel}
             audioLevelDisplayType={audioLevelDisplayType}
             audioLevelDisplayColor={audioLevelDisplayColor}
             displayShape={displayShape}
@@ -208,7 +218,7 @@ export const VideoTile = ({
           ) : (
             // TODO circle controls are broken now
             <VideoTileControls
-              isLocal={isLocal}
+              isLocal={peer.isLocal}
               label={label}
               isAudioMuted={isAudioMuted}
               showAudioMuteStatus={showAudioMuteStatus}

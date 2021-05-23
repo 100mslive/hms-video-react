@@ -36,6 +36,7 @@ export const Header = ({
     speaker ? (
       <div
         className={`self-center focus:outline-none text-lg flex items-center`}
+        key={0}
       >
         <div className="inline-block">
           <VolumeIcon />

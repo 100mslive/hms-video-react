@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
-import { AudioLevelDisplayType, MediaStreamWithInfo } from '../../types';
+import { AudioLevelDisplayType } from '../../types';
 import { VideoTile } from '../VideoTile';
 import {
-  chunkStreams,
+  chunkElements,
   getModeAspectRatio,
   calculateLayoutSizes,
 } from '../../utils';
@@ -11,6 +11,10 @@ import { useResizeDetector } from 'react-resize-detector';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { HMSPeer, HMSPeerID, HMSTrack, HMSTrackID } from '../../store/schema';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectTracksMap } from '../../store/selectors';
+import { getVideoTracksFromPeers, TrackWithPeer } from '../../utils/videoListUtils';
 
 export interface VideoListClasses extends VideoTileClasses {
   /**
@@ -44,9 +48,16 @@ export interface VideoListClasses extends VideoTileClasses {
 }
 export interface VideoListProps {
   /**
-    MediaStream to be displayed.
+    HMS Peers who need to be displayed
     */
-  streams: MediaStreamWithInfo[];
+  peers: HMSPeer[];
+  /**
+   * a function which tells whether to show the screenshare for a peer. A peer
+   * id is passed and a boolean value is expected. You can use it to disable
+   * showing main screenshare if you're already showing it in a bigger tile for eg.
+   * @param peerID the peer ID for whom video tile is going to be rendered
+   */
+  showScreenFn?: (peerID: HMSPeerID) => boolean,
   /**
    * Max tiles in a  page. Overrides maxRowCount and maxColCount
    */
@@ -77,7 +88,7 @@ export interface VideoListProps {
   objectFit?: 'contain' | 'cover';
   /**
    Aspect ratio in which the video tile should be shown, will only be applied if display shape is rectangle.
-   If undefined, then the most common aspect ratio among all video streams will be chosen
+   If undefined, then the most common aspect ratio among all peer's feed will be chosen
    */
   aspectRatio?: {
     width: number;
@@ -126,7 +137,8 @@ const defaultClasses: VideoListClasses = {
 };
 
 export const VideoList = ({
-  streams,
+  peers,
+  showScreenFn = () => true,
   overflow = 'scroll-x',
   maxTileCount,
   tileArrangeDirection = 'row',
@@ -153,6 +165,8 @@ export const VideoList = ({
       tag: 'hmsui-videoList',
     }),[]);
 
+  const tracksMap: Record<HMSTrackID, HMSTrack> = useHMSStore(selectTracksMap);
+
   const { width = 0, height = 0, ref } = useResizeDetector();
 
   try {
@@ -164,20 +178,22 @@ export const VideoList = ({
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
+  const tracksWithPeer: TrackWithPeer[] = getVideoTracksFromPeers(peers, tracksMap, showScreenFn);
+
   const finalAspectRatio = useMemo(() => {
     if (aspectRatio) {
       return aspectRatio;
     } else {
-      const modeAspectRatio = getModeAspectRatio(streams);
+      const modeAspectRatio = getModeAspectRatio(tracksWithPeer);
       //Default to 1 if there are no video tracks
       return {
-        width: !isNaN(modeAspectRatio) && modeAspectRatio ? modeAspectRatio : 1,
+        width: modeAspectRatio ? modeAspectRatio : 1,
         height: 1,
       };
     }
-  }, [aspectRatio, streams]);
+  }, [aspectRatio, tracksWithPeer]);
 
-  const count = streams.length;
+  const count = tracksWithPeer.length;
   const {
     tilesInFirstPage,
     defaultWidth,
@@ -206,9 +222,9 @@ export const VideoList = ({
     finalAspectRatio,
   ]);
 
-  const chunkedStreams = useMemo(() => {
-    return chunkStreams({
-      streams,
+  const chunkedTracksWithPeer = useMemo(() => {
+    return chunkElements<TrackWithPeer>({
+      elements: tracksWithPeer,
       tilesInFirstPage,
       onlyOnePage: overflow === 'hidden',
       isLastPageDifferentFromFirstPage,
@@ -218,7 +234,7 @@ export const VideoList = ({
       lastPageHeight,
     });
   }, [
-    streams,
+    tracksWithPeer,
     tilesInFirstPage,
     overflow,
     width,
@@ -230,9 +246,9 @@ export const VideoList = ({
 
   return (
     <div className={`${styler('root')}`} ref={ref}>
-      {chunkedStreams && chunkedStreams.length > 0 && (
+      {chunkedTracksWithPeer && chunkedTracksWithPeer.length > 0 && (
         <Carousel>
-          {chunkedStreams.map((streams, page) => {
+          {chunkedTracksWithPeer.map((tracksPeersOnOnePage, page) => {
             return (
               <div className={`${styler('sliderInner')}`} key={page}>
                 <div
@@ -244,19 +260,16 @@ export const VideoList = ({
                       : tileArrangeDirection
                   } `}
                 >
-                  {streams.map((stream, index) => {
+                  {tracksPeersOnOnePage.map((trackPeer, index) => {
                     return (
                       <div
-                        style={{ height: stream.height, width: stream.width }}
-                        key={stream.peer.id}
+                        style={{ height: trackPeer.height, width: trackPeer.width }}
+                        key={trackPeer.track.id}
                         className={`${styler('videoTileContainer')}`}
                       >
                         <VideoTile
-                          audioTrack={stream.audioTrack}
-                          videoTrack={stream.videoTrack}
-                          isLocal={stream.peer.isLocal}
-                          peer={stream.peer}
-                          hmsVideoTrack={stream.hmsVideoTrack}
+                          peer={trackPeer.peer}
+                          hmsVideoTrack={trackPeer.track}
                           objectFit={objectFit}
                           displayShape={displayShape}
                           audioLevelDisplayType={audioLevelDisplayType}

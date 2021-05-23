@@ -1,4 +1,3 @@
-import { MediaStreamWithInfo } from '../../types';
 import { getUserMedia } from '../../utils/preview';
 import { HMSTrackSource } from '../../store/schema';
 import React from 'react';

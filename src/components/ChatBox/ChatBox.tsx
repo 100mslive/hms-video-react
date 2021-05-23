@@ -229,7 +229,7 @@ export const ChatBox = ({
               </div>
             ) : (
               /* messageRoot */
-              <div className={styler('messageRoot')}>
+              <div className={styler('messageRoot')} key={message.id}>
                 {/* messageInfo */}
                 <div className={styler('messageInfo')}>
                   {/* messageSender */}

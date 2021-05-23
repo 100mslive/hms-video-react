@@ -39,7 +39,8 @@ export interface VideoClasses {
 export interface VideoProps {
   //TODO make one of audioTrack and videoTrack mandatory instead of both
   /**
-   * Video Track to be displayed.
+   * Native Video Track to be displayed. This is auto inferred and not required if you
+   * pass in peer and hmsVideoTrack
    */
   videoTrack?: MediaStreamTrack;
   /**

@@ -4,10 +4,10 @@ import { create } from 'twind';
 import clsx from 'clsx';
 import { reduce } from 'lodash';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
-import { MediaStreamWithInfo } from '../types';
 
 import { theme as defaultTailwindConfig } from '../defaultTheme';
-import { HMSTrackSource } from '../store/schema';
+import { HMSTrack, HMSTrackSource } from '../store/schema';
+import { TrackWithPeer } from './videoListUtils';
 
 const getVideoTileLabel = (
   peerName: string,
@@ -63,18 +63,17 @@ interface GetTileSizesInList {
   };
 }
 
-const getModeAspectRatio = (streams: MediaStreamWithInfo[]) => {
+/**
+ * get the aspect ration occurring with the highest frequency
+ * @param tracks - video tracks to infer aspect ratios from
+ */
+const getModeAspectRatio = (tracks: TrackWithPeer[]): number | null => {
   return mode(
-    streams
-      .filter(
-        stream =>
-          stream.videoTrack &&
-          stream.videoTrack.getSettings().width &&
-          stream.videoTrack.getSettings().height,
-      )
-      .map(stream => {
-        const width = stream.videoTrack?.getSettings().width;
-        const height = stream.videoTrack?.getSettings().height;
+    tracks
+      .filter(track => track?.track.width && track?.track.height)
+      .map(track => {
+        const width = track?.track.width;
+        const height = track?.track.height;
         //Default to 1 if there are no video tracks
         return (width ? width : 1) / (height ? height : 1);
       }),
@@ -331,8 +330,8 @@ function calculateLayoutSizes({
   };
 }
 
-interface ChunkStreams {
-  streams: MediaStreamWithInfo[];
+interface ChunkElements<T> {
+  elements: T[];
   tilesInFirstPage: number;
   onlyOnePage: boolean;
   isLastPageDifferentFromFirstPage: boolean;
@@ -342,8 +341,13 @@ interface ChunkStreams {
   lastPageHeight: number;
 }
 
-const chunkStreams = ({
-  streams,
+/**
+ * Given a list of tracks/elements and some constraints, group the tracks in separate pages.
+ * @return 2D list for every page which has the original element and height and width
+ * for its tile.
+ */
+const chunkElements = <T>({
+  elements,
   tilesInFirstPage,
   onlyOnePage,
   isLastPageDifferentFromFirstPage,
@@ -351,10 +355,10 @@ const chunkStreams = ({
   defaultHeight,
   lastPageWidth,
   lastPageHeight,
-}: ChunkStreams) => {
-  const chunks = chunk(streams, tilesInFirstPage, onlyOnePage);
+}: ChunkElements<T>): (T & {width: number, height: number})[][] => {
+  const chunks: T[][] = chunk<T>(elements, tilesInFirstPage, onlyOnePage);
   return chunks.map((chunk, page) => {
-    return chunk.map(stream => {
+    return chunk.map(element => {
       const isLastPage = page === chunks.length - 1;
       const width =
         isLastPageDifferentFromFirstPage && isLastPage
@@ -364,20 +368,24 @@ const chunkStreams = ({
         isLastPageDifferentFromFirstPage && isLastPage
           ? lastPageHeight
           : defaultHeight;
-      return { ...stream, width, height };
+      return {...element, height, width};
     });
   });
 };
 
-function mode(array: any[]) {
+/**
+ * Mathematical mode - the element with the highest occurrence in an array
+ * @param array
+ */
+function mode(array: number[]): number | null {
   if (array.length === 0) {
     return null;
   }
-  var modeMap = {} as any;
-  var maxEl = array[0],
-    maxCount = 1;
-  for (var i = 0; i < array.length; i++) {
-    var el = array[i];
+  const modeMap: Record<number, number> = {};
+  let maxEl = array[0];
+  let maxCount = 1;
+  for (let i = 0; i < array.length; i++) {
+    const el = array[i];
     if (modeMap[el] === null) {
       modeMap[el] = 1;
     } else {
@@ -410,7 +418,7 @@ const getInitialsFromName = (name: string | undefined) => {
  *
  * @param {Number}  containerWidth      The width of the container.
  * @param {Number}  containerHeight     The height of the container.
- * @param {Number}  numSquares          How many rectangles must fit within.
+ * @param {Number}  numRects            How many rectangles must fit within.
  * @param {Number}  width               The unscaled width of the rectangles to be placed.
  * @param {Number}  height              The unscaled height of the rectangles to be placed.
  * @return {Object}                     The area and number of rows and columns that fit.
@@ -577,7 +585,7 @@ export {
   generateClassName,
   addGlobalCss,
   combineClasses,
-  chunkStreams,
+  chunkElements,
   mode,
   generateRandomString,
   mergeRefs,
