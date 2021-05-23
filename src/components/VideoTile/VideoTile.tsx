@@ -104,7 +104,7 @@ export const VideoTile = ({
   isAudioMuted = false,
   isVideoMuted = false,
   showAudioMuteStatus = true,
-  showAudioLevel = true,
+  showAudioLevel,
   objectFit = 'cover',
   aspectRatio,
   displayShape = 'rectangle',
@@ -128,6 +128,10 @@ export const VideoTile = ({
     const selectVideoByPeerID = showScreen ? selectScreenShareByPeerID : selectCameraStreamByPeerID;
     const storeHmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
     const storeIsAudioMuted = !useHMSStore(store => selectIsPeerAudioEnabled(store, peer.id));
+
+    if (showAudioLevel === undefined) {
+      showAudioLevel = !showScreen;
+    }
 
     hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
 
