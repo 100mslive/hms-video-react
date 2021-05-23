@@ -156,7 +156,7 @@ export const VideoList = ({
   allowRemoteMute,
   avatarType,
 }: VideoListProps) => {
-  const {tw} = useHMSTheme();
+  const {tw, appBuilder} = useHMSTheme();
   const styler = useMemo(()=>
     hmsUiClassParserGenerator<VideoListClasses>({
       tw,
@@ -164,17 +164,12 @@ export const VideoList = ({
       defaultClasses,
       tag: 'hmsui-videoList',
     }),[]);
-
   const tracksMap: Record<HMSTrackID, HMSTrack> = useHMSStore(selectTracksMap);
-
   const { width = 0, height = 0, ref } = useResizeDetector();
 
-  try {
-    let context = useHMSTheme();
-    if (aspectRatio === undefined) {
-      aspectRatio = context.appBuilder.videoTileAspectRatio;
-    }
-  } catch (e) {}
+  if (aspectRatio === undefined) {
+    aspectRatio = appBuilder.videoTileAspectRatio;
+  }
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 

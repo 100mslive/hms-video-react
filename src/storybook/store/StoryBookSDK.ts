@@ -97,7 +97,6 @@ export class StoryBookSDK implements IHMSBridge {
       store.peers[peer.id] = peer;
       store.room.peers.push(peer.id);
       store.speakers[peer.id] = {
-        id: peer.id,
         audioLevel: this.randomFromArray([0, 10, 20, 50, 70, 80, 100])
       }
       if (peer.audioTrack) {
@@ -122,7 +121,7 @@ export class StoryBookSDK implements IHMSBridge {
   }
 
   getPeers(): HMSPeer[] {
-    return Object.values(this.store(store => store.peers));
+    return Object.values(this.store.getState().peers);
   }
 
   private log(...args: any[]) {

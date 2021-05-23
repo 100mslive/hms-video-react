@@ -263,6 +263,17 @@ function calculateLayoutSizes({
   let isLastPageDifferentFromFirstPage = false;
   let tilesInFirstPage = 0;
 
+  if (count == 0) { // no tracks to show
+    return {
+      tilesInFirstPage,
+      defaultWidth,
+      defaultHeight,
+      lastPageWidth,
+      lastPageHeight,
+      isLastPageDifferentFromFirstPage,
+    };
+  }
+
   if (maxTileCount) {
     ({
       tilesInFirstPage,

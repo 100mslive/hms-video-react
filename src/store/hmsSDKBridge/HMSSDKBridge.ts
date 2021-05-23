@@ -1,4 +1,5 @@
 import {
+  createDefaultStoreState,
   HMSMediaSettings,
   HMSMessage,
   HMSMessageType,
@@ -19,7 +20,7 @@ import {
   selectHMSMessagesCount,
   selectPeerNameByID,
   selectPeersMap,
-  selectTracksMap,
+  selectTracksMap, selectIsConnectedToRoom,
 } from '../selectors';
 import HMSLogger from '../../utils/ui-logger';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
@@ -35,7 +36,6 @@ export class HMSSDKBridge implements IHMSBridge {
   private readonly sdk: HMSSdk;
   private readonly store: IHMSStore;
   private isRoomJoinCalled: boolean = false;
-  private isRoomLeaveCalled: boolean = false;
 
   constructor(sdk: HMSSdk, store: IHMSStore) {
     this.sdk = sdk;
@@ -58,18 +58,17 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   async leave() {
-    if (this.isRoomLeaveCalled) {
-      this.logPossibleInconsistency('room leave is called again');
+    const isRoomConnected = selectIsConnectedToRoom(this.store.getState());
+    if (!isRoomConnected) {
+      this.logPossibleInconsistency('room leave is called when no room is connected');
       return; // ignore
     }
     return this.sdk.leave().then(() => {
-      this.isRoomLeaveCalled = true;
+      this.resetState();
       HMSLogger.i('sdk', 'left room');
-      this.store.setState(store => {
-        store.room.isConnected = false;
-      })
-      this.store.destroy();
-    });
+    }).catch((err) => {
+      HMSLogger.e("error in leaving room - ", err);
+    })
   }
 
   async setScreenShareEnabled(enabled:boolean){
@@ -81,10 +80,9 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   async setLocalAudioEnabled(enabled: boolean) {
-    const trackID = this.store(selectLocalAudioTrackID);
-    // useHMSStore(localAudioTrackIDSelector)
+    const trackID = selectLocalAudioTrackID(this.store.getState());
     if (trackID) {
-      const isCurrentEnabled = this.store(selectIsLocalAudioEnabled);
+      const isCurrentEnabled = selectIsLocalAudioEnabled(this.store.getState());
       if (isCurrentEnabled === enabled) {
         // why would same value will be set again?
         this.logPossibleInconsistency('local audio track muted states.');
@@ -94,9 +92,9 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   async setLocalVideoEnabled(enabled: boolean) {
-    const trackID = this.store(selectLocalVideoTrackID);
+    const trackID = selectLocalVideoTrackID(this.store.getState());
     if (trackID) {
-      const isCurrentEnabled = this.store(selectIsLocalVideoEnabled);
+      const isCurrentEnabled = selectIsLocalVideoEnabled(this.store.getState());
       if (isCurrentEnabled === enabled) {
         // why would same value will be set again?
         this.logPossibleInconsistency('local video track muted states.');
@@ -135,6 +133,14 @@ export class HMSSDKBridge implements IHMSBridge {
     }
   }
 
+  private resetState() {
+    this.store.setState(store => {
+      Object.assign(store, createDefaultStoreState());
+    })
+    this.isRoomJoinCalled = false;
+    this.hmsSDKTracks = {};
+  }
+
   private sdkJoinWithListeners(config: sdkTypes.HMSConfig) {
     this.sdk.join(config, {
       onJoin: this.onJoin.bind(this),
@@ -150,7 +156,7 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   private async startScreenShare() {
-    const isScreenShared = this.store(selectIsLocalScreenShared);
+    const isScreenShared = selectIsLocalScreenShared(this.store.getState());
     if (!isScreenShared) {
       await this.sdk.startScreenShare(this.syncPeers.bind(this));
       this.syncPeers();
@@ -160,7 +166,7 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   private async stopScreenShare() {
-    const isScreenShared = this.store(selectIsLocalScreenShared);
+    const isScreenShared = selectIsLocalScreenShared(this.store.getState());
     if (isScreenShared) {
       await this.sdk.stopScreenShare();
       this.syncPeers();
@@ -193,10 +199,10 @@ export class HMSSDKBridge implements IHMSBridge {
     const hmsPeers: Record<HMSPeerID, HMSPeer> = {};
     const hmsPeerIDs: HMSPeerID[] = [];
     const hmsTracks: Record<HMSTrackID, HMSTrack> = {};
-    const oldHMSPeers = this.store(selectPeersMap);
-    const oldHMSTracks = this.store(selectTracksMap);
     this.hmsSDKTracks = {};
     this.store.setState(store => {
+      const oldHMSPeers = selectPeersMap(store);
+      const oldHMSTracks = selectTracksMap(store);
       for (let sdkPeer of sdkPeers) {
         let hmsPeer = SDKToHMS.convertPeer(sdkPeer);
         if (hmsPeer.id in oldHMSPeers) {
@@ -275,20 +281,12 @@ export class HMSSDKBridge implements IHMSBridge {
 
   protected onPeerUpdate(
     type: sdkTypes.HMSPeerUpdate,
-    sdkPeer: sdkTypes.HMSPeer,
   ) {
     if (
       type === sdkTypes.HMSPeerUpdate.BECAME_DOMINANT_SPEAKER ||
       type === sdkTypes.HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER
     ) {
-      const isDominantSpeaker =
-        type === sdkTypes.HMSPeerUpdate.BECAME_DOMINANT_SPEAKER;
-      this.store.setState(store => {
-        const hmsPeer = store.peers[sdkPeer.peerId];
-        if (hmsPeer) {
-          hmsPeer.isDominantSpeaker = isDominantSpeaker;
-        }
-      });
+      return; // ignore, high frequency update so no point of syncing peers
     } else {
       this.syncPeers();
     }
@@ -310,7 +308,7 @@ export class HMSSDKBridge implements IHMSBridge {
 
   protected onHMSMessage(hmsMessage: HMSMessage) {
     this.store.setState(store => {
-      hmsMessage.id = String(this.store(selectHMSMessagesCount) + 1);
+      hmsMessage.id = String(selectHMSMessagesCount(this.store.getState()) + 1);
       store.messages.byID[hmsMessage.id] = hmsMessage;
       store.messages.allIDs.push(hmsMessage.id);
     });
@@ -319,11 +317,12 @@ export class HMSSDKBridge implements IHMSBridge {
   /*
   note: speakers array contain the value only for peers who have audioLevel != 0
    */
-  protected onAudioLevelUpdate(speakers: sdkTypes.HMSSpeaker[]) {
+  protected onAudioLevelUpdate(sdkSpeakers: sdkTypes.HMSSpeaker[]) {
     this.store.setState(store => {
       const peerIDAudioLevelMap: Record<HMSPeerID, number> = {};
-      speakers.forEach(speaker => {
-        peerIDAudioLevelMap[speaker.peerId] = speaker.audioLevel;
+      sdkSpeakers.forEach(sdkSpeaker => {
+        peerIDAudioLevelMap[sdkSpeaker.peerId] = sdkSpeaker.audioLevel;
+        store.speakers[sdkSpeaker.peerId] = {};
       });
       for (let [peerID, speaker] of Object.entries(store.speakers)) {
         speaker.audioLevel = peerIDAudioLevelMap[peerID] || 0;
@@ -333,6 +332,9 @@ export class HMSSDKBridge implements IHMSBridge {
 
   protected onError(error: SDKHMSException) {
     // send notification
+    if (Math.floor(error.code/1000) === 1) {  // critical error
+      this.leave().then(() => console.log("error from SDK, left room."));
+    }
     HMSLogger.e('sdkError', 'received error from sdk', error);
   }
 

@@ -11,6 +11,10 @@ export const selectMaxTilesCount = createSelector(
   (settings) => settings.maxTileCount
 )
 
+const selectSpeakers = (store: HMSStore) => {
+  return store.speakers;
+}
+
 const selectSpeakerByID = (store: HMSStore, peerID: HMSPeerID | undefined) => {
   return peerID ? store.speakers[peerID] : null;
 };
@@ -39,13 +43,21 @@ export const selectRemotePeers = createSelector(selectPeers, peers => {
   return peers.filter(p => !p.isLocal);
 });
 
-export const selectDominantPeer = createSelector(selectPeers, peers => {
-  const dominantSpeakers = peers.filter(p => p.isDominantSpeaker);
-  if (dominantSpeakers.length > 0) {
-    return dominantSpeakers[0].name;
-  } else {
-    return null;
+export const selectDominantSpeakerName = createSelector(selectPeersMap, selectSpeakers,
+  (peersMap, speakers) => {
+  // sort in descending order by audio level
+  const speakersInOrder = Object.entries(speakers).sort((s1, s2) => {
+    const s1Level = s1[1]?.audioLevel || 0;
+    const s2Level = s2[1]?.audioLevel || 0;
+    return s2Level > s1Level ? 1 : -1;
+  });
+  if (speakersInOrder.length > 0) {
+    const peerID = speakersInOrder[0][0];
+    if (peerID in peersMap) {
+      return peersMap[peerID].name;
+    }
   }
+  return null;
 });
 
 export const selectPeerByID = createSelector(
