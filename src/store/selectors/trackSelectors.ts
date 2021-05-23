@@ -1,4 +1,4 @@
-import { HMSPeer, HMSStore, HMSTrackID } from '../schema';
+import { HMSPeer, HMSPeerID, HMSStore, HMSTrack, HMSTrackID } from '../schema';
 import { selectLocalPeer, selectPeerByID, selectPeers } from './peerSelectors';
 import { createSelector } from 'reselect';
 
@@ -51,14 +51,35 @@ export const selectPeerScreenSharing = (store: HMSStore): HMSPeer | undefined =>
   return peers.find(peer => isScreenSharing(store, peer));
 }
 
+export const selectScreenShareByPeerID = (store: HMSStore, peerID: HMSPeerID): HMSTrack | undefined => {
+  const peer = selectPeerByID(store, peerID);
+  if (peer && isScreenSharing(store, peer)) {
+    const trackID = peer?.auxiliaryTracks.find(trackID => isScreenShare(store.tracks[trackID]));
+    return trackID ? store.tracks[trackID] : undefined;
+  }
+  return undefined;
+}
+
+export const selectCameraStreamByPeerID = (store: HMSStore, peerID: HMSPeerID): HMSTrack | undefined => {
+  const peer = selectPeerByID(store, peerID);
+  if (peer && peer.videoTrack && (peer.videoTrack !== "")){
+    return store.tracks[peer.videoTrack];
+  }
+  return undefined;
+}
+
 function isScreenSharing(store: HMSStore, peer: HMSPeer) {
   return peer && peer.auxiliaryTracks.some(trackID => {
     if (trackID && store.tracks[trackID]) {
       const track = store.tracks[trackID];
-      return track.type === 'video' && track.source === 'screen';
+      return isScreenShare(track);
     }
     return false;
   })
+}
+
+function isScreenShare(track: HMSTrack | undefined) {
+  return track && track.type === 'video' && track.source === 'screen';
 }
 
 function isTrackEnabled(store: HMSStore, trackID?: string) {

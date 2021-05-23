@@ -7,11 +7,18 @@ import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { HMSPeer } from '../../store/schema';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectCameraStreamByPeerID, selectIsPeerAudioEnabled, selectScreenShareByPeerID } from '../../store/selectors';
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
    */
   peer: HMSPeer;
+
+  /**
+   * If showScreen is true, user's screenshare will be shown instead of camera
+   */
+  showScreen: false,
 
   /**
    * Indicates if the stream's audio is muted or not. Ignored if showAudioMuteStatus is false.
@@ -89,10 +96,8 @@ const customClasses: VideoTileClasses = {
 };
 
 export const VideoTile = ({
-  videoTrack,
-  hmsVideoTrack,
-  audioTrack,
   peer,
+  showScreen = false,
   isLocal = false,
   audioLevel = 0,
   isAudioMuted = false,
@@ -119,11 +124,20 @@ export const VideoTile = ({
       tag: 'hmsui-videoTile',
     }),[]);
 
+    const selectVideoByPeerID = showScreen ? selectScreenShareByPeerID : selectCameraStreamByPeerID;
+
+    const hmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
+    const storeIsAudioMuted = !useHMSStore(store => selectIsPeerAudioEnabled(store, peer.id));
+
+    if (isAudioMuted === undefined || isAudioMuted ===  null) {
+      isAudioMuted = storeIsAudioMuted;
+    }
+
     const label = getVideoTileLabel(
-    peer.name,
-    isLocal,
-    hmsVideoTrack?.source,
-  );
+      peer.name,
+      isLocal,
+      hmsVideoTrack?.source,
+    );
   try {
     if (aspectRatio === undefined) {
       aspectRatio = appBuilder.videoTileAspectRatio;
@@ -134,9 +148,12 @@ export const VideoTile = ({
   } catch (e) {}
   avatarType = avatarType || 'initial';
 
-  const { width, height } = videoTrack
-    ? videoTrack.getSettings()
-    : { width: 1, height: 1 };
+  let { width, height } = { width: 1, height: 1 };
+  if (hmsVideoTrack?.width && hmsVideoTrack.height) {
+    width = hmsVideoTrack.width;
+    height = hmsVideoTrack.height;
+  }
+
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
@@ -152,7 +169,7 @@ export const VideoTile = ({
               ? {
                   aspectRatio: `${
                     displayShape === 'rectangle'
-                      ? //@ts-expect-error
+                      ?
                         impliedAspectRatio.width / impliedAspectRatio.height
                       : 1
                   }`,
@@ -163,9 +180,7 @@ export const VideoTile = ({
           {/* TODO this doesn't work in Safari and looks ugly with contain*/}
           <Video
             peerId={peer.id}
-            videoTrack={videoTrack}
             hmsVideoTrack={hmsVideoTrack}
-            audioTrack={audioTrack}
             objectFit={objectFit}
             isLocal={isLocal}
             showAudioLevel={showAudioLevel}

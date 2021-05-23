@@ -41,7 +41,7 @@ export interface VideoProps {
   /**
    * Video Track to be displayed.
    */
-  videoTrack: MediaStreamTrack;
+  videoTrack?: MediaStreamTrack;
   /**
    * HMS Video Track is for track related metadata
    */
@@ -49,7 +49,7 @@ export interface VideoProps {
   /**
    * Audio Track to be displayed.
    */
-  audioTrack: MediaStreamTrack;
+  audioTrack?: MediaStreamTrack;
   /**
    * Indicates if the stream belongs to the user viewing it. Used in labelling and styling.
    */

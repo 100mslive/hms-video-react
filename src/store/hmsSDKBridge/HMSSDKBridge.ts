@@ -235,6 +235,9 @@ export class HMSSDKBridge implements IHMSBridge {
         Object.assign(oldHmsTracks[hmsTrack.id], hmsTrack);
         hmsTrack = oldHmsTracks[hmsTrack.id];
       }
+      const mediaSettings = sdkTrack.getMediaTrackSettings();
+      hmsTrack.height = mediaSettings.height;
+      hmsTrack.width = mediaSettings.width;
       hmsTracksDraft[hmsTrack.id] = hmsTrack;
     };
     if (sdkPeer.audioTrack) {
