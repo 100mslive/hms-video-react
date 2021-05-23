@@ -38,6 +38,6 @@ export enum HMSRoomUpdate {
   DEFAULT_UPDATE,
 }
 
-//TODO temporary solutio till HMSException is exported from interfaces in SDK
+//TODO temporary solution till HMSException is exported from interfaces in SDK
 export interface HMSException extends Error{
 };
