@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from 'react';
-import { tw, style, apply } from 'twind/style';
-import { camelize, resolveClasses } from '../../utils/classes';
+import { style } from 'twind/style';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { resolveClasses } from '../../utils/classes';
 
 type TextTags =
   | 'h1'
@@ -83,6 +84,7 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
     classes || {},
     defaultClasses,
   );
+  const { tw } = useHMSTheme();
   const TagName = tag || 'p';
   const typography = style({
     // base
@@ -120,13 +122,12 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
       },
       {
         variant: 'button',
-        size: 'sm',
+        size: 'lg',
         use: `${finalClasses.rootButtonLg}`,
       },
     ],
   });
   const twClasses = typography({ size, variant });
-  // const propClass = `hmsui ${camelize(`root ${variant} ${size}`)}`;
   const className = tw(twClasses);
   return (
     <TagName className={className} {...props}>
