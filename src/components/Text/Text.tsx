@@ -85,9 +85,10 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
     defaultClasses,
   );
   const { tw } = useHMSTheme();
-  const TagName = tag || 'p';
+  const TagName = tag || 'span';
   const typography = style({
     // base
+    // @ts-ignore
     base: `${finalClasses.root}`,
     matches: [
       {
@@ -127,6 +128,7 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
       },
     ],
   });
+  // @ts-ignore
   const twClasses = typography({ size, variant });
   const className = tw(twClasses);
   return (

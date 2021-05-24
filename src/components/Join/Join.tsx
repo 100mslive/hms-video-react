@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { resolveClasses } from '../../utils/classes';
 import { Select } from '../Select';
 import { Input } from '../Input';
 import { Button } from '../TwButton';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { DoorIcon } from '../Icons';
+import { Text } from '../Text';
 
 interface Fields {
   username: string;
@@ -90,11 +89,13 @@ export const Join = ({
       <div className={parseClass('containerRoot')}>
         <div className={parseClass('header')}>
           <DoorIcon className="mr-2" />
-          Join your class
+          <Text variant="heading">Join your class</Text>
         </div>
         <div className={parseClass('inputRoot')}>
           <div className={parseClass('inputName')}>
-            <span>Username</span>
+            <Text variant="heading" size="sm">
+              Username
+            </Text>
           </div>
           <div className={parseClass('inputFieldRoot')}>
             <Input
@@ -106,7 +107,9 @@ export const Join = ({
             ></Input>
           </div>
           <div className={parseClass('inputName')}>
-            <span>RoomId</span>
+            <Text variant="heading" size="sm">
+              RoomId
+            </Text>
           </div>
           <div className={parseClass('inputFieldRoot')}>
             <Input
@@ -118,7 +121,9 @@ export const Join = ({
             ></Input>
           </div>
           <div className={parseClass('inputName')}>
-            <span>Role</span>
+            <Text variant="heading" size="sm">
+              Role
+            </Text>
           </div>
           <div className={parseClass('inputFieldRoot')}>
             <Select
@@ -135,7 +140,9 @@ export const Join = ({
             </Select>
           </div>
           <div className={parseClass('inputName')}>
-            <span>Environment</span>
+            <Text variant="heading" size="sm">
+              Environment
+            </Text>
           </div>
           <div className={parseClass('inputFieldRoot')}>
             <Select

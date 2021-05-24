@@ -12,6 +12,8 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Button as TwButton } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { groupBy, Dictionary } from 'lodash';
+import { Text } from '../Text';
+
 interface SettingsClasses {
   root?: string;
   iconContainer?: string;
@@ -220,7 +222,7 @@ export const Settings = ({
               <span className={`${parseClass('titleIcon')}`}>
                 <SettingsIcon className="w-7 h-7" />
               </span>
-              <span className={`${parseClass('titleText')}`}>Settings</span>
+              <Text variant="heading">Settings</Text>
             </span>
 
             <TwButton
@@ -238,7 +240,9 @@ export const Settings = ({
               <>
                 <div className={`${parseClass('formInner')}`}>
                   <div className={`${parseClass('selectLabel')}`}>
-                    <span>Camera:</span>
+                    <Text variant="heading" size="sm">
+                      Camera:
+                    </Text>
                   </div>
                   <div className={`${parseClass('selectContainer')}`}>
                     {videoInput.length > 0 && (
@@ -263,8 +267,11 @@ export const Settings = ({
                 </div>
                 <div className={`${parseClass('formInner')}`}>
                   <div className={`${parseClass('selectLabel')}`}>
-                    <span>Microphone:</span>
+                    <Text variant="heading" size="sm">
+                      Microphone:
+                    </Text>
                   </div>
+
                   <div className={`${parseClass('selectContainer')}`}>
                     {audioInput.length > 0 && (
                       <select
@@ -288,7 +295,9 @@ export const Settings = ({
                 </div>
                 <div className={`${parseClass('formInner')}`}>
                   <div className={`${parseClass('selectLabel')}`}>
-                    <span>Audio Output:</span>
+                    <Text variant="heading" size="sm">
+                      Audio Output:
+                    </Text>
                   </div>
                   <div className={`${parseClass('selectContainer')}`}>
                     {audioOutput.length > 0 && (
@@ -420,9 +429,9 @@ export const Settings = ({
             <div className={parseClass('sliderContainer')}>
               <div className={parseClass('sliderInner')}>
                 <div className={parseClass('sliderLabelContainer')}>
-                  <span className={parseClass('sliderLabel')}>
+                  <Text variant="heading" size="sm">
                     Participants in view:
-                  </span>
+                  </Text>
                 </div>
                 <div className={parseClass('slider')}>
                   <HMSSlider

@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import { Participant, Peer } from '../../types';
 import { VolumeIcon, Logo } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { Text } from '../Text';
 
 export interface HeaderClasses {
   root?: string;
@@ -44,7 +45,11 @@ export const Header = ({
           <VolumeIcon />
         </div>
         {/* TODO figure out why xs:hidden is needed */}
-        <div className="md:pl-1 xs:hidden md:inline-block">{speaker}</div>
+        <div className="md:pl-1 xs:hidden md:inline-block">
+          <Text variant="body" size="md">
+            {speaker}
+          </Text>
+        </div>
       </div>
     ) : (
       <></>

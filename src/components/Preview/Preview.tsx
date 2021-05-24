@@ -9,6 +9,7 @@ import { Button } from '../TwButton';
 import HMSLogger from '../../utils/ui-logger';
 import { SettingsFormProps } from '../Settings/Settings';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { Text } from '../Text';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -268,7 +269,9 @@ export const Preview = ({
           />
         </div>
         {/* helloDiv */}
-        <div className={parseClass('helloDiv')}>Hello, {name}</div>
+        <div className={parseClass('helloDiv')}>
+          <Text variant="heading">Hello, {name}</Text>
+        </div>
         {/* joinButton */}
         <Button
           variant={'emphasized'}
