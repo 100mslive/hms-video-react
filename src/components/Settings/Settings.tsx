@@ -1,17 +1,17 @@
 import React, {
-  useEffect,
-  useState,
   ChangeEventHandler,
   useCallback,
+  useEffect,
+  useState,
 } from 'react';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
+import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { getLocalDevices, getLocalStream } from '@100mslive/100ms-web-sdk';
 import { Button as TwButton } from '../TwButton';
-import HMSLogger from '../../utils/ui-logger';
-import { groupBy, Dictionary } from 'lodash';
 import { Text } from '../Text';
 
 interface SettingsClasses {
@@ -52,10 +52,10 @@ export interface SettingsProps {
 
 const defaultClasses: SettingsClasses = {
   iconContainer: 'focus:outline-none mr-3 hover:bg-gray-200 p-2 rounded-lg',
-  dialogRoot: 'rounded-lg',
+  dialogRoot: 'rounded-xl ',
   dialogContainer:
-    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto divide-solid',
-  dialogInner: 'text-2xl mb-3 p-2 border-b-2 flex justify-between',
+    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto rounded-xl',
+  dialogInner: 'text-2xl mb-3 p-2 flex justify-between',
   titleContainer: 'flex items-center',
   titleIcon: 'pr-4',
   titleText: 'text-2xl leading-7',
@@ -66,7 +66,7 @@ const defaultClasses: SettingsClasses = {
   select:
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   selectInner: 'p-4',
-  divider: 'bg-gray-200 h-px w-full my-4',
+  divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
   sliderContainer: 'w-full my-1.5',
   sliderInner: 'w-full flex',
   sliderLabelContainer: 'w-1/3 flex justify-end items-center ',
@@ -106,6 +106,12 @@ const HMSSlider = withStyles({
   },
 })(Slider);
 
+const HMSDialog = withStyles({
+  paper: {
+    borderRadius: '12px',
+    backgroundColor: 'inherit',
+  },
+})(Dialog);
 //TODO split button and settings dialog
 
 export const Settings = ({
@@ -124,9 +130,15 @@ export const Settings = ({
   );
 
   const [open, setOpen] = useState(false);
-  const [deviceGroups, setDeviceGroups] = useState<
-    Dictionary<MediaDeviceInfo[]>
-  >({});
+  const [deviceGroups, setDeviceGroups] = useState<{
+    audioinput: MediaDeviceInfo[];
+    audiooutput: MediaDeviceInfo[];
+    videoinput: MediaDeviceInfo[];
+  }>({
+    audioinput: [],
+    audiooutput: [],
+    videoinput: [],
+  });
   const [error, setError] = useState('');
 
   const [values, setValues] = useState<SettingsFormProps>({
@@ -169,17 +181,12 @@ export const Settings = ({
 
   useEffect(() => {
     if (open) {
-      navigator.mediaDevices.enumerateDevices().then(
-        devices => {
-          const deviceGroups = groupBy(devices, 'kind');
-          HMSLogger.d('Groups:', deviceGroups);
-          setDeviceGroups(deviceGroups);
-        },
-        error => {
-          //TODO this is not working right now
-          setError(error);
-        },
-      );
+      getLocalStream({ video: true, audio: true })
+        .then(stream => {
+          closeMediaStream(stream);
+          getLocalDevices().then(deviceGroups => setDeviceGroups(deviceGroups));
+        })
+        .catch(err => setError(err.message));
     }
   }, [open]);
 
@@ -208,7 +215,7 @@ export const Settings = ({
       >
         <SettingsIcon />
       </TwButton>
-      <Dialog
+      <HMSDialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
@@ -231,9 +238,11 @@ export const Settings = ({
               iconSize="md"
               onClick={handleClose}
             >
-              <CloseIcon />
+              <CloseIcon className="text-gray-400" />
             </TwButton>
           </div>
+
+          <div className={parseClass('divider')}></div>
 
           <div className={`${parseClass('formContainer')}`}>
             {error === '' ? (
@@ -509,7 +518,7 @@ export const Settings = ({
             </div>
           </div>
         </div>
-      </Dialog>
+      </HMSDialog>
     </>
   );
 };

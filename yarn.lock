@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@100mslive/100ms-web-sdk@0.0.12-32":
-  version "0.0.12-32"
-  resolved "https://registry.yarnpkg.com/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.12-32.tgz#c166929ee36879d86f1a9dbce018054f15825744"
-  integrity sha512-UpQgbtgi/yltb1JdnLAj8wYjUH7lFq3+ucGZpPBjmLWNKN6rRlh+GcgsQktxlHWI8Rvv0+C0aMtXs/PD1rT70g==
+"@100mslive/100ms-web-sdk@0.0.12-34":
+  version "0.0.12-34"
+  resolved "https://registry.yarnpkg.com/@100mslive/100ms-web-sdk/-/100ms-web-sdk-0.0.12-34.tgz#afe11a9e00961601e256ed8cd112171932223bb2"
+  integrity sha512-VtIVc82A3BNCcWYx1qzpBIsaVIkhSQSvguDVWXW4aVIMi63coqS9SPcGDSQ6deuBEAZ2Sy+cF5dl6firsKpVZw==
   dependencies:
     uuid "^8.3.2"
 
@@ -11358,6 +11358,11 @@ react-addons-create-fragment@^15.6.2:
     fbjs "^0.8.4"
     loose-envify "^1.3.1"
     object-assign "^4.1.0"
+
+react-click-away-listener@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-click-away-listener/-/react-click-away-listener-2.0.3.tgz#3d032603cff8c1d66a9107f6908695df04db34a8"
+  integrity sha512-buvbebDZ10me+ConatrMcv33BNH6D+3HvEjztiNdz6LvDvyEYHxD0QLXw9aaO7bXjz2YPC7zbgIxLX+cEsFjkA==
 
 react-clientside-effect@^1.2.2:
   version "1.2.5"

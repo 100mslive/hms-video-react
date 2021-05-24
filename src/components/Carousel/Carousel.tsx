@@ -1,5 +1,10 @@
-import React, { useState, useEffect, useCallback, createRef } from 'react';
-import { useInView } from 'react-intersection-observer';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  MouseEventHandler,
+  useRef,
+} from 'react';
 import {
   LeftCaratIcon,
   RightCaratIcon,
@@ -7,7 +12,6 @@ import {
   UpCaratIcon,
   DotIcon,
 } from '../Icons';
-import { scrollTo, mergeRefs } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
 
@@ -23,12 +27,15 @@ interface CarouselClasses {
   rootHorizontal?: string;
   rootVertical?: string;
   pageContainer?: string;
+  carouselContainer?:string;
+  carouselInner?:string;
   videoTileContainer?: string;
   navContainer?: string;
   navContainerHorizontal?: string;
   navContainerVertical?: string;
   caratActive?: string;
   caratInactive?: string;
+  dotButton?:string;
   dotActive?: string;
   dotInactive?: string;
   carat?: string;
@@ -36,10 +43,12 @@ interface CarouselClasses {
 }
 
 const defaultClasses: CarouselClasses = {
-  root: `w-full h-full flex`,
+  root: `w-full h-full`,
   rootHorizontal: 'overflow-x-auto pb-6',
   rootVertical: 'overflow-y-auto flex-col pr-6',
-  pageContainer: 'flex-shrink-0 w-full h-full',
+  pageContainer: 'inline-block align-top w-full h-full',
+  carouselContainer:'overflow-hidden w-full h-full',
+  carouselInner:'w-full h-full whitespace-nowrap',
   videoTileContainer: 'flex justify-center',
   navContainer: 'absolute w-full flex justify-center items-center',
   navContainerHorizontal: 'bottom-0 left-0',
@@ -50,6 +59,7 @@ const defaultClasses: CarouselClasses = {
   dotInactive: 'text-transparent-700 dark:text-transparent-300 cursor-pointer',
   carat: 'w-4 h-4 m-1',
   dot: 'w-2 h-2 m-1',
+  dotButton:'inline-block focus:outline-none focus-visible:ring-4 focus-visible:blue-tint'
 };
 
 const customClasses: CarouselClasses = {
@@ -62,6 +72,10 @@ export const Carousel = ({
   classes,
   children,
 }: CarouselProps) => {
+  const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const pages = Array.isArray(children) ? children : [children];
+  const carouselRef = useRef(null);
+
   const hu = useCallback(
     hmsUiClassParserGenerator<CarouselClasses>({
       classes,
@@ -72,35 +86,25 @@ export const Carousel = ({
     [],
   );
 
-  const pages = Array.isArray(children) ? children : [children];
-  const showNav = showNavigation && Array.isArray(children) && pages.length > 1;
-  const [currentPage, setCurrentPage] = useState(0);
-  const { ref: prevRef, inView: prevInView } = useInView({ threshold: 0.5 });
-  const { ref: nextRef, inView: nextInView } = useInView({ threshold: 0.5 });
+  const showNav = showNavigation && pages.length > 1;
 
-  const [refs, setRefs] = React.useState<
-    React.MutableRefObject<HTMLDivElement | null>[]
-  >([]);
+  const navClassName = `${hu('navContainer')} ${
+    direction === 'horizontal'
+      ? hu('navContainerHorizontal')
+      : hu('navContainerVertical')
+  }`;
 
   useEffect(() => {
-    setRefs(refs =>
-      Array(pages.length)
-        .fill({})
-        .map((page, index) => refs[index] || createRef<HTMLDivElement>()),
-    );
-  }, [children]);
-
-  useEffect(() => {
-    if (prevInView) {
-      setCurrentPage(currentPage => currentPage - 1);
+    if (carouselRef) {
+      const el: HTMLElement = carouselRef.current!;
+      const width = el.clientWidth;
+      const scrollAmount = currentPageIndex * width;
+      el.scrollTo({
+        left: scrollAmount,
+        behavior: 'smooth',
+      });
     }
-  }, [prevInView]);
-
-  useEffect(() => {
-    if (nextInView) {
-      setCurrentPage(currentPage => currentPage + 1);
-    }
-  }, [nextInView]);
+  }, [currentPageIndex]);
 
   return (
     <>
@@ -108,120 +112,107 @@ export const Carousel = ({
         className={`${hu('root')} ${
           direction === 'horizontal' ? hu('rootHorizontal') : hu('rootVertical')
         }`}
-        style={{
-          scrollBehavior: 'smooth',
-          WebkitOverflowScrolling: 'touch',
-          scrollSnapType: `${direction === 'horizontal' ? 'x' : 'y'} mandatory`,
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
-        }}
       >
-        {pages.map((page, index) => {
-          switch (index) {
-            case currentPage - 1:
-              return (
-                <div
-                  key={index}
-                  ref={mergeRefs(prevRef, refs[index])}
-                  className={hu('pageContainer')}
-                  style={{ scrollSnapAlign: 'start' }}
-                ></div>
-              );
-            case currentPage + 1:
-              return (
-                <div
-                  key={index}
-                  ref={mergeRefs(nextRef, refs[index])}
-                  className={hu('pageContainer')}
-                  style={{ scrollSnapAlign: 'start' }}
-                ></div>
-              );
-            case currentPage:
-              return (
-                <div
-                  key={index}
-                  ref={refs[index]}
-                  className={hu('pageContainer')}
-                  style={{ scrollSnapAlign: 'start' }}
-                >
-                  {page}
-                </div>
-              );
-            default:
-              return (
-                <div
-                  key={index}
-                  ref={refs[index]}
-                  className={hu('pageContainer')}
-                  style={{ scrollSnapAlign: 'start' }}
-                ></div>
-              );
-          }
-        })}
-        {showNav && (
-          <div
-            className={`${hu('navContainer')} ${
-              direction === 'horizontal'
-                ? hu('navContainerHorizontal')
-                : hu('navContainerVertical')
-            }`}
-          >
-            <button
-              onClick={
-                currentPage !== 0 ? scrollTo(refs[currentPage - 1]) : () => {}
-              }
-            >
-              {direction === 'horizontal' ? (
-                <LeftCaratIcon
-                  className={`${
-                    currentPage !== 0 ? hu('caratActive') : hu('caratInactive')
-                  } ${hu('carat')}`}
-                />
-              ) : (
-                <UpCaratIcon
-                  className={`${
-                    currentPage !== 0 ? hu('caratActive') : hu('caratInactive')
-                  } ${hu('carat')}`}
-                />
-              )}
-            </button>
+        <div className={`${hu('carouselContainer')}`} ref={carouselRef}>
+          <div className={`${hu('carouselInner')}`}>
             {pages.map((page, index) => (
-              <button className="inline-block" onClick={scrollTo(refs[index])}>
-                <DotIcon
-                  className={`${
-                    index === currentPage ? hu('dotActive') : hu('dotInactive')
-                  } ${hu('dot')}`}
-                />
-              </button>
+              <div
+                className={`${hu('pageContainer')}`}
+                key={`slide=${index}`}
+              >
+                {pages[index]}
+              </div>
             ))}
-            <button
-              onClick={
-                currentPage !== pages.length - 1
-                  ? scrollTo(refs[currentPage + 1])
-                  : () => {}
-              }
-            >
-              {direction === 'horizontal' ? (
-                <RightCaratIcon
-                  className={`${
-                    currentPage !== pages.length - 1
-                      ? hu('caratActive')
-                      : hu('caratInactive')
-                  } ${hu('carat')}`}
-                />
-              ) : (
-                <DownCaratIcon
-                  className={`${
-                    currentPage !== pages.length - 1
-                      ? hu('caratActive')
-                      : hu('caratInactive')
-                  } ${hu('carat')}`}
-                />
-              )}
-            </button>
           </div>
-        )}
+        </div>
       </div>
+      {showNav ? (
+        <div className={navClassName}>
+          <PrevButton
+            direction={direction}
+            isActive={currentPageIndex !== 0}
+            onClick={e => {
+              if (currentPageIndex > 0) {
+                setCurrentPageIndex(currentPageIndex - 1);
+              }
+            }}
+            hu={hu}
+          />
+
+          {pages.map((page, index) => (
+            <button
+              className={`${hu('dotButton')}`}
+              onClick={e => {
+                setCurrentPageIndex(index);
+              }}
+            >
+              <DotIcon
+                className={`${
+                  index === currentPageIndex
+                    ? hu('dotActive')
+                    : hu('dotInactive')
+                } ${hu('dot')}`}
+              />
+            </button>
+          ))}
+
+          <NextButton
+            direction={direction}
+            isActive={currentPageIndex !== pages.length - 1}
+            onClick={e => {
+              if (currentPageIndex < pages.length - 1) {
+                setCurrentPageIndex(currentPageIndex + 1);
+              }
+            }}
+            hu={hu}
+          />
+        </div>
+      ) : null}
     </>
   );
 };
+
+interface ButtonProps {
+  direction: 'horizontal' | 'vertical';
+  isActive: boolean;
+  onClick: MouseEventHandler;
+  hu: Function;
+}
+
+function NextButton({ direction, isActive, onClick, hu }: ButtonProps) {
+  const className = `${isActive ? hu('caratActive') : hu('caratInactive')} ${hu(
+    'carat',
+  )}`;
+
+  return (
+    <button
+      className="focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+      onClick={onClick}
+    >
+      {direction === 'horizontal' ? (
+        <RightCaratIcon className={className} />
+      ) : (
+        <DownCaratIcon className={className} />
+      )}
+    </button>
+  );
+}
+
+function PrevButton({ direction, isActive, onClick, hu }: ButtonProps) {
+  const className = `${isActive ? hu('caratActive') : hu('caratInactive')} ${hu(
+    'carat',
+  )}`;
+
+  return (
+    <button
+      className="focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+      onClick={onClick}
+    >
+      {direction === 'horizontal' ? (
+        <LeftCaratIcon className={className} />
+      ) : (
+        <UpCaratIcon className={className} />
+      )}
+    </button>
+  );
+}

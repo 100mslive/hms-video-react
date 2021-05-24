@@ -86,7 +86,7 @@ export interface ButtonClasses {
 
 const defaultClasses: ButtonClasses = {
   root:
-    'inline-flex items-center justify-center text-base font-medium focus:outline-none',
+    'inline-flex items-center justify-center text-base font-medium focus:outline-none focus-visible:ring-4 focus-visible:blue-tint',
   rootFocus: 'focus:ring-brand-tint',
   rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
   rootStandard: 'bg-gray-200 hover:bg-gray-300 text-white',
@@ -106,9 +106,9 @@ const defaultClasses: ButtonClasses = {
   rootIconOnlyDanger:
     'text-black hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
   rootIconOnlyStandardActive:
-    'dark:bg-white dark:text-black bg-gray-200 text-white',
+    'dark:bg-white dark:text-black bg-gray-200 text-white dark:hover:bg-white hover:bg-gray-200',
   rootIconOnlyDangerActive:
-    'bg-red-main hover:bg-red-tint dark:hover:bg-red-tint text-white dark:text-white',
+    'bg-red-main hover:bg-red-main dark:hover:bg-red-main text-white dark:text-white',
 };
 
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({

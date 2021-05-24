@@ -61,9 +61,9 @@ const defaultClasses: MessageModalClasses = {
 };
 
 export const StyledMessageModal = ({
-  title = 'Permission Denied!',
-  message = 'Click on camera icon',
-  secondary = 'I dont know',
+  title = '',
+  message = '',
+  secondary = '',
   show = true,
   allow,
   gobackOnClick,
