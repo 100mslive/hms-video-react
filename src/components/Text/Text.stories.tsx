@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Text, TextProps } from './index';
+import { Text, TextProps } from './Text';
 import { css } from 'twind/css';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 

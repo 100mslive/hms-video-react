@@ -1,17 +1,24 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import './index.css';
-import { Peer } from '../../types';
-import { Video, VideoProps, VideoClasses } from '../Video';
+import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../TwAvatar';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { HMSPeer } from '../../store/schema';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectCameraStreamByPeerID, selectIsPeerAudioEnabled, selectScreenShareByPeerID } from '../../store/selectors';
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
    */
-  peer: Peer;
+  peer: HMSPeer;
+
+  /**
+   * If showScreen is true, user's screenshare will be shown instead of camera
+   */
+  showScreen?: boolean,
 
   /**
    * Indicates if the stream's audio is muted or not. Ignored if showAudioMuteStatus is false.
@@ -90,16 +97,14 @@ const customClasses: VideoTileClasses = {
 
 export const VideoTile = ({
   videoTrack,
-  hmsVideoTrack,
-  audioTrack,
   peer,
-  isLocal = false,
-  videoSource = 'camera',
+  hmsVideoTrack,
+  showScreen = false,
   audioLevel = 0,
   isAudioMuted = false,
   isVideoMuted = false,
-  showAudioMuteStatus,
-  showAudioLevel = true,
+  showAudioMuteStatus = true,
+  showAudioLevel,
   objectFit = 'cover',
   aspectRatio,
   displayShape = 'rectangle',
@@ -108,20 +113,37 @@ export const VideoTile = ({
   allowRemoteMute = false,
   controlsComponent,
   classes,
-  audioLevelEmitter,
   avatarType,
 }: VideoTileProps) => {
-  const { appBuilder } = useHMSTheme();
-  const parseClass = useCallback(
+  const { appBuilder, tw } = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<VideoTileClasses>({
+      tw,
       classes,
       customClasses,
       defaultClasses,
       tag: 'hmsui-videoTile',
-    }),
-    [],
-  );
-  const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
+    }),[]);
+
+    const selectVideoByPeerID = showScreen ? selectScreenShareByPeerID : selectCameraStreamByPeerID;
+    const storeHmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
+    const storeIsAudioMuted = !useHMSStore(store => selectIsPeerAudioEnabled(store, peer.id));
+
+    if (showAudioLevel === undefined) {
+      showAudioLevel = !showScreen;
+    }
+
+    hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
+
+    if (isAudioMuted === undefined || isAudioMuted ===  null) {
+      isAudioMuted = storeIsAudioMuted;
+    }
+
+    const label = getVideoTileLabel(
+      peer.name,
+      peer.isLocal,
+      hmsVideoTrack?.source,
+    );
   try {
     if (aspectRatio === undefined) {
       aspectRatio = appBuilder.videoTileAspectRatio;
@@ -132,25 +154,34 @@ export const VideoTile = ({
   } catch (e) {}
   avatarType = avatarType || 'initial';
 
-  const { width, height } = videoTrack
-    ? videoTrack.getSettings()
-    : { width: 1, height: 1 };
+  let { width, height } = { width: 1, height: 1 };
+  if (hmsVideoTrack) {
+    if (hmsVideoTrack?.width && hmsVideoTrack.height) {
+      width = hmsVideoTrack.width;
+      height = hmsVideoTrack.height;
+    }
+  } else if (videoTrack) {
+    let trackSettings = videoTrack.getSettings();
+    width = trackSettings.width || width;
+    height = trackSettings.height || width;
+  }
+
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
-    <div className={parseClass('root')}>
+    <div className={styler('root')}>
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
         objectFit === 'contain') && (
         <div
-          className={`${parseClass('videoContainer')} ${
-            displayShape === 'circle' ? parseClass('videoContainerCircle') : ''
+          className={`${styler('videoContainer')} ${
+            displayShape === 'circle' ? styler('videoContainerCircle') : ''
           } `}
           style={
             objectFit !== 'contain'
               ? {
                   aspectRatio: `${
                     displayShape === 'rectangle'
-                      ? //@ts-expect-error
+                      ?
                         impliedAspectRatio.width / impliedAspectRatio.height
                       : 1
                   }`,
@@ -161,29 +192,26 @@ export const VideoTile = ({
           {/* TODO this doesn't work in Safari and looks ugly with contain*/}
           <Video
             peerId={peer.id}
-            videoTrack={videoTrack}
             hmsVideoTrack={hmsVideoTrack}
-            audioTrack={audioTrack}
+            videoTrack={videoTrack}
             objectFit={objectFit}
-            isLocal={isLocal}
-            isAudioMuted={isAudioMuted}
-            videoSource={videoSource}
+            isLocal={peer.isLocal}
             showAudioLevel={showAudioLevel}
+            audioLevel={audioLevel}
             audioLevelDisplayType={audioLevelDisplayType}
             audioLevelDisplayColor={audioLevelDisplayColor}
             displayShape={displayShape}
-            audioLevelEmitter={audioLevelEmitter}
           />
           {isVideoMuted && (
             <div
-              className={`${parseClass('avatarContainer')} ${
+              className={`${styler('avatarContainer')} ${
                 displayShape === 'circle'
-                  ? parseClass('avatarContainerCircle')
+                  ? styler('avatarContainerCircle')
                   : ''
               }`}
             >
               <Avatar
-                label={peer.displayName}
+                label={peer.name}
                 size="xl"
                 avatarType={avatarType}
               />
@@ -194,7 +222,7 @@ export const VideoTile = ({
           ) : (
             // TODO circle controls are broken now
             <VideoTileControls
-              isLocal={isLocal}
+              isLocal={peer.isLocal}
               label={label}
               isAudioMuted={isAudioMuted}
               showAudioMuteStatus={showAudioMuteStatus}

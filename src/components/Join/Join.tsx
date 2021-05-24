@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { Select } from '../Select';
 import { Input } from '../Input';
 import { Button } from '../TwButton';
@@ -60,12 +61,15 @@ export const Join = ({
   classes,
   ...props
 }: JoinProps) => {
-  const parseClass = useCallback(
-    hmsUiClassParserGenerator<JoinClasses>({
-      classes,
-      defaultClasses,
-      tag: 'hmsui-join',
-    }),
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<JoinClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-join',
+      }),
     [],
   );
 
@@ -80,19 +84,19 @@ export const Join = ({
   }, [initialValues]);
 
   return (
-    <div className={parseClass('root')} {...props}>
-      <div className={parseClass('containerRoot')}>
-        <div className={parseClass('header')}>
+    <div className={styler('root')} {...props}>
+      <div className={styler('containerRoot')}>
+        <div className={styler('header')}>
           <DoorIcon className="mr-2" />
           <Text variant="heading">Join your class</Text>
         </div>
-        <div className={parseClass('inputRoot')}>
-          <div className={parseClass('inputName')}>
+        <div className={styler('inputRoot')}>
+          <div className={styler('inputName')}>
             <Text variant="heading" size="sm">
               Username
             </Text>
           </div>
-          <div className={parseClass('inputFieldRoot')}>
+          <div className={styler('inputFieldRoot')}>
             <Input
               compact
               defaultValue={initialValues?.username || username}
@@ -101,12 +105,12 @@ export const Join = ({
               }}
             ></Input>
           </div>
-          <div className={parseClass('inputName')}>
+          <div className={styler('inputName')}>
             <Text variant="heading" size="sm">
               RoomId
             </Text>
           </div>
-          <div className={parseClass('inputFieldRoot')}>
+          <div className={styler('inputFieldRoot')}>
             <Input
               compact
               defaultValue={initialValues?.roomId || roomId}
@@ -115,12 +119,12 @@ export const Join = ({
               }}
             ></Input>
           </div>
-          <div className={parseClass('inputName')}>
+          <div className={styler('inputName')}>
             <Text variant="heading" size="sm">
               Role
             </Text>
           </div>
-          <div className={parseClass('inputFieldRoot')}>
+          <div className={styler('inputFieldRoot')}>
             <Select
               name="role"
               defaultValue={initialValues?.role || role}
@@ -134,7 +138,7 @@ export const Join = ({
               <option value="Viewer">Viewer</option>
             </Select>
           </div>
-          <div className={parseClass('joinRoot')}>
+          <div className={styler('joinRoot')}>
             <Button
               variant={'emphasized'}
               onClick={() =>

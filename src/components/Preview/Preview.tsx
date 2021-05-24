@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import _ from 'lodash';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { startCase } from 'lodash';
 import { closeMediaStream } from '../../utils';
 import { getLocalStream } from '@100mslive/100ms-web-sdk';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -16,6 +17,7 @@ import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { VideoTileControls } from './Controls';
 import HMSLogger from '../../utils/ui-logger';
 import { Text } from '../Text';
+import { HMSPeer } from '../../store/schema';
 
 interface MuteStatus {
   audioMuted?: boolean;
@@ -43,8 +45,7 @@ export interface PreviewProps {
   joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
   onChange: (values: SettingsFormProps) => void;
   goBackOnClick: () => void;
-  toggleMute: (type: 'audio' | 'video') => void;
-  videoTileProps: Partial<VideoTileProps>;
+  videoTileProps?: Partial<VideoTileProps>;
   videoTileClasses?: VideoTileClasses;
   /**
    * extra classes added  by user
@@ -61,12 +62,15 @@ export const Preview = ({
   classes,
   videoTileClasses,
 }: PreviewProps) => {
-  const parseClass = useCallback(
-    hmsUiClassParserGenerator<PreviewClasses>({
-      classes,
-      defaultClasses,
-      tag: 'hmsui-preview',
-    }),
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<PreviewClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-preview',
+      }),
     [],
   );
   const [mediaStream, setMediaStream] = useState(new MediaStream());
@@ -81,26 +85,11 @@ export const Preview = ({
 
   const toggleMediaState = (type: string) => {
     if (type === 'audio') {
-      if (!audioMuted) {
-        mediaStream.getAudioTracks()[0].enabled = false;
-        //TODO add handling for green light later
-        //mediaStream.getAudioTracks()[0].stop();
-      } else {
-        mediaStream.getAudioTracks()[0].enabled = true;
-        //startMediaStream();
-      }
+      mediaStream.getAudioTracks()[0].enabled = audioMuted;
       setAudioMuted(prevMuted => !prevMuted);
-      //toggleMute('audio');
     } else if (type === 'video') {
-      if (!videoMuted) {
-        mediaStream.getVideoTracks()[0].enabled = false;
-        //mediaStream.getVideoTracks()[0].stop();
-      } else {
-        mediaStream.getVideoTracks()[0].enabled = true;
-        //startMediaStream();
-      }
+      mediaStream.getVideoTracks()[0].enabled = videoMuted;
       setVideoMuted(prevMuted => !prevMuted);
-      //toggleMute('video');
     }
   };
 
@@ -126,7 +115,7 @@ export const Preview = ({
         setError(localStreamError);
       } else {
         setError({
-          title: _.startCase(err.title),
+          title: startCase(err.title),
           message: err.message,
         });
       }
@@ -152,10 +141,10 @@ export const Preview = ({
 
   return (
     // root
-    <div className={parseClass('root')}>
-      <div className={parseClass('containerRoot')}>
+    <div className={styler('root')}>
+      <div className={styler('containerRoot')}>
         {/* header */}
-        <div className={parseClass('header')}>
+        <div className={styler('header')}>
           {/* messageModal */}
           <MessageModal
             show={showModal}
@@ -170,10 +159,12 @@ export const Preview = ({
             {...videoTileProps}
             videoTrack={mediaStream.getVideoTracks()[0]}
             audioTrack={mediaStream.getAudioTracks()[0]}
-            peer={{
-              id: name,
-              displayName: name,
-            }}
+            peer={
+              {
+                id: name,
+                name: name,
+              } as HMSPeer
+            }
             objectFit="cover"
             isLocal={true}
             aspectRatio={{
@@ -193,7 +184,7 @@ export const Preview = ({
           />
         </div>
         {/* helloDiv */}
-        <div className={parseClass('helloDiv')}>
+        <div className={styler('helloDiv')}>
           <Text variant="heading">Hello, {name}</Text>
         </div>
         {/* joinButton */}
