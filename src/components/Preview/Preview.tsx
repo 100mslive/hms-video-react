@@ -154,6 +154,8 @@ export const Preview = ({
           <VideoTile
             {...videoTileProps}
             videoTrack={mediaStream.getVideoTracks()[0]}
+            isAudioMuted={audioMuted}
+            isVideoMuted={videoMuted}
             audioTrack={mediaStream.getAudioTracks()[0]}
             peer={{
               id: name,

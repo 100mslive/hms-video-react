@@ -135,7 +135,7 @@ export const VideoTile = ({
   const storeIsVideoMuted = !useHMSStore(store => selectIsPeerVideoEnabled(store, peer.id));
 
   if (showAudioLevel === undefined) {
-    showAudioLevel = !showScreen;
+    showAudioLevel = !showScreen;  // don't show audio levels for screenshare
   }
 
   hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
