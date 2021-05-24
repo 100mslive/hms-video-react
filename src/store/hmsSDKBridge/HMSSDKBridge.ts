@@ -194,6 +194,17 @@ export class HMSSDKBridge implements IHMSBridge {
     this.syncPeers();
   }
 
+  /**
+   * This is a very important function as it's responsible to maintaining the source of
+   * truth with maximum efficiency. The efficiency comes from the fact that the only
+   * those portions of the store are updated which have actually changed.
+   * While making a change in this function don't use functions like map, reduce etc.
+   * which return a new copy of the data. Use Object.assign etc. to ensure that if the data
+   * doesn't change reference is also not changed.
+   * The UI and selectors rely on the fact that the store is immutable that is if there is
+   * any change they'll get a new copy of the data they're interested in with a new reference.
+   * @protected
+   */
   protected syncPeers() {
     const sdkPeers: sdkTypes.HMSPeer[] = this.sdk.getPeers();
     const hmsPeers: Record<HMSPeerID, HMSPeer> = {};
@@ -205,13 +216,25 @@ export class HMSSDKBridge implements IHMSBridge {
       const oldHMSTracks = selectTracksMap(store);
       for (let sdkPeer of sdkPeers) {
         let hmsPeer = SDKToHMS.convertPeer(sdkPeer);
+        const oldVideoTrack = oldHMSPeers[hmsPeer.id]?.videoTrack;
         if (hmsPeer.id in oldHMSPeers) {
+          const oldAuxiliaryTracks = oldHMSPeers[hmsPeer.id].auxiliaryTracks;
+          if (this.arraysEqual(hmsPeer.auxiliaryTracks, oldAuxiliaryTracks)) {
+            hmsPeer.auxiliaryTracks = oldAuxiliaryTracks;
+          }
           // update existing object so if there isn't a change, reference is not changed
           Object.assign(oldHMSPeers[hmsPeer.id], hmsPeer);
           hmsPeer = oldHMSPeers[hmsPeer.id];
         }
         hmsPeers[hmsPeer.id] = hmsPeer as HMSPeer;
         hmsPeerIDs.push(hmsPeer.id);
+        let replaceTrackIDWith: string | undefined;
+        // if (hmsPeer.isLocal && oldVideoTrack && hmsPeer.videoTrack && hmsPeer.videoTrack !== oldVideoTrack
+        // && sdkPeer.videoTrack?.source === "regular") {
+        //   // replace track has happened - video muted etc. there is no point of changing peer object here
+        //   hmsPeer.videoTrack = oldVideoTrack;
+        //   replaceTrackIDWith = oldVideoTrack;
+        // }
         this.addPeerTracks(oldHMSTracks, hmsTracks, sdkPeer);
         if (hmsPeer.isLocal) {
           const newSettings: HMSMediaSettings = {
@@ -233,10 +256,12 @@ export class HMSSDKBridge implements IHMSBridge {
     oldHmsTracks: Record<HMSTrackID, HMSTrack>,
     hmsTracksDraft: Record<HMSTrackID, HMSTrack>,
     sdkPeer: sdkTypes.HMSPeer,
+    replaceTrackIDWith?: string,
   ) {
     const addTrack = (sdkTrack: SDKHMSTrack) => {
-      this.hmsSDKTracks[sdkTrack.trackId] = sdkTrack;
-      let hmsTrack = SDKToHMS.convertTrack(sdkTrack);
+      const sdkTrackID = replaceTrackIDWith || sdkTrack.trackId;
+      this.hmsSDKTracks[sdkTrackID] = sdkTrack;
+      let hmsTrack = SDKToHMS.convertTrack(sdkTrack, replaceTrackIDWith);
       if (hmsTrack.id in oldHmsTracks) {
         Object.assign(oldHmsTracks[hmsTrack.id], hmsTrack);
         hmsTrack = oldHmsTracks[hmsTrack.id];
@@ -255,12 +280,15 @@ export class HMSSDKBridge implements IHMSBridge {
     sdkPeer.auxiliaryTracks.forEach(sdkTrack => addTrack(sdkTrack));
   }
 
-  private arraysEqual(arr1: string[], arr2: string[]) {
+  private arraysEqual(arr1: string[] | undefined, arr2: string[]) {
+    if (!arr1) {
+      return false;
+    }
     if (arr1.length !== arr2.length) {
       return false;
     }
-    for (let i = 0; i < arr1.length; ++i) {
-      if (arr1[i] !== arr2[i]) {
+    for (let elem of arr1) {
+      if (arr2.indexOf(elem) === -1) {
         return false;
       }
     }

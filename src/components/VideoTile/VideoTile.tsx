@@ -129,6 +129,10 @@ export const VideoTile = ({
       tag: 'hmsui-videoTile',
     }),[]);
 
+  if (hmsVideoTrack?.source === "screen") {
+    showScreen = true;
+  }
+
   const selectVideoByPeerID = showScreen ? selectScreenShareByPeerID : selectCameraStreamByPeerID;
   const storeHmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
   const storeIsAudioMuted = !useHMSStore(store => selectIsPeerAudioEnabled(store, peer.id));
@@ -140,11 +144,11 @@ export const VideoTile = ({
 
   hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
 
-  if (isAudioMuted === undefined || isAudioMuted ===  null) {
+  if (!showScreen && (isAudioMuted === undefined || isAudioMuted ===  null)) {
     isAudioMuted = storeIsAudioMuted;
   }
 
-  if (isVideoMuted === undefined || isVideoMuted ===  null) {
+  if (!showScreen && (isVideoMuted === undefined || isVideoMuted ===  null)) {
     isVideoMuted = storeIsVideoMuted;
   }
 
