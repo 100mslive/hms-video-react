@@ -1,11 +1,17 @@
-import React, {useCallback} from 'react';
+import React, {useMemo} from 'react';
+import {useHMSTheme} from '../../../hooks/HMSThemeProvider'
+import { hmsUiClassParserGenerator } from '../../../utils/classes';
 import '../index.css';
 import { ButtonDisplayType } from '../../../types';
 import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
 import { Button } from '../../TwButton';
 import { Settings, SettingsFormProps } from '../../Settings/Settings';
-import { hmsUiClassParserGenerator } from '../../../utils/classes';
 
+interface PreviewControlsClasses {
+  root?: string;
+  controls?: string;
+  rightcontrols?: string;
+}
 export interface VideoTileControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
@@ -41,17 +47,17 @@ export const VideoTileControls = ({
   onChange,
   classes,
 }: VideoTileControlsProps) => {
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<PreviewControlsClasses>({
+      tw,
       classes,
       defaultClasses,
       tag: 'hmsui-preview',
-    }),
-    [],
-  );
+    }),[]);
   return (
-    <div className={`${hu('root')}`}>
-      <div className={`${hu('controls')}`}>
+    <div className={`${styler('root')}`}>
+      <div className={`${styler('controls')}`}>
         <Button
           iconOnly
           variant="no-fill"
@@ -71,7 +77,7 @@ export const VideoTileControls = ({
           {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
         </Button>
       </div>
-      <div className={`${hu('rightControls')}`}>
+      <div className={`${styler('rightControls')}`}>
         <Settings onChange={onChange} key={0} />
       </div>
     </div>

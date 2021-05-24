@@ -1,6 +1,6 @@
 import React, {
   ChangeEventHandler,
-  useCallback,
+  useMemo,
   useEffect,
   useState,
 } from 'react';
@@ -10,8 +10,11 @@ import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { getLocalDevices, getLocalStream } from '@100mslive/100ms-web-sdk';
 import { Button as TwButton } from '../TwButton';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectLocalMediaSettings } from '../../store/selectors';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { getLocalDevices, getLocalStream } from '@100mslive/100ms-web-sdk';
 
 interface SettingsClasses {
   root?: string;
@@ -118,15 +121,17 @@ export const Settings = ({
   initialValues,
   classes,
 }: SettingsProps) => {
-  const parseClass = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<SettingsClasses>({
+      tw,
       classes,
       customClasses,
       defaultClasses,
       tag: 'hmsui-settings',
-    }),
-    [],
-  );
+    }),[]);
+
+    const storeInitialValues = useHMSStore(selectLocalMediaSettings);
 
   const [open, setOpen] = useState(false);
   const [deviceGroups, setDeviceGroups] = useState<{
@@ -140,6 +145,13 @@ export const Settings = ({
   });
   const [error, setError] = useState('');
 
+  if (!initialValues) {
+    initialValues = {};
+  }
+  initialValues.selectedVideoInput = initialValues.selectedVideoInput || storeInitialValues.videoInputDeviceId;
+  initialValues.selectedAudioInput = initialValues.selectedAudioInput || storeInitialValues.audioInputDeviceId;
+  initialValues.selectedAudioOutput = initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
+
   const [values, setValues] = useState<SettingsFormProps>({
     selectedAudioInput: initialValues?.selectedAudioInput
       ? initialValues?.selectedAudioInput
@@ -152,6 +164,17 @@ export const Settings = ({
       : 'default',
     maxTileCount: initialValues?.maxTileCount ? initialValues?.maxTileCount : 9,
   });
+
+  useEffect(() => {
+    if (open) {
+      getLocalStream({ video: true, audio: true })
+        .then(stream => {
+          closeMediaStream(stream);
+          getLocalDevices().then(deviceGroups => setDeviceGroups(deviceGroups));
+        })
+        .catch(err => setError(err.message));
+    }
+  }, [open]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -177,17 +200,6 @@ export const Settings = ({
     }
     setValues(newValues);
   };
-
-  useEffect(() => {
-    if (open) {
-      getLocalStream({ video: true, audio: true })
-        .then(stream => {
-          closeMediaStream(stream);
-          getLocalDevices().then(deviceGroups => setDeviceGroups(deviceGroups));
-        })
-        .catch(err => setError(err.message));
-    }
-  }, [open]);
 
   const videoInput = deviceGroups['videoinput']
     ? deviceGroups['videoinput']
@@ -219,16 +231,16 @@ export const Settings = ({
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
-        className={`${parseClass('dialogRoot')}`}
+        className={`${styler('dialogRoot')}`}
         maxWidth="sm"
       >
-        <div className={`${parseClass('dialogContainer')}`}>
-          <div className={`${parseClass('dialogInner')}`}>
-            <span className={`${parseClass('titleContainer')}`}>
-              <span className={`${parseClass('titleIcon')}`}>
+        <div className={`${styler('dialogContainer')}`}>
+          <div className={`${styler('dialogInner')}`}>
+            <span className={`${styler('titleContainer')}`}>
+              <span className={`${styler('titleIcon')}`}>
                 <SettingsIcon className="w-7 h-7" />
               </span>
-              <span className={`${parseClass('titleText')}`}>Settings</span>
+              <span className={`${styler('titleText')}`}>Settings</span>
             </span>
 
             <TwButton
@@ -241,27 +253,27 @@ export const Settings = ({
             </TwButton>
           </div>
 
-          <div className={parseClass('divider')}></div>
+          <div className={styler('divider')}></div>
 
-          <div className={`${parseClass('formContainer')}`}>
+          <div className={`${styler('formContainer')}`}>
             {error === '' ? (
               <>
-                <div className={`${parseClass('formInner')}`}>
-                  <div className={`${parseClass('selectLabel')}`}>
+                <div className={`${styler('formInner')}`}>
+                  <div className={`${styler('selectLabel')}`}>
                     <span>Camera:</span>
                   </div>
-                  <div className={`${parseClass('selectContainer')}`}>
+                  <div className={`${styler('selectContainer')}`}>
                     {videoInput.length > 0 && (
                       <select
                         name="selectedVideoInput"
-                        className={`${parseClass('select')}`}
+                        className={`${styler('select')}`}
                         onChange={handleInputChange}
                         value={values.selectedVideoInput}
                       >
                         {videoInput.map((device, index) => (
                           <option
                             value={device.deviceId}
-                            className={`${parseClass('selectInner')}`}
+                            className={`${styler('selectInner')}`}
                             key={index}
                           >
                             {device.label} {device.deviceId}
@@ -271,22 +283,22 @@ export const Settings = ({
                     )}
                   </div>
                 </div>
-                <div className={`${parseClass('formInner')}`}>
-                  <div className={`${parseClass('selectLabel')}`}>
+                <div className={`${styler('formInner')}`}>
+                  <div className={`${styler('selectLabel')}`}>
                     <span>Microphone:</span>
                   </div>
-                  <div className={`${parseClass('selectContainer')}`}>
+                  <div className={`${styler('selectContainer')}`}>
                     {audioInput.length > 0 && (
                       <select
                         name="selectedAudioInput"
-                        className={`${parseClass('select')}`}
+                        className={`${styler('select')}`}
                         onChange={handleInputChange}
                         value={values.selectedAudioInput}
                       >
                         {audioInput.map((device, index) => (
                           <option
                             value={device.deviceId}
-                            className={`${parseClass('selectInner')}`}
+                            className={`${styler('selectInner')}`}
                             key={index}
                           >
                             {device.label}
@@ -296,22 +308,22 @@ export const Settings = ({
                     )}
                   </div>
                 </div>
-                <div className={`${parseClass('formInner')}`}>
-                  <div className={`${parseClass('selectLabel')}`}>
+                <div className={`${styler('formInner')}`}>
+                  <div className={`${styler('selectLabel')}`}>
                     <span>Audio Output:</span>
                   </div>
-                  <div className={`${parseClass('selectContainer')}`}>
+                  <div className={`${styler('selectContainer')}`}>
                     {audioOutput.length > 0 && (
                       <select
                         name="selectedAudioOutput"
-                        className={`${parseClass('select')}`}
+                        className={`${styler('select')}`}
                         onChange={handleInputChange}
                         value={values.selectedAudioOutput}
                       >
                         {audioOutput.map((device, index) => (
                           <option
                             value={device.deviceId}
-                            className={`${parseClass('select')}`}
+                            className={`${styler('select')}`}
                             key={index}
                           >
                             {device.label}
@@ -323,7 +335,7 @@ export const Settings = ({
                 </div>
               </>
             ) : (
-              <div className={parseClass('errorContainer')}>
+              <div className={styler('errorContainer')}>
                 Error in accessing devices. Please check permissions. Are all
                 devices plugged in?
               </div>
@@ -426,15 +438,15 @@ export const Settings = ({
                 </div>
               </div>
             </div> */}
-            <div className={parseClass('divider')}></div>
-            <div className={parseClass('sliderContainer')}>
-              <div className={parseClass('sliderInner')}>
-                <div className={parseClass('sliderLabelContainer')}>
-                  <span className={parseClass('sliderLabel')}>
+            <div className={styler('divider')}></div>
+            <div className={styler('sliderContainer')}>
+              <div className={styler('sliderInner')}>
+                <div className={styler('sliderLabelContainer')}>
+                  <span className={styler('sliderLabel')}>
                     Participants in view:
                   </span>
                 </div>
-                <div className={parseClass('slider')}>
+                <div className={styler('slider')}>
                   <HMSSlider
                     name="maxTileCount"
                     defaultValue={9}

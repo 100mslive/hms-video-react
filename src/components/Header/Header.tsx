@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
-import { Participant, Peer } from '../../types';
+import React, { useMemo } from 'react';
 import { VolumeIcon, Logo } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 
 export interface HeaderClasses {
   root?: string;
@@ -10,7 +10,6 @@ export interface HeaderClasses {
   rightRoot?: string;
 }
 export interface HeaderProps {
-  peer: Peer;
   time: number;
   speaker: string;
   leftComponents: Array<React.ReactNode>;
@@ -31,14 +30,13 @@ const defaultClasses: HeaderClasses = {
 };
 
 export const Header = ({
-  peer,
-  time,
   speaker,
-  leftComponents = [<Logo />],
+  leftComponents = [<Logo key={0}/>],
   centerComponents = [
     speaker ? (
       <div
         className={`self-center focus:outline-none text-lg flex items-center`}
+        key={0}
       >
         <div className="inline-block">
           <VolumeIcon />
@@ -53,20 +51,20 @@ export const Header = ({
   rightComponents = [],
   classes,
 }: HeaderProps) => {
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<HeaderClasses>({
+      tw,
       classes,
       defaultClasses,
       tag: 'hmsui-header',
-    }),
-    [],
-  );
+    }),[]);
 
   return (
-    <div className={hu('root')}>
-      <div className={hu('leftRoot')}>{leftComponents}</div>
-      <div className={hu('centerRoot')}>{centerComponents}</div>
-      <div className={hu('rightRoot')}>{rightComponents}</div>
+    <div className={styler('root')}>
+      <div className={styler('leftRoot')}>{leftComponents}</div>
+      <div className={styler('centerRoot')}>{centerComponents}</div>
+      <div className={styler('rightRoot')}>{rightComponents}</div>
     </div>
   );
 };

@@ -93,7 +93,7 @@ LightMicStory.args = {
 
 export const MicWithDangerActiveStory = MicWithDangerActive.bind({});
 MicWithDangerActiveStory.args = {
-  variant: 'icon-only',
+  variant: 'danger',
   shape: 'circle',
 };
 

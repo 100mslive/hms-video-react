@@ -1,12 +1,14 @@
-import React, { useCallback, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 import { DownCaratIcon, UpCaratIcon, MicOffIcon, MicOnIcon } from '../Icons';
-import { Participant } from '../../types';
 import { Button } from '../TwButton';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { groupBy } from 'lodash';
 import './index.css';
 import { Avatar } from '../TwAvatar';
 import ClickAwayListener from 'react-click-away-listener';
+import { HMSPeerWithMuteStatus, selectPeersWithMuteStatus } from '../../store/selectors';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
 
 interface ParticipantListClasses {
   root?: string;
@@ -26,7 +28,7 @@ interface ParticipantListClasses {
 }
 
 export interface ParticipantListProps {
-  participantList?: Array<Participant>;
+  participantList?: HMSPeerWithMuteStatus[];
   classes?: ParticipantListClasses;
 }
 
@@ -60,22 +62,24 @@ const customClasses: ParticipantListClasses = {
   onIcon: 'hmsui-participantList-show-on-group-hover',
 };
 
-type RoleMap = Map<string, Participant[]>;
+type RoleMap = Map<string, HMSPeerWithMuteStatus[]>;
 
 export const ParticipantList = ({
   participantList,
   classes,
 }: ParticipantListProps) => {
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<ParticipantListClasses>({
+      tw,
       classes,
       customClasses,
       defaultClasses,
       tag: 'hmsui-participantList',
-    }),
-    [],
-  );
+    }),[]);
+  const participantsFromStore = useHMSStore(selectPeersWithMuteStatus);
   const [listOpen, setListOpen] = useState(false);
+  participantList = participantList || participantsFromStore;
   const handleClick = useCallback(() => setListOpen(open => !open), []);
   const handleClose = useCallback(() => setListOpen(false), []);
   const rolesMap = groupBy(
@@ -86,20 +90,20 @@ export const ParticipantList = ({
 
   return (
     <ClickAwayListener onClickAway={handleClose}>
-      <div className={`${hu('root')}`}>
+      <div className={`${styler('root')}`}>
         <button
           type="button"
-          className={`${hu('buttonRoot')}
-          ${listOpen ? hu('buttonOpen') : hu('buttonClosed')}`}
+          className={`${styler('buttonRoot')}
+          ${listOpen ? styler('buttonOpen') : styler('buttonClosed')}`}
           onClick={handleClick}
         >
-          <div className={`${hu('buttonInner')}`}>
+          <div className={`${styler('buttonInner')}`}>
             {participantList?.length} in room
-            <span className={`${hu('buttonText')}`}>
+            <span className={`${styler('buttonText')}`}>
               {listOpen ? (
-                <UpCaratIcon className={hu('carat')} />
+                <UpCaratIcon className={styler('carat')} />
               ) : (
-                <DownCaratIcon className={hu('carat')} />
+                <DownCaratIcon className={styler('carat')} />
               )}
             </span>
           </div>
@@ -107,7 +111,7 @@ export const ParticipantList = ({
 
         {listOpen && (
           <div
-            className={`${hu('menuRoot')}`}
+            className={`${styler('menuRoot')}`}
             role="menu"
             aria-orientation="vertical"
             aria-labelledby="menu-button"
@@ -118,7 +122,7 @@ export const ParticipantList = ({
               roles.map((role, index) => (
                 <div key={index}>
                   <div>
-                    <span className={`${hu('menuSection')}`} role="menuitem">
+                    <span className={`${styler('menuSection')}`} role="menuitem">
                       {role === 'undefined' ? 'Unknown' : role}
                       {rolesMap[role].length > 1 ? 's' : ''}{' '}
                       {rolesMap[role].length}
@@ -128,21 +132,21 @@ export const ParticipantList = ({
                     {rolesMap[role] &&
                       rolesMap[role].map((participant, index) => (
                         <span
-                          className={`${hu('menuItem')}`}
+                          className={`${styler('menuItem')}`}
                           role="menuitem"
                           key={index}
                         >
-                          <div className={`${hu('menuText')}`}>
+                          <div className={`${styler('menuText')}`}>
                             <Avatar
-                              label={participant.peer.displayName}
+                              label={participant.peer.name}
                               shape="square"
                               classes={{ root: 'mr-2' }}
                             />
-                            {participant.peer.displayName}
+                            {participant.peer.name}
                           </div>
-                          <div className={`${hu('menuIconContainer')}`}>
+                          <div className={`${styler('menuIconContainer')}`}>
                             {participant.isAudioMuted ? (
-                              <div className={`${hu('offIcon')}`}>
+                              <div className={`${styler('offIcon')}`}>
                                 <Button
                                   iconOnly
                                   shape={'circle'}
@@ -154,7 +158,7 @@ export const ParticipantList = ({
                                 </Button>
                               </div>
                             ) : (
-                              <div className={`${hu('onIcon')}`}>
+                              <div className={`${styler('onIcon')}`}>
                                 <Button iconOnly shape={'circle'} size={'sm'}>
                                   <MicOnIcon />
                                 </Button>

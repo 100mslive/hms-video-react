@@ -2,10 +2,12 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Join, JoinProps } from './Join';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
+import { storyBookSDK } from '../../storybook/store/SetUpFakeStore';
 
 const meta: Meta = {
   title: 'Join',
   component: Join,
+  parameters: { actions: { argTypesRegex: '.*OnClick' } },
 };
 
 export default meta;
@@ -40,21 +42,14 @@ const OverrideClass: Story<JoinProps> = args => {
   );
 };
 
+const joinArgs = {
+  submitOnClick: (...args: any[]) => storyBookSDK.join(...args)
+}
+
 export const Default = Template.bind({});
-Default.args = {
-  submitOnClick: params => {
-    alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`);
-  },
-};
+Default.args = joinArgs;
 
 export const OverrideClasses = OverrideClass.bind({});
-OverrideClasses.args = {
-  submitOnClick: params => {
-    alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`);
-  },
-};
+OverrideClasses.args = joinArgs;
 export const Light = LightTemplate.bind({});
-Default.args = {
-  submitOnClick: params =>
-    alert(`Join Clicked, ${JSON.stringify(params, null, 2)}`),
-};
+Default.args = joinArgs;

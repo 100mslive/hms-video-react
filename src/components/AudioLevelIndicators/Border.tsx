@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { AudioLevelIndicatorProps } from '.';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { sigmoid } from '../../utils';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 export interface AudioLevelIndicatorClasses {
   /**
    * Style attached to avatar
@@ -26,14 +27,15 @@ export const AudioLevelBorder = ({
   displayShape,
   classes,
 }: AudioLevelBorderProps) => {
-  const hu = useCallback(
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
     hmsUiClassParserGenerator<AudioLevelIndicatorClasses>({
+      tw,
       classes,
       defaultClasses,
-      tag: 'hmsui-audioLevelBorder',
-    }),
-    [],
-  );
+      tag: 'hmsui-audioLevelIndicator',
+    }),[]);
+
   const borderStyle = {
     transition: 'box-shadow 0.4s ease-in-out',
     boxShadow: level
@@ -43,8 +45,8 @@ export const AudioLevelBorder = ({
   };
   return (
     <div
-      className={`${hu('root')} ${
-        displayShape === 'circle' ? hu('videoCircle') : ''
+      className={`${styler('root')} ${
+        displayShape === 'circle' ? styler('videoCircle') : ''
       }
         `}
       style={borderStyle}

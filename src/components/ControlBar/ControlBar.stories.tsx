@@ -6,6 +6,7 @@ import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 const meta: Meta = {
   title: 'ControlBar',
   component: ControlBar,
+  parameters: { actions: { argTypesRegex: '.*OnClick' } },
 };
 
 export default meta;
@@ -41,21 +42,6 @@ const LightTemplate: Story<ControlBarProps> = args => {
 };
 
 const defaultArgs = {
-  audioButtonOnClick: (e: React.MouseEvent) => {
-    alert('audio toggled');
-  },
-  videoButtonOnClick: (e: React.MouseEvent) => {
-    alert('video toggled');
-  },
-  leaveButtonOnClick: (e: React.MouseEvent) => {
-    alert('left room');
-  },
-  screenshareButtonOnClick: () => {
-    alert('Share Screen room');
-  },
-  chatButtonOnClick: () => {
-    alert('chat button clicked');
-  },
   isAudioMuted: true,
   isVideoMuted: true,
   isChatOpen: true,

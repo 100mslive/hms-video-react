@@ -1,10 +1,9 @@
-import { VideoTile } from './index.tsx';
+import { VideoTile } from './VideoTile.tsx';
 import {
   DefaultVideoTile,
   GoogleMeetVideoTile,
-  CampFireVideoTile,
 } from './VideoTile.stories.tsx';
-import { Meta, Story, Canvas, Props } from '@storybook/addon-docs/blocks';
+import { Meta, Canvas, Props } from '@storybook/addon-docs/blocks';
 
 <Meta title="Design System|CreditCard" component={VideoTile} />;
 
@@ -14,9 +13,6 @@ You can use VideoTile component to render local or remote video content.
 
 ## Importing
 
-```javascript
-import { VideoTile } from '100ms-sdk-component-library-react';
-```
 
 ## Example
 
@@ -25,7 +21,7 @@ import { VideoTile } from '100ms-sdk-component-library-react';
 <Canvas>
   <DefaultVideoTile
     videoSource="camera"
-    peer={{ id: '123', displayName: 'Eswar' }}
+    peer={{ id: '123', name: 'Eswar' }}
     {...DefaultVideoTile.args}
   />
 </Canvas>
@@ -36,7 +32,7 @@ Note: You need to pass MediaStream object as props to VideoTile for it to work
 <VideoTile
   isLocal={true}
   stream={MediaStream}
-  peer={{ id: '123', displayName: 'Eswar' }}
+  peer={{ id: '123', name: 'Eswar' }}
   aspectRatio={{ width: 1, height: 1 }}
   displayShape="rectangle"
   showAudioLevel={true}
@@ -50,7 +46,7 @@ Note: You need to pass MediaStream object as props to VideoTile for it to work
 <Canvas>
   <GoogleMeetVideoTile
     videoSource="camera"
-    peer={{ id: '123', displayName: 'Eswar' }}
+    peer={{ id: '123', name: 'Eswar' }}
     {...GoogleMeetVideoTile.args}
   />
 </Canvas>
@@ -61,7 +57,7 @@ Note: You need to pass MediaStream object as props to VideoTile for it to work
 <VideoTile
   isLocal={true}
   stream={MediaStream}
-  peer={{ id: '123', displayName: 'Eswar' }}
+  peer={{ id: '123', name: 'Eswar' }}
   aspectRatio={{ width: 16, height: 9 }}
   displayShape="rectangle"
   showAudioLevel={true}
@@ -76,7 +72,7 @@ Note: You need to pass MediaStream object as props to VideoTile for it to work
 <Canvas>
   <AroundVideoTile
     videoSource="camera"
-    peer={{ id: '123', displayName: 'Eswar' }}
+    peer={{ id: '123', name: 'Eswar' }}
     {...AroundVideoTile.args}
   />
 </Canvas>
@@ -87,7 +83,7 @@ Note: You need to pass MediaStream object as props to VideoTile for it to work
 <VideoTile
   isLocal={true}
   stream={MediaStream}
-  peer={{ id: '123', displayName: 'Eswar' }}
+  peer={{ id: '123', name: 'Eswar' }}
   displayShape="circle"
   showAudioLevel={true}
   audioLevelDisplayType="border"
