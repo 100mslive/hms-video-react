@@ -1,3 +1,3 @@
-import PostLeaveDisplay from './PostLeaveDisplay';
+import { PostLeaveDisplay } from './PostLeaveDisplay';
 
-export default PostLeaveDisplay;
+export { PostLeaveDisplay };

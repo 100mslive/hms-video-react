@@ -21,7 +21,7 @@ interface PostLeaveDisplayClasses {
   buttonWrapper: string;
 }
 
-const PostLeaveDisplay: React.FC<Props> = ({
+export const PostLeaveDisplay: React.FC<Props> = ({
   username = '',
   classes,
   joinRoomOnClick,
@@ -81,5 +81,3 @@ const PostLeaveDisplay: React.FC<Props> = ({
     </div>
   );
 };
-
-export default PostLeaveDisplay;
