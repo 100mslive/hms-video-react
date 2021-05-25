@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
 import { useInView } from 'react-intersection-observer';
@@ -137,7 +137,7 @@ export const Video = ({
         if (inView) {
           await hmsActions.attachVideo(videoTrackID, videoRef.current);
         } else {
-          await hmsActions.removeVideo(videoTrackID, videoRef.current);
+          await hmsActions.detachVideo(videoTrackID, videoRef.current);
         }
       }
     })();

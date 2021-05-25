@@ -53,7 +53,7 @@ export class StoryBookSDK implements IHMSBridge {
     })
   }
 
-  removeVideo(trackID: string, videoElement: HTMLVideoElement): void {
+  detachVideo(trackID: string, videoElement: HTMLVideoElement): void {
     videoElement.srcObject = null;
     this.log("video removed");
   }

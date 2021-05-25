@@ -144,7 +144,7 @@ export class HMSSDKBridge implements IHMSBridge {
     }
   }
 
-  async removeVideo(trackID: string, videoElement: HTMLVideoElement) {
+  async detachVideo(trackID: string, videoElement: HTMLVideoElement) {
     const sdkTrack = this.hmsSDKTracks[trackID];
     if (sdkTrack && sdkTrack.type === 'video') {
       await (sdkTrack as SDKHMSVideoTrack).removeSink(videoElement);
