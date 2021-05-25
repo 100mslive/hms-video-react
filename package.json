@@ -1,5 +1,5 @@
 {
-  "version": "0.3.46",
+  "version": "0.3.47",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -13,8 +13,9 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint --fix",
+    "test": "tsdx test",
+    "test:watch": "tsdx test --watch",
+    "lint": "tsdx lint",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
