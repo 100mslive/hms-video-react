@@ -1,15 +1,41 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Text } from '../Text';
 
 interface Props {
   username?: string;
+  classes?: FirstPersonDisplayClasses;
 }
 
-const FirstPersonDisplay: React.FC<Props> = ({ username = 'Sanjana' }) => {
+interface FirstPersonDisplayClasses {
+  root: string;
+  rootBg: string;
+}
+
+const FirstPersonDisplay: React.FC<Props> = ({
+  username = 'Sanjana',
+  classes,
+}) => {
+  const defaultClasses: FirstPersonDisplayClasses = {
+    root: `h-full text-white flex items-center justify-center`,
+    rootBg: `w-37.5 h-42.5 rounded-2xl relative flex flex-col text-center space-y-4 pt-44 items-center`,
+  };
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<FirstPersonDisplayClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-first-person-display',
+      }),
+    [],
+  );
   return (
-    <div className="h-full text-white flex items-center justify-center">
+    <div className={styler('root')}>
       <div
-        className="w-37.5 h-42.5 rounded-2xl relative flex flex-col text-center space-y-4 pt-44 items-center"
+        className={styler('rootBg')}
         style={{
           backgroundImage: `url(https://i.postimg.cc/SKvM5DY1/back.png)`,
         }}
