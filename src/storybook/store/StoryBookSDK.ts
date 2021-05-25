@@ -141,10 +141,7 @@ export class StoryBookSDK implements IHMSBridge {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-<<<<<<< HEAD
   setAudioSettings(settings: HMSAudioTrackSettings): void {
   }
 
-=======
->>>>>>> parent of 2848775 (chore: Linting)
 }
