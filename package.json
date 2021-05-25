@@ -35,16 +35,16 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
-  "name": "@100mslive/hmsvideo-react",
+  "name": "@100mslive/hms-video-react",
   "author": "100ms",
-  "module": "dist/hmsvideo-react.esm.js",
+  "module": "dist/hms-video-react.esm.js",
   "size-limit": [
     {
-      "path": "dist/hmsvideo-react.cjs.production.min.js",
+      "path": "dist/hms-video-react.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/hmsvideo-react.esm.js",
+      "path": "dist/hms-video-react.esm.js",
       "limit": "10 KB"
     }
   ],
