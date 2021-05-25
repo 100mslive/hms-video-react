@@ -1,3 +1,3 @@
-import FirstPersonDisplay from './FirstPersonDisplay';
+import { FirstPersonDisplay } from './FirstPersonDisplay';
 
-export default FirstPersonDisplay;
+export { FirstPersonDisplay };
