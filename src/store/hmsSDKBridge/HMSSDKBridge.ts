@@ -332,6 +332,14 @@ export class HMSSDKBridge implements IHMSBridge {
         if (isEqual(oldPeer.auxiliaryTracks, newPeer.auxiliaryTracks)) {
           newPeer.auxiliaryTracks = oldPeer.auxiliaryTracks;
         }
+        // on replace track, use prev video track id, this is because we
+        // don't want the peer or peers object reference to change
+        if (oldPeer.isLocal && oldPeer.videoTrack && newPeer.videoTrack &&
+          oldPeer.videoTrack !== newPeer.videoTrack) {
+          this.hmsSDKTracks[oldPeer.videoTrack] = this.hmsSDKTracks[newPeer.videoTrack];
+          delete this.hmsSDKTracks[newPeer.videoTrack];
+          newPeer.videoTrack = oldPeer.videoTrack;
+        }
         Object.assign(oldPeer, newPeer);
       } else if (oldPeer && !newPeers) {
         // remove
