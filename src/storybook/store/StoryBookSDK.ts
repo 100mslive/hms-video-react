@@ -144,4 +144,7 @@ export class StoryBookSDK implements IHMSBridge {
   setAudioSettings(settings: HMSAudioTrackSettings): void {
   }
 
+  setVideoSettings(settings: HMSVideoTrackSettings): void {
+  }
+
 }
