@@ -19,10 +19,7 @@ interface PostLeaveDisplayClasses {
   buttonWrapper: string;
 }
 
-const PostLeaveDisplay: React.FC<Props> = ({
-  username = 'Sanjana',
-  classes,
-}) => {
+const PostLeaveDisplay: React.FC<Props> = ({ username = '', classes }) => {
   const defaultClasses: PostLeaveDisplayClasses = {
     root: `h-full text-white flex items-center justify-center`,
     rootBg: `w-37.5 h-42.5 rounded-2xl`,
