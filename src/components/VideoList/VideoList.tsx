@@ -253,9 +253,10 @@ export const VideoList = ({
 
   return (
     <div className={`${styler('root')}`}>
-      {chunkedTracksWithPeer && chunkedTracksWithPeer.length > 0 && (
-        <Carousel ref={ref}>
-          {chunkedTracksWithPeer.map((tracksPeersOnOnePage, page) => {
+      <Carousel ref={ref}>
+        {chunkedTracksWithPeer &&
+          chunkedTracksWithPeer.length > 0 &&
+          chunkedTracksWithPeer.map((tracksPeersOnOnePage, page) => {
             return (
               <div className={`${styler('sliderInner')}`} key={page}>
                 <div
@@ -270,11 +271,11 @@ export const VideoList = ({
                   {tracksPeersOnOnePage.map((trackPeer, index) => {
                     return (
                       <div
+                        key={trackPeer.peer.id + trackPeer.track.source} // track id changes on replace track
                         style={{
                           height: trackPeer.height,
                           width: trackPeer.width,
                         }}
-                        key={trackPeer.track.id}
                         className={`${styler('videoTileContainer')}`}
                       >
                         <VideoTile
@@ -301,8 +302,7 @@ export const VideoList = ({
               </div>
             );
           })}
-        </Carousel>
-      )}
+      </Carousel>
     </div>
   );
 };

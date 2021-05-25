@@ -11,8 +11,8 @@ import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
   selectCameraStreamByPeerID,
   selectIsPeerAudioEnabled,
-  selectScreenShareByPeerID,
-} from '../../store/selectors';
+  selectIsPeerVideoEnabled,
+  selectScreenShareByPeerID } from '../../store/selectors';
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
@@ -109,8 +109,8 @@ export const VideoTile = ({
   hmsVideoTrack,
   showScreen = false,
   audioLevel = 0,
-  isAudioMuted = false,
-  isVideoMuted = false,
+  isAudioMuted,
+  isVideoMuted,
   showAudioMuteStatus = true,
   showAudioLevel,
   objectFit = 'cover',
@@ -137,24 +137,27 @@ export const VideoTile = ({
     [],
   );
 
-  const selectVideoByPeerID = showScreen
-    ? selectScreenShareByPeerID
-    : selectCameraStreamByPeerID;
-  const storeHmsVideoTrack = useHMSStore(store =>
-    selectVideoByPeerID(store, peer.id),
-  );
-  const storeIsAudioMuted = !useHMSStore(store =>
-    selectIsPeerAudioEnabled(store, peer.id),
-  );
+  if (hmsVideoTrack?.source === "screen") {
+    showScreen = true;
+  }
+
+  const selectVideoByPeerID = showScreen ? selectScreenShareByPeerID : selectCameraStreamByPeerID;
+  const storeHmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
+  const storeIsAudioMuted = !useHMSStore(store => selectIsPeerAudioEnabled(store, peer.id));
+  const storeIsVideoMuted = !useHMSStore(store => selectIsPeerVideoEnabled(store, peer.id));
 
   if (showAudioLevel === undefined) {
-    showAudioLevel = !showScreen;
+    showAudioLevel = !showScreen;  // don't show audio levels for screenshare
   }
 
   hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
 
-  if (isAudioMuted === undefined || isAudioMuted === null) {
+  if (!showScreen && (isAudioMuted === undefined || isAudioMuted ===  null)) {
     isAudioMuted = storeIsAudioMuted;
+  }
+
+  if (!showScreen && (isVideoMuted === undefined || isVideoMuted ===  null)) {
+    isVideoMuted = storeIsVideoMuted;
   }
 
   const label = getVideoTileLabel(
@@ -162,6 +165,7 @@ export const VideoTile = ({
     peer.isLocal,
     hmsVideoTrack?.source,
   );
+
   try {
     if (aspectRatio === undefined) {
       aspectRatio = appBuilder.videoTileAspectRatio;

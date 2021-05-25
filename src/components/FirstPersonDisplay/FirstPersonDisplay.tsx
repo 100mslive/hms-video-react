@@ -13,7 +13,10 @@ interface FirstPersonDisplayClasses {
   rootBg: string;
 }
 
-const FirstPersonDisplay: React.FC<Props> = ({ username = '', classes }) => {
+export const FirstPersonDisplay: React.FC<Props> = ({
+  username = '',
+  classes,
+}) => {
   const defaultClasses: FirstPersonDisplayClasses = {
     root: `h-full text-white flex items-center justify-center`,
     rootBg: `w-37.5 h-42.5 rounded-2xl relative flex flex-col text-center space-y-4 pt-44 items-center`,
@@ -52,5 +55,3 @@ const FirstPersonDisplay: React.FC<Props> = ({ username = '', classes }) => {
     </div>
   );
 };
-
-export default FirstPersonDisplay;

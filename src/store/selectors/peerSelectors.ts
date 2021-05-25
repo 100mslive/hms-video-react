@@ -31,9 +31,29 @@ export const selectPeers = createSelector(
   },
 );
 
+export interface MinimalLocalPeer {
+  id: HMSPeerID;
+  name: string;
+  role?: string;
+}
+
 export const selectLocalPeer = createSelector(selectPeers, peers => {
   return peers.filter(p => p.isLocal)[0];
 });
+
+/**
+ * A more efficient version of selectLocalPeer which doesn't have changing
+ * fields.
+ */
+export const selectMinimalLocalPeer = createSelector(
+  selectLocalPeer,
+  (peer): MinimalLocalPeer | null => {
+    if (!peer) {
+      return null;
+    }
+    return { id: peer.id, name: peer.name, role: peer.role }
+  }
+)
 
 export const selectLocalPeerID = createSelector(selectLocalPeer, peer => {
   return peer.id;
@@ -51,7 +71,8 @@ export const selectDominantSpeakerName = createSelector(selectPeersMap, selectSp
     const s2Level = s2[1]?.audioLevel || 0;
     return s2Level > s1Level ? 1 : -1;
   });
-  if (speakersInOrder.length > 0) {
+  if (speakersInOrder.length > 0 && speakersInOrder[0][1].audioLevel &&
+    speakersInOrder[0][1].audioLevel > 0) {
     const peerID = speakersInOrder[0][0];
     if (peerID in peersMap) {
       return peersMap[peerID].name;

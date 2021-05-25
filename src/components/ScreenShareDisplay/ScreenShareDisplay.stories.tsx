@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import ScreenShareDisplay from './index';
+import { ScreenShareDisplay } from './index';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {

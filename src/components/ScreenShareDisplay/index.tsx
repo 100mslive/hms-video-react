@@ -1,3 +1,3 @@
-import ScreenShareDisplay from './ScreenShareDisplay';
+import { ScreenShareDisplay } from './ScreenShareDisplay';
 
-export default ScreenShareDisplay;
+export { ScreenShareDisplay };
