@@ -259,7 +259,7 @@ export const VideoList = ({
                     return (
                       <div
                         style={{ height: trackPeer.height, width: trackPeer.width }}
-                        key={trackPeer.track.id}
+                        key={trackPeer.peer.id + trackPeer.track.source} // track id changes on replace track
                         className={`${styler('videoTileContainer')}`}
                       >
                         <VideoTile

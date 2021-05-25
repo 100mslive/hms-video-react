@@ -7,6 +7,7 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions } from '../../hooks/HMSRoomProvider';
 import { HMSTrack } from '../../store/schema';
 import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { VideoCore } from './VideoCore';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -162,11 +163,8 @@ export const Video = ({
 
   return (
     <>
-      <video
+      <VideoCore
         ref={setRefs}
-        muted={true}
-        autoPlay
-        playsInline
         className={`${styler('video')} 
           ${displayShape === 'circle' ? styler('videoCircle') : ''}
           ${
@@ -177,7 +175,7 @@ export const Video = ({
           ${objectFit === 'contain' ? styler('videoContain') : ''}
           ${objectFit === 'cover' ? styler('videoCover') : ''}
         `}
-      ></video>
+      ></VideoCore>
       {showAudioLevel && audioLevelDisplayType === 'border' && (
         <AudioLevelIndicator
           peerId={peerId}
