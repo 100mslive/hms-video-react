@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { Select } from '../Select';
 import { Input } from '../Input';
 import { Button } from '../TwButton';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { DoorIcon } from '../Icons';
+import { Text } from '../Text';
 
 interface Fields {
   username: string;
@@ -60,20 +61,21 @@ export const Join = ({
   classes,
   ...props
 }: JoinProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<JoinClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-join',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<JoinClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-join',
+      }),
+    [],
+  );
 
   const [username, setUserName] = useState(initialValues?.username || '');
   const [role, setRole] = useState(initialValues?.role || 'Student');
-  const [roomId, setRoomId] = useState(
-    initialValues?.roomId || '',
-  );
+  const [roomId, setRoomId] = useState(initialValues?.roomId || '');
 
   useEffect(() => {
     initialValues?.username && setUserName(initialValues.username);
@@ -86,11 +88,13 @@ export const Join = ({
       <div className={styler('containerRoot')}>
         <div className={styler('header')}>
           <DoorIcon className="mr-2" />
-          Join your class
+          <Text variant="heading">Join your class</Text>
         </div>
         <div className={styler('inputRoot')}>
           <div className={styler('inputName')}>
-            <span>Username</span>
+            <Text variant="heading" size="sm">
+              Username
+            </Text>
           </div>
           <div className={styler('inputFieldRoot')}>
             <Input
@@ -102,7 +106,9 @@ export const Join = ({
             ></Input>
           </div>
           <div className={styler('inputName')}>
-            <span>RoomId</span>
+            <Text variant="heading" size="sm">
+              RoomId
+            </Text>
           </div>
           <div className={styler('inputFieldRoot')}>
             <Input
@@ -114,7 +120,9 @@ export const Join = ({
             ></Input>
           </div>
           <div className={styler('inputName')}>
-            <span>Role</span>
+            <Text variant="heading" size="sm">
+              Role
+            </Text>
           </div>
           <div className={styler('inputFieldRoot')}>
             <Select
@@ -137,7 +145,7 @@ export const Join = ({
                 submitOnClick({
                   username,
                   roomId,
-                  role
+                  role,
                 })
               }
             >

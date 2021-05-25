@@ -1,6 +1,7 @@
 import React, { PropsWithChildren } from 'react';
-import { tw, style, apply } from 'twind/style';
-import { camelize, resolveClasses } from '../../utils/classes';
+import { style } from 'twind/style';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { resolveClasses } from '../../utils/classes';
 
 type TextTags =
   | 'h1'
@@ -61,13 +62,13 @@ export interface TextClasses {
 
 const defaultClasses: TextClasses = {
   root: 'tracking-normal',
-  rootHeadingLg: 'text-5xl font-semibold leading-7',
-  rootHeadingMd: 'text-4xl font-medium leading-6',
-  rootHeadingSm: 'text-3xl font-medium leading-6',
-  rootBodyLg: 'text-base leading-5',
-  rootBodyMd: 'text-sm leading-4',
-  rootBodySm: 'text-xs leading-3',
-  rootButtonLg: 'text-lg font-semibold leading-6',
+  rootHeadingLg: 'text-heading-lg font-semibold',
+  rootHeadingMd: 'text-heading-md font-medium ',
+  rootHeadingSm: 'text-heading-sm font-medium',
+  rootBodyLg: 'text-body-lg',
+  rootBodyMd: 'text-body-md',
+  rootBodySm: 'text-body-xs',
+  rootButtonLg: 'text-button font-semibold',
 };
 
 export const Text: React.FC<PropsWithChildren<TextProps>> = ({
@@ -83,9 +84,11 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
     classes || {},
     defaultClasses,
   );
-  const TagName = tag || 'p';
+  const { tw } = useHMSTheme();
+  const TagName = tag || 'span';
   const typography = style({
     // base
+    // @ts-ignore
     base: `${finalClasses.root}`,
     matches: [
       {
@@ -120,14 +123,14 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
       },
       {
         variant: 'button',
-        size: 'sm',
+        size: 'lg',
         use: `${finalClasses.rootButtonLg}`,
       },
     ],
   });
+  // @ts-ignore
   const twClasses = typography({ size, variant });
-  const propClass = `hmsui ${camelize(`root ${variant} ${size}`)}`;
-  const className = tw(propClass, twClasses);
+  const className = tw(twClasses);
   return (
     <TagName className={className} {...props}>
       {children}
