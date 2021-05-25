@@ -2,7 +2,7 @@ import React, { Ref } from 'react';
 
 export interface VideoCoreProps {
   className: string;
-  ref: Ref<any>;
+  internalRef: Ref<any>;
 }
 
 /*
@@ -12,10 +12,10 @@ to separate out the core video element and memoize to avoid most flickering issu
 
 const VideoCoreElement = ({
   className,
-  ref,
+  internalRef,
 }: VideoCoreProps) => {
   return <video
-    ref={ref}
+    ref={internalRef}
     muted={true}
     autoPlay
     playsInline

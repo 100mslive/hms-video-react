@@ -164,7 +164,7 @@ export const Video = ({
   return (
     <>
       <VideoCore
-        ref={setRefs}
+        internalRef={setRefs}
         className={`${styler('video')} 
           ${displayShape === 'circle' ? styler('videoCircle') : ''}
           ${
