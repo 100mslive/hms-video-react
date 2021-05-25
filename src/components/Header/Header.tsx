@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { VolumeIcon, Logo } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { Text } from '../Text';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export interface HeaderClasses {
   root?: string;
@@ -31,7 +32,7 @@ const defaultClasses: HeaderClasses = {
 
 export const Header = ({
   speaker,
-  leftComponents = [<Logo key={0}/>],
+  leftComponents = [<Logo key={0} />],
   centerComponents = [
     speaker ? (
       <div
@@ -42,7 +43,11 @@ export const Header = ({
           <VolumeIcon />
         </div>
         {/* TODO figure out why xs:hidden is needed */}
-        <div className="md:pl-1 xs:hidden md:inline-block">{speaker}</div>
+        <div className="md:pl-1 xs:hidden md:inline-block">
+          <Text variant="body" size="md">
+            {speaker}
+          </Text>
+        </div>
       </div>
     ) : (
       <></>
@@ -51,14 +56,17 @@ export const Header = ({
   rightComponents = [],
   classes,
 }: HeaderProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<HeaderClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-header',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<HeaderClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-header',
+      }),
+    [],
+  );
 
   return (
     <div className={styler('root')}>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
-import {startCase} from 'lodash';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { startCase } from 'lodash';
 import { closeMediaStream } from '../../utils';
 import { getLocalStream } from '@100mslive/100ms-web-sdk';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -16,6 +16,7 @@ import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { VideoTileControls } from './Controls';
 import HMSLogger from '../../utils/ui-logger';
+import { Text } from '../Text';
 import { HMSPeer } from '../../store/schema';
 
 interface MuteStatus {
@@ -61,14 +62,17 @@ export const Preview = ({
   classes,
   videoTileClasses,
 }: PreviewProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<PreviewClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-preview',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<PreviewClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-preview',
+      }),
+    [],
+  );
   const [mediaStream, setMediaStream] = useState(new MediaStream());
   const [error, setError] = useState({
     title: '',
@@ -157,10 +161,12 @@ export const Preview = ({
             isAudioMuted={audioMuted}
             isVideoMuted={videoMuted}
             audioTrack={mediaStream.getAudioTracks()[0]}
-            peer={{
-              id: name,
-              name: name,
-            } as HMSPeer}
+            peer={
+              {
+                id: name,
+                name: name,
+              } as HMSPeer
+            }
             objectFit="cover"
             isLocal={true}
             aspectRatio={{
@@ -180,7 +186,9 @@ export const Preview = ({
           />
         </div>
         {/* helloDiv */}
-        <div className={styler('helloDiv')}>Hello, {name}</div>
+        <div className={styler('helloDiv')}>
+          <Text variant="heading">Hello, {name}</Text>
+        </div>
         {/* joinButton */}
         <Button
           variant={'emphasized'}

@@ -14,7 +14,10 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { HMSPeer, HMSPeerID, HMSTrack, HMSTrackID } from '../../store/schema';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { selectTracksMap } from '../../store/selectors';
-import { getVideoTracksFromPeers, TrackWithPeer } from '../../utils/videoListUtils';
+import {
+  getVideoTracksFromPeers,
+  TrackWithPeer,
+} from '../../utils/videoListUtils';
 
 export interface VideoListClasses extends VideoTileClasses {
   /**
@@ -57,7 +60,7 @@ export interface VideoListProps {
    * showing main screenshare if you're already showing it in a bigger tile for eg.
    * @param peerID the peer ID for whom video tile is going to be rendered
    */
-  showScreenFn?: (peerID: HMSPeerID) => boolean,
+  showScreenFn?: (peerID: HMSPeerID) => boolean;
   /**
    * Max tiles in a  page. Overrides maxRowCount and maxColCount
    */
@@ -124,6 +127,7 @@ export interface VideoListProps {
   videoTileClasses?: VideoTileClasses;
 
   avatarType?: 'initial' | 'pebble';
+  compact?: boolean;
 }
 
 const defaultClasses: VideoListClasses = {
@@ -133,7 +137,7 @@ const defaultClasses: VideoListClasses = {
   sliderInner: 'w-full h-full',
   listContainer:
     'relative h-full w-full flex flex-wrap justify-center items-center content-center',
-  videoTileContainer: 'flex justify-center',
+  videoTileContainer: 'flex justify-center p-3',
 };
 
 export const VideoList = ({
@@ -150,20 +154,24 @@ export const VideoList = ({
   maxRowCount,
   maxColCount,
   videoTileControls,
-  showAudioMuteStatus=true,
+  showAudioMuteStatus = true,
   classes,
   videoTileClasses,
   allowRemoteMute,
   avatarType,
+  compact = false,
 }: VideoListProps) => {
-  const {tw, appBuilder} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<VideoListClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-videoList',
-    }),[]);
+  const { tw, appBuilder } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<VideoListClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-videoList',
+      }),
+    [],
+  );
   const tracksMap: Record<HMSTrackID, HMSTrack> = useHMSStore(selectTracksMap);
   const { width = 0, height = 0, ref } = useResizeDetector();
 
@@ -173,7 +181,11 @@ export const VideoList = ({
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
-  const tracksWithPeer: TrackWithPeer[] = getVideoTracksFromPeers(peers, tracksMap, showScreenFn);
+  const tracksWithPeer: TrackWithPeer[] = getVideoTracksFromPeers(
+    peers,
+    tracksMap,
+    showScreenFn,
+  );
 
   const finalAspectRatio = useMemo(() => {
     if (aspectRatio) {
@@ -240,9 +252,9 @@ export const VideoList = ({
   ]);
 
   return (
-    <div className={`${styler('root')}`} ref={ref}>
+    <div className={`${styler('root')}`}>
       {chunkedTracksWithPeer && chunkedTracksWithPeer.length > 0 && (
-        <Carousel>
+        <Carousel ref={ref}>
           {chunkedTracksWithPeer.map((tracksPeersOnOnePage, page) => {
             return (
               <div className={`${styler('sliderInner')}`} key={page}>
@@ -258,8 +270,11 @@ export const VideoList = ({
                   {tracksPeersOnOnePage.map((trackPeer, index) => {
                     return (
                       <div
-                        style={{ height: trackPeer.height, width: trackPeer.width }}
                         key={trackPeer.peer.id + trackPeer.track.source} // track id changes on replace track
+                        style={{
+                          height: trackPeer.height,
+                          width: trackPeer.width,
+                        }}
                         className={`${styler('videoTileContainer')}`}
                       >
                         <VideoTile
@@ -277,6 +292,7 @@ export const VideoList = ({
                             videoTileControls && videoTileControls[index]
                           }
                           avatarType={avatarType}
+                          compact={compact}
                         />
                       </div>
                     );

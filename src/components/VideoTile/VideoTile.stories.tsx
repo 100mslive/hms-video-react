@@ -135,10 +135,7 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                     </div>
                   )}
                   <VideoTileControls
-                    label={getVideoTileLabel(
-                      "Tushar",
-                      args.isLocal || false,
-                    )}
+                    label={getVideoTileLabel('Tushar', args.isLocal || false)}
                     isAudioMuted={args.isAudioMuted}
                     showAudioMuteStatus={args.showAudioMuteStatus}
                     showGradient={false}

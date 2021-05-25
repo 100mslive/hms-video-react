@@ -22,7 +22,7 @@ export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * If showScreen is true, user's screenshare will be shown instead of camera
    */
-  showScreen?: boolean,
+  showScreen?: boolean;
 
   /**
    * Indicates if the stream's audio is muted or not. Ignored if showAudioMuteStatus is false.
@@ -61,6 +61,10 @@ export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   classes?: VideoTileClasses;
 
   avatarType?: 'initial' | 'pebble';
+  /**
+   * Boolean variable to specify if videoTile is small or not
+   */
+  compact?: boolean;
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -118,16 +122,20 @@ export const VideoTile = ({
   controlsComponent,
   classes,
   avatarType,
+  compact = false,
 }: VideoTileProps) => {
   const { appBuilder, tw } = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<VideoTileClasses>({
-      tw,
-      classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-videoTile',
-    }),[]);
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<VideoTileClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-videoTile',
+      }),
+    [],
+  );
 
   if (hmsVideoTrack?.source === "screen") {
     showScreen = true;
@@ -195,8 +203,7 @@ export const VideoTile = ({
               ? {
                   aspectRatio: `${
                     displayShape === 'rectangle'
-                      ?
-                        impliedAspectRatio.width / impliedAspectRatio.height
+                      ? impliedAspectRatio.width / impliedAspectRatio.height
                       : 1
                   }`,
                 }
@@ -219,14 +226,12 @@ export const VideoTile = ({
           {isVideoMuted && (
             <div
               className={`${styler('avatarContainer')} ${
-                displayShape === 'circle'
-                  ? styler('avatarContainerCircle')
-                  : ''
+                displayShape === 'circle' ? styler('avatarContainerCircle') : ''
               }`}
             >
               <Avatar
                 label={peer.name}
-                size="xl"
+                size={compact ? 'sm' : 'xl'}
                 avatarType={avatarType}
               />
             </div>
