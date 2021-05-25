@@ -18,12 +18,16 @@ export class SDKToHMS {
     };
   }
 
-  static convertTrack(sdkTrack: SDKHMSTrack, replaceTrackIDWith?: string): HMSTrack {
+  static convertTrack(
+    sdkTrack: SDKHMSTrack,
+    replaceTrackIDWith?: string,
+  ): HMSTrack {
     return {
       id: replaceTrackIDWith || sdkTrack.trackId,
       source: sdkTrack.source,
       type: sdkTrack.type,
       enabled: sdkTrack.enabled,
+      displayEnabled: sdkTrack.enabled,
     };
   }
 
@@ -33,7 +37,7 @@ export class SDKToHMS {
       name: sdkRoom.name,
       hasWaitingRoom: sdkRoom.hasWaitingRoom,
       shareableLink: sdkRoom.shareableLink,
-    }
+    };
   }
 
   static convertMessage(

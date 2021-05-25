@@ -244,15 +244,16 @@ export class HMSSDKBridge implements IHMSBridge {
       if (!store.tracks[trackID]) {
         this.logPossibleInconsistency('track id not found for setEnabled');
       } else {
-        store.tracks[trackID].enabled = enabled;
+        store.tracks[trackID].displayEnabled = enabled;
       }
     });
     try {
       await this.setEnabledSDKTrack(trackID, enabled); // do the operation
+      this.syncPeers();
     } catch (err) {
       // rollback on failure
       this.store.setState(store => {
-        store.tracks[trackID].enabled = !enabled;
+        store.tracks[trackID].displayEnabled = !enabled;
       });
     }
   }
