@@ -1,46 +1,41 @@
 import React from 'react';
 import { AudioLevelDisplayType } from '../../types';
-import { DisplayShapes } from '../Video';
+import { DisplayShapes } from '../Video/Video';
 import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
-import AudioLevelBorder from './Border';
+import { AudioLevelBorder, AudioLevelIndicatorClasses } from './Border';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectPeerAudioByID } from '../../store/selectors';
 
 export interface AudioLevelIndicatorProps {
+  peerId?: string;
   type: AudioLevelDisplayType;
-  level: number;
+  level?: number;
   color?: string;
   displayShape?: DisplayShapes;
-  classes?: {
-    /**
-     * Style attached to avatar
-     */
-    root?: string;
-    /**
-     * Style attached when display shape is circle
-     */
-    videoCircle?: string;
-  };
+  classes?: AudioLevelIndicatorClasses;
 }
 
 export const AudioLevelIndicator = ({
+  peerId,
   type,
-  level,
+  level = 0,
   color,
   displayShape = 'rectangle',
-  classes = {
-    root: 'w-full h-full absolute left-0 top-0 rounded-lg',
-    videoCircle: 'rounded-full',
-  },
+  classes,
 }: AudioLevelIndicatorProps) => {
+  let audioLevel = useHMSStore(store => selectPeerAudioByID(store, peerId));
+  audioLevel = level || audioLevel;
+
   switch (type) {
     case 'inline-circle':
-      return <InlineCircle level={level} />;
+      return <InlineCircle level={audioLevel} />;
     case 'inline-wave':
-      return <InlineWave level={level} />;
+      return <InlineWave level={audioLevel} />;
     case 'border':
       return (
         <AudioLevelBorder
-          level={level}
+          level={audioLevel}
           displayShape={displayShape}
           color={color}
           classes={classes}

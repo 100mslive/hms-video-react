@@ -1,6 +1,8 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { ParticipantList, ParticipantListProps } from './ParticipantList';
+import { ParticipantList } from './ParticipantList';
+import { ParticipantListProps } from './ParticipantProps';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
   title: 'ParticipantList',
@@ -10,60 +12,36 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<ParticipantListProps> = args => (
-  <div>
+  <HMSThemeProvider
+    config={{
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+            body: ['Montserrat', 'sans-serif'],
+          },
+        },
+      },
+    }}
+    appBuilder={{ theme: 'dark' }}
+  >
     <ParticipantList {...args} />
-  </div>
+  </HMSThemeProvider>
+);
+
+const DarkTemplate: Story<ParticipantListProps> = args => (
+  <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+    <ParticipantList {...args} />
+  </HMSThemeProvider>
+);
+
+const LightTemplate: Story<ParticipantListProps> = args => (
+  <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+    <ParticipantList {...args} />
+  </HMSThemeProvider>
 );
 
 export const Default = Template.bind({});
-export const Real = Template.bind({})
-
-Default.args = {
-  participantList: [
-    {
-      peer: { id: '123', displayName: 'Alex Tinmayson', role: 'Teacher' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Ankita Bhattacharya', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Anshul Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Ishaan Awasthi', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Ivy Loppinbug', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-    {
-      peer: { id: '123', displayName: 'Sudhanshu Kumar', role: 'Student' },
-      isAudioMuted: false,
-      isStarMarked: false,
-    },
-  ],
-};
-
-Real.args= {
-  participantList:[
-    {
-      peer:{
-        id:"dasd-232",
-        displayName:"ni",
-      }},
-      {peer:{
-        id:"asdasd232-",
-        displayName:"Aniket Behera"
-      }
-    }
-  ]
-}
+export const Real = Template.bind({});
+export const Dark = DarkTemplate.bind({});
+export const Light = LightTemplate.bind({});

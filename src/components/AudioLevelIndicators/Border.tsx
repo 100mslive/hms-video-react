@@ -1,32 +1,55 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { AudioLevelIndicatorProps } from '.';
-export type AudioLevelProps = Omit<AudioLevelIndicatorProps, 'type'>;
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { sigmoid } from '../../utils';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+export interface AudioLevelIndicatorClasses {
+  /**
+   * Style attached to avatar
+   */
+  root?: string;
+  /**
+   * Style attached when display shape is circle
+   */
+  videoCircle?: string;
+}
 
-const AudioLevelBorder = ({
+type AudioLevelBorderProps = Omit<AudioLevelIndicatorProps, 'type'>;
+
+const defaultClasses: AudioLevelIndicatorClasses = {
+  root: 'w-full h-full absolute left-0 top-0 rounded-lg',
+  videoCircle: 'rounded-full',
+};
+
+export const AudioLevelBorder = ({
   level,
   color = '#0F6CFF',
   displayShape,
-  classes = {
-    root: 'w-full h-full absolute left-0 top-0 rounded-lg',
-    videoCircle: 'rounded-full',
-  },
-}: AudioLevelProps) => {
+  classes,
+}: AudioLevelBorderProps) => {
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
+    hmsUiClassParserGenerator<AudioLevelIndicatorClasses>({
+      tw,
+      classes,
+      defaultClasses,
+      tag: 'hmsui-audioLevelIndicator',
+    }),[]);
+
+  const borderStyle = {
+    transition: 'box-shadow 0.4s ease-in-out',
+    boxShadow: level
+      ? `0px 0px ${24 * sigmoid(level)}px ${color}, 0px 0px ${16 *
+          sigmoid(level)}px ${color}`
+      : '',
+  };
   return (
     <div
-      className={`${classes.root} ${
-        displayShape === 'circle' ? classes.videoCircle : ''
+      className={`${styler('root')} ${
+        displayShape === 'circle' ? styler('videoCircle') : ''
       }
         `}
-      style={
-        level
-          ? {
-              boxShadow: `0px 0px ${0.12 * level}px ${color}, 0px 0px ${0.8 *
-                level}px ${color}`,
-            }
-          : {}
-      }
+      style={borderStyle}
     ></div>
   );
 };
-
-export default AudioLevelBorder;

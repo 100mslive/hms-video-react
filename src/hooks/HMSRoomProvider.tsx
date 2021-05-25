@@ -1,81 +1,56 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, { createContext, useContext } from 'react';
+import {
+  IHMSBridge,
+  HMSSDKBridge,
+  IHMSStore,
+  createNewStore,
+} from '../store';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
-import HMSUpdateListener from '@100mslive/100ms-web-sdk/dist/interfaces/update-listener';
-import HMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
-import HMSConfig from '@100mslive/100ms-web-sdk/dist/interfaces/config';
-import HMSRoomProps from './interfaces/HMSRoomProps';
-import createListener from './helpers/createListener';
+import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
+import { IHMSStoreReadOnly } from '../store/IHMSStore';
 
-const sdk = new HMSSdk();
+// Data flow is unidirectional following flux. View never directly changes store, it calls an
+// action function(eg. sendMessage, leave etc.) which in turns does the necessary action
+// required and might modify the store if needed. View only reads from the store and shows it.
 
-const HMSContext = createContext<HMSRoomProps | null>(null);
+const store: IHMSStore = createNewStore();
+const sdk: IHMSBridge = new HMSSDKBridge(new HMSSdk(), store);
 
-export const HMSRoomProvider: React.FC = props => {
-  const [peers, setPeers] = useState(sdk.getPeers());
+const HMSContext = createContext<HMSContextProviderProps | null>(null);
 
-  const [localPeer, setLocalPeer] = useState(sdk.getLocalPeer());
+export interface HMSRoomProviderProps {
+  sdk?: IHMSBridge;
+  store?: IHMSStoreReadOnly;
+}
 
-  const [isScreenShare, setIsScreenShare] = useState(false);
+let providerProps: HMSContextProviderProps = { sdk, store };
 
-  const join = (config: HMSConfig, listener: HMSUpdateListener) => {
-    sdk.join(config, createListener(listener, setPeers, setLocalPeer, sdk));
-  };
-
-  const leave = () => {
-    sdk.leave();
-  };
-
-  const toggleMute = async (track: HMSTrack) => {
-    await track.setEnabled(!track.enabled);
-    setPeers(sdk.getPeers());
-    setLocalPeer(sdk.getLocalPeer());
-  };
-
-  const toggleScreenShare = async () => {
-    if (!isScreenShare) {
-      console.debug('HMSui-component: [toggleScreenshare] Starting screenshare');
-      setIsScreenShare(true);
-      await sdk.startScreenShare(async () => {
-        console.debug('HMSui-component: [toggleScreenshare] Inside the onstop of screenshare');
-        setIsScreenShare(false);
-        await sdk.stopScreenShare();
-      });
-    } else {
-      console.debug('HMSui-component: [toggleScreenshare] Stopping screnshare');
-      setIsScreenShare(false);
-      await sdk.stopScreenShare();
-    }
-
-    setPeers(sdk.getPeers());
-    setLocalPeer(sdk.getLocalPeer());
-  };
-
+export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({ children, ...props }) => {
+  if (props.sdk && props.store) {
+    providerProps = {sdk: props.sdk, store: props.store}
+  }
   window.onunload = () => {
-    leave();
+    providerProps.sdk.leave();
   };
-
-  return (
-    <HMSContext.Provider
-      value={{
-        peers: peers,
-        localPeer: localPeer,
-        join: join,
-        leave: leave,
-        toggleMute: toggleMute,
-        toggleScreenShare: toggleScreenShare,
-      }}
-    >
-      {props.children}
-    </HMSContext.Provider>
-  );
+  return <HMSContext.Provider value={providerProps}>
+    {children}
+  </HMSContext.Provider>
 };
 
-export const useHMSRoom = (): HMSRoomProps => {
-  const HMSContextConsumer = useContext(HMSContext);
+/*
+UseHMSStore is a read only hook which can be passed a selector to read data.
+The hook can only be used in a component if HMSRoomProvider is present in its ancestors.
+One HMSRoomProvider will need to be created per room in the UI.
+ */
+export const useHMSStore = makeHMSStoreHook(HMSContext);
 
-  if (HMSContextConsumer === null) {
+/*
+UseHMSActions is a write ony hook which can be used to dispatch actions.
+ */
+export const useHMSActions = () => {
+  const HMSContextConsumer = useContext(HMSContext);
+  if (!HMSContextConsumer) {
     throw new Error('HMSContext state variables are not set');
   }
-
-  return HMSContextConsumer;
+  return HMSContextConsumer.sdk;
 };

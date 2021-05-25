@@ -1,42 +1,97 @@
-import React, { useState } from 'react';
-import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
-import { VideoTile } from '../VideoTile/index';
-import { largestRect } from '../../utils';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import Slider from 'react-slick';
-import './index.css';
+import React, { useMemo } from 'react';
+import { AudioLevelDisplayType } from '../../types';
+import { VideoTile } from '../VideoTile';
 import {
-  SliderRightArrow,
-  SliderDownArrow,
-  SliderLeftArrow,
-  SliderUpArrow,
-} from '../../icons';
-import {
-  colToRowTransform,
-  groupTilesIntoPage,
-  rowToColTransform,
-} from '../../utils/index';
+  chunkElements,
+  getModeAspectRatio,
+  calculateLayoutSizes,
+} from '../../utils';
+import { Carousel } from '../Carousel';
 import { useResizeDetector } from 'react-resize-detector';
+import { VideoTileClasses } from '../VideoTile/VideoTile';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { HMSPeer, HMSPeerID, HMSTrack, HMSTrackID } from '../../store/schema';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectTracksMap } from '../../store/selectors';
+import {
+  getVideoTracksFromPeers,
+  TrackWithPeer,
+} from '../../utils/videoListUtils';
 
+export interface VideoListClasses extends VideoTileClasses {
+  /**
+   * Styles applied to the root element
+   */
+  root?: string;
+  /**
+   * Styles applied to the slider root
+   */
+  sliderRoot?: string;
+  /**
+   * Styles applied to the slider inner container
+   */
+  sliderInner?: string;
+  /**
+   * Styles applied to the list container
+   */
+  listContainer?: string;
+  /**
+   * Styles applited to the container of all video tiles
+   */
+  videoTileContainer?: string;
+  /**
+   * Styles applied to individual video tiles
+   */
+  videoTile?: string;
+  /**
+   * Styles applied to the video
+   */
+  video?: string;
+}
 export interface VideoListProps {
   /**
-    MediaStream to be displayed.
+    HMS Peers who need to be displayed
     */
-  streams: MediaStreamWithInfo[];
-
+  peers: HMSPeer[];
+  /**
+   * a function which tells whether to show the screenshare for a peer. A peer
+   * id is passed and a boolean value is expected. You can use it to disable
+   * showing main screenshare if you're already showing it in a bigger tile for eg.
+   * @param peerID the peer ID for whom video tile is going to be rendered
+   */
+  showScreenFn?: (peerID: HMSPeerID) => boolean;
+  /**
+   * Max tiles in a  page. Overrides maxRowCount and maxColCount
+   */
   maxTileCount?: number;
+  /**
+   * Max rows in a  page. Only applied if maxTileCount is not present
+   */
+  maxRowCount?: number;
+  /**
+   * Max columns in a  page. Only applied if maxTileCount and maxRowCount is not present
+   */
+  maxColCount?: number;
+  /**
+   * Should the next page scroll vertically, horizontally or be hidden
+   */
   overflow?: 'scroll-x' | 'scroll-y' | 'hidden';
+  /**
+   * Arrange tiles in a row or col. Similar to flex-direction
+   */
   tileArrangeDirection?: 'row' | 'col';
-  dominantSpeakers?: Peer[];
-
   /**
    Indicates if Audio Status will be shown or not.
    */
   showAudioMuteStatus?: boolean;
+  /**
+   * Contain the video or cover the video in a tile
+   */
   objectFit?: 'contain' | 'cover';
   /**
    Aspect ratio in which the video tile should be shown, will only be applied if display shape is rectangle.
+   If undefined, then the most common aspect ratio among all peer's feed will be chosen
    */
   aspectRatio?: {
     width: number;
@@ -50,186 +105,162 @@ export interface VideoListProps {
   Sets display type of Audio Level, inline-wave, inline-circle, border, avatar-circle are types available.
    */
   audioLevelDisplayType?: AudioLevelDisplayType;
+  /**
+    Show audio level for each tile?
+   */
   showAudioLevel?: boolean;
-  classes?: {
-    root?: string;
-    videoTileParent?: string;
-    videoTile?: string;
-    video?: string;
-  };
-  maxRowCount?: number;
-  maxColCount?: number;
+  /**
+   * Show control bars on all video tiles
+   */
   videoTileControls?: React.ReactNode[];
+  /**
+   * Allow local peer to mute remote peers?
+   */
   allowRemoteMute?: boolean;
+  /**
+   * extra classes added  by user
+   */
+  classes?: VideoListClasses;
+  /**
+   * videoTileClasses
+   */
+  videoTileClasses?: VideoTileClasses;
+
+  avatarType?: 'initial' | 'pebble';
+  compact?: boolean;
 }
 
+const defaultClasses: VideoListClasses = {
+  root:
+    'relative h-full w-full flex flex-wrap justify-center content-evenly justify-items-center bg-white dark:bg-black',
+  sliderRoot: 'w-full h-full',
+  sliderInner: 'w-full h-full',
+  listContainer:
+    'relative h-full w-full flex flex-wrap justify-center items-center content-center',
+  videoTileContainer: 'flex justify-center p-3',
+};
+
 export const VideoList = ({
-  streams,
+  peers,
+  showScreenFn = () => true,
   overflow = 'scroll-x',
   maxTileCount,
   tileArrangeDirection = 'row',
   objectFit = 'cover',
-  aspectRatio = { width: 1, height: 1 },
+  aspectRatio,
   displayShape = 'rectangle',
   audioLevelDisplayType,
   showAudioLevel,
-  classes,
   maxRowCount,
   maxColCount,
   videoTileControls,
-  showAudioMuteStatus,
+  showAudioMuteStatus = true,
+  classes,
+  videoTileClasses,
+  allowRemoteMute,
+  avatarType,
+  compact = false,
 }: VideoListProps) => {
+  const { tw, appBuilder } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<VideoListClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-videoList',
+      }),
+    [],
+  );
+  const tracksMap: Record<HMSTrackID, HMSTrack> = useHMSStore(selectTracksMap);
   const { width = 0, height = 0, ref } = useResizeDetector();
+
+  if (aspectRatio === undefined) {
+    aspectRatio = appBuilder.videoTileAspectRatio;
+  }
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
-  const getTileDimensions = (
-    parentWidth: number,
-    parentHeight: number,
-  ): {
-    width: number;
-    height: number;
-    rows: number;
-    cols: number;
-    videoCount: number;
-  } => {
-    if (maxTileCount) {
-      return {
-        ...largestRect(
-          parentWidth,
-          parentHeight,
-          Math.min(streams.length, maxTileCount),
-          aspectRatio.width,
-          aspectRatio.height,
-        ),
-        videoCount: Math.min(streams.length, maxTileCount),
-      };
-    } else if (maxRowCount) {
-      //let cols = ;
-      let rows = Math.min(maxRowCount, streams.length);
-      //let width = parentWidth / cols;
-      let height = parentHeight / rows;
-
-      let cols = Math.floor(parentWidth / height);
-      let width = parentWidth / cols;
-      cols = cols === 0 ? 1 : cols;
-
-      return {
-        ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
-        videoCount: rows * cols,
-      };
-    } else if (maxColCount) {
-      let cols = Math.min(maxColCount, streams.length);
-      //let width = parentWidth / cols;
-      let width = parentWidth / cols;
-      //let height = (width * aspectRatio.height) / aspectRatio.width;
-
-      let rows = Math.floor(parentHeight / width);
-      rows = rows === 0 ? 1 : rows;
-
-      let height = parentHeight / rows;
-
-      return {
-        ...largestRect(width, height, 1, aspectRatio.width, aspectRatio.height),
-        rows,
-        cols,
-        videoCount: rows * cols,
-      };
-    } else {
-      return {
-        ...largestRect(
-          parentWidth,
-          parentHeight,
-          streams.length,
-          aspectRatio.width,
-          aspectRatio.height,
-        ),
-        videoCount: streams.length,
-      };
-    }
-  };
-
-  var settings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    swipeToSlide: true,
-    vertical: overflow === 'scroll-y',
-    nextArrow:
-      overflow === 'scroll-x' ? <SliderRightArrow /> : <SliderDownArrow />,
-    prevArrow:
-      overflow === 'scroll-x' ? <SliderLeftArrow /> : <SliderUpArrow />,
-    //arrows: false,
-    //can be exposed a props
-    // centerMode: true,
-  };
-
-  const dimensions = getTileDimensions(width, height);
-  const { width: w, height: h, videoCount } = dimensions;
-  console.log(
-    `SDK-Component: ${JSON.stringify(
-      dimensions,
-    )}, parentHeight:${width} , parentwidth:${height}  , streams: ${
-      streams.length
-    }`,
+  const tracksWithPeer: TrackWithPeer[] = getVideoTracksFromPeers(
+    peers,
+    tracksMap,
+    showScreenFn,
   );
 
+  const finalAspectRatio = useMemo(() => {
+    if (aspectRatio) {
+      return aspectRatio;
+    } else {
+      const modeAspectRatio = getModeAspectRatio(tracksWithPeer);
+      //Default to 1 if there are no video tracks
+      return {
+        width: modeAspectRatio ? modeAspectRatio : 1,
+        height: 1,
+      };
+    }
+  }, [aspectRatio, tracksWithPeer]);
+
+  const count = tracksWithPeer.length;
+  const {
+    tilesInFirstPage,
+    defaultWidth,
+    defaultHeight,
+    lastPageWidth,
+    lastPageHeight,
+    isLastPageDifferentFromFirstPage,
+  } = useMemo(() => {
+    //Flooring since there's a bug in react-slick where it converts widdh into a number
+    return calculateLayoutSizes({
+      count,
+      parentWidth: Math.floor(width),
+      parentHeight: Math.floor(height),
+      maxTileCount,
+      maxRowCount,
+      maxColCount,
+      aspectRatio: finalAspectRatio,
+    });
+  }, [
+    count,
+    width,
+    height,
+    maxTileCount,
+    maxRowCount,
+    maxColCount,
+    finalAspectRatio,
+  ]);
+
+  const chunkedTracksWithPeer = useMemo(() => {
+    return chunkElements<TrackWithPeer>({
+      elements: tracksWithPeer,
+      tilesInFirstPage,
+      onlyOnePage: overflow === 'hidden',
+      isLastPageDifferentFromFirstPage,
+      defaultWidth,
+      defaultHeight,
+      lastPageWidth,
+      lastPageHeight,
+    });
+  }, [
+    tracksWithPeer,
+    tilesInFirstPage,
+    overflow,
+    width,
+    height,
+    maxColCount,
+    maxRowCount,
+    finalAspectRatio,
+  ]);
+
   return (
-    <div
-      className={`${classes?.root} h-full w-full flex flex-wrap justify-center content-evenly justify-items-center flex-${tileArrangeDirection} `}
-      ref={ref}
-    >
-      <Slider {...settings} className="w-full h-full">
-        {groupTilesIntoPage(
-          streams.map((stream, index) => (
-            <div
-              style={{ height: h, width: w }}
-              key={stream.peer.id}
-              className={`${classes?.videoTileParent} flex justify-center`}
-            >
-              <VideoTile
-                {...stream}
-                objectFit={objectFit}
-                displayShape={displayShape}
-                audioLevelDisplayType={audioLevelDisplayType}
-                showAudioLevel={showAudioLevel}
-                showAudioMuteStatus={showAudioMuteStatus}
-                aspectRatio={aspectRatio}
-                controlsComponent={
-                  videoTileControls && videoTileControls[index]
-                }
-              />
-            </div>
-          )),
-          videoCount,
-          overflow === 'hidden',
-        )
-          .map(page => {
-            if (
-              tileArrangeDirection === 'col' &&
-              !maxTileCount &&
-              !maxRowCount &&
-              maxColCount &&
-              maxColCount < page.length
-            ) {
-              return colToRowTransform(page, maxColCount);
-            } else if (
-              tileArrangeDirection === 'row' &&
-              maxRowCount &&
-              !maxTileCount &&
-              maxRowCount < page.length
-            ) {
-              return rowToColTransform(page, maxRowCount);
-            }
-            return page;
-          })
-          .map(item => {
+    <div className={`${styler('root')}`}>
+      <Carousel ref={ref}>
+        {chunkedTracksWithPeer &&
+          chunkedTracksWithPeer.length > 0 &&
+          chunkedTracksWithPeer.map((tracksPeersOnOnePage, page) => {
             return (
-              <div className="w-full h-full">
+              <div className={`${styler('sliderInner')}`} key={page}>
                 <div
-                  className={` ${
-                    classes?.root
-                  } h-full w-full flex flex-wrap justify-center items-center content-center  flex-${
+                  className={` ${styler('listContainer')}   flex-${
                     maxRowCount
                       ? 'col'
                       : maxColCount
@@ -237,12 +268,41 @@ export const VideoList = ({
                       : tileArrangeDirection
                   } `}
                 >
-                  {item}
+                  {tracksPeersOnOnePage.map((trackPeer, index) => {
+                    return (
+                      <div
+                        key={trackPeer.peer.id + trackPeer.track.source} // track id changes on replace track
+                        style={{
+                          height: trackPeer.height,
+                          width: trackPeer.width,
+                        }}
+                        className={`${styler('videoTileContainer')}`}
+                      >
+                        <VideoTile
+                          peer={trackPeer.peer}
+                          hmsVideoTrack={trackPeer.track}
+                          objectFit={objectFit}
+                          displayShape={displayShape}
+                          audioLevelDisplayType={audioLevelDisplayType}
+                          allowRemoteMute={allowRemoteMute}
+                          showAudioLevel={showAudioLevel}
+                          showAudioMuteStatus={showAudioMuteStatus}
+                          aspectRatio={aspectRatio}
+                          classes={videoTileClasses}
+                          controlsComponent={
+                            videoTileControls && videoTileControls[index]
+                          }
+                          avatarType={avatarType}
+                          compact={compact}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );
           })}
-      </Slider>
+      </Carousel>
     </div>
   );
 };

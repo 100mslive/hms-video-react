@@ -1,0 +1,8 @@
+.hmsui-chatBox-no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hmsui-chatBox-no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

@@ -1,17 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import './index.css';
-import { Peer } from '../../types';
-import { Video, VideoProps, VideoClasses } from '../Video';
+import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
-import { Avatar } from '../Avatar';
-import { getTileContainerDimensions, getVideoTileLabel } from '../../utils';
-import { useResizeDetector } from 'react-resize-detector';
-
-export interface VideoTileProps extends VideoProps {
+import { Avatar } from '../TwAvatar';
+import { getVideoTileLabel } from '../../utils';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { HMSPeer } from '../../store/schema';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import {
+  selectCameraStreamByPeerID,
+  selectIsPeerAudioEnabled,
+  selectIsPeerVideoEnabled,
+  selectScreenShareByPeerID } from '../../store/selectors';
+export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
    */
-  peer: Peer;
+  peer: HMSPeer;
+
+  /**
+   * If showScreen is true, user's screenshare will be shown instead of camera
+   */
+  showScreen?: boolean;
 
   /**
    * Indicates if the stream's audio is muted or not. Ignored if showAudioMuteStatus is false.
@@ -40,14 +51,20 @@ export interface VideoTileProps extends VideoProps {
    */
   allowRemoteMute?: boolean;
   /**
-   * Additional classes to be included for the components.
-   */
-  classes?: VideoTileClasses;
-  /**
    * Custom controls component to display label, audio mute status, audio level, remote mute control.
    * Default is VideoTileControls.
    */
   controlsComponent?: React.ReactNode;
+  /**
+   * extra classes added  by user
+   */
+  classes?: VideoTileClasses;
+
+  avatarType?: 'initial' | 'pebble';
+  /**
+   * Boolean variable to specify if videoTile is small or not
+   */
+  compact?: boolean;
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -73,143 +90,162 @@ export interface VideoTileClasses extends VideoClasses {
   videoContainerCircle?: string;
 }
 
+const defaultClasses: VideoTileClasses = {
+  root: 'group w-full h-full flex relative justify-center rounded-lg ',
+  videoContainer:
+    'relative rounded-lg object-cover relative max-w-full max-h-full',
+  avatarContainer:
+    'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
+  videoContainerCircle: 'rounded-full',
+};
+
+const customClasses: VideoTileClasses = {
+  root: 'hmsui-videoTile-showControlsOnHoverParent',
+};
+
 export const VideoTile = ({
   videoTrack,
-  audioTrack,
   peer,
-  isLocal = false,
-  videoSource = 'camera',
-  audioLevel,
-  isAudioMuted = false,
-  isVideoMuted = false,
+  hmsVideoTrack,
+  showScreen = false,
+  audioLevel = 0,
+  isAudioMuted,
+  isVideoMuted,
   showAudioMuteStatus = true,
-  showAudioLevel = true,
+  showAudioLevel,
   objectFit = 'cover',
   aspectRatio,
   displayShape = 'rectangle',
   audioLevelDisplayType = 'border',
   audioLevelDisplayColor = '#0F6CFF',
   allowRemoteMute = false,
-  classes = {
-    root: 'w-full h-full flex relative items-center justify-center rounded-lg',
-    videoContainer: 'relative rounded-lg shadow-lg',
-    avatarContainer:
-      'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
-    avatarContainerCircle: 'rounded-full',
-    videoContainerCircle: 'rounded-full',
-  },
   controlsComponent,
+  classes,
+  avatarType,
+  compact = false,
 }: VideoTileProps) => {
-  const [height, setHeight] = useState(0);
-  const [width, setWidth] = useState(0);
-  const label = getVideoTileLabel(peer.displayName, isLocal, videoSource);
-  const isSquare =
-    displayShape === 'rectangle' &&
-    aspectRatio &&
-    aspectRatio.width === aspectRatio.height;
-  const isCircle = displayShape === 'circle';
-  const isSquareOrCircle = isSquare || isCircle;
-  const videoClasses =
-    classes.video ||
-    classes.videoCircle ||
-    classes.videoLocal ||
-    classes.videoContain ||
-    classes.videoCover
-      ? {
-          video: classes.video,
-          videoCircle: classes.videoCircle,
-          videoLocal: classes.videoLocal,
-          videoCover: classes.videoCover,
-          videoContain: classes.videoContain,
-        }
-      : undefined;
+  const { appBuilder, tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<VideoTileClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-videoTile',
+      }),
+    [],
+  );
 
-  const {
-    width: containerWidth,
-    height: containerHeight,
-    ref: containerRef,
-  } = useResizeDetector();
+  if (hmsVideoTrack?.source === "screen") {
+    showScreen = true;
+  }
 
-  useEffect(() => {
-    console.debug(
-      'HMSui-component: [Videotile] Video track and container dimensions are',
-      videoTrack,
-      containerHeight,
-      containerWidth,
-    );
-    if (containerWidth && containerHeight) {
-      /*
-       * If aspect ratio is defined, container width is the largest rectangle fitting into parent
-       * If aspect ratio is not defined, container width is the same as the video dimensions
-       */
-      const { width, height } = getTileContainerDimensions({
-        parentWidth: containerWidth,
-        parentHeight: containerHeight,
-        videoTrack,
-        objectFit,
-        aspectRatio,
-        isSquareOrCircle,
-      });
-      setHeight(height);
-      setWidth(width);
+  const selectVideoByPeerID = showScreen ? selectScreenShareByPeerID : selectCameraStreamByPeerID;
+  const storeHmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
+  const storeIsAudioMuted = !useHMSStore(store => selectIsPeerAudioEnabled(store, peer.id));
+  const storeIsVideoMuted = !useHMSStore(store => selectIsPeerVideoEnabled(store, peer.id));
+
+  if (showAudioLevel === undefined) {
+    showAudioLevel = !showScreen;  // don't show audio levels for screenshare
+  }
+
+  hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
+
+  if (!showScreen && (isAudioMuted === undefined || isAudioMuted ===  null)) {
+    isAudioMuted = storeIsAudioMuted;
+  }
+
+  if (!showScreen && (isVideoMuted === undefined || isVideoMuted ===  null)) {
+    isVideoMuted = storeIsVideoMuted;
+  }
+
+  const label = getVideoTileLabel(
+    peer.name,
+    peer.isLocal,
+    hmsVideoTrack?.source,
+  );
+
+  try {
+    if (aspectRatio === undefined) {
+      aspectRatio = appBuilder.videoTileAspectRatio;
     }
-  }, [
-    videoTrack,
-    aspectRatio,
-    displayShape,
-    objectFit,
-    isSquareOrCircle,
-    containerWidth,
-    containerHeight,
-  ]);
+    if (avatarType === undefined) {
+      avatarType = appBuilder.avatarType;
+    }
+  } catch (e) {}
+  avatarType = avatarType || 'initial';
 
-  useEffect(() => {
-    console.debug(
-      'HMSui-component: [Videotile] Video and Audio Track is',
-      videoTrack,
-      audioTrack,
-    );
-  }, [videoTrack, audioTrack]);
+  let { width, height } = { width: 1, height: 1 };
+  if (hmsVideoTrack) {
+    if (hmsVideoTrack?.width && hmsVideoTrack.height) {
+      width = hmsVideoTrack.width;
+      height = hmsVideoTrack.height;
+    }
+  } else if (videoTrack) {
+    let trackSettings = videoTrack.getSettings();
+    width = trackSettings.width || width;
+    height = trackSettings.height || width;
+  }
 
+  const impliedAspectRatio =
+    aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
-    <div ref={containerRef} className={classes.root}>
-      {containerHeight && containerWidth && (
+    <div className={styler('root')}>
+      {((impliedAspectRatio.width && impliedAspectRatio.height) ||
+        objectFit === 'contain') && (
         <div
-          className={`${classes.videoContainer} ${
-            displayShape === 'circle' ? classes.videoContainerCircle : ''
-          }`}
-          style={{ width: `${width}px`, height: `${height}px` }}
+          className={`${styler('videoContainer')} ${
+            displayShape === 'circle' ? styler('videoContainerCircle') : ''
+          } `}
+          style={
+            objectFit !== 'contain'
+              ? {
+                  aspectRatio: `${
+                    displayShape === 'rectangle'
+                      ? impliedAspectRatio.width / impliedAspectRatio.height
+                      : 1
+                  }`,
+                }
+              : { objectFit: 'contain', width: '100%', height: '100%' }
+          }
         >
+          {/* TODO this doesn't work in Safari and looks ugly with contain*/}
           <Video
+            peerId={peer.id}
+            hmsVideoTrack={hmsVideoTrack}
             videoTrack={videoTrack}
-            audioTrack={audioTrack}
             objectFit={objectFit}
-            isLocal={isLocal}
-            videoSource={videoSource}
+            isLocal={peer.isLocal}
             showAudioLevel={showAudioLevel}
             audioLevel={audioLevel}
             audioLevelDisplayType={audioLevelDisplayType}
             audioLevelDisplayColor={audioLevelDisplayColor}
             displayShape={displayShape}
-            classes={videoClasses}
           />
           {isVideoMuted && (
             <div
-              className={`${classes.avatarContainer} ${
-                displayShape === 'circle' ? classes.avatarContainerCircle : ''
+              className={`${styler('avatarContainer')} ${
+                displayShape === 'circle' ? styler('avatarContainerCircle') : ''
               }`}
             >
-              <Avatar label={peer.displayName} />
+              <Avatar
+                label={peer.name}
+                size={compact ? 'sm' : 'xl'}
+                avatarType={avatarType}
+              />
             </div>
           )}
           {controlsComponent ? (
             controlsComponent
           ) : (
+            // TODO circle controls are broken now
             <VideoTileControls
+              isLocal={peer.isLocal}
               label={label}
               isAudioMuted={isAudioMuted}
               showAudioMuteStatus={showAudioMuteStatus}
-              showGradient={!isCircle}
+              showGradient={displayShape === 'circle'}
               allowRemoteMute={allowRemoteMute}
               showAudioLevel={
                 showAudioLevel && audioLevelDisplayType !== 'border'

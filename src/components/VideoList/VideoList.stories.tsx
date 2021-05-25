@@ -1,12 +1,13 @@
-import { useEffect } from '@storybook/client-api';
 import { Meta, Story } from '@storybook/react';
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { VideoList, VideoListProps } from '.';
-import { closeMediaStream, getVideoTileLabel } from '../../utils';
-import { MediaStreamWithInfo, Peer, VideoSource } from '../../types';
+import { getVideoTileLabel } from '../../utils';
 import { VideoTileControls } from '../VideoTile/Controls';
-import { MicOff, MicOn } from '../../icons';
-import { loadStreams } from '../../storybook/utils';
+import { MicOffIcon, MicOnIcon } from '../Icons';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
+import { fakeStreamsWithInfo } from '../../storybook/fixtures/streamFixtures';
+import { HMSPeer, HMSTrack } from '../../store/schema';
+import { storyBookSDK } from '../../storybook/store/SetUpFakeStore';
 declare global {
   interface HTMLVideoElement {
     captureStream(frameRate?: number): MediaStream;
@@ -38,196 +39,60 @@ interface VideoListStoryProps extends VideoListProps {
 }
 
 const Template: Story<VideoListStoryProps> = args => {
-  const [streamsWithInfo, setStreamsWithInfo] = useState<MediaStreamWithInfo[]>(
-    args.streams,
-  );
   const dummyCameraVideoRef = useRef<HTMLVideoElement>(null);
   const dummyScreenVideoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    //TODO can be refactored to simplify
-    //TODO move to decorator
-    //TODO make this a composite story with videoTile stories
-    //Currently video is not muted in the story if videoMute is set to true
-    return loadStreams({
-      streamsWithInfo,
-      dummyCameraVideoRef,
-      dummyScreenVideoRef,
-      setStreamsWithInfo,
-    });
-  }, [streamsWithInfo]);
-
   return (
-    <div className="flex items-center justify-center h-screen">
-      <video
-        crossOrigin="anonymous"
-        className="hidden"
-        width="400"
-        height="225"
-        ref={dummyCameraVideoRef}
-        src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618246/pexels-mart-production-7261921_XCEC2bNM_osJG_lhdtua.mp4"
-        loop
-        autoPlay
-        onPlay={() => {
-          if (dummyCameraVideoRef && dummyCameraVideoRef.current) {
-            streamsWithInfo?.forEach((streamWithInfo, index) => {
-              if (
-                !streamWithInfo.isLocal &&
-                streamWithInfo.videoSource !== 'screen' &&
-                dummyCameraVideoRef.current
-              ) {
-                let newStreamsWithInfo = [...streamsWithInfo];
-                newStreamsWithInfo[
-                  index
-                ].videoTrack = dummyCameraVideoRef.current
-                  .captureStream()
-                  .getVideoTracks()[0];
-                newStreamsWithInfo[
-                  index
-                ].audioTrack = dummyCameraVideoRef.current
-                  .captureStream()
-                  .getAudioTracks()[0];
-                setStreamsWithInfo(newStreamsWithInfo);
-              }
-            });
-          }
-        }}
-      ></video>
-      <video
-        crossOrigin="anonymous"
-        className="hidden"
-        width="400"
-        height="225"
-        ref={dummyScreenVideoRef}
-        src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618376/Screen_Recording_2021-04-17_at_5.36.24_AM_if70nz_wl31nt.mp4"
-        loop
-        autoPlay
-        onPlay={() => {
-          if (dummyScreenVideoRef && dummyScreenVideoRef.current) {
-            streamsWithInfo?.forEach((streamWithInfo, index) => {
-              if (
-                !streamWithInfo.isLocal &&
-                streamWithInfo.videoSource === 'screen' &&
-                dummyScreenVideoRef.current
-              ) {
-                let newStreamsWithInfo = [...streamsWithInfo];
-                newStreamsWithInfo[
-                  index
-                ].videoTrack = dummyScreenVideoRef.current
-                  .captureStream()
-                  .getVideoTracks()[0];
-                newStreamsWithInfo[
-                  index
-                ].audioTrack = dummyScreenVideoRef.current
-                  .captureStream()
-                  .getAudioTracks()[0];
-                setStreamsWithInfo(newStreamsWithInfo);
-              }
-            });
-          }
-        }}
-      ></video>
-      <VideoList {...args} streams={streamsWithInfo} />
-    </div>
+    <HMSThemeProvider
+      config={{
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Montserrat', 'sans-serif'],
+              body: ['Montserrat', 'sans-serif'],
+            },
+          },
+        },
+      }}
+      appBuilder={{
+        theme: 'dark',
+        videoTileAspectRatio: {
+          width: 1,
+          height: 1,
+        },
+      }}
+    >
+      <div className="flex items-center justify-center h-screen">
+        <video
+          crossOrigin="anonymous"
+          className="hidden"
+          width="400"
+          height="225"
+          ref={dummyCameraVideoRef}
+          src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618246/pexels-mart-production-7261921_XCEC2bNM_osJG_lhdtua.mp4"
+          loop
+          autoPlay
+        ></video>
+        <video
+          crossOrigin="anonymous"
+          className="hidden"
+          width="400"
+          height="225"
+          ref={dummyScreenVideoRef}
+          src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618376/Screen_Recording_2021-04-17_at_5.36.24_AM_if70nz_wl31nt.mp4"
+          loop
+          autoPlay
+        ></video>
+        <VideoList {...args} peers={storyBookSDK.getPeers()} />
+      </div>
+    </HMSThemeProvider>
   );
 };
 
-const streams = [
-  {
-    peer: { id: '1', displayName: 'Nikhil1' },
-    videoSource: 'camera',
-    audioLevel: 50,
-    isLocal: true,
-  },
-  {
-    peer: { id: '2', displayName: 'Nikhil2' },
-    videoSource: 'screen',
-    audioLevel: 100,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '3', displayName: 'Nikhil3' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '4', displayName: 'Nikhil4' },
-    videoSource: 'screen',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '1235', displayName: 'Nikhil5' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: true,
-  },
-  {
-    peer: { id: '1236', displayName: 'Nikhil6' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: true,
-  },
-  {
-    peer: { id: '1237', displayName: 'Nikhil7' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '1238', displayName: 'Nikhil8' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '1239', displayName: 'Nikhil9' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '12310', displayName: 'Nikhil10' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '12311', displayName: 'Nikhil11' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  {
-    peer: { id: '12312', displayName: 'Nikhil12' },
-    videoSource: 'camera',
-    audioLevel: 10,
-    isAudioMuted: true,
-    isVideoMuted: false,
-  },
-  // {
-  //   stream: new MediaStream(),
-  //   peer: { id: '123', displayName: 'Nikhil' },
-  //   videoSource: 'screen',
-  // },
-];
+const streams = fakeStreamsWithInfo;
 
 export const DefaultList = Template.bind({});
 DefaultList.args = {
-  //Figure out how to initiate empty tracks to remote the typeerror
-  //@ts-ignore
-  streams: streams,
   maxTileCount: 3,
   height: '98vh',
   width: '100%',
@@ -239,8 +104,6 @@ DefaultList.args = {
 
 export const CenterStage = Template.bind({});
 CenterStage.args = {
-  //@ts-ignore
-  streams: streams,
   maxTileCount: 2,
   overflow: 'hidden',
   audioLevelDisplayType: 'border',
@@ -254,8 +117,6 @@ CenterStage.args = {
 
 export const Campfire = Template.bind({});
 Campfire.args = {
-  //@ts-ignore
-  streams: streams,
   maxTileCount: 5,
   showAudioLevel: false,
   displayShape: 'circle',
@@ -271,9 +132,6 @@ Campfire.args = {
 
 export const SideBar = Template.bind({});
 SideBar.args = {
-  //TODO use decorator to constuct correct div
-  //@ts-ignore
-  streams: streams.slice(0, 4),
   showAudioLevel: false,
   classes: {
     videoTile: 'p-1',
@@ -284,35 +142,33 @@ const GoogleMeetControls = ({
   allowRemoteMute,
   isAudioMuted,
   peer,
-  isLocal,
-  videoSource,
   showAudioLevel,
   showAudioMuteStatus,
   audioLevel,
+  hmsVideoTrack,
 }: {
   allowRemoteMute: boolean;
   isAudioMuted?: boolean;
-  peer: Peer;
-  isLocal?: boolean;
-  videoSource: VideoSource;
+  peer: HMSPeer;
   showAudioLevel: boolean;
   showAudioMuteStatus: boolean;
   audioLevel?: number;
+  hmsVideoTrack?: HMSTrack;
 }) => {
   return (
     <>
       {allowRemoteMute && (
         <div className="inset-center">
           <div className="rounded-full text-white py-3 px-4 opacity-40 bg-gray-300 hover:opacity-70 ">
-            {isAudioMuted ? MicOff : MicOn}
+            {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
           </div>
         </div>
       )}
       <VideoTileControls
         label={getVideoTileLabel(
-          peer.displayName,
-          isLocal || false,
-          videoSource,
+          peer.name,
+          peer.isLocal || false,
+          hmsVideoTrack?.source,
         )}
         isAudioMuted={isAudioMuted}
         showAudioMuteStatus={showAudioMuteStatus}
@@ -321,9 +177,6 @@ const GoogleMeetControls = ({
         showAudioLevel={showAudioLevel}
         audioLevelDisplayType="inline-wave"
         audioLevel={audioLevel}
-        classes={{
-          labelContainer: 'flex justify-around items-center w-min',
-        }}
       />
       ;
     </>
@@ -333,103 +186,40 @@ const GoogleMeetControls = ({
 const MeetTemplate: Story<VideoListStoryProps> = (
   args: VideoListStoryProps,
 ) => {
-  const { streams, ...rest } = args;
-  const {
-    allowRemoteMute = true,
-    showAudioLevel = true,
-    showAudioMuteStatus = true,
-  } = rest;
-  const isCameraStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'camera',
-  );
-  const isScreenStreamRequired: boolean = args.streams.some(
-    stream => stream.videoSource === 'screen',
-  );
-  const [cameraStream, setCameraStream] = useState<MediaStream>();
-  const [screenStream, setScreenStream] = useState<MediaStream>();
-
-  // useEffect(() => {
-  //   const track = stream?.getVideoTracks()[0];
-  //   if (track) track.enabled = !args.isVideoMuted;
-  // }, [args.peer.isVideoMuted]);
-
-  // useEffect(() => {
-  //   const track = stream?.getAudioTracks()[0];
-  //   if (track) track.enabled = !args.isAudioMuted;
-  // }, [args.isAudioMuted]);
-
-  useEffect(() => {
-    closeMediaStream(cameraStream);
-    closeMediaStream(screenStream);
-
-    if (isCameraStreamRequired) {
-      window.navigator.mediaDevices
-        .getUserMedia({ audio: true, video: true })
-        .then(function(stream) {
-          //console.log(stream);
-          setCameraStream(stream);
-        });
-    }
-    if (isScreenStreamRequired) {
-      window.navigator.mediaDevices
-        .getDisplayMedia({ video: true })
-        .then(function(stream: MediaStream | undefined) {
-          //console.log(stream);
-          setScreenStream(stream);
-        });
-    }
-
-    return () => {
-      closeMediaStream(screenStream);
-      closeMediaStream(cameraStream);
-    };
-  }, [
-    args.streams,
-    cameraStream,
-    isCameraStreamRequired,
-    isScreenStreamRequired,
-    screenStream,
-  ]);
-
+  const peers = storyBookSDK.getPeers();
   return (
+    <HMSThemeProvider appBuilder={{
+      theme: 'dark',
+      videoTileAspectRatio: {
+        width: 1,
+        height: 1,
+      },
+    }} config={{}}>
     <div className="h-screen w-full flex flex-wrap justify-center content-evenly justify-items-center">
       <div style={{ width: args.width, height: args.height }} className="p-8">
-        {cameraStream && (
+        {(
           <VideoList
-            {...rest}
-            streams={streams
-              .filter(
-                item =>
-                  item.videoSource === 'screen' ||
-                  item.videoSource === 'camera',
-              )
-              .map((item): any => ({
-                ...item,
-                stream:
-                  item.videoSource === 'screen' ? screenStream : cameraStream,
-              }))}
-            videoTileControls={streams.map(stream => (
+            {...args}
+            peers={peers}
+            videoTileControls={peers.map(peer => (
               <GoogleMeetControls
-                allowRemoteMute={allowRemoteMute}
-                isAudioMuted={stream.isAudioMuted}
-                peer={stream.peer}
-                isLocal={stream.isLocal}
-                videoSource={stream.videoSource}
-                showAudioLevel={showAudioLevel}
-                audioLevel={stream.audioLevel}
-                showAudioMuteStatus={showAudioMuteStatus}
+                allowRemoteMute={false}
+                peer={peer}
+                showAudioLevel={true}
+                showAudioMuteStatus={true}
               />
             ))}
           />
         )}
       </div>
     </div>
+    </HMSThemeProvider>
   );
 };
 
 export const GoogleMeet = MeetTemplate.bind({});
 GoogleMeet.args = {
-  //@ts-ignore
+  //@ts-expect-error
   streams: streams,
   maxTileCount: 6,
   overflow: 'hidden',

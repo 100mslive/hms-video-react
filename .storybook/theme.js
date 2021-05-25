@@ -26,9 +26,9 @@ export default create({
   barBg: '161B22',
 
   // // Form colors
-  inputBg: 'white',
+  inputBg: 'black',
   // inputBorder: 'silver',
-  // inputTextColor: 'black',
+  inputTextColor: 'white',
   // inputBorderRadius: 4,
 
   brandTitle: '100ms',

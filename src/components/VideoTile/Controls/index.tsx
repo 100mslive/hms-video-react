@@ -1,1 +1,2 @@
-export { VideoTileControls, VideoTileControlsProps } from './Controls';
+export { VideoTileControls } from './Controls';
+export type { VideoTileControlsProps } from './Controls';

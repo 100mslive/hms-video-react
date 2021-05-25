@@ -1,97 +1,139 @@
-import React from 'react';
-import { MuteListButton, SpotlightListButton } from '../MediaIcons';
-import { DownCarret, UpCarret } from '../../icons';
-import { Participant } from '../../types';
-import { AvatarList } from '../Avatar';
-import Popper from '@material-ui/core/Popper';
+import React, { useMemo, useState, useCallback } from 'react';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { DownCaratIcon, UpCaratIcon } from '../Icons';
+import { ParticipantInList } from './ParticipantInList';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+import groupBy from 'lodash/groupBy';
+import './index.css';
+import ClickAwayListener from 'react-click-away-listener';
+import {
+  HMSPeerWithMuteStatus,
+  selectPeersWithAudioStatus,
+} from '../../store/selectors';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import {
+  ParticipantListClasses,
+  ParticipantListProps,
+} from './ParticipantProps';
 
-export interface ParticipantListProps {
-  participantList: Array<Participant>;
-}
+const defaultClasses: ParticipantListClasses = {
+  root:
+    'flex flex-grow justify-content:center border-opacity-0 sm:hidden md:inline-block relative',
+  buttonRoot:
+    'text-gray-300 dark:text-gray-500 flex border-opacity-0 focus:outline-none w-60 py-1.5 bg-white',
+  buttonOpen: 'rounded-t-xl dark:bg-gray-100 shadow-1 dark:shadow-none',
+  buttonClosed: 'rounded-xl dark:bg-black',
+  buttonInner:
+    'flex flex-grow justify-center px-3 m-0 my-1 tracking-wide self-center',
+  buttonText: 'pl-2 self-center',
+  carat: 'w-3 h-3',
+  // TODO fix shadow border
+  menuRoot:
+    'w-60 max-h-116 pb-2 overflow-y-auto rounded-b-xl bg-white shadow-1 dark:shadow-none dark:bg-gray-100 focus:outline-none z-50 absolute',
+  menuSection:
+    'text-gray-200 dark:text-gray-500 group flex items-center px-3 pt-3 pb-2 text-base',
+  menuItem:
+    'text-gray-100 dark:text-white group flex items-center flex-nowrap px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
+  menuText:
+    'w-52 whitespace-nowrap overflow-hidden overflow-ellipsis flex items-center',
+  menuIconContainer: 'flex flex-grow justify-self-end justify-end',
+  onIcon: '',
+  offIcon: '',
+};
 
-export const ParticipantList = ({ participantList }: ParticipantListProps) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-  };
+const customClasses: ParticipantListClasses = {
+  menuRoot: 'hmsui-participantList-scrollbar',
+  onIcon: 'hmsui-participantList-show-on-group-hover',
+};
 
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popper' : undefined;
-  const roles = new Map<string, Participant[]>();
-  participantList.forEach(participant => {
-    let role = participant.peer.role || 'Audience';
-    let list = roles.get(role) || [];
-    list.push(participant);
-    roles.set(role, list);
-  });
+type RoleMap = Map<string, HMSPeerWithMuteStatus[]>;
+
+export const ParticipantList = ({
+  participantList,
+  classes,
+}: ParticipantListProps) => {
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ParticipantListClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-participantList',
+      }),
+    [],
+  );
+  const participantsFromStore = useHMSStore(selectPeersWithAudioStatus);
+  const [listOpen, setListOpen] = useState(false);
+  participantList = participantList || participantsFromStore;
+  const handleClick = useCallback(() => setListOpen(open => !open), []);
+  const handleClose = useCallback(() => setListOpen(false), []);
+  const rolesMap = groupBy(
+    participantList,
+    participant => participant.peer.role,
+  );
+  const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
 
   return (
-    <div className="flex flex-grow justify-content:center border-opacity-0">
-      <button
-        aria-describedby={id}
-        type="button"
-        className={`text-gray-500 flex border-opacity-0 focus:outline-none w-60 pt-1.5 mb-1 rounded-tl-lg rounded-tr-lg ${
-          open ? 'bg-gray-100' : 'bg-black'
-        } self-center px-3`}
-        onClick={handleClick}
-      >
-        <div className="flex flex-grow justify-center px-3 tracking-wide self-center">
-          {participantList.length} in room
-          <span className="pl-2 self-center">
-            {open ? UpCarret : DownCarret}
-          </span>
-        </div>
-      </button>
-      <Popper id={id} open={open} anchorEl={anchorEl}>
-        <div
-          className="w-60 max-h-100 overflow-y-auto rounded-bl-xl rounded-br-xl py-1.5 bg-gray-100 focus:outline-none"
-          role="menu"
-          aria-orientation="vertical"
-          aria-labelledby="menu-button"
-          tabIndex={-1}
+    <ClickAwayListener onClickAway={handleClose}>
+      <div className={`${styler('root')}`}>
+        <button // button to open/close participant list
+          type="button"
+          className={`${styler('buttonRoot')}
+          ${listOpen ? styler('buttonOpen') : styler('buttonClosed')}`}
+          onClick={handleClick}
         >
-          {Array.from(roles.keys()).map((role,index) => {
-            let list = roles.get(role) || [];
-            return (
-              <div key={index}>
-                <div role="none" key={role}>
-                  <a
-                    href="#"
-                    className="text-gray-500 group flex items-center px-3 py-2 text-base"
-                    role="menuitem"
-                    tabIndex={-1}
-                  >
-                    {role} ({roles.get(role)?.length})
-                  </a>
-                </div>
-                <div role="none">
-                  {list.map((participant, index) => (
-                    <a
-                      href="#"
-                      className="text-white group flex items-center space-x-2 px-3 py-2 text-base hover:bg-gray-200"
+          <div className={`${styler('buttonInner')}`}>
+            {participantList?.length} in room
+            <span className={`${styler('buttonText')}`}>
+              {listOpen ? (
+                <UpCaratIcon className={styler('carat')} />
+              ) : (
+                <DownCaratIcon className={styler('carat')} />
+              )}
+            </span>
+          </div>
+        </button>
+
+        {listOpen && (
+          <div
+            className={`${styler('menuRoot')}`}
+            role="menu"
+            aria-orientation="vertical"
+            aria-labelledby="menu-button"
+            tabIndex={-1}
+          >
+            {roles &&
+              //@ts-expect-error
+              roles.map(role => (
+                <div key={role}>
+                  <div>
+                    <span
+                      className={`${styler('menuSection')}`}
                       role="menuitem"
-                      tabIndex={-1}
-                      id="menu-item-3"
-                      key={index}
                     >
-                      <AvatarList label={participant.peer.displayName} />
-                      <div className="flex justify-between">
-                        {participant.peer.displayName}
-                      </div>
-                      <div className="flex flex-grow justify-end right-0 absolute">
-                        <MuteListButton isMuteOn={participant.isAudioMuted} />
-                        <SpotlightListButton
-                          isSpotlightOn={participant.isStarMarked}
+                      {role === 'undefined' ? 'Unknown' : role}
+                      {rolesMap[role].length > 1 ? 's' : ''}{' '}
+                      {rolesMap[role].length}
+                    </span>
+                  </div>
+                  <div>
+                    {rolesMap[role] &&
+                      rolesMap[role].map(participant => (
+                        <ParticipantInList
+                          key={participant.peer.id}
+                          styler={styler}
+                          isAudioEnabled={participant.isAudioEnabled}
+                          name={participant.peer.name}
                         />
-                      </div>
-                    </a>
-                  ))}
+                      ))}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
-        </div>
-      </Popper>
-    </div>
+              ))}
+          </div>
+        )}
+      </div>
+    </ClickAwayListener>
   );
 };

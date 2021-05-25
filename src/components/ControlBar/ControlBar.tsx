@@ -1,75 +1,143 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { ButtonDisplayType } from '../../types';
-
 import {
-  AudioButton,
-  VideoButton,
-  LeaveButton,
-  ShareScreenButton,
-} from '../MediaIcons';
+  HangUpIcon,
+  MicOffIcon,
+  MicOnIcon,
+  CamOffIcon,
+  CamOnIcon,
+  ChatIcon,
+  ShareScreenIcon,
+} from '../Icons';
+import { Button as TwButton } from '../TwButton';
+import { Settings } from '../Settings/Settings';
+import { VerticalDivider } from '../VerticalDivider';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
+export interface ControlBarClasses {
+  root?: string;
+  leftRoot?: string;
+  centerRoot?: string;
+  rightRoot?: string;
+}
 export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
+  isChatOpen?: boolean;
   buttonDisplay: ButtonDisplayType;
-  classes?: {
-    root?: string;
-    leftRoot?: string;
-    centerRoot?: string;
-    rightRoot?: string;
-  };
+
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
+  chatButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
+
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
   rightComponents: Array<React.ReactNode>;
+  classes?: ControlBarClasses;
 }
+
+const defaultClasses: ControlBarClasses = {
+  root:
+    'flex flex-grow bg-white dark:bg-black h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
+  leftRoot:
+    'flex md:flex-none md:self-center md:justify-center gap-x-4 md:left-0 md:ml-2 md:absolute items-center',
+  centerRoot:
+    'flex md:flex-grow gap-x-4 md:mr-2 md:self-center md:justify-center',
+  rightRoot:
+    'flex md:flex-none gap-x-4 md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
+};
 
 export const ControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
-  buttonDisplay = 'square',
+  isChatOpen = false,
+  buttonDisplay = 'rectangle',
   audioButtonOnClick,
   videoButtonOnClick,
   leaveButtonOnClick,
+  chatButtonOnClick,
   screenshareButtonOnClick,
-  classes = {
-    root:
-      'flex flex-grow h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
-    leftRoot:
-      'flex md:flex-none md:self-center md:justify-center md:left-0 md:ml-2 md:absolute',
-    centerRoot:
-      'flex md:flex-grow gap-x-4 md:mr-2 md:self-center md:justify-center',
-    rightRoot:
-      'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
-  },
   leftComponents = [
-    <ShareScreenButton
-      buttonDisplay={buttonDisplay}
-      clickHandler={screenshareButtonOnClick}
+    <Settings
+      onChange={props => {
+        console.debug('Settings on change called ', props);
+      }}
+      key={0}
     />,
+    <VerticalDivider key={1} />,
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
+      shape={buttonDisplay}
+      onClick={screenshareButtonOnClick}
+      key={2}
+    >
+      <ShareScreenIcon />
+    </TwButton>,
+    <VerticalDivider key={3} />,
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
+      shape={buttonDisplay}
+      onClick={chatButtonOnClick}
+      active={isChatOpen}
+      key={4}
+    >
+      <ChatIcon />
+    </TwButton>,
   ],
   centerComponents = [
-    <VideoButton
-      isVideoMuted={isVideoMuted}
-      buttonDisplay={buttonDisplay}
-      clickHandler={videoButtonOnClick}
-    />,
-    <AudioButton
-      isAudioMuted={isAudioMuted}
-      buttonDisplay={buttonDisplay}
-      clickHandler={audioButtonOnClick}
-    />,
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
+      shape={buttonDisplay}
+      active={isAudioMuted}
+      onClick={audioButtonOnClick}
+      key={0}
+    >
+      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+    </TwButton>,
+    <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
+      shape={buttonDisplay}
+      active={isVideoMuted}
+      onClick={videoButtonOnClick}
+      key={1}
+    >
+      {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+    </TwButton>,
   ],
   rightComponents = [
-    <LeaveButton
-      buttonDisplay={buttonDisplay}
-      clickHandler={leaveButtonOnClick}
-    />,
+    <TwButton
+      size="md"
+      shape={buttonDisplay}
+      variant={'danger'}
+      onClick={leaveButtonOnClick}
+      icon={<HangUpIcon />}
+      key={0}
+    >
+      Leave room
+    </TwButton>,
   ],
+  classes,
 }: ControlBarProps) => {
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
+    hmsUiClassParserGenerator<ControlBarClasses>({
+      tw,
+      classes,
+      defaultClasses,
+      tag: 'hmsui-controlbar',
+    }),[]);
+
   const leftItems = Array<React.ReactNode>();
   const centerItems = Array<React.ReactNode>();
   const rightItems = Array<React.ReactNode>();
@@ -80,14 +148,16 @@ export const ControlBar = ({
   rightComponents.forEach(comp => {
     rightItems.push(comp);
   });
+
   leftComponents.forEach(comp => {
     leftItems.push(comp);
   });
+
   return (
-    <div className={classes.root}>
-      <div className={classes.leftRoot}>{leftItems}</div>
-      <div className={classes.centerRoot}>{centerItems}</div>
-      <div className={classes.rightRoot}>{rightItems}</div>
+    <div className={styler('root')}>
+      <div className={styler('leftRoot')}>{leftItems}</div>
+      <div className={styler('centerRoot')}>{centerItems}</div>
+      <div className={styler('rightRoot')}>{rightItems}</div>
     </div>
   );
 };
