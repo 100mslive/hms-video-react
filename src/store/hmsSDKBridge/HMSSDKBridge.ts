@@ -215,7 +215,7 @@ export class HMSSDKBridge implements IHMSBridge {
   }
 
   /**
-   * This is a very important function as it's responsible to maintaining the source of
+   * This is a very important function as it's responsible for maintaining the source of
    * truth with maximum efficiency. The efficiency comes from the fact that the only
    * those portions of the store are updated which have actually changed.
    * While making a change in this function don't use functions like map, reduce etc.
@@ -229,7 +229,7 @@ export class HMSSDKBridge implements IHMSBridge {
     const newHmsPeers: Record<HMSPeerID, Partial<HMSPeer>> = {};
     const newHmsPeerIDs: HMSPeerID[] = [];  // to add in room.peers
     const newHmsTracks: Record<HMSTrackID, Partial<HMSTrack>> = {};
-    const newSDKHmsTracks: Record<HMSTrackID, SDKHMSTrack> = {};
+    const newHmsSDkTracks: Record<HMSTrackID, SDKHMSTrack> = {};
     const newMediaSettings: Partial<HMSMediaSettings> = {};
 
     const sdkPeers: sdkTypes.HMSPeer[] = this.sdk.getPeers();
@@ -248,7 +248,7 @@ export class HMSSDKBridge implements IHMSBridge {
         const hmsTrack = SDKToHMS.convertTrack(sdkTrack);
         this.enrichHMSTrack(hmsTrack, sdkTrack); // fill in video width/height
         newHmsTracks[hmsTrack.id] = hmsTrack;
-        newSDKHmsTracks[sdkTrack.trackId] = sdkTrack;
+        newHmsSDkTracks[sdkTrack.trackId] = sdkTrack;
       }
 
       if (hmsPeer.isLocal) {
@@ -265,6 +265,7 @@ export class HMSSDKBridge implements IHMSBridge {
       this.mergeNewPeersInDraft(draftPeers, newHmsPeers);
       this.mergeNewTracksInDraft(draftTracks, newHmsTracks);
       Object.assign(draftStore.settings, newMediaSettings);
+      this.hmsSDKTracks = newHmsSDkTracks;
     })
   }
 

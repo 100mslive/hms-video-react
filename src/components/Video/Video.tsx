@@ -129,31 +129,19 @@ export const Video = ({
 
   const { ref: inViewRef, inView } = useInView({ threshold: 0.5 });
 
-  //TODO replace with mergeRefs
-  /**
-   * Callback to assign multiple refs(containerRef, inViewRef) to a single component.
-   * Refer: [https://github.com/thebuilder/react-intersection-observer#how-can-i-assign-multiple-refs-to-a-component]
-   */
-  const setRefs = useCallback(
-    node => {
-      videoRef.current = node;
-      inViewRef(node);
-    },
-    [inViewRef],
-  );
-
+  const videoTrackID = hmsVideoTrack?.id;
   useEffect(() => {
     (async () => {
-      if (videoRef.current && hmsVideoTrack) {
+      if (videoRef.current && videoTrackID) {
         HMSLogger.d('Video InView', videoTrack, inView);
         if (inView) {
-          await hmsActions.attachVideo(hmsVideoTrack.id, videoRef.current);
+          await hmsActions.attachVideo(videoTrackID, videoRef.current);
         } else {
-          await hmsActions.removeVideo(hmsVideoTrack.id, videoRef.current);
+          await hmsActions.removeVideo(videoTrackID, videoRef.current);
         }
       }
     })();
-  }, [inView, videoRef, videoTrack, hmsVideoTrack]);
+  }, [inView, videoRef.current, videoTrack, videoTrackID]);
 
   useEffect(() => {
     if (videoRef && videoRef.current && videoTrack && !hmsVideoTrack) {
@@ -162,9 +150,9 @@ export const Video = ({
   }, [videoRef, videoTrack, isLocal]);
 
   return (
-    <>
+    <div ref={inViewRef}>
       <VideoCore
-        internalRef={setRefs}
+        internalRef={videoRef}
         className={`${styler('video')} 
           ${displayShape === 'circle' ? styler('videoCircle') : ''}
           ${
@@ -189,6 +177,6 @@ export const Video = ({
           color={audioLevelDisplayColor}
         />
       )}
-    </>
+    </div>
   );
 };
