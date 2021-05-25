@@ -2,11 +2,11 @@ import { css } from 'twind/css';
 //@ts-ignore
 import { create } from 'twind';
 import clsx from 'clsx';
-import { reduce } from 'lodash';
+import reduce from 'lodash/reduce';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
 
 import { theme as defaultTailwindConfig } from '../defaultTheme';
-import { HMSTrack, HMSTrackSource } from '../store/schema';
+import { HMSTrackSource } from '../store/schema';
 import { TrackWithPeer } from './videoListUtils';
 
 const getVideoTileLabel = (
@@ -263,7 +263,8 @@ function calculateLayoutSizes({
   let isLastPageDifferentFromFirstPage = false;
   let tilesInFirstPage = 0;
 
-  if (count == 0) { // no tracks to show
+  if (count == 0) {
+    // no tracks to show
     return {
       tilesInFirstPage,
       defaultWidth,
@@ -366,7 +367,7 @@ const chunkElements = <T>({
   defaultHeight,
   lastPageWidth,
   lastPageHeight,
-}: ChunkElements<T>): (T & {width: number, height: number})[][] => {
+}: ChunkElements<T>): (T & { width: number; height: number })[][] => {
   const chunks: T[][] = chunk<T>(elements, tilesInFirstPage, onlyOnePage);
   return chunks.map((chunk, page) => {
     return chunk.map(element => {
@@ -379,7 +380,7 @@ const chunkElements = <T>({
         isLastPageDifferentFromFirstPage && isLastPage
           ? lastPageHeight
           : defaultHeight;
-      return {...element, height, width};
+      return { ...element, height, width };
     });
   });
 };

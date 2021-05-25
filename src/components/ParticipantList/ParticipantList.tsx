@@ -1,13 +1,16 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { DownCaratIcon, UpCaratIcon, MicOffIcon, MicOnIcon } from '../Icons';
 import { Button } from '../TwButton';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { groupBy } from 'lodash';
+import groupBy from 'lodash/groupBy';
 import './index.css';
 import { Avatar } from '../TwAvatar';
 import ClickAwayListener from 'react-click-away-listener';
-import { HMSPeerWithMuteStatus, selectPeersWithMuteStatus } from '../../store/selectors';
+import {
+  HMSPeerWithMuteStatus,
+  selectPeersWithMuteStatus,
+} from '../../store/selectors';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 
 interface ParticipantListClasses {
@@ -68,15 +71,18 @@ export const ParticipantList = ({
   participantList,
   classes,
 }: ParticipantListProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<ParticipantListClasses>({
-      tw,
-      classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-participantList',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ParticipantListClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-participantList',
+      }),
+    [],
+  );
   const participantsFromStore = useHMSStore(selectPeersWithMuteStatus);
   const [listOpen, setListOpen] = useState(false);
   participantList = participantList || participantsFromStore;
@@ -122,7 +128,10 @@ export const ParticipantList = ({
               roles.map((role, index) => (
                 <div key={index}>
                   <div>
-                    <span className={`${styler('menuSection')}`} role="menuitem">
+                    <span
+                      className={`${styler('menuSection')}`}
+                      role="menuitem"
+                    >
                       {role === 'undefined' ? 'Unknown' : role}
                       {rolesMap[role].length > 1 ? 's' : ''}{' '}
                       {rolesMap[role].length}

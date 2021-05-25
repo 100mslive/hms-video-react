@@ -20,7 +20,8 @@ import {
   selectHMSMessagesCount,
   selectPeerNameByID,
   selectPeersMap,
-  selectTracksMap, selectIsConnectedToRoom,
+  selectTracksMap,
+  selectIsConnectedToRoom,
 } from '../selectors';
 import HMSLogger from '../../utils/ui-logger';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
@@ -30,6 +31,7 @@ import SDKHMSVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSVide
 import SDKHMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
 import HMSLocalAudioTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSLocalAudioTrack';
 import HMSLocalVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSLocalVideoTrack';
+import merge from 'lodash/merge';
 
 export class HMSSDKBridge implements IHMSBridge {
   private hmsSDKTracks: Record<string, SDKHMSTrack> = {};
@@ -52,7 +54,7 @@ export class HMSSDKBridge implements IHMSBridge {
       this.isRoomJoinCalled = true;
     } catch (err) {
       this.isRoomJoinCalled = false; // so it can be called again if needed
-      HMSLogger.e("Failed to connect to room - ", err);
+      HMSLogger.e('Failed to connect to room - ', err);
       return;
     }
   }
@@ -60,21 +62,26 @@ export class HMSSDKBridge implements IHMSBridge {
   async leave() {
     const isRoomConnected = selectIsConnectedToRoom(this.store.getState());
     if (!isRoomConnected) {
-      this.logPossibleInconsistency('room leave is called when no room is connected');
+      this.logPossibleInconsistency(
+        'room leave is called when no room is connected',
+      );
       return; // ignore
     }
-    return this.sdk.leave().then(() => {
-      this.resetState();
-      HMSLogger.i('sdk', 'left room');
-    }).catch((err) => {
-      HMSLogger.e("error in leaving room - ", err);
-    })
+    return this.sdk
+      .leave()
+      .then(() => {
+        this.resetState();
+        HMSLogger.i('sdk', 'left room');
+      })
+      .catch(err => {
+        HMSLogger.e('error in leaving room - ', err);
+      });
   }
 
-  async setScreenShareEnabled(enabled:boolean){
-    if(enabled){
+  async setScreenShareEnabled(enabled: boolean) {
+    if (enabled) {
       await this.startScreenShare();
-    } else{
+    } else {
       await this.stopScreenShare();
     }
   }
@@ -100,6 +107,54 @@ export class HMSSDKBridge implements IHMSBridge {
         this.logPossibleInconsistency('local video track muted states.');
       }
       await this.setEnabledTrack(trackID, enabled);
+    }
+  }
+
+  async setAudioSettings(settings: Partial<sdkTypes.HMSAudioTrackSettings>) {
+    const trackID = selectLocalAudioTrackID(this.store.getState());
+    if (trackID) {
+      // TODO: Handle other settings changes
+      if (
+        settings.deviceId &&
+        this.store.getState().settings.audioInputDeviceId !== settings.deviceId
+      ) {
+        this.store.setState(store => {
+          // show on UI immediately
+          if (!store.tracks[trackID]) {
+            this.logPossibleInconsistency(
+              'track id not found for setAudioSettings',
+            );
+          } else {
+            store.settings.audioInputDeviceId = settings.deviceId!;
+          }
+        });
+        await this.setSDKLocalAudioTrackSettings(trackID, settings);
+        this.syncPeers();
+      }
+    }
+  }
+
+  async setVideoSettings(settings: sdkTypes.HMSVideoTrackSettings) {
+    const trackID = selectLocalVideoTrackID(this.store.getState());
+    if (trackID) {
+      // TODO: Handle other settings changes
+      if (
+        settings.deviceId &&
+        this.store.getState().settings.videoInputDeviceId !== settings.deviceId
+      ) {
+        this.store.setState(store => {
+          // show on UI immediately
+          if (!store.tracks[trackID]) {
+            this.logPossibleInconsistency(
+              'track id not found for setVideoSettings',
+            );
+          } else {
+            store.settings.videoInputDeviceId = settings.deviceId!;
+          }
+        });
+        await this.setSDKLocalVideoTrackSettings(trackID, settings);
+        this.syncPeers();
+      }
     }
   }
 
@@ -136,7 +191,7 @@ export class HMSSDKBridge implements IHMSBridge {
   private resetState() {
     this.store.setState(store => {
       Object.assign(store, createDefaultStoreState());
-    })
+    });
     this.isRoomJoinCalled = false;
     this.hmsSDKTracks = {};
   }
@@ -161,7 +216,9 @@ export class HMSSDKBridge implements IHMSBridge {
       await this.sdk.startScreenShare(this.syncPeers.bind(this));
       this.syncPeers();
     } else {
-      this.logPossibleInconsistency("start screenshare is called while it's on")
+      this.logPossibleInconsistency(
+        "start screenshare is called while it's on",
+      );
     }
   }
 
@@ -171,25 +228,28 @@ export class HMSSDKBridge implements IHMSBridge {
       await this.sdk.stopScreenShare();
       this.syncPeers();
     } else {
-      this.logPossibleInconsistency("stop screenshare is called while it's not on")
+      this.logPossibleInconsistency(
+        "stop screenshare is called while it's not on",
+      );
     }
   }
 
   private async setEnabledTrack(trackID: string, enabled: boolean) {
-    this.store.setState(store => {  // show on UI immediately
+    this.store.setState(store => {
+      // show on UI immediately
       if (!store.tracks[trackID]) {
-        this.logPossibleInconsistency("track id not found for setEnabled");
+        this.logPossibleInconsistency('track id not found for setEnabled');
       } else {
         store.tracks[trackID].enabled = enabled;
       }
-    })
+    });
     try {
       await this.setEnabledSDKTrack(trackID, enabled); // do the operation
     } catch (err) {
       // rollback on failure
       this.store.setState(store => {
         store.tracks[trackID].enabled = !enabled;
-      })
+      });
     }
     this.syncPeers();
   }
@@ -215,9 +275,11 @@ export class HMSSDKBridge implements IHMSBridge {
         this.addPeerTracks(oldHMSTracks, hmsTracks, sdkPeer);
         if (hmsPeer.isLocal) {
           const newSettings: HMSMediaSettings = {
-            audioInputDeviceId: (sdkPeer.audioTrack as HMSLocalAudioTrack)?.settings?.deviceId,
-            videoInputDeviceId: (sdkPeer.audioTrack as HMSLocalVideoTrack)?.settings?.deviceId,
-          }
+            audioInputDeviceId: (sdkPeer.audioTrack as HMSLocalAudioTrack)
+              ?.settings?.deviceId,
+            videoInputDeviceId: (sdkPeer.videoTrack as HMSLocalVideoTrack)
+              ?.settings?.deviceId,
+          };
           Object.assign(store.settings, newSettings);
         }
       }
@@ -271,7 +333,7 @@ export class HMSSDKBridge implements IHMSBridge {
     this.store.setState(store => {
       Object.assign(store.room, SDKToHMS.convertRoom(sdkRoom));
       store.room.isConnected = true;
-    })
+    });
     this.syncPeers();
   }
 
@@ -279,9 +341,7 @@ export class HMSSDKBridge implements IHMSBridge {
     this.syncPeers();
   }
 
-  protected onPeerUpdate(
-    type: sdkTypes.HMSPeerUpdate,
-  ) {
+  protected onPeerUpdate(type: sdkTypes.HMSPeerUpdate) {
     if (
       type === sdkTypes.HMSPeerUpdate.BECAME_DOMINANT_SPEAKER ||
       type === sdkTypes.HMSPeerUpdate.RESIGNED_DOMINANT_SPEAKER
@@ -332,8 +392,9 @@ export class HMSSDKBridge implements IHMSBridge {
 
   protected onError(error: SDKHMSException) {
     // send notification
-    if (Math.floor(error.code/1000) === 1) {  // critical error
-      this.leave().then(() => console.log("error from SDK, left room."));
+    if (Math.floor(error.code / 1000) === 1) {
+      // critical error
+      this.leave().then(() => console.log('error from SDK, left room.'));
     }
     HMSLogger.e('sdkError', 'received error from sdk', error);
   }
@@ -343,7 +404,49 @@ export class HMSSDKBridge implements IHMSBridge {
     if (track) {
       await track.setEnabled(enabled);
     } else {
-      this.logPossibleInconsistency(`track ${trackID} not present, unable to enabled/disable`);
+      this.logPossibleInconsistency(
+        `track ${trackID} not present, unable to enabled/disable`,
+      );
+    }
+  }
+
+  private async setSDKLocalAudioTrackSettings(
+    trackID: string,
+    settings: Partial<sdkTypes.HMSAudioTrackSettings>,
+  ) {
+    const track = this.hmsSDKTracks[trackID];
+    // TODO: Export type from sdk-index(instead of dist) to use instanceOf
+    if (track && track.constructor.name === 'HMSLocalAudioTrack') {
+      // Clone track.settings - lodash.merge overrides destination(first parameter)
+      // track.settings should be updated only in the SDK.
+      // @ts-expect-error
+      const newSettings = merge({ ...track.settings }, settings);
+      // @ts-expect-error
+      await track.setSettings(newSettings);
+    } else {
+      this.logPossibleInconsistency(
+        `audio track ${trackID} not present, unable to set settings`,
+      );
+    }
+  }
+
+  private async setSDKLocalVideoTrackSettings(
+    trackID: string,
+    settings: Partial<sdkTypes.HMSVideoTrackSettings>,
+  ) {
+    const track = this.hmsSDKTracks[trackID];
+    // TODO: Export type from sdk-index(instead of dist) to use instanceOf
+    if (track && track.constructor.name === 'HMSLocalVideoTrack') {
+      // Clone track.settings - lodash.merge overrides destination(first parameter)
+      // track.settings should be updated only in the SDK.
+      // @ts-expect-error
+      const newSettings = merge({ ...track.settings }, settings);
+      // @ts-expect-error
+      await track.setSettings(newSettings);
+    } else {
+      this.logPossibleInconsistency(
+        `video track ${trackID} not present, unable to set settings`,
+      );
     }
   }
 

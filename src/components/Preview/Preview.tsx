@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
-import {startCase} from 'lodash';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import startCase from 'lodash/startCase';
 import { closeMediaStream } from '../../utils';
 import { getLocalStream } from '@100mslive/100ms-web-sdk';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -61,14 +61,17 @@ export const Preview = ({
   classes,
   videoTileClasses,
 }: PreviewProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<PreviewClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-preview',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<PreviewClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-preview',
+      }),
+    [],
+  );
   const [mediaStream, setMediaStream] = useState(new MediaStream());
   const [error, setError] = useState({
     title: '',
@@ -155,10 +158,12 @@ export const Preview = ({
             {...videoTileProps}
             videoTrack={mediaStream.getVideoTracks()[0]}
             audioTrack={mediaStream.getAudioTracks()[0]}
-            peer={{
-              id: name,
-              name: name,
-            } as HMSPeer}
+            peer={
+              {
+                id: name,
+                name: name,
+              } as HMSPeer
+            }
             objectFit="cover"
             isLocal={true}
             aspectRatio={{
