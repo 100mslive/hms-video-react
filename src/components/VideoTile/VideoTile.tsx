@@ -12,7 +12,8 @@ import {
   selectCameraStreamByPeerID,
   selectIsPeerAudioEnabled,
   selectIsPeerVideoEnabled,
-  selectScreenShareByPeerID } from '../../store/selectors';
+  selectScreenShareByPeerID,
+} from '../../store/selectors';
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
@@ -137,26 +138,34 @@ export const VideoTile = ({
     [],
   );
 
-  if (hmsVideoTrack?.source === "screen") {
+  if (hmsVideoTrack?.source === 'screen') {
     showScreen = true;
   }
 
-  const selectVideoByPeerID = showScreen ? selectScreenShareByPeerID : selectCameraStreamByPeerID;
-  const storeHmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
-  const storeIsAudioMuted = !useHMSStore(store => selectIsPeerAudioEnabled(store, peer.id));
-  const storeIsVideoMuted = !useHMSStore(store => selectIsPeerVideoEnabled(store, peer.id));
+  const selectVideoByPeerID = showScreen
+    ? selectScreenShareByPeerID
+    : selectCameraStreamByPeerID;
+  const storeHmsVideoTrack = useHMSStore(store =>
+    selectVideoByPeerID(store, peer.id),
+  );
+  const storeIsAudioMuted = !useHMSStore(store =>
+    selectIsPeerAudioEnabled(store, peer.id),
+  );
+  const storeIsVideoMuted = !useHMSStore(store =>
+    selectIsPeerVideoEnabled(store, peer.id),
+  );
 
   if (showAudioLevel === undefined) {
-    showAudioLevel = !showScreen;  // don't show audio levels for screenshare
+    showAudioLevel = !showScreen; // don't show audio levels for screenshare
   }
 
   hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
 
-  if (!showScreen && (isAudioMuted === undefined || isAudioMuted ===  null)) {
+  if (!showScreen && (isAudioMuted === undefined || isAudioMuted === null)) {
     isAudioMuted = storeIsAudioMuted;
   }
 
-  if (!showScreen && (isVideoMuted === undefined || isVideoMuted ===  null)) {
+  if (!showScreen && (isVideoMuted === undefined || isVideoMuted === null)) {
     isVideoMuted = storeIsVideoMuted;
   }
 

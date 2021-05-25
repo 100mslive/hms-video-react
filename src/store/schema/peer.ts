@@ -28,7 +28,7 @@ export interface HMSTrack {
   type: HMSTrackType;
   enabled: boolean;
   height?: number;
-  width?: number
+  width?: number;
 }
 
 /**

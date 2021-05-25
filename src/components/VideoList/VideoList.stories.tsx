@@ -188,31 +188,34 @@ const MeetTemplate: Story<VideoListStoryProps> = (
 ) => {
   const peers = storyBookSDK.getPeers();
   return (
-    <HMSThemeProvider appBuilder={{
-      theme: 'dark',
-      videoTileAspectRatio: {
-        width: 1,
-        height: 1,
-      },
-    }} config={{}}>
-    <div className="h-screen w-full flex flex-wrap justify-center content-evenly justify-items-center">
-      <div style={{ width: args.width, height: args.height }} className="p-8">
-        {(
-          <VideoList
-            {...args}
-            peers={peers}
-            videoTileControls={peers.map(peer => (
-              <GoogleMeetControls
-                allowRemoteMute={false}
-                peer={peer}
-                showAudioLevel={true}
-                showAudioMuteStatus={true}
-              />
-            ))}
-          />
-        )}
+    <HMSThemeProvider
+      appBuilder={{
+        theme: 'dark',
+        videoTileAspectRatio: {
+          width: 1,
+          height: 1,
+        },
+      }}
+      config={{}}
+    >
+      <div className="h-screen w-full flex flex-wrap justify-center content-evenly justify-items-center">
+        <div style={{ width: args.width, height: args.height }} className="p-8">
+          {
+            <VideoList
+              {...args}
+              peers={peers}
+              videoTileControls={peers.map(peer => (
+                <GoogleMeetControls
+                  allowRemoteMute={false}
+                  peer={peer}
+                  showAudioLevel={true}
+                  showAudioMuteStatus={true}
+                />
+              ))}
+            />
+          }
+        </div>
       </div>
-    </div>
     </HMSThemeProvider>
   );
 };

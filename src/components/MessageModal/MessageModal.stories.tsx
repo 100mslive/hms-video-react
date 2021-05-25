@@ -22,6 +22,8 @@ const Template: Story<MessageModalProps> = args => {
 
 export const Default = Template.bind({});
 Default.args = {
-  setShow: (value) => {alert("Modal show status changed to - " + value)},
-  gobackOnClick: () => {}
-}
+  setShow: value => {
+    alert(`Modal show status changed to - ${value}`);
+  },
+  gobackOnClick: () => {},
+};

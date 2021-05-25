@@ -129,14 +129,17 @@ export const ControlBar = ({
   ],
   classes,
 }: ControlBarProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<ControlBarClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-controlbar',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ControlBarClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-controlbar',
+      }),
+    [],
+  );
 
   const leftItems = Array<React.ReactNode>();
   const centerItems = Array<React.ReactNode>();

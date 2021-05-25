@@ -1,10 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import {
-  IHMSBridge,
-  HMSSDKBridge,
-  IHMSStore,
-  createNewStore,
-} from '../store';
+import { IHMSBridge, HMSSDKBridge, IHMSStore, createNewStore } from '../store';
 import { HMSSdk } from '@100mslive/100ms-web-sdk';
 import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
 import { IHMSStoreReadOnly } from '../store/IHMSStore';
@@ -25,16 +20,19 @@ export interface HMSRoomProviderProps {
 
 let providerProps: HMSContextProviderProps = { sdk, store };
 
-export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({ children, ...props }) => {
+export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
+  children,
+  ...props
+}) => {
   if (props.sdk && props.store) {
-    providerProps = {sdk: props.sdk, store: props.store}
+    providerProps = { sdk: props.sdk, store: props.store };
   }
   window.onunload = () => {
     providerProps.sdk.leave();
   };
-  return <HMSContext.Provider value={providerProps}>
-    {children}
-  </HMSContext.Provider>
+  return (
+    <HMSContext.Provider value={providerProps}>{children}</HMSContext.Provider>
+  );
 };
 
 /*
