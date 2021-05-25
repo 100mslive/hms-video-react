@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 interface InputPropsWithoutNativeAttrs {
   /**
    * Smaller Width for InputField
@@ -50,14 +50,17 @@ export const Input = ({
   children,
   ...props
 }: InputProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<InputClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-input',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<InputClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-input',
+      }),
+    [],
+  );
 
   return (
     <>

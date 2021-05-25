@@ -43,8 +43,8 @@ const OverrideClass: Story<JoinProps> = args => {
 };
 
 const joinArgs = {
-  submitOnClick: (...args: any[]) => storyBookSDK.join(...args)
-}
+  submitOnClick: (...args: any[]) => storyBookSDK.join(...args),
+};
 
 export const Default = Template.bind({});
 Default.args = joinArgs;
