@@ -157,7 +157,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
         {...props}
         className={classList.join(' ')}
         style={{
-          backgroundColor: `${colorsArr[colorIndex]}`,
+          backgroundColor: `${colorsArr[colorIndex - 1]}`,
         }}
       >
         {getInitialsFromName(label)}
@@ -168,7 +168,9 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
         {...props}
         className={classList.join(' ')}
         style={{
-          background: `linear-gradient(180deg, ${gradArr[colorIndex][0]} 0%, ${gradArr[colorIndex][1]} 100%)`,
+          background: `linear-gradient(180deg, ${
+            gradArr[colorIndex - 1][0]
+          } 0%, ${gradArr[colorIndex - 1][1]} 100%)`,
         }}
       >
         {getInitialsFromName(label)}
