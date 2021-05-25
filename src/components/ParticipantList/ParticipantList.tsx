@@ -1,39 +1,20 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { DownCaratIcon, UpCaratIcon, MicOffIcon, MicOnIcon } from '../Icons';
-import { Button } from '../TwButton';
+import { DownCaratIcon, UpCaratIcon } from '../Icons';
+import { ParticipantInList } from './ParticipantInList';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import groupBy from 'lodash/groupBy';
 import './index.css';
-import { Avatar } from '../TwAvatar';
 import ClickAwayListener from 'react-click-away-listener';
 import {
   HMSPeerWithMuteStatus,
-  selectPeersWithMuteStatus,
+  selectPeersWithAudioStatus,
 } from '../../store/selectors';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-
-interface ParticipantListClasses {
-  root?: string;
-  buttonRoot?: string;
-  buttonOpen?: string;
-  buttonClosed?: string;
-  buttonInner?: string;
-  buttonText?: string;
-  carat?: string;
-  menuRoot?: string;
-  menuSection?: string;
-  menuItem?: string;
-  menuText?: string;
-  menuIconContainer?: string;
-  offIcon?: string;
-  onIcon?: string;
-}
-
-export interface ParticipantListProps {
-  participantList?: HMSPeerWithMuteStatus[];
-  classes?: ParticipantListClasses;
-}
+import {
+  ParticipantListClasses,
+  ParticipantListProps,
+} from './ParticipantProps';
 
 const defaultClasses: ParticipantListClasses = {
   root:
@@ -83,7 +64,7 @@ export const ParticipantList = ({
       }),
     [],
   );
-  const participantsFromStore = useHMSStore(selectPeersWithMuteStatus);
+  const participantsFromStore = useHMSStore(selectPeersWithAudioStatus);
   const [listOpen, setListOpen] = useState(false);
   participantList = participantList || participantsFromStore;
   const handleClick = useCallback(() => setListOpen(open => !open), []);
@@ -97,7 +78,7 @@ export const ParticipantList = ({
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <div className={`${styler('root')}`}>
-        <button
+        <button // button to open/close participant list
           type="button"
           className={`${styler('buttonRoot')}
           ${listOpen ? styler('buttonOpen') : styler('buttonClosed')}`}
@@ -125,8 +106,8 @@ export const ParticipantList = ({
           >
             {roles &&
               //@ts-expect-error
-              roles.map((role, index) => (
-                <div key={index}>
+              roles.map(role => (
+                <div key={role}>
                   <div>
                     <span
                       className={`${styler('menuSection')}`}
@@ -139,42 +120,13 @@ export const ParticipantList = ({
                   </div>
                   <div>
                     {rolesMap[role] &&
-                      rolesMap[role].map((participant, index) => (
-                        <span
-                          className={`${styler('menuItem')}`}
-                          role="menuitem"
-                          key={index}
-                        >
-                          <div className={`${styler('menuText')}`}>
-                            <Avatar
-                              label={participant.peer.name}
-                              shape="square"
-                              classes={{ root: 'mr-2' }}
-                            />
-                            {participant.peer.name}
-                          </div>
-                          <div className={`${styler('menuIconContainer')}`}>
-                            {participant.isAudioMuted ? (
-                              <div className={`${styler('offIcon')}`}>
-                                <Button
-                                  iconOnly
-                                  shape={'circle'}
-                                  variant={'danger'}
-                                  size={'sm'}
-                                  active={participant.isAudioMuted}
-                                >
-                                  <MicOffIcon />
-                                </Button>
-                              </div>
-                            ) : (
-                              <div className={`${styler('onIcon')}`}>
-                                <Button iconOnly shape={'circle'} size={'sm'}>
-                                  <MicOnIcon />
-                                </Button>
-                              </div>
-                            )}
-                          </div>
-                        </span>
+                      rolesMap[role].map(participant => (
+                        <ParticipantInList
+                          key={participant.peer.id}
+                          styler={styler}
+                          isAudioEnabled={participant.isAudioEnabled}
+                          name={participant.peer.name}
+                        />
                       ))}
                   </div>
                 </div>
