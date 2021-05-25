@@ -1,5 +1,9 @@
 {
+<<<<<<< HEAD
   "version": "0.0.82",
+=======
+  "version": "0.0.8",
+>>>>>>> parent of 2848775 (chore: Linting)
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",

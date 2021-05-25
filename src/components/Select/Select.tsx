@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 import { DownCaratIcon } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
@@ -28,17 +28,14 @@ export const Select: React.FC<SelectProps> = ({
   children,
   ...props
 }) => {
-  const { tw } = useHMSTheme();
-  const styler = useMemo(
-    () =>
-      hmsUiClassParserGenerator<SelectClasses>({
-        tw,
-        classes,
-        defaultClasses,
-        tag: 'hmsui-select',
-      }),
-    [],
-  );
+  const {tw} = useHMSTheme();
+  const styler = useMemo(()=>
+    hmsUiClassParserGenerator<SelectClasses>({
+      tw,
+      classes,
+      defaultClasses,
+      tag: 'hmsui-select',
+    }),[]);
 
   return (
     <div className={`${styler('container')}`}>

@@ -128,9 +128,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     [],
   );
 
-  if (avatarType === 'pebble') {
-    shape = 'square';
-  }
+  if (avatarType === 'pebble') shape = 'square';
   const classList = [`${styler('root')}`];
   shape === 'circle'
     ? classList.push(`${styler('rootShapeCircle')}`)

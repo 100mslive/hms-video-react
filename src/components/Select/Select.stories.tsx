@@ -35,10 +35,8 @@ const Light: Story<SelectProps> = args => {
 };
 
 export const Default = BasicSelectField.bind({});
-const options = ['Kheer Ganga', 'Hampi', 'Ooty', 'Manali'].map(o => (
-  <option>{o}</option>
-));
-Default.args = { children: options };
+const options = ["Kheer Ganga", "Hampi", "Ooty", "Manali"].map(o => <option>{o}</option>)
+Default.args = {children: options};
 
 export const LightSelect = Light.bind({});
-LightSelect.args = { children: options };
+LightSelect.args = {children: options};
