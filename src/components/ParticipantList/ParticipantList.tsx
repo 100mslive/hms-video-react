@@ -8,8 +8,7 @@ import './index.css';
 import ClickAwayListener from 'react-click-away-listener';
 import { HMSPeerWithMuteStatus, selectPeersWithAudioStatus } from '../../store/selectors';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import { ParticipantListClasses } from './ParticipantProps';
-import { ParticipantListProps } from '../../../dist';
+import { ParticipantListClasses, ParticipantListProps } from './ParticipantProps';
 
 const defaultClasses: ParticipantListClasses = {
   root:
