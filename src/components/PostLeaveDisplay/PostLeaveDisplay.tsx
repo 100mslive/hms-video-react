@@ -8,6 +8,8 @@ import { Button } from '../TwButton';
 interface Props {
   username?: string;
   classes?: PostLeaveDisplayClasses;
+  joinRoomOnClick?: (event: React.MouseEvent) => void;
+  goToDashboardOnClick?: (event: React.MouseEvent) => void;
 }
 
 interface PostLeaveDisplayClasses {
@@ -19,7 +21,12 @@ interface PostLeaveDisplayClasses {
   buttonWrapper: string;
 }
 
-const PostLeaveDisplay: React.FC<Props> = ({ username = '', classes }) => {
+const PostLeaveDisplay: React.FC<Props> = ({
+  username = '',
+  classes,
+  joinRoomOnClick,
+  goToDashboardOnClick,
+}) => {
   const defaultClasses: PostLeaveDisplayClasses = {
     root: `h-full text-white flex items-center justify-center`,
     rootBg: `w-37.5 h-42.5 rounded-2xl`,
@@ -64,8 +71,10 @@ const PostLeaveDisplay: React.FC<Props> = ({ username = '', classes }) => {
           </Text>
           <div className={styler('divider')}></div>
           <div className={styler('buttonWrapper')}>
-            <Button variant="emphasized">Join Again</Button>
-            <Button>Go to Dashboard</Button>
+            <Button variant="emphasized" onClick={joinRoomOnClick}>
+              Join Again
+            </Button>
+            <Button onClick={goToDashboardOnClick}>Go to Dashboard</Button>
           </div>
         </div>
       </div>

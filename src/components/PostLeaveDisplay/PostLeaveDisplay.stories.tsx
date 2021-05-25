@@ -10,16 +10,24 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story = (args) => {
+const Template: Story = args => {
   return (
-    <div className='w-full h-screen'>
+    <div className="w-full h-screen">
       <HMSThemeProvider
         config={{}}
         appBuilder={{
           theme: 'dark',
         }}
       >
-        <PostLeaveDisplay {...args} />
+        <PostLeaveDisplay
+          {...args}
+          joinRoomOnClick={() => {
+            alert('join room clicked');
+          }}
+          goToDashboardOnClick={() => {
+            alert('go to dashboard ');
+          }}
+        />
       </HMSThemeProvider>
     </div>
   );
