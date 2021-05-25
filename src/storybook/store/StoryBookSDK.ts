@@ -2,6 +2,7 @@ import { IHMSBridge } from '../../store';
 import { IHMSStore } from '../../store';
 import { makeFakeMessage } from '../fixtures/chatFixtures';
 import { HMSPeer, HMSRoom } from '../../store/schema';
+import { HMSAudioTrackSettings, HMSVideoTrackSettings } from '../../store/hmsSDKBridge/sdkTypes';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
@@ -138,6 +139,12 @@ export class StoryBookSDK implements IHMSBridge {
 
   private randomFromArray<T>(arr: T[]) {
     return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  setAudioSettings(settings: HMSAudioTrackSettings): void {
+  }
+
+  setVideoSettings(settings: HMSVideoTrackSettings): void {
   }
 
 }
