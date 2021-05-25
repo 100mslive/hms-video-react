@@ -1,6 +1,7 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { ParticipantList, ParticipantListProps } from './ParticipantList';
+import { ParticipantList } from './ParticipantList';
+import { ParticipantListProps } from './ParticipantProps';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
