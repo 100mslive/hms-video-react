@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useMemo } from 'react';
+import React, { useEffect, useRef, useMemo, useCallback } from 'react';
 import { AudioLevelDisplayType } from '../../types';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
 import { useInView } from 'react-intersection-observer';
@@ -149,10 +149,18 @@ export const Video = ({
     }
   }, [videoRef, videoTrack, isLocal]);
 
+  const setRefs = useCallback(
+    node => {
+      videoRef.current = node;
+      inViewRef(node);
+    },
+    [inViewRef],
+  );
+
   return (
-    <div ref={inViewRef}>
+    <>
       <VideoCore
-        internalRef={videoRef}
+        internalRef={setRefs}
         className={`${styler('video')} 
           ${displayShape === 'circle' ? styler('videoCircle') : ''}
           ${
@@ -177,6 +185,6 @@ export const Video = ({
           color={audioLevelDisplayColor}
         />
       )}
-    </div>
+    </>
   );
 };
