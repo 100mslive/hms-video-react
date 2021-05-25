@@ -11,7 +11,7 @@ export class StoryBookSDK implements IHMSBridge {
   private readonly store: IHMSStore;
   private videoURLs: string[] = [];
   private dummyTrackURLs: Record<string, string> = {};
-  private counter: number = 0;
+  private counter: number = 100;
 
   constructor(store: IHMSStore) {
     this.store = store;
@@ -53,7 +53,7 @@ export class StoryBookSDK implements IHMSBridge {
     })
   }
 
-  removeVideo(trackID: string, videoElement: HTMLVideoElement): void {
+  detachVideo(trackID: string, videoElement: HTMLVideoElement): void {
     videoElement.srcObject = null;
     this.log("video removed");
   }
@@ -100,8 +100,8 @@ export class StoryBookSDK implements IHMSBridge {
         audioLevel: this.randomFromArray([0, 10, 20, 50, 70, 80, 100])
       }
       if (peer.audioTrack) {
-        store.tracks[videoTrackID] = {
-          enabled: true, id: audioTrackID, type: "audio"
+        store.tracks[audioTrackID] = {
+          enabled: this.randomFromArray([true, false]), id: audioTrackID, type: "audio"
         };
       }
       if (peer.videoTrack) {

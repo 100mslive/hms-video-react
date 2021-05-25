@@ -270,11 +270,11 @@ export const VideoList = ({
                   {tracksPeersOnOnePage.map((trackPeer, index) => {
                     return (
                       <div
+                        key={trackPeer.peer.id + trackPeer.track.source} // track id changes on replace track
                         style={{
                           height: trackPeer.height,
                           width: trackPeer.width,
                         }}
-                        key={trackPeer.track.id}
                         className={`${styler('videoTileContainer')}`}
                       >
                         <VideoTile
