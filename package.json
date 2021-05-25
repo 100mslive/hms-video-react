@@ -1,5 +1,5 @@
 {
-  "version": "0.3.48",
+  "version": "0.1.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -36,16 +36,16 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
-  "name": "@100mslive/sdk-components",
+  "name": "@100mslive/hms-video-react",
   "author": "100ms",
-  "module": "dist/100ms-sdk-components.esm.js",
+  "module": "dist/hms-video-react.esm.js",
   "size-limit": [
     {
-      "path": "dist/100ms-sdk-components.cjs.production.min.js",
+      "path": "dist/hms-video-react.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/100ms-sdk-components.esm.js",
+      "path": "dist/hms-video-react.esm.js",
       "limit": "10 KB"
     }
   ],
