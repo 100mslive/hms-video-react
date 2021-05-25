@@ -60,12 +60,14 @@ export interface IHMSBridge {
    * Change settings of the local peer's audio track
    * @param settings HMSAudioTrackSettings
    * ({ volume, codec, maxBitrate, deviceId, advanced })
+   * @privateRemarks TODO: Change to MediaStreamConstraints or define interface in sdk-components.
    */
   setAudioSettings(settings: HMSAudioTrackSettings): void;
   /**
    * Change settings of the local peer's video track
    * @param settings HMSVideoTrackSettings
    * ({ width, height, codec, maxFramerate, maxBitrate, deviceId, advanced })
+   * @privateRemarks TODO: Change to MediaStreamConstraints or define interface in sdk-components.
    */
   setVideoSettings(settings: HMSVideoTrackSettings): void;
 

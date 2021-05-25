@@ -112,47 +112,29 @@ export class HMSSDKBridge implements IHMSBridge {
 
   async setAudioSettings(settings: Partial<sdkTypes.HMSAudioTrackSettings>) {
     const trackID = selectLocalAudioTrackID(this.store.getState());
+    const currentSettings = this.store.getState().settings;
     if (trackID) {
       // TODO: Handle other settings changes
       if (
         settings.deviceId &&
-        this.store.getState().settings.audioInputDeviceId !== settings.deviceId
+        currentSettings.audioInputDeviceId !== settings.deviceId
       ) {
-        this.store.setState(store => {
-          // show on UI immediately
-          if (!store.tracks[trackID]) {
-            this.logPossibleInconsistency(
-              'track id not found for setAudioSettings',
-            );
-          } else {
-            store.settings.audioInputDeviceId = settings.deviceId!;
-          }
-        });
-        await this.setSDKLocalAudioTrackSettings(trackID, settings);
+        await this.setSDKLocalTrackSettings(trackID, settings);
         this.syncPeers();
       }
     }
   }
 
-  async setVideoSettings(settings: sdkTypes.HMSVideoTrackSettings) {
+  async setVideoSettings(settings: Partial<sdkTypes.HMSVideoTrackSettings>) {
     const trackID = selectLocalVideoTrackID(this.store.getState());
+    const currentSettings = this.store.getState().settings;
     if (trackID) {
       // TODO: Handle other settings changes
       if (
         settings.deviceId &&
-        this.store.getState().settings.videoInputDeviceId !== settings.deviceId
+        currentSettings.videoInputDeviceId !== settings.deviceId
       ) {
-        this.store.setState(store => {
-          // show on UI immediately
-          if (!store.tracks[trackID]) {
-            this.logPossibleInconsistency(
-              'track id not found for setVideoSettings',
-            );
-          } else {
-            store.settings.videoInputDeviceId = settings.deviceId!;
-          }
-        });
-        await this.setSDKLocalVideoTrackSettings(trackID, settings);
+        await this.setSDKLocalTrackSettings(trackID, settings);
         this.syncPeers();
       }
     }
@@ -410,13 +392,19 @@ export class HMSSDKBridge implements IHMSBridge {
     }
   }
 
-  private async setSDKLocalAudioTrackSettings(
+  private async setSDKLocalTrackSettings(
     trackID: string,
-    settings: Partial<sdkTypes.HMSAudioTrackSettings>,
+    settings:
+      | Partial<sdkTypes.HMSAudioTrackSettings>
+      | Partial<sdkTypes.HMSVideoTrackSettings>,
   ) {
     const track = this.hmsSDKTracks[trackID];
     // TODO: Export type from sdk-index(instead of dist) to use instanceOf
-    if (track && track.constructor.name === 'HMSLocalAudioTrack') {
+    if (
+      track &&
+      (track.constructor.name === 'HMSLocalAudioTrack' ||
+        track.constructor.name === 'HMSLocalVideoTrack')
+    ) {
       // Clone track.settings - lodash.merge overrides destination(first parameter)
       // track.settings should be updated only in the SDK.
       // @ts-expect-error
@@ -425,27 +413,7 @@ export class HMSSDKBridge implements IHMSBridge {
       await track.setSettings(newSettings);
     } else {
       this.logPossibleInconsistency(
-        `audio track ${trackID} not present, unable to set settings`,
-      );
-    }
-  }
-
-  private async setSDKLocalVideoTrackSettings(
-    trackID: string,
-    settings: Partial<sdkTypes.HMSVideoTrackSettings>,
-  ) {
-    const track = this.hmsSDKTracks[trackID];
-    // TODO: Export type from sdk-index(instead of dist) to use instanceOf
-    if (track && track.constructor.name === 'HMSLocalVideoTrack') {
-      // Clone track.settings - lodash.merge overrides destination(first parameter)
-      // track.settings should be updated only in the SDK.
-      // @ts-expect-error
-      const newSettings = merge({ ...track.settings }, settings);
-      // @ts-expect-error
-      await track.setSettings(newSettings);
-    } else {
-      this.logPossibleInconsistency(
-        `video track ${trackID} not present, unable to set settings`,
+        `local track ${trackID} not present, unable to set settings`,
       );
     }
   }
