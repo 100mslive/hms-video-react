@@ -1,2 +1,1 @@
-export { VideoList } from './VideoList';
-export { VideoListProps } from './VideoList';
+export { VideoList, VideoListProps } from './VideoList';
