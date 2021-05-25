@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { startCase } from 'lodash';
+import startCase from 'lodash/startCase';
 import { closeMediaStream } from '../../utils';
 import { getLocalStream } from '@100mslive/100ms-web-sdk';
 import { hmsUiClassParserGenerator } from '../../utils/classes';

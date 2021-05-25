@@ -1,14 +1,20 @@
 import React, { useMemo, useState, useCallback } from 'react';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { DownCaratIcon, UpCaratIcon } from '../Icons';
-import {ParticipantInList} from './ParticipantInList';
+import { ParticipantInList } from './ParticipantInList';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { groupBy } from 'lodash';
+import groupBy from 'lodash/groupBy';
 import './index.css';
 import ClickAwayListener from 'react-click-away-listener';
-import { HMSPeerWithMuteStatus, selectPeersWithAudioStatus } from '../../store/selectors';
+import {
+  HMSPeerWithMuteStatus,
+  selectPeersWithAudioStatus,
+} from '../../store/selectors';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import { ParticipantListClasses, ParticipantListProps } from './ParticipantProps';
+import {
+  ParticipantListClasses,
+  ParticipantListProps,
+} from './ParticipantProps';
 
 const defaultClasses: ParticipantListClasses = {
   root:
@@ -46,15 +52,18 @@ export const ParticipantList = ({
   participantList,
   classes,
 }: ParticipantListProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<ParticipantListClasses>({
-      tw,
-      classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-participantList',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ParticipantListClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-participantList',
+      }),
+    [],
+  );
   const participantsFromStore = useHMSStore(selectPeersWithAudioStatus);
   const [listOpen, setListOpen] = useState(false);
   participantList = participantList || participantsFromStore;
@@ -69,7 +78,7 @@ export const ParticipantList = ({
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <div className={`${styler('root')}`}>
-        <button  // button to open/close participant list
+        <button // button to open/close participant list
           type="button"
           className={`${styler('buttonRoot')}
           ${listOpen ? styler('buttonOpen') : styler('buttonClosed')}`}
@@ -97,10 +106,13 @@ export const ParticipantList = ({
           >
             {roles &&
               //@ts-expect-error
-              roles.map((role) => (
+              roles.map(role => (
                 <div key={role}>
                   <div>
-                    <span className={`${styler('menuSection')}`} role="menuitem">
+                    <span
+                      className={`${styler('menuSection')}`}
+                      role="menuitem"
+                    >
                       {role === 'undefined' ? 'Unknown' : role}
                       {rolesMap[role].length > 1 ? 's' : ''}{' '}
                       {rolesMap[role].length}
@@ -108,7 +120,7 @@ export const ParticipantList = ({
                   </div>
                   <div>
                     {rolesMap[role] &&
-                      rolesMap[role].map((participant) => (
+                      rolesMap[role].map(participant => (
                         <ParticipantInList
                           key={participant.peer.id}
                           styler={styler}
