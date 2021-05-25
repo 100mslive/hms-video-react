@@ -10,16 +10,21 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story = (args) => {
+const Template: Story = args => {
   return (
-    <div className='w-full h-screen'>
+    <div className="w-full h-screen">
       <HMSThemeProvider
         config={{}}
         appBuilder={{
           theme: 'dark',
         }}
       >
-        <ScreenShareDisplay {...args} />
+        <ScreenShareDisplay
+          {...args}
+          stopScreenShare={() => {
+            alert('stopping screen share');
+          }}
+        />
       </HMSThemeProvider>
     </div>
   );

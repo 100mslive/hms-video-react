@@ -7,6 +7,7 @@ import { Button } from '../TwButton';
 
 interface Props {
   classes?: ScreenShareDisplayClasses;
+  stopScreenShare: (event: React.MouseEvent) => void;
 }
 
 interface ScreenShareDisplayClasses {
@@ -14,7 +15,7 @@ interface ScreenShareDisplayClasses {
   rootBg: string;
 }
 
-const ScreenShareDisplay: React.FC<Props> = ({ classes }) => {
+const ScreenShareDisplay: React.FC<Props> = ({ classes, stopScreenShare }) => {
   const defaultClasses: ScreenShareDisplayClasses = {
     root: `h-full text-white flex items-center justify-center`,
     rootBg: `w-37.5 h-37.5 rounded-2xl bg-gray-100 relative flex flex-col text-center space-y-6 justify-center items-center`,
@@ -37,7 +38,7 @@ const ScreenShareDisplay: React.FC<Props> = ({ classes }) => {
         <Text tag="h1" variant="heading">
           You are sharing your screen
         </Text>
-        <Button icon={<CrossIcon />} variant="danger">
+        <Button icon={<CrossIcon />} variant="danger" onClick={stopScreenShare}>
           Stop screen share
         </Button>
       </div>
