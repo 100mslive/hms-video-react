@@ -13,7 +13,7 @@ import {
   DotIcon,
 } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import './index.css';
 
 export interface CarouselProps {
@@ -28,15 +28,15 @@ interface CarouselClasses {
   rootHorizontal?: string;
   rootVertical?: string;
   pageContainer?: string;
-  carouselContainer?:string;
-  carouselInner?:string;
+  carouselContainer?: string;
+  carouselInner?: string;
   videoTileContainer?: string;
   navContainer?: string;
   navContainerHorizontal?: string;
   navContainerVertical?: string;
   caratActive?: string;
   caratInactive?: string;
-  dotButton?:string;
+  dotButton?: string;
   dotActive?: string;
   dotInactive?: string;
   carat?: string;
@@ -48,8 +48,8 @@ const defaultClasses: CarouselClasses = {
   rootHorizontal: 'overflow-x-auto pb-6',
   rootVertical: 'overflow-y-auto flex-col pr-6',
   pageContainer: 'inline-block align-top w-full h-full',
-  carouselContainer:'overflow-hidden w-full h-full',
-  carouselInner:'w-full h-full whitespace-nowrap',
+  carouselContainer: 'overflow-hidden w-full h-full',
+  carouselInner: 'w-full h-full whitespace-nowrap',
   videoTileContainer: 'flex justify-center',
   navContainer: 'absolute w-full flex justify-center items-center',
   navContainerHorizontal: 'bottom-0 left-0',
@@ -60,118 +60,129 @@ const defaultClasses: CarouselClasses = {
   dotInactive: 'text-transparent-700 dark:text-transparent-300 cursor-pointer',
   carat: 'w-4 h-4 m-1',
   dot: 'w-2 h-2 m-1',
-  dotButton:'inline-block focus:outline-none focus-visible:ring-4 focus-visible:blue-tint'
+  dotButton:
+    'inline-block focus:outline-none focus-visible:ring-4 focus-visible:blue-tint',
 };
 
 const customClasses: CarouselClasses = {
   root: 'no-scrollbar',
 };
 
-export const Carousel = ({
-  direction = 'horizontal',
-  showNavigation = true,
-  classes,
-  children,
-}: CarouselProps) => {
-  const [currentPageIndex, setCurrentPageIndex] = useState(0);
-  const pages = Array.isArray(children) ? children : [children];
-  const carouselRef = useRef(null);
-
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<CarouselClasses>({
-      tw,
+export const Carousel = React.forwardRef(
+  (
+    {
+      direction = 'horizontal',
+      showNavigation = true,
       classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-carousel',
-    }),[]);
+      children,
+    }: CarouselProps,
+    ref: React.ForwardedRef<HTMLDivElement>,
+  ) => {
+    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const pages = Array.isArray(children) ? children : [children];
+    const carouselRef = useRef(null);
 
-  const showNav = showNavigation && pages.length > 1;
+    const { tw } = useHMSTheme();
+    const styler = useMemo(
+      () =>
+        hmsUiClassParserGenerator<CarouselClasses>({
+          tw,
+          classes,
+          customClasses,
+          defaultClasses,
+          tag: 'hmsui-carousel',
+        }),
+      [],
+    );
 
-  const navClassName = `${styler('navContainer')} ${
-    direction === 'horizontal'
-      ? styler('navContainerHorizontal')
-      : styler('navContainerVertical')
-  }`;
+    const showNav = showNavigation && pages.length > 1;
 
-  useEffect(() => {
-    if (carouselRef) {
-      const el: HTMLElement = carouselRef.current!;
-      const width = el.clientWidth;
-      const scrollAmount = currentPageIndex * width;
-      el.scrollTo({
-        left: scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  }, [currentPageIndex]);
+    const navClassName = `${styler('navContainer')} ${
+      direction === 'horizontal'
+        ? styler('navContainerHorizontal')
+        : styler('navContainerVertical')
+    }`;
 
-  return (
-    <>
-      <div
-        className={`${styler('root')} ${
-          direction === 'horizontal' ? styler('rootHorizontal') : styler('rootVertical')
-        }`}
-      >
-        <div className={`${styler('carouselContainer')}`} ref={carouselRef}>
-          <div className={`${styler('carouselInner')}`}>
-            {pages.map((page, index) => (
-              <div
-                className={`${styler('pageContainer')}`}
-                key={`slide=${index}`}
-              >
-                {pages[index]}
-              </div>
-            ))}
+    useEffect(() => {
+      if (carouselRef) {
+        const el: HTMLElement = carouselRef.current!;
+        const width = el.clientWidth;
+        const scrollAmount = currentPageIndex * width;
+        el.scrollTo({
+          left: scrollAmount,
+          behavior: 'smooth',
+        });
+      }
+    }, [currentPageIndex]);
+
+    return (
+      <>
+        <div
+          className={`${styler('root')} ${
+            direction === 'horizontal'
+              ? styler('rootHorizontal')
+              : styler('rootVertical')
+          }`}
+        >
+          <div className={`${styler('carouselContainer')}`} ref={carouselRef}>
+            <div className={`${styler('carouselInner')}`} ref={ref}>
+              {pages.map((page, index) => (
+                <div
+                  className={`${styler('pageContainer')}`}
+                  key={`slide=${index}`}
+                >
+                  {pages[index]}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      {showNav ? (
-        <div className={navClassName}>
-          <PrevButton
-            direction={direction}
-            isActive={currentPageIndex !== 0}
-            onClick={e => {
-              if (currentPageIndex > 0) {
-                setCurrentPageIndex(currentPageIndex - 1);
-              }
-            }}
-            styler={styler}
-          />
-
-          {pages.map((page, index) => (
-            <button
-              className={`${styler('dotButton')}`}
+        {showNav ? (
+          <div className={navClassName}>
+            <PrevButton
+              direction={direction}
+              isActive={currentPageIndex !== 0}
               onClick={e => {
-                setCurrentPageIndex(index);
+                if (currentPageIndex > 0) {
+                  setCurrentPageIndex(currentPageIndex - 1);
+                }
               }}
-            >
-              <DotIcon
-                className={`${
-                  index === currentPageIndex
-                    ? styler('dotActive')
-                    : styler('dotInactive')
-                } ${styler('dot')}`}
-              />
-            </button>
-          ))}
+              styler={styler}
+            />
 
-          <NextButton
-            direction={direction}
-            isActive={currentPageIndex !== pages.length - 1}
-            onClick={e => {
-              if (currentPageIndex < pages.length - 1) {
-                setCurrentPageIndex(currentPageIndex + 1);
-              }
-            }}
-            styler={styler}
-          />
-        </div>
-      ) : null}
-    </>
-  );
-};
+            {pages.map((page, index) => (
+              <button
+                className={`${styler('dotButton')}`}
+                onClick={e => {
+                  setCurrentPageIndex(index);
+                }}
+              >
+                <DotIcon
+                  className={`${
+                    index === currentPageIndex
+                      ? styler('dotActive')
+                      : styler('dotInactive')
+                  } ${styler('dot')}`}
+                />
+              </button>
+            ))}
+
+            <NextButton
+              direction={direction}
+              isActive={currentPageIndex !== pages.length - 1}
+              onClick={e => {
+                if (currentPageIndex < pages.length - 1) {
+                  setCurrentPageIndex(currentPageIndex + 1);
+                }
+              }}
+              styler={styler}
+            />
+          </div>
+        ) : null}
+      </>
+    );
+  },
+);
 
 interface ButtonProps {
   direction: 'horizontal' | 'vertical';
@@ -181,9 +192,9 @@ interface ButtonProps {
 }
 
 function NextButton({ direction, isActive, onClick, styler }: ButtonProps) {
-  const className = `${isActive ? styler('caratActive') : styler('caratInactive')} ${styler(
-    'carat',
-  )}`;
+  const className = `${
+    isActive ? styler('caratActive') : styler('caratInactive')
+  } ${styler('carat')}`;
 
   return (
     <button
@@ -200,9 +211,9 @@ function NextButton({ direction, isActive, onClick, styler }: ButtonProps) {
 }
 
 function PrevButton({ direction, isActive, onClick, styler }: ButtonProps) {
-  const className = `${isActive ? styler('caratActive') : styler('caratInactive')} ${styler(
-    'carat',
-  )}`;
+  const className = `${
+    isActive ? styler('caratActive') : styler('caratInactive')
+  } ${styler('carat')}`;
 
   return (
     <button
