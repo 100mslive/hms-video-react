@@ -20,6 +20,7 @@ export * from './components/Button';
 export * from './components/Carousel';
 export * from './components/VerticalDivider';
 export * from './components/FirstPersonDisplay'
+export * from './components/ScreenShareDisplay'
 export { Button as TwButton } from './components/TwButton';
 export {
   HMSRoomProvider,
