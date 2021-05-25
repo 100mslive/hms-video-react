@@ -16,6 +16,7 @@ import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { VideoTileControls } from './Controls';
 import HMSLogger from '../../utils/ui-logger';
+import { Text } from '../Text';
 import { HMSPeer } from '../../store/schema';
 
 interface MuteStatus {
@@ -183,7 +184,9 @@ export const Preview = ({
           />
         </div>
         {/* helloDiv */}
-        <div className={styler('helloDiv')}>Hello, {name}</div>
+        <div className={styler('helloDiv')}>
+          <Text variant="heading">Hello, {name}</Text>
+        </div>
         {/* joinButton */}
         <Button
           variant={'emphasized'}
