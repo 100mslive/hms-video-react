@@ -4,6 +4,7 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { SunWithFace } from '../Icons';
 import { Text } from '../Text';
 import { Button } from '../TwButton';
+import post_leave_img from './post_leave.png';
 
 interface Props {
   username?: string;
@@ -51,7 +52,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
       <div
         className={styler('rootBg')}
         style={{
-          backgroundImage: `url(https://i.postimg.cc/GtwwMnLL/back.png)`,
+          backgroundImage: `url(${post_leave_img})`,
         }}
       >
         <div
