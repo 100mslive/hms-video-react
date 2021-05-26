@@ -11,6 +11,7 @@ interface Props {
   classes?: PostLeaveDisplayClasses;
   joinRoomOnClick?: (event: React.MouseEvent) => void;
   goToDashboardOnClick?: (event: React.MouseEvent) => void;
+  src?: string;
 }
 
 interface PostLeaveDisplayClasses {
@@ -27,6 +28,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
   classes,
   joinRoomOnClick,
   goToDashboardOnClick,
+  src,
 }) => {
   const defaultClasses: PostLeaveDisplayClasses = {
     root: `h-full text-white flex items-center justify-center`,
@@ -52,7 +54,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
       <div
         className={styler('rootBg')}
         style={{
-          backgroundImage: `url(${post_leave_img})`,
+          backgroundImage: `url(${src || post_leave_img})`,
         }}
       >
         <div
