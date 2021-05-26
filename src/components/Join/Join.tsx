@@ -8,7 +8,7 @@ import { DoorIcon } from '../Icons';
 import { Text } from '../Text';
 
 interface Fields {
-  username: string;
+  userId: string;
   roomId: string;
   role: string;
 }
@@ -48,7 +48,7 @@ export interface JoinProps extends React.DetailsHTMLAttributes<any> {
   /**
    * Event handler for join button click.
    */
-  submitOnClick: ({ username, roomId, role }: Fields) => void;
+  submitOnClick: ({ userId, roomId, role }: Fields) => void;
   /**
    * extra classes added  by user
    */
@@ -99,7 +99,7 @@ export const Join = ({
           <div className={styler('inputFieldRoot')}>
             <Input
               compact
-              defaultValue={initialValues?.username || username}
+              defaultValue={initialValues?.userId || userId}
               onChange={event => {
                 setUsername(event.target.value);
               }}
@@ -143,7 +143,7 @@ export const Join = ({
               variant={'emphasized'}
               onClick={() =>
                 submitOnClick({
-                  username,
+                  userId,
                   roomId,
                   role,
                 })
