@@ -5,17 +5,8 @@ import { getVideoTileLabel } from '../../utils';
 import { VideoTileControls } from '../VideoTile/Controls';
 import { MicOffIcon, MicOnIcon } from '../Icons';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
-import { fakeStreamsWithInfo } from '../../storybook/fixtures/streamFixtures';
 import { HMSPeer, HMSTrack } from '../../store/schema';
 import { storyBookSDK } from '../../storybook/store/SetUpFakeStore';
-declare global {
-  interface HTMLVideoElement {
-    captureStream(frameRate?: number): MediaStream;
-  }
-  interface MediaDevices {
-    getDisplayMedia(constraints?: MediaStreamConstraints): Promise<MediaStream>;
-  }
-}
 
 const meta: Meta = {
   title: 'Video/ List',
@@ -88,8 +79,6 @@ const Template: Story<VideoListStoryProps> = args => {
     </HMSThemeProvider>
   );
 };
-
-const streams = fakeStreamsWithInfo;
 
 export const DefaultList = Template.bind({});
 DefaultList.args = {
@@ -188,39 +177,40 @@ const MeetTemplate: Story<VideoListStoryProps> = (
 ) => {
   const peers = storyBookSDK.getPeers();
   return (
-    <HMSThemeProvider appBuilder={{
-      theme: 'dark',
-      videoTileAspectRatio: {
-        width: 1,
-        height: 1,
-      },
-    }} config={{}}>
-    <div className="h-screen w-full flex flex-wrap justify-center content-evenly justify-items-center">
-      <div style={{ width: args.width, height: args.height }} className="p-8">
-        {(
-          <VideoList
-            {...args}
-            peers={peers}
-            videoTileControls={peers.map(peer => (
-              <GoogleMeetControls
-                allowRemoteMute={false}
-                peer={peer}
-                showAudioLevel={true}
-                showAudioMuteStatus={true}
-              />
-            ))}
-          />
-        )}
+    <HMSThemeProvider
+      appBuilder={{
+        theme: 'dark',
+        videoTileAspectRatio: {
+          width: 1,
+          height: 1,
+        },
+      }}
+      config={{}}
+    >
+      <div className="h-screen w-full flex flex-wrap justify-center content-evenly justify-items-center">
+        <div style={{ width: args.width, height: args.height }} className="p-8">
+          {
+            <VideoList
+              {...args}
+              peers={peers}
+              videoTileControls={peers.map(peer => (
+                <GoogleMeetControls
+                  allowRemoteMute={false}
+                  peer={peer}
+                  showAudioLevel={true}
+                  showAudioMuteStatus={true}
+                />
+              ))}
+            />
+          }
+        </div>
       </div>
-    </div>
     </HMSThemeProvider>
   );
 };
 
 export const GoogleMeet = MeetTemplate.bind({});
 GoogleMeet.args = {
-  //@ts-expect-error
-  streams: streams,
   maxTileCount: 6,
   overflow: 'hidden',
   aspectRatio: { width: 16, height: 9 },

@@ -1,5 +1,6 @@
 const postcss = require('rollup-plugin-postcss');
 const static_files = require('rollup-plugin-static-files');
+const images = require('@rollup/plugin-image');
 
 module.exports = {
   rollup(config, options) {
@@ -16,9 +17,10 @@ module.exports = {
       }),
       static_files({
         include: ['./public'],
-      })
+      }),
     );
+
+    config.plugins.unshift(images());
     return config;
   },
 };
-

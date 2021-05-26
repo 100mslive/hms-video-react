@@ -73,12 +73,12 @@ export const Join = ({
     [],
   );
 
-  const [username, setUserName] = useState(initialValues?.username || '');
+  const [username, setUsername] = useState(initialValues?.username || '');
   const [role, setRole] = useState(initialValues?.role || 'Student');
   const [roomId, setRoomId] = useState(initialValues?.roomId || '');
 
   useEffect(() => {
-    initialValues?.username && setUserName(initialValues.username);
+    initialValues?.username && setUsername(initialValues.username);
     initialValues?.role && setRole(initialValues.role);
     initialValues?.roomId && setRoomId(initialValues.roomId);
   }, [initialValues]);
@@ -101,7 +101,7 @@ export const Join = ({
               compact
               defaultValue={initialValues?.username || username}
               onChange={event => {
-                setUserName(event.target.value);
+                setUsername(event.target.value);
               }}
             ></Input>
           </div>

@@ -7,7 +7,6 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions } from '../../hooks/HMSRoomProvider';
 import { HMSTrack } from '../../store/schema';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { VideoCore } from './VideoCore';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -132,26 +131,6 @@ export const Video = ({
 
   const { ref: inViewRef, inView } = useInView({ threshold: 0.5 });
 
-  const videoTrackID = hmsVideoTrack?.id;
-  useEffect(() => {
-    (async () => {
-      if (videoRef.current && videoTrackID) {
-        HMSLogger.d('Video InView', videoTrack, inView);
-        if (inView) {
-          await hmsActions.attachVideo(videoTrackID, videoRef.current);
-        } else {
-          await hmsActions.detachVideo(videoTrackID, videoRef.current);
-        }
-      }
-    })();
-  }, [inView, videoRef.current, videoTrack, videoTrackID]);
-
-  useEffect(() => {
-    if (videoRef && videoRef.current && videoTrack && !hmsVideoTrack) {
-      videoRef.current.srcObject = new MediaStream([videoTrack]);
-    }
-  }, [videoRef, videoTrack, isLocal]);
-
   const setRefs = useCallback(
     node => {
       videoRef.current = node;
@@ -160,10 +139,32 @@ export const Video = ({
     [inViewRef],
   );
 
+  useEffect(() => {
+    (async () => {
+      if (videoRef.current && hmsVideoTrack) {
+        HMSLogger.d('Video InView', videoTrack, inView);
+        if (inView && hmsVideoTrack.enabled) {
+          await hmsActions.attachVideo(hmsVideoTrack.id, videoRef.current);
+        } else {
+          await hmsActions.detachVideo(hmsVideoTrack.id, videoRef.current);
+        }
+      }
+    })();
+  }, [inView, videoRef, videoTrack, hmsVideoTrack]);
+
+  useEffect(() => {
+    if (videoRef && videoRef.current && videoTrack && !hmsVideoTrack) {
+      videoRef.current.srcObject = new MediaStream([videoTrack]);
+    }
+  }, [videoRef, videoTrack, isLocal]);
+
   return (
     <>
-      <VideoCore
-        internalRef={setRefs}
+      <video
+        ref={setRefs}
+        muted={true}
+        autoPlay
+        playsInline
         className={`${styler('video')} 
           ${displayShape === 'circle' ? styler('videoCircle') : ''}
           ${
@@ -174,7 +175,7 @@ export const Video = ({
           ${objectFit === 'contain' ? styler('videoContain') : ''}
           ${objectFit === 'cover' ? styler('videoCover') : ''}
         `}
-      ></VideoCore>
+      ></video>
       {showAudioLevel && audioLevelDisplayType === 'border' && (
         <AudioLevelIndicator
           peerId={peerId}

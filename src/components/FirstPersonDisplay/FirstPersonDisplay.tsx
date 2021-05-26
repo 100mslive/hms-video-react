@@ -2,10 +2,12 @@ import React, { useMemo } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Text } from '../Text';
+import first_person_img from './first_person.png';
 
 interface Props {
   username?: string;
   classes?: FirstPersonDisplayClasses;
+  src?: string;
 }
 
 interface FirstPersonDisplayClasses {
@@ -16,6 +18,7 @@ interface FirstPersonDisplayClasses {
 export const FirstPersonDisplay: React.FC<Props> = ({
   username = '',
   classes,
+  src,
 }) => {
   const defaultClasses: FirstPersonDisplayClasses = {
     root: `h-full text-white flex items-center justify-center`,
@@ -37,11 +40,11 @@ export const FirstPersonDisplay: React.FC<Props> = ({
       <div
         className={styler('rootBg')}
         style={{
-          backgroundImage: `url(https://i.postimg.cc/SKvM5DY1/back.png)`,
+          backgroundImage: `url(${src || first_person_img})`,
         }}
       >
         <Text tag="h1" variant="heading">
-          Welcome, {username} !
+          Welcome {username} !
         </Text>
         <div>
           <Text tag="p" variant="heading" size="sm">
