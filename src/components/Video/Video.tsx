@@ -168,7 +168,7 @@ export const Video = ({
         className={`${styler('video')} 
           ${displayShape === 'circle' ? styler('videoCircle') : ''}
           ${
-            isLocal && hmsVideoTrack?.source === 'regular'
+            isLocal && (hmsVideoTrack?.source === 'regular' || videoTrack)
               ? styler('videoLocal')
               : ''
           }
