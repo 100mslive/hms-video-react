@@ -18,12 +18,9 @@ export class SDKToHMS {
     };
   }
 
-  static convertTrack(
-    sdkTrack: SDKHMSTrack,
-    replaceTrackIDWith?: string,
-  ): HMSTrack {
+  static convertTrack(sdkTrack: SDKHMSTrack): HMSTrack {
     return {
-      id: replaceTrackIDWith || sdkTrack.trackId,
+      id: sdkTrack.trackId,
       source: sdkTrack.source,
       type: sdkTrack.type,
       enabled: sdkTrack.enabled,
