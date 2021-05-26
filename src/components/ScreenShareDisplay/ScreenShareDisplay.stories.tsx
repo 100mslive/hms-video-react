@@ -12,7 +12,7 @@ export default meta;
 
 const Template: Story = args => {
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-screen bg-black">
       <HMSThemeProvider
         config={{}}
         appBuilder={{
@@ -30,4 +30,25 @@ const Template: Story = args => {
   );
 };
 
+const Light: Story = args => {
+  return (
+    <div className="w-full h-screen bg-white">
+      <HMSThemeProvider
+        config={{}}
+        appBuilder={{
+          theme: 'light',
+        }}
+      >
+        <ScreenShareDisplay
+          {...args}
+          stopScreenShare={() => {
+            alert('stopping screen share');
+          }}
+        />
+      </HMSThemeProvider>
+    </div>
+  );
+};
+
 export const Default = Template.bind({});
+export const LightMode = Light.bind({});

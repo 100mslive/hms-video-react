@@ -21,7 +21,7 @@ export const ScreenShareDisplay: React.FC<Props> = ({
 }) => {
   const defaultClasses: ScreenShareDisplayClasses = {
     root: `h-full text-white flex items-center justify-center`,
-    rootBg: `w-37.5 h-37.5 rounded-2xl bg-gray-100 relative flex flex-col text-center space-y-6 justify-center items-center`,
+    rootBg: `w-37.5 h-37.5 rounded-2xl bg-gray-600 dark:bg-gray-100 dark:text-white text-black relative flex flex-col text-center space-y-6 justify-center items-center`,
   };
   const { tw } = useHMSTheme();
   const styler = useMemo(
