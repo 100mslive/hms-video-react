@@ -68,7 +68,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
             You left the room
           </Text>
           <Text tag="h1" variant="heading">
-            Have a nice day, {username}
+            Have a nice day {username} !
           </Text>
           <div className={styler('divider')}></div>
           <div className={styler('buttonWrapper')}>

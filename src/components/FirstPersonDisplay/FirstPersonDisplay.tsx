@@ -42,7 +42,7 @@ export const FirstPersonDisplay: React.FC<Props> = ({
         }}
       >
         <Text tag="h1" variant="heading">
-          Welcome, {username} !
+          Welcome {username} !
         </Text>
         <div>
           <Text tag="p" variant="heading" size="sm">
