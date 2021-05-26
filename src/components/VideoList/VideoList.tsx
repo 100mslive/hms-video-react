@@ -271,7 +271,7 @@ export const VideoList = ({
                   {tracksPeersOnOnePage.map((trackPeer, index) => {
                     return (
                       <div
-                        key={trackPeer.peer.id + trackPeer.track.source} // track id changes on replace track
+                        key={trackPeer.track.id} // track id changes on replace track
                         style={{
                           height: trackPeer.height,
                           width: trackPeer.width,
