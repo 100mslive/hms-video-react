@@ -6,7 +6,7 @@ import HMSLogger from '../../utils/ui-logger';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions } from '../../hooks/HMSRoomProvider';
 import { HMSTrack } from '../../store/schema';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { VideoCore } from './VideoCore';
 
 export type DisplayShapes = 'circle' | 'rectangle';
@@ -115,14 +115,17 @@ export const Video = ({
   displayShape,
   classes,
 }: VideoProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<VideoClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-video',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<VideoClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-video',
+      }),
+    [],
+  );
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const hmsActions = useHMSActions();
@@ -164,7 +167,7 @@ export const Video = ({
         className={`${styler('video')} 
           ${displayShape === 'circle' ? styler('videoCircle') : ''}
           ${
-            isLocal && hmsVideoTrack?.source === 'regular'
+            isLocal && (hmsVideoTrack?.source === 'regular' || videoTrack)
               ? styler('videoLocal')
               : ''
           }

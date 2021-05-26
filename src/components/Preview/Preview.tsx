@@ -165,10 +165,10 @@ export const Preview = ({
               {
                 id: name,
                 name: name,
+                isLocal: true,
               } as HMSPeer
             }
             objectFit="cover"
-            isLocal={true}
             aspectRatio={{
               width: 1,
               height: 1,
