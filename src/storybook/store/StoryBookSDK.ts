@@ -20,7 +20,7 @@ export class StoryBookSDK implements IHMSBridge {
   constructor(store: IHMSStore) {
     this.store = store;
   }
-  markMessagesAsRead(): void {
+  markMessage(id: string, readStatus: boolean): void {
     return;
   }
 
