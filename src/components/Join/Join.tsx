@@ -8,7 +8,7 @@ import { DoorIcon } from '../Icons';
 import { Text } from '../Text';
 
 interface Fields {
-  userId: string;
+  username: string;
   roomId: string;
   role: string;
 }
@@ -48,7 +48,7 @@ export interface JoinProps extends React.DetailsHTMLAttributes<any> {
   /**
    * Event handler for join button click.
    */
-  submitOnClick: ({ userId, roomId, role }: Fields) => void;
+  submitOnClick: ({ username, roomId, role }: Fields) => void;
   /**
    * extra classes added  by user
    */
@@ -73,12 +73,12 @@ export const Join = ({
     [],
   );
 
-  const [userId, setUserId] = useState(initialValues?.userId || '');
+  const [username, setUsername] = useState(initialValues?.username || '');
   const [role, setRole] = useState(initialValues?.role || 'Student');
   const [roomId, setRoomId] = useState(initialValues?.roomId || '');
 
   useEffect(() => {
-    initialValues?.userId && setUserId(initialValues.userId);
+    initialValues?.username && setUsername(initialValues.username);
     initialValues?.role && setRole(initialValues.role);
     initialValues?.roomId && setRoomId(initialValues.roomId);
   }, [initialValues]);
@@ -99,9 +99,9 @@ export const Join = ({
           <div className={styler('inputFieldRoot')}>
             <Input
               compact
-              defaultValue={initialValues?.userId || userId}
+              defaultValue={initialValues?.username || username}
               onChange={event => {
-                setUserId(event.target.value);
+                setUsername(event.target.value);
               }}
             ></Input>
           </div>
@@ -143,7 +143,7 @@ export const Join = ({
               variant={'emphasized'}
               onClick={() =>
                 submitOnClick({
-                  userId,
+                  username,
                   roomId,
                   role,
                 })
