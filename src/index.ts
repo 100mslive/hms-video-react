@@ -1,4 +1,3 @@
-import './components/Button/Button.css';
 import './components/VideoTile/index.css';
 import './components/Carousel/index.css';
 import './components/TwButton/Button.css';
@@ -16,7 +15,6 @@ export * from './components/ChatBox/ChatBox';
 export * from './components/Settings/Settings';
 export * from './components/Join';
 export * from './components/Icons';
-export * from './components/Button';
 export * from './components/Carousel';
 export * from './components/VerticalDivider';
 export * from './components/FirstPersonDisplay'
