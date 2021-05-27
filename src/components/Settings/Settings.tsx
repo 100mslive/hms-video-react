@@ -10,7 +10,7 @@ import { Text } from '../Text';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { selectLocalMediaSettings } from '../../store/selectors';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { getLocalDevices, getLocalStream } from '@100mslive/100ms-web-sdk';
+import { getLocalDevices, getLocalStream } from '@100mslive/hms-video';
 
 interface SettingsClasses {
   root?: string;
