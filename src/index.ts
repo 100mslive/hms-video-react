@@ -21,6 +21,7 @@ export * from './components/FirstPersonDisplay'
 export * from './components/ScreenShareDisplay'
 export * from './components/PostLeaveDisplay'
 export * from './components/Button';
+export * from './components/Text'
 export {
   HMSRoomProvider,
   useHMSStore,

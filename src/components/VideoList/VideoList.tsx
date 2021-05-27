@@ -11,7 +11,7 @@ import { useResizeDetector } from 'react-resize-detector';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { HMSPeer, HMSPeerID, HMSTrack, HMSTrackID } from '../../store/schema';
+import { HMSPeer, HMSTrack, HMSTrackID } from '../../store/schema';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { selectTracksMap } from '../../store/selectors';
 import {
@@ -60,7 +60,7 @@ export interface VideoListProps {
    * showing main screenshare if you're already showing it in a bigger tile for eg.
    * @param peerID the peer ID for whom video tile is going to be rendered
    */
-  showScreenFn?: (peerID: HMSPeerID) => boolean;
+  showScreenFn?: (peer: HMSPeer) => boolean;
   /**
    * Max tiles in a  page. Overrides maxRowCount and maxColCount
    */
