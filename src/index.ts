@@ -22,6 +22,7 @@ export * from './components/VerticalDivider';
 export * from './components/FirstPersonDisplay'
 export * from './components/ScreenShareDisplay'
 export * from './components/PostLeaveDisplay'
+export * from './components/Text'
 export { Button as TwButton } from './components/TwButton';
 export {
   HMSRoomProvider,
