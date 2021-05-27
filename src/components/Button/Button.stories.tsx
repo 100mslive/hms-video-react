@@ -5,7 +5,7 @@ import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 import { MicOffIcon, MicOnIcon } from '../Icons';
 
 const meta: Meta = {
-  title: 'TwButton',
+  title: 'Button',
   component: Button,
 };
 
