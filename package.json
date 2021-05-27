@@ -96,6 +96,7 @@
     "react-intersection-observer": "^8.31.1",
     "react-markdown": "^6.0.0",
     "react-resize-detector": "^6.6.5",
+    "react-toastify": "^7.0.4",
     "remark-gfm": "^1.0.0",
     "reselect": "^4.0.0",
     "reselect-tools": "^0.0.7",
