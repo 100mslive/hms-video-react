@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
 import { useInView } from 'react-intersection-observer';
 import { HMSMessage } from '../../store/schema';
 import { isTotallyScrolled, scrollToBottom } from './chatBoxUtils';
@@ -78,7 +78,7 @@ export interface Message extends HMSMessage {
 export interface ChatProps {
   messages?: Message[];
   onSend?: (message: string) => void;
-  onClose?: () => void;  // when the chat box is closed
+  onClose?: () => void; // when the chat box is closed
   autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
   messageFormatter?: (message: string) => React.ReactNode;
@@ -113,20 +113,24 @@ export const ChatBox = ({
     return `${date.getHours()}:${minString}`;
   },
 }: ChatProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<ChatBoxClasses>({
-      tw,
-      classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-chatBox',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ChatBoxClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-chatBox',
+      }),
+    [],
+  );
   const storeMessages = useHMSStore(selectHMSMessages);
   const hmsActions = useHMSActions();
 
   messages = messages || storeMessages;
-  const sendMessage = (msg: string) => onSend ? onSend(msg) : hmsActions.sendMessage(msg);
+  const sendMessage = (msg: string) =>
+    onSend ? onSend(msg) : hmsActions.sendMessage(msg);
   const [messageDraft, setMessageDraft] = useState('');
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   // a dummy element with messagesEndRef is created and put in the end
@@ -147,7 +151,7 @@ export const ChatBox = ({
         setUnreadMessagesCount(unreadMessagesCount => unreadMessagesCount + 1);
       }
     }
-  }, [messages])
+  }, [messages]);
 
   if (messagesEndInView && unreadMessagesCount != 0) {
     setUnreadMessagesCount(0);

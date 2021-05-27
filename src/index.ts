@@ -1,6 +1,6 @@
 import './components/VideoTile/index.css';
 import './components/Carousel/index.css';
-import './components/TwButton/Button.css';
+import './components/Button/Button.css';
 import './components/ParticipantList/index.css';
 import './components/ChatBox/index.css';
 export { Silence } from './components/Silence';
@@ -20,7 +20,7 @@ export * from './components/VerticalDivider';
 export * from './components/FirstPersonDisplay'
 export * from './components/ScreenShareDisplay'
 export * from './components/PostLeaveDisplay'
-export { Button as TwButton } from './components/TwButton';
+export * from './components/Button';
 export {
   HMSRoomProvider,
   useHMSStore,
