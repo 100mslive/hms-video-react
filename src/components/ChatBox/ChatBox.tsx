@@ -103,10 +103,11 @@ export const ChatBox = ({
         <Linkify
           componentDecorator={(decoratedHref, decoratedText, key) => (
             <a
-              target="_blank"
               className="text-brand-tint"
               href={decoratedHref}
               key={key}
+              target="_blank"
+              rel="noopener"
             >
               {decoratedText}
             </a>
