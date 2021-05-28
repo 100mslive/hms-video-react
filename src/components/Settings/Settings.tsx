@@ -5,7 +5,7 @@ import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { Button as TwButton } from '../TwButton';
+import { Button as TwButton } from '../Button';
 import { Text } from '../Text';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { selectLocalMediaSettings } from '../../store/selectors';

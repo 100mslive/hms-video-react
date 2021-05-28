@@ -3,7 +3,7 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { SunWithFace } from '../Icons';
 import { Text } from '../Text';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
 import post_leave_img from './post_leave.png';
 
 interface Props {

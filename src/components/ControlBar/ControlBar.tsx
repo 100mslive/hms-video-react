@@ -10,7 +10,7 @@ import {
   ShareScreenIcon,
   ChatUnreadIcon,
 } from '../Icons';
-import { Button as TwButton } from '../TwButton';
+import { Button as TwButton } from '../Button';
 import { Settings } from '../Settings/Settings';
 import { VerticalDivider } from '../VerticalDivider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';

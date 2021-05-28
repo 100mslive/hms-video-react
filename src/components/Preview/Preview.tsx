@@ -11,7 +11,7 @@ import {
 } from '../../utils/preview';
 import { MessageModal } from '../MessageModal';
 import { SettingsFormProps } from '../Settings/Settings';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { VideoTileControls } from './Controls';
