@@ -3,8 +3,7 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import Autolinker from 'autolinker';
-import ReactHtmlParser from 'react-html-parser';
+import Linkify from 'react-linkify';
 import { Button } from '../Button';
 import { useInView } from 'react-intersection-observer';
 import { HMSMessage } from '../../store/schema';
@@ -99,14 +98,24 @@ export const ChatBox = ({
   autoScrollToBottom = true, //TODO shouldn't be exposed as a prop
   scrollAnimation = 'auto', //TODO shouldn't be exposed as a prop
   messageFormatter = (message: string) => {
-    let text = Autolinker.link(message, {
-      sanitizeHtml: true,
-      mention: 'twitter',
-      className: 'text-brand-tint',
-    });
-
     return (
-      <div className="whitespace-pre-wrap">{ReactHtmlParser(text.trim())}</div>
+      <div className="whitespace-pre-wrap">
+        <Linkify
+          componentDecorator={(decoratedHref, decoratedText, key) => (
+            <a
+              className="text-brand-tint"
+              href={decoratedHref}
+              key={key}
+              target="_blank"
+              rel="noopener"
+            >
+              {decoratedText}
+            </a>
+          )}
+        >
+          {message.trim()}
+        </Linkify>
+      </div>
     );
   },
   classes,
@@ -247,10 +256,6 @@ export const ChatBox = ({
                 </div>
                 {/* messageText */}
                 <div className={styler('messageText')}>
-                  {/* {ReactHtmlParser(
-                      Autolinker.link(message.message, { sanitizeHtml: true }),
-                    )} */}
-                  {/* <ReactMarkdown>{message.message}</ReactMarkdown> */}
                   {messageFormatter
                     ? messageFormatter(message.message)
                     : message.message}

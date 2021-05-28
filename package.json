@@ -1,5 +1,5 @@
 {
-  "version": "0.1.28",
+  "version": "0.1.29",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -64,7 +64,7 @@
     "@types/lodash": "^4.14.168",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
-    "@types/react-html-parser": "^2.0.1",
+    "@types/react-linkify": "^1.0.0",
     "@types/react-slick": "^0.23.4",
     "@types/react-window": "^1.8.2",
     "babel-loader": "^8.2.2",
@@ -78,13 +78,12 @@
     "size-limit": "^4.10.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.3"
+    "typescript": "4.2.4"
   },
   "dependencies": {
-    "@100mslive/hms-video": "^0.0.15",
+    "@100mslive/hms-video": "^0.0.17",
     "@material-ui/core": "^4.11.3",
     "@twind/aspect-ratio": "^0.1.4",
-    "autolinker": "^3.14.3",
     "autoprefixer": "^9.8.6",
     "clsx": "^1.1.1",
     "immer": "^9.0.2",
@@ -92,8 +91,8 @@
     "lodash-es": "^4.17.21",
     "postcss": "^7.0.35",
     "react-click-away-listener": "^2.0.3",
-    "react-html-parser": "^2.0.2",
     "react-intersection-observer": "^8.31.1",
+    "react-linkify": "^1.0.0-alpha",
     "react-markdown": "^6.0.0",
     "react-resize-detector": "^6.6.5",
     "remark-gfm": "^1.0.0",
