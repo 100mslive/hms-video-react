@@ -9,7 +9,10 @@ import { useInView } from 'react-intersection-observer';
 import { HMSMessage } from '../../store/schema';
 import { isTotallyScrolled, scrollToBottom } from './chatBoxUtils';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
-import { selectHMSMessages } from '../../store/selectors';
+import {
+  selectHMSMessages,
+  selectUnreadHMSMessagesCount,
+} from '../../store/selectors';
 
 interface ChatBoxClasses {
   root?: string;
@@ -134,13 +137,13 @@ export const ChatBox = ({
     [],
   );
   const storeMessages = useHMSStore(selectHMSMessages);
+  const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
   const hmsActions = useHMSActions();
 
   messages = messages || storeMessages;
   const sendMessage = (msg: string) =>
     onSend ? onSend(msg) : hmsActions.sendMessage(msg);
   const [messageDraft, setMessageDraft] = useState('');
-  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   // a dummy element with messagesEndRef is created and put in the end
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
   const messageListRef = useRef<HTMLDivElement>(null);
@@ -153,16 +156,13 @@ export const ChatBox = ({
         (myOwnMessage || isTotallyScrolled(messageListRef))
       ) {
         scrollToBottom(messageListRef, scrollAnimation);
-        setUnreadMessagesCount(0);
-      } else {
-        // unread should be read/updated from/to central store
-        setUnreadMessagesCount(unreadMessagesCount => unreadMessagesCount + 1);
+        hmsActions.setMessageRead(true);
       }
     }
   }, [messages]);
 
   if (messagesEndInView && unreadMessagesCount != 0) {
-    setUnreadMessagesCount(0);
+    hmsActions.setMessageRead(true);
   }
 
   return (
