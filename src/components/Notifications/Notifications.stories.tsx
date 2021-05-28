@@ -20,4 +20,15 @@ const Template: Story = args => {
   );
 };
 
+const Light: Story = args => {
+  return (
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div>
+        <Notifications {...args} />
+      </div>
+    </HMSThemeProvider>
+  );
+};
+
 export const Default = Template.bind({});
+export const LightMode = Light.bind({});
