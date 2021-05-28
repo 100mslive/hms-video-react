@@ -5,7 +5,7 @@ import './index.css';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import Autolinker from 'autolinker';
 import ReactHtmlParser from 'react-html-parser';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
 import { useInView } from 'react-intersection-observer';
 import { HMSMessage } from '../../store/schema';
 import { isTotallyScrolled, scrollToBottom } from './chatBoxUtils';

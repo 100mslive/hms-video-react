@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { Select } from '../Select';
 import { Input } from '../Input';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { DoorIcon } from '../Icons';
 import { Text } from '../Text';

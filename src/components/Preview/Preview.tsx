@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import startCase from 'lodash/startCase';
 import { closeMediaStream } from '../../utils';
-import { getLocalStream } from '@100mslive/100ms-web-sdk';
+import { getLocalStream } from '@100mslive/hms-video';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import {
   BrowserOSError,
@@ -11,7 +11,7 @@ import {
 } from '../../utils/preview';
 import { MessageModal } from '../MessageModal';
 import { SettingsFormProps } from '../Settings/Settings';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { VideoTileControls } from './Controls';
