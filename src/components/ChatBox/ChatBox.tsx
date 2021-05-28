@@ -136,7 +136,6 @@ export const ChatBox = ({
   const sendMessage = (msg: string) =>
     onSend ? onSend(msg) : hmsActions.sendMessage(msg);
   const [messageDraft, setMessageDraft] = useState('');
-  //const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   // a dummy element with messagesEndRef is created and put in the end
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
   const messageListRef = useRef<HTMLDivElement>(null);
@@ -148,8 +147,8 @@ export const ChatBox = ({
         autoScrollToBottom &&
         (myOwnMessage || isTotallyScrolled(messageListRef))
       ) {
-        hmsActions.setMessageRead(true);
         scrollToBottom(messageListRef, scrollAnimation);
+        hmsActions.setMessageRead(true);
       }
     }
   }, [messages]);
