@@ -5,7 +5,7 @@ import { useHMSTheme } from '../..';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Button } from '../TwButton';
 import { Text } from '../Text';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast, ToastContainer, ToastProps } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 interface NotificationClasses {
@@ -20,6 +20,10 @@ interface Props {
    * extra classes added  by user
    */
   classes?: { [key: string]: string } | NotificationClasses;
+  /**
+   * Toast Props based on React-Toastify
+   */
+  toastProps?: Partial<ToastProps>;
 }
 
 const defaultClasses: NotificationClasses = {
@@ -51,7 +55,7 @@ const NotificationUI = ({ styler }) => {
   );
 };
 
-export const Notifications: React.FC<Props> = ({ classes }) => {
+export const Notifications: React.FC<Props> = ({ classes, toastProps }) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
@@ -67,8 +71,8 @@ export const Notifications: React.FC<Props> = ({ classes }) => {
   const showNotification = () => toast(<NotificationUI styler={styler} />);
   return (
     <>
-      <button onClick={showNotification}>Trigger Notif</button>
-      <ToastContainer style={{ width: '612px' }} />
+      <button onClick={showNotification}>Trigger Notification</button>
+      <ToastContainer style={{ width: '612px' }} {...toastProps} />
     </>
   );
 };
