@@ -10,12 +10,24 @@ import 'react-toastify/dist/ReactToastify.css';
 
 interface NotificationClasses {
   root?: string;
-  rootIcon?: string;
+  rootLeft?: string;
   rootCenter?: string;
-  rootClose?: string;
+  rootRight?: string;
 }
 
 interface Props {
+  /**
+   * Left Component
+   */
+  leftComponent?: JSX.Element;
+  /**
+   * Left Component
+   */
+  centerComponent?: JSX.Element;
+  /**
+   * Left Component
+   */
+  rightComponent?: JSX.Element;
   /**
    * extra classes added  by user
    */
@@ -28,34 +40,29 @@ interface Props {
 
 const defaultClasses: NotificationClasses = {
   root: `rounded-lg dark:bg-gray-100 bg-white p-5 flex items-center justify-between`,
-  rootIcon: ``,
+  rootLeft: ``,
   rootCenter: `flex items-center dark:text-white text-black  space-x-4`,
-  rootClose: `cursor-pointer`,
+  rootRight: `cursor-pointer`,
 };
 
 // @ts-ignore
-const NotificationUI = ({ styler }) => {
+const NotificationUI = ({ styler, left, center, right }) => {
   return (
     <div style={{ width: '612px' }} className={styler('root')}>
-      <div className={styler('rootIcon')}>
-        <ShareScreenIcon />
-      </div>
-      <div className={styler('rootCenter')}>
-        <p>
-          <Text variant="body">
-            Sanjana Ma’am is requesting you to share your screen
-          </Text>
-        </p>
-        <Button>Share Screen</Button>
-      </div>
-      <div className={styler('rootClose')}>
-        <CloseIcon className="text-gray-400" />
-      </div>
+      <div className={styler('rootLeft')}>{left}</div>
+      <div className={styler('rootCenter')}>{center}</div>
+      <div className={styler('rootRight')}>{right}</div>
     </div>
   );
 };
 
-export const Notifications: React.FC<Props> = ({ classes, toastProps }) => {
+export const Notifications: React.FC<Props> = ({
+  classes,
+  toastProps,
+  leftComponent,
+  centerComponent,
+  rightComponent,
+}) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
@@ -68,7 +75,15 @@ export const Notifications: React.FC<Props> = ({ classes, toastProps }) => {
     [],
   );
 
-  const showNotification = () => toast(<NotificationUI styler={styler} />);
+  const showNotification = () =>
+    toast(
+      <NotificationUI
+        styler={styler}
+        left={leftComponent}
+        center={centerComponent}
+        right={rightComponent}
+      />,
+    );
   return (
     <>
       <button onClick={showNotification}>Trigger Notification</button>
