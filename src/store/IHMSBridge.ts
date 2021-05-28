@@ -50,6 +50,18 @@ export interface IHMSBridge {
   sendMessage(message: string): void;
 
   /**
+   * If just readStatus argument is passed, the function will set read flag of every message
+   * as the readStatus argument passed.
+   * If both readStatus and messageId argument is passed, then just read flag of message
+   * with passed messageId will be set as readStatus argument. if message with passed messageId is not
+   * found in store, no change in store will take place.
+   *
+   * @param readStatus boolean value which you want to set as read flag for message/messages.
+   * @param messageId message id whose read falg you want to set.
+   */
+  setMessageRead(readStatus: boolean, messageId?: string): void;
+
+  /**
    * These functions can be used to mute/unmute the local peer's audio and video
    * @param enabled boolean
    */
