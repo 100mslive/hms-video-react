@@ -21,7 +21,19 @@ export class StoryBookSDK implements IHMSBridge {
     this.store = store;
   }
   setMessageRead(readStatus: boolean, messageId: string): void {
-    return;
+    this.store.setState(store => {
+      if (messageId) {
+        if (!store.messages.byID[messageId]) {
+          return;
+        } else {
+          store.messages.byID[messageId].read = readStatus;
+        }
+      } else {
+        store.messages.allIDs.forEach((id: string) => {
+          store.messages.byID[id].read = readStatus;
+        });
+      }
+    });
   }
 
   join(...args: any[]): void {
