@@ -3,7 +3,10 @@ import { Meta, Story } from '@storybook/react';
 import Chat from './index';
 import './index.css';
 import { ChatProps, Message } from '../ChatBox/ChatBox';
-import { fakeMessages, makeFakeMessage } from '../../storybook/fixtures/chatFixtures';
+import {
+  fakeMessages,
+  makeFakeMessage,
+} from '../../storybook/fixtures/chatFixtures';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
@@ -26,5 +29,5 @@ const Template: Story<ChatProps> = args => {
 export const Default = Template.bind({});
 Default.args = {
   autoScrollToBottom: true,
-  onSend: undefined,  // use from hmsActions
+  onSend: undefined, // use from hmsActions
 };

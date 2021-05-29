@@ -22,13 +22,13 @@ import {
   selectIsConnectedToRoom,
 } from '../selectors';
 import HMSLogger from '../../utils/ui-logger';
-import { HMSSdk } from '@100mslive/100ms-web-sdk';
+import { HMSSdk } from '@100mslive/hms-video';
 import { IHMSStore } from '../IHMSStore';
-import SDKHMSException from '@100mslive/100ms-web-sdk/dist/error/HMSException';
-import SDKHMSVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSVideoTrack';
-import SDKHMSTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSTrack';
-import HMSLocalAudioTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSLocalAudioTrack';
-import HMSLocalVideoTrack from '@100mslive/100ms-web-sdk/dist/media/tracks/HMSLocalVideoTrack';
+import SDKHMSException from '@100mslive/hms-video/dist/error/HMSException';
+import SDKHMSVideoTrack from '@100mslive/hms-video/dist/media/tracks/HMSVideoTrack';
+import SDKHMSTrack from '@100mslive/hms-video/dist/media/tracks/HMSTrack';
+import HMSLocalAudioTrack from '@100mslive/hms-video/dist/media/tracks/HMSLocalAudioTrack';
+import HMSLocalVideoTrack from '@100mslive/hms-video/dist/media/tracks/HMSLocalVideoTrack';
 import merge from 'lodash/merge';
 import {
   mergeNewPeersInDraft,
@@ -172,6 +172,21 @@ export class HMSSDKBridge implements IHMSBridge {
     hmsMessage.read = true;
     hmsMessage.senderName = 'You';
     this.onHMSMessage(hmsMessage);
+  }
+  setMessageRead(readStatus: boolean, messageId?: string) {
+    this.store.setState(store => {
+      if (messageId) {
+        if (!store.messages.byID[messageId]) {
+          this.logPossibleInconsistency('no message with id is found');
+        } else {
+          store.messages.byID[messageId].read = readStatus;
+        }
+      } else {
+        store.messages.allIDs.forEach((id: string) => {
+          store.messages.byID[id].read = readStatus;
+        });
+      }
+    });
   }
 
   async attachVideo(trackID: string, videoElement: HTMLVideoElement) {

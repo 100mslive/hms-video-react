@@ -5,7 +5,7 @@ import {
   IHMSStore,
   createNewStore,
 } from '../store';
-import { HMSSdk } from '@100mslive/100ms-web-sdk';
+import { HMSSdk } from '@100mslive/hms-video';
 import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
 import { IHMSStoreReadOnly } from '../store/IHMSStore';
 

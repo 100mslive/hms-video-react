@@ -2,7 +2,10 @@ import { IHMSBridge } from '../../store';
 import { IHMSStore } from '../../store';
 import { makeFakeMessage } from '../fixtures/chatFixtures';
 import { HMSPeer, HMSRoom } from '../../store/schema';
-import { HMSAudioTrackSettings, HMSVideoTrackSettings } from '../../store/hmsSDKBridge/sdkTypes';
+import {
+  HMSAudioTrackSettings,
+  HMSVideoTrackSettings,
+} from '../../store/hmsSDKBridge/sdkTypes';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
@@ -17,14 +20,29 @@ export class StoryBookSDK implements IHMSBridge {
   constructor(store: IHMSStore) {
     this.store = store;
   }
+  setMessageRead(readStatus: boolean, messageId: string): void {
+    this.store.setState(store => {
+      if (messageId) {
+        if (!store.messages.byID[messageId]) {
+          return;
+        } else {
+          store.messages.byID[messageId].read = readStatus;
+        }
+      } else {
+        store.messages.allIDs.forEach((id: string) => {
+          store.messages.byID[id].read = readStatus;
+        });
+      }
+    });
+  }
 
   join(...args: any[]): void {
     const joinParams = args[0];
     if (!(joinParams.username && joinParams.role && joinParams.roomId)) {
-      this.log("invalid params");
+      this.log('invalid params');
       return;
     }
-    this.log("User joining room");
+    this.log('User joining room');
     this.store.setState(store => {
       store.room.isConnected = true;
       store.room.id = joinParams.roomId;
@@ -33,63 +51,65 @@ export class StoryBookSDK implements IHMSBridge {
         role: joinParams?.role,
         isLocal: true,
         id: String(this.randomNumber()),
-        auxiliaryTracks: []
-      }
+        auxiliaryTracks: [],
+      };
       store.room.peers.push(newPeer.id);
       store.peers[newPeer.id] = newPeer;
-    })
+    });
   }
 
   attachVideo(trackID: string, videoElement: HTMLVideoElement): void {
     if (this.dummyTrackURLs[trackID]) {
       videoElement.src = this.dummyTrackURLs[trackID];
     }
-    this.log("video attached");
+    this.log('video attached');
   }
 
   leave(): void {
-    this.log("user left room")
+    this.log('user left room');
     this.store.setState(store => {
       store.room.isConnected = false;
-    })
+    });
   }
 
   detachVideo(trackID: string, videoElement: HTMLVideoElement): void {
     videoElement.srcObject = null;
-    this.log("video removed");
+    this.log('video removed');
   }
 
   sendMessage(message: string, randomUser?: boolean): void {
     this.store.setState(store => {
-      const user = randomUser ? this.randomUser() : "You";
+      const user = randomUser ? this.randomUser() : 'You';
       const newMsg = makeFakeMessage(message, user);
       store.messages.byID[newMsg.id] = newMsg;
       store.messages.allIDs.push(newMsg.id);
-    })
-    this.log("message sent - ", message);
+    });
+    this.log('message sent - ', message);
   }
 
   setLocalAudioEnabled(enabled: boolean): void {
-    this.log("set local audio enabled state - ", enabled);
+    this.log('set local audio enabled state - ', enabled);
   }
 
   setLocalVideoEnabled(enabled: boolean): void {
-    this.log("set local video enabled state - ", enabled);
+    this.log('set local video enabled state - ', enabled);
   }
 
   setScreenShareEnabled(enabled: boolean): void {
-    this.log("set screenshare enabled state - ", enabled);
+    this.log('set screenshare enabled state - ', enabled);
   }
 
   addTestRoom(room: Partial<HMSRoom>) {
     this.store.setState(store => {
       Object.assign(store.room, room);
-    })
+    });
   }
 
   addTestPeerAndSpeaker(peer: HMSPeer) {
     const randomURL = this.randomFromArray(this.videoURLs);
-    const videoTrackID = String(this.videoURLs.indexOf(randomURL) || this.counter++);
+    const videoTrackID = String(
+      this.videoURLs.indexOf(randomURL) || this.counter++,
+    );
     const audioTrackID = String(this.counter++);
     this.dummyTrackURLs[videoTrackID] = randomURL;
     peer.audioTrack = audioTrackID;
@@ -98,19 +118,23 @@ export class StoryBookSDK implements IHMSBridge {
       store.peers[peer.id] = peer;
       store.room.peers.push(peer.id);
       store.speakers[peer.id] = {
-        audioLevel: this.randomFromArray([0, 10, 20, 50, 70, 80, 100])
-      }
+        audioLevel: this.randomFromArray([0, 10, 20, 50, 70, 80, 100]),
+      };
       if (peer.audioTrack) {
         store.tracks[audioTrackID] = {
-          enabled: this.randomFromArray([true, false]), id: audioTrackID, type: "audio"
+          enabled: this.randomFromArray([true, false]),
+          id: audioTrackID,
+          type: 'audio',
         };
       }
       if (peer.videoTrack) {
         store.tracks[videoTrackID] = {
-          enabled: true, id: videoTrackID, type: "video"
+          enabled: true,
+          id: videoTrackID,
+          type: 'video',
         };
       }
-    })
+    });
   }
 
   addTestVideoURLs(urls: string[]) {
@@ -126,11 +150,18 @@ export class StoryBookSDK implements IHMSBridge {
   }
 
   private log(...args: any[]) {
-    console.log("storybook sdk", ...args);
+    console.log('storybook sdk', ...args);
   }
 
   private randomUser() {
-    return this.randomFromArray(["You", "Tushar", "Eswar", "Aniket", "Kshitiz", "Sagar"]);
+    return this.randomFromArray([
+      'You',
+      'Tushar',
+      'Eswar',
+      'Aniket',
+      'Kshitiz',
+      'Sagar',
+    ]);
   }
 
   private randomNumber() {
@@ -141,10 +172,7 @@ export class StoryBookSDK implements IHMSBridge {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  setAudioSettings(settings: HMSAudioTrackSettings): void {
-  }
+  setAudioSettings(settings: HMSAudioTrackSettings): void {}
 
-  setVideoSettings(settings: HMSVideoTrackSettings): void {
-  }
-
+  setVideoSettings(settings: HMSVideoTrackSettings): void {}
 }

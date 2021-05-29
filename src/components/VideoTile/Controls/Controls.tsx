@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { AudioLevelDisplayType } from '../../../types';
-import { Button } from '../../TwButton';
+import { Button } from '../../Button';
 import { MicOffIcon } from '../../Icons';
 import '../index.css';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
-import {useHMSTheme} from '../../../hooks/HMSThemeProvider'
+import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
 
 export interface VideoTileControlsClasses {
   root?: string;
@@ -14,7 +14,7 @@ export interface VideoTileControlsClasses {
   controlsStatus?: string;
   hoverHide?: string;
   label?: string;
-  controlsWrapper?:string;
+  controlsWrapper?: string;
 }
 export interface VideoTileControlsProps {
   label?: string;
@@ -40,7 +40,7 @@ const defaultClasses: VideoTileControlsClasses = {
     'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
   controlsStatus: 'transition-all opacity-1 mx-1',
   label: 'mt-1 mx-1',
-  controlsWrapper:'flex justify-center',
+  controlsWrapper: 'flex justify-center',
 };
 
 const customClasses: VideoTileControlsClasses = {
@@ -56,15 +56,18 @@ export const VideoTileControls = ({
   allowRemoteMute = false,
   classes,
 }: VideoTileControlsProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<VideoTileControlsClasses>({
-      tw,
-      classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-videoTileControls',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<VideoTileControlsClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-videoTileControls',
+      }),
+    [],
+  );
   return (
     <div className={`${styler('root')}`}>
       <div className={`${showGradient ? styler('gradient') : ''}`} />
