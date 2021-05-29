@@ -84,33 +84,6 @@ export interface ButtonClasses {
   rootIconOnlyDangerActive: string;
 }
 
-const defaultClasses: ButtonClasses = {
-  root:
-    'inline-flex items-center justify-center text-base font-medium focus:outline-none focus-visible:ring-4 focus-visible:blue-tint',
-  rootFocus: 'focus:ring-brand-tint',
-  rootDisabled: 'opacity-50 cursor-not-allowed', // TODO: disbaled hover state
-  rootStandard: 'bg-gray-200 hover:bg-gray-300 text-white',
-  rootDanger: 'bg-red-main hover:bg-red-tint text-white',
-  rootEmphasized: 'bg-brand-main hover:bg-brand-tint text-white',
-  rootNoFill: 'hover:opacity-80 shadow-none text-white',
-  rootCircle: 'rounded-full',
-  rootRectangle: 'rounded-lg',
-  rootSizeSm: 'px-2.5 py-1.5',
-  rootSizeMd: 'px-4 py-2',
-  rootSizeLg: 'px-6 py-3',
-  rootIconSizeSm: 'w-7 h-7 p-0.5 rounded-full',
-  rootIconSizeMd: 'w-8 h-8 p-1',
-  rootIconSizeLg: 'w-10 h-10 p-1',
-  rootIconOnlyStandard:
-    'text-black hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
-  rootIconOnlyDanger:
-    'text-black hover:bg-transparent-700 dark:text-white dark:hover:bg-transparent-300',
-  rootIconOnlyStandardActive:
-    'dark:bg-white dark:text-black bg-gray-200 text-white dark:hover:bg-white hover:bg-gray-200',
-  rootIconOnlyDangerActive:
-    'bg-red-main hover:bg-red-main dark:hover:bg-red-main text-white dark:text-white',
-};
-
 export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   variant = 'standard',
   shape = 'rectangle',
@@ -126,6 +99,45 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   children,
   ...props
 }) => {
+  const ifDisabled = (s: string, d?: string) => (disabled ? d : s);
+  const defaultClasses: ButtonClasses = {
+    root: `inline-flex items-center justify-center text-base font-medium focus:outline-none ${ifDisabled(
+      'focus-visible:ring-4 focus-visible:blue-tint',
+    )}`,
+    rootFocus: `focus:ring-brand-tint`,
+    rootDisabled: `opacity-50 cursor-not-allowed ${
+      variant !== 'no-fill' ? 'dark:bg-gray-100 bg-gray-600' : ''
+    }`,
+    rootStandard: `bg-gray-600 dark:bg-gray-200 text-black dark:text-white ${ifDisabled(
+      'dark:hover:bg-gray-300 hover:bg-gray-500',
+      'op-20 text-gray-400',
+    )}`,
+    rootDanger: `bg-red-main text-white  ${ifDisabled('hover:bg-red-tint')}`,
+    rootEmphasized: `bg-brand-main text-white ${ifDisabled(
+      'hover:bg-brand-tint',
+    )}`,
+    rootNoFill: `shadow-none text-white ${ifDisabled('hover:opacity-80')}`,
+    rootCircle: `rounded-full`,
+    rootRectangle: `rounded-lg`,
+    rootSizeSm: `px-2.5 py-1.5`,
+    rootSizeMd: `px-4 py-2`,
+    rootSizeLg: `px-6 py-3`,
+    rootIconSizeSm: `w-7 h-7 p-0.5 rounded-full`,
+    rootIconSizeMd: `w-8 h-8 p-1`,
+    rootIconSizeLg: `w-10 h-10 p-1`,
+    rootIconOnlyStandard: `text-black dark:text-white ${ifDisabled(
+      'hover:bg-transparent-700 dark:hover:bg-transparent-300',
+    )}`,
+    rootIconOnlyDanger: `text-black dark:text-white ${ifDisabled(
+      'hover:bg-transparent-700 dark:hover:bg-transparent-300',
+    )}`,
+    rootIconOnlyStandardActive: `dark:bg-white dark:text-black bg-gray-200 text-white ${ifDisabled(
+      'dark:hover:bg-white hover:bg-gray-200',
+    )}`,
+    rootIconOnlyDangerActive: `bg-red-main text-white dark:text-white ${ifDisabled(
+      'hover:bg-red-main dark:hover:bg-red-main',
+    )}`,
+  };
   const { tw } = useHMSTheme();
   const finalClasses: ButtonClasses = resolveClasses(
     classes || {},
