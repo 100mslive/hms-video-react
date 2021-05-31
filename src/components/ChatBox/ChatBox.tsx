@@ -3,11 +3,10 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import Linkify from 'react-linkify';
 import { Button } from '../Button';
 import { useInView } from 'react-intersection-observer';
 import { HMSMessage } from '../../store/schema';
-import { isTotallyScrolled, scrollToBottom } from './chatBoxUtils';
+import { ChatLink, isTotallyScrolled, scrollToBottom } from './chatBoxUtils';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
   selectHMSMessages,
@@ -100,21 +99,7 @@ export const ChatBox = ({
   messageFormatter = (message: string) => {
     return (
       <div className="whitespace-pre-wrap">
-        <Linkify
-          componentDecorator={(decoratedHref, decoratedText, key) => (
-            <a
-              className="text-brand-tint"
-              href={decoratedHref}
-              key={key}
-              target="_blank"
-              rel="noopener"
-            >
-              {decoratedText}
-            </a>
-          )}
-        >
-          {message.trim()}
-        </Linkify>
+        <ChatLink text={message} />
       </div>
     );
   },

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.29",
+  "version": "0.1.30",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -92,7 +92,6 @@
     "postcss": "^7.0.35",
     "react-click-away-listener": "^2.0.3",
     "react-intersection-observer": "^8.31.1",
-    "react-linkify": "^1.0.0-alpha",
     "react-markdown": "^6.0.0",
     "react-resize-detector": "^6.6.5",
     "remark-gfm": "^1.0.0",
