@@ -9,7 +9,7 @@ export interface appBuilder {
   };
   enableScreenShare?: boolean;
   enableChat?: boolean;
-  avatarType?: 'initial' | 'pebble';
+  avatarType?: 'initial';
 }
 
 export default interface HMSThemeProps {
