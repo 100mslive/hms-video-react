@@ -132,10 +132,10 @@ export const Join = ({
                 setRole(event.target.value);
               }}
             >
-              <option value="Teacher">Teacher</option>
-              <option value="Student">Student</option>
-              <option value="Admin">Admin</option>
-              <option value="Viewer">Viewer</option>
+              <option value="teacher">Teacher</option>
+              <option value="student">Student</option>
+              <option value="admin">Admin</option>
+              <option value="viewer">Viewer</option>
             </Select>
           </div>
           <div className={styler('joinRoot')}>
