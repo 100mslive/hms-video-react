@@ -10,6 +10,7 @@ export interface VideoTileControlsClasses {
   root?: string;
   controlsInner?: string;
   controls?: string;
+  contextMenu?: string;
   gradient?: string;
   controlsStatus?: string;
   hoverHide?: string;
@@ -31,20 +32,34 @@ export interface VideoTileControlsProps {
 
 //TODO group hover is not working
 const defaultClasses: VideoTileControlsClasses = {
-  root: 'absolute bottom-0 w-full z-20 rounded-none h-24 overflow-hidden',
+  root: 'relative w-full z-20 rounded-none h-full overflow-hidden',
   // TODO solve for smaller tiles
-  controlsInner:
-    'absolute bottom-0 w-full h-full z-20 pb-2 text-white px-2 text-center flex flex-col justify-end items-center',
-  controls: 'invisible max-h-0 transition-all text-center mt-1',
-  gradient:
-    'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
-  controlsStatus: 'transition-all opacity-1 mx-1',
-  label: 'mt-1 mx-1',
-  controlsWrapper: 'flex justify-center',
+  controlsInner: 'absolute right-0',
+  controls:
+    'w-9 h-9 m-2 rounded-full bg-gray-300 opacity-50 cursor-pointer flex items-center justify-center fill-current text-white',
+  contextMenu: 'absolute right-0 top-12 mr-2 rounder',
+  gradient: '',
+  controlsStatus: '',
+  label: '',
+  controlsWrapper: '',
 };
 
 const customClasses: VideoTileControlsClasses = {
   controls: 'hmsui-videoTile-showControlsOnHoverChild',
+};
+
+export const DotMenuIcon = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path d="M6 12a3 3 0 11-6 0 3 3 0 016 0zm9 0a3 3 0 11-6 0 3 3 0 016 0zm9 0a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  );
 };
 
 export const VideoTileControls = ({
@@ -56,6 +71,7 @@ export const VideoTileControls = ({
   allowRemoteMute = false,
   classes,
 }: VideoTileControlsProps) => {
+  const [openMenu, setOpenMenu] = React.useState(false);
   const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
@@ -70,31 +86,16 @@ export const VideoTileControls = ({
   );
   return (
     <div className={`${styler('root')}`}>
-      <div className={`${showGradient ? styler('gradient') : ''}`} />
       <div className={`${styler('controlsInner')}`}>
-        <div className={`${styler('controlsWrapper')}`}>
-          {showAudioMuteStatus && isAudioMuted && (
-            <Button
-              iconOnly
-              active
-              size={'md'}
-              shape="circle"
-              variant="danger"
-              classes={{ root: 'dark' }}
-            >
-              <MicOffIcon />
-            </Button>
-          )}
-        </div>
-        <div className={`${styler('label')}`}>{label}</div>
-        <div className={`${styler('controls')}`}>
-          {!isLocal && showAudioMuteStatus && !isAudioMuted && allowRemoteMute && (
-            <Button iconOnly size={'md'} classes={{ root: 'dark' }}>
-              <MicOffIcon />
-            </Button>
-          )}
+        <div
+          className={`${styler('controls')}`}
+          onClick={() => setOpenMenu(!openMenu)}
+        >
+          <DotMenuIcon />
         </div>
       </div>
+
+      <div className={`${styler('contextMenu')}`}>Menu</div>
     </div>
   );
 };
