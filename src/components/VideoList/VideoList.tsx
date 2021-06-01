@@ -126,7 +126,7 @@ export interface VideoListProps {
    */
   videoTileClasses?: VideoTileClasses;
 
-  avatarType?: 'initial' | 'pebble';
+  avatarType?: 'initial';
   compact?: boolean;
 }
 
