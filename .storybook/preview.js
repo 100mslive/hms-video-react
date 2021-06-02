@@ -16,7 +16,7 @@ setUpFakeStore();
 
 export const decorators = [
   Story => (
-    <HMSRoomProvider store={storyBookStore} sdk={storyBookSDK}>
+    <HMSRoomProvider store={storyBookStore} actions={storyBookSDK}>
       <Story />
     </HMSRoomProvider>
   ),

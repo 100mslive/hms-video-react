@@ -26,11 +26,12 @@ const HMSContext = createContext<HMSContextProviderProps | null>(null);
 let providerProps: HMSContextProviderProps;
 export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
   children,
-  ...props
+  actions,
+  store,
 }) => {
   if (!providerProps) {
-    if (props.actions && props.store) {
-      providerProps = { actions: props.actions, store: props.store };
+    if (actions && store) {
+      providerProps = { actions: actions, store: store };
     } else {
       const hmsReactiveStore = new HMSReactiveStore();
       providerProps = {

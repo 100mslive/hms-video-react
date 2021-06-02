@@ -1,9 +1,12 @@
 import { fakeMessages } from '../fixtures/chatFixtures';
 import { fakeParticipants } from '../fixtures/peersFixtures';
 import { StoryBookSDK } from './StoryBookSDK';
-import { HMSReactiveStore } from '@100mslive/hms-video-store';
+import { HMSReactiveStore, HMSStore } from '@100mslive/hms-video-store';
+import create from 'zustand';
 
-export const storyBookStore = HMSReactiveStore.createNewHMSStore();
+export const storyBookStore = create<HMSStore>(
+  HMSReactiveStore.createNewHMSStore(),
+);
 export const storyBookSDK = new StoryBookSDK(storyBookStore);
 
 const videoURLS = [
