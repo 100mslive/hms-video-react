@@ -74,7 +74,7 @@ export const Join = ({
   );
 
   const [username, setUsername] = useState(initialValues?.username || '');
-  const [role, setRole] = useState(initialValues?.role || 'Student');
+  const [role, setRole] = useState(initialValues?.role || 'student');
   const [roomId, setRoomId] = useState(initialValues?.roomId || '');
 
   useEffect(() => {
@@ -127,7 +127,7 @@ export const Join = ({
           <div className={styler('inputFieldRoot')}>
             <Select
               name="role"
-              defaultValue={initialValues?.role || role}
+              value={role}
               onChange={event => {
                 setRole(event.target.value);
               }}
@@ -149,7 +149,7 @@ export const Join = ({
                 })
               }
             >
-              Join{' '}
+              Join
             </Button>
           </div>
         </div>
