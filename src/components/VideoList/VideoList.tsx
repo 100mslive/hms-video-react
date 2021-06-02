@@ -11,9 +11,9 @@ import { useResizeDetector } from 'react-resize-detector';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { HMSPeer, HMSTrack, HMSTrackID } from '../../store/schema';
+import { HMSPeer, HMSTrack, HMSTrackID } from '@100mslive/hms-video-store';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import { selectTracksMap } from '../../store/selectors';
+import { selectTracksMap } from '@100mslive/hms-video-store';
 import {
   getVideoTracksFromPeers,
   TrackWithPeer,

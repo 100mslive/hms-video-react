@@ -2,6 +2,15 @@
 # yarn lockfile v1
 
 
+"@100mslive/hms-video-store@^0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.7.tgz#395841550bc5e3b6662bea78bb14dfe74f336449"
+  integrity sha512-/Wt5CI+ZawO4S0QA+dJMRO1klC16hh2QMPOx536bn/iDsew5C1X3rk8FpPNqNIvsN+3QIEZ27PSjiPZ4Z/ncfA==
+  dependencies:
+    immer "^9.0.2"
+    reselect "^4.0.0"
+    zustand "^3.5.1"
+
 "@100mslive/hms-video@^0.0.19":
   version "0.0.19"
   resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.19.tgz#4df15a891bb33d7f4f4e923a2f5e0db35d4ba4f4"
@@ -12380,14 +12389,7 @@ require-main-filename@^2.0.0:
   resolved "https://registry.yarnpkg.com/require-main-filename/-/require-main-filename-2.0.0.tgz#d0b329ecc7cc0f61649f62215be69af54aa8989b"
   integrity sha512-NKN5kMDylKuldxYLSUfrbo5Tuzh4hd+2E8NPPX02mZtn1VuREQToYe/ZdlJy+J3uCpfaiGF05e7B8W0iXbQHmg==
 
-reselect-tools@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/reselect-tools/-/reselect-tools-0.0.7.tgz#bff19df422ebebd1a7c322262db94a554f6b44ed"
-  integrity sha512-+RGguS8ph21y04l6YwQwL+VfJ/c0qyZKCkhCd5ZwbNJ/lklsJml3CIim+uaG/t+7jYZQcwDW4bk5+VzTeuzwtw==
-  dependencies:
-    reselect "4.0.0"
-
-reselect@4.0.0, reselect@^4.0.0:
+reselect@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.0.0.tgz#f2529830e5d3d0e021408b246a206ef4ea4437f7"
   integrity sha512-qUgANli03jjAyGlnbYVAV5vvnOmJnODyABz51RdBN7M4WaVu8mecZWgyQNkG8Yqe3KRGRt0l4K4B3XVEULC4CA==

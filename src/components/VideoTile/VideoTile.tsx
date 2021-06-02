@@ -6,14 +6,14 @@ import { Avatar } from '../TwAvatar';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { HMSPeer } from '../../store/schema';
+import { HMSPeer } from '@100mslive/hms-video-store';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
   selectCameraStreamByPeerID,
   selectIsPeerAudioEnabled,
   selectIsPeerVideoEnabled,
   selectScreenShareByPeerID,
-} from '../../store/selectors';
+} from '@100mslive/hms-video-store';
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.

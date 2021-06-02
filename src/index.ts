@@ -17,15 +17,14 @@ export * from './components/Join';
 export * from './components/Icons';
 export * from './components/Carousel';
 export * from './components/VerticalDivider';
-export * from './components/FirstPersonDisplay'
-export * from './components/ScreenShareDisplay'
-export * from './components/PostLeaveDisplay'
+export * from './components/FirstPersonDisplay';
+export * from './components/ScreenShareDisplay';
+export * from './components/PostLeaveDisplay';
 export * from './components/Button';
-export * from './components/Text'
+export * from './components/Text';
 export {
   HMSRoomProvider,
   useHMSStore,
   useHMSActions,
 } from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';
-export * from './store/selectors';

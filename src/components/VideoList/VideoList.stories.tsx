@@ -5,7 +5,7 @@ import { getVideoTileLabel } from '../../utils';
 import { VideoTileControls } from '../VideoTile/Controls';
 import { MicOffIcon, MicOnIcon } from '../Icons';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
-import { HMSPeer, HMSTrack } from '../../store/schema';
+import { HMSPeer, HMSTrack } from '@100mslive/hms-video-store';
 import { storyBookSDK } from '../../storybook/store/SetUpFakeStore';
 
 const meta: Meta = {

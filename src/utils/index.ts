@@ -6,7 +6,7 @@ import reduce from 'lodash/reduce';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
 
 import { theme as defaultTailwindConfig } from '../defaultTheme';
-import { HMSTrackSource } from '../store/schema';
+import { HMSTrackSource } from '@100mslive/hms-video-store';
 import { TrackWithPeer } from './videoListUtils';
 
 const getVideoTileLabel = (

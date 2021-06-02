@@ -1,4 +1,4 @@
-import { HMSPeer, HMSTrack, HMSTrackID } from '../store/schema';
+import { HMSPeer, HMSTrack, HMSTrackID } from '@100mslive/hms-video-store';
 
 export type TrackWithPeer = { track: HMSTrack; peer: HMSPeer };
 

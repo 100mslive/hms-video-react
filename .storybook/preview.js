@@ -1,6 +1,10 @@
 import '../src/index.css';
 import { HMSRoomProvider } from '../src';
-import { setUpFakeStore, storyBookSDK, storyBookStore } from '../src/storybook/store/SetUpFakeStore';
+import {
+  setUpFakeStore,
+  storyBookSDK,
+  storyBookStore,
+} from '../src/storybook/store/SetUpFakeStore';
 
 // https://storybook.js.org/docs/react/writing-stories/parameters#global-parameters
 export const parameters = {
@@ -11,7 +15,7 @@ export const parameters = {
 setUpFakeStore();
 
 export const decorators = [
-  (Story) => (
+  Story => (
     <HMSRoomProvider store={storyBookStore} sdk={storyBookSDK}>
       <Story />
     </HMSRoomProvider>
