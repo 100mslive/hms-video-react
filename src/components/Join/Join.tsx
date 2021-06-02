@@ -25,6 +25,11 @@ interface JoinClasses {
   joinButton?: string;
 }
 
+interface Option {
+  label: string,
+  value: string
+}
+
 const defaultClasses: JoinClasses = {
   root:
     'flex bg-white dark:bg-black justify-center items-center w-screen h-screen ',
@@ -40,11 +45,17 @@ const defaultClasses: JoinClasses = {
   joinRoot: 'w-full flex justify-end m-2',
   joinButton: 'bg-brand-main  rounded-lg px-5 py-2 focus:outline-none',
 };
+
 export interface JoinProps extends React.DetailsHTMLAttributes<any> {
   /**
    * Initial values to be filled in the form.
    */
   initialValues?: Partial<Fields>;
+  /**
+   * Roles to be passed by the user other defaults will be used
+   * Each role should follow { label: string, value: string } format 
+   */
+  roles?: Option[],
   /**
    * Event handler for join button click.
    */
@@ -55,10 +66,11 @@ export interface JoinProps extends React.DetailsHTMLAttributes<any> {
   classes?: { [key: string]: string } | JoinClasses;
 }
 
-export const Join = ({
+const Join = ({
   initialValues,
   submitOnClick,
   classes,
+  roles = [],
   ...props
 }: JoinProps) => {
   const { tw } = useHMSTheme();
@@ -74,7 +86,7 @@ export const Join = ({
   );
 
   const [username, setUsername] = useState(initialValues?.username || '');
-  const [role, setRole] = useState(initialValues?.role || 'Student');
+  const [role, setRole] = useState(initialValues?.role || roles[0].value);
   const [roomId, setRoomId] = useState(initialValues?.roomId || '');
 
   useEffect(() => {
@@ -127,15 +139,14 @@ export const Join = ({
           <div className={styler('inputFieldRoot')}>
             <Select
               name="role"
-              defaultValue={initialValues?.role || role}
+              value={role}
               onChange={event => {
                 setRole(event.target.value);
               }}
             >
-              <option value="teacher">Teacher</option>
-              <option value="student">Student</option>
-              <option value="admin">Admin</option>
-              <option value="viewer">Viewer</option>
+              {roles.map(({ label, value}) => {
+                return <option value={value}>{label}</option>
+              })}
             </Select>
           </div>
           <div className={styler('joinRoot')}>
@@ -149,7 +160,7 @@ export const Join = ({
                 })
               }
             >
-              Join{' '}
+              Join
             </Button>
           </div>
         </div>
@@ -157,3 +168,14 @@ export const Join = ({
     </div>
   );
 };
+
+Join.defaultProps = {
+  roles: [
+    { label: "Student", value: "student" },
+    { label: "Teacher", value: "teacher" },
+    { label: "Viewer", value: "viewer" },
+    { label: "Admin", value: "admin" },
+  ]
+}
+
+export { Join };
