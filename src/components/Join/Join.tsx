@@ -52,7 +52,8 @@ export interface JoinProps extends React.DetailsHTMLAttributes<any> {
    */
   initialValues?: Partial<Fields>;
   /**
-   * 
+   * Roles to be passed by the user other defaults will be used
+   * Each role should follow { label: string, value: string } format 
    */
   roles?: Option[],
   /**
@@ -85,7 +86,7 @@ const Join = ({
   );
 
   const [username, setUsername] = useState(initialValues?.username || '');
-  const [role, setRole] = useState(initialValues?.role || 'student');
+  const [role, setRole] = useState(initialValues?.role || roles[0].value);
   const [roomId, setRoomId] = useState(initialValues?.roomId || '');
 
   useEffect(() => {
@@ -170,8 +171,8 @@ const Join = ({
 
 Join.defaultProps = {
   roles: [
-    { label: "Teacher", value: "teacher" },
     { label: "Student", value: "student" },
+    { label: "Teacher", value: "teacher" },
     { label: "Viewer", value: "viewer" },
     { label: "Admin", value: "admin" },
   ]
