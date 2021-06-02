@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import startCase from 'lodash/startCase';
 import { closeMediaStream } from '../../utils';
 import { getLocalStream } from '@100mslive/hms-video';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -115,7 +114,7 @@ export const Preview = ({
         setError(localStreamError);
       } else {
         setError({
-          title: startCase(err.title),
+          title: err.description,
           message: err.message,
         });
       }
