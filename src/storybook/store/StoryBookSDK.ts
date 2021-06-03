@@ -1,17 +1,20 @@
-import { IHMSBridge } from '../../store';
-import { IHMSStore } from '../../store';
 import { makeFakeMessage } from '../fixtures/chatFixtures';
-import { HMSPeer, HMSRoom } from '../../store/schema';
+import {
+  IHMSActions,
+  IHMSStore,
+  HMSPeer,
+  HMSRoom,
+} from '@100mslive/hms-video-store';
 import {
   HMSAudioTrackSettings,
   HMSVideoTrackSettings,
-} from '../../store/hmsSDKBridge/sdkTypes';
+} from '@100mslive/hms-video-store';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
 storybook or writing functional tests.
  */
-export class StoryBookSDK implements IHMSBridge {
+export class StoryBookSDK implements IHMSActions {
   private readonly store: IHMSStore;
   private videoURLs: string[] = [];
   private dummyTrackURLs: Record<string, string> = {};
@@ -20,6 +23,7 @@ export class StoryBookSDK implements IHMSBridge {
   constructor(store: IHMSStore) {
     this.store = store;
   }
+
   setMessageRead(readStatus: boolean, messageId: string): void {
     this.store.setState(store => {
       if (messageId) {

@@ -5,13 +5,13 @@ import './index.css';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Button } from '../Button';
 import { useInView } from 'react-intersection-observer';
-import { HMSMessage } from '../../store/schema';
+import { HMSMessage } from '@100mslive/hms-video-store';
 import { ChatLink, isTotallyScrolled, scrollToBottom } from './chatBoxUtils';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
   selectHMSMessages,
   selectUnreadHMSMessagesCount,
-} from '../../store/selectors';
+} from '@100mslive/hms-video-store';
 
 interface ChatBoxClasses {
   root?: string;

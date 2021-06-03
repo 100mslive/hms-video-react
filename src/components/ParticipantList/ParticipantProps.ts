@@ -1,4 +1,4 @@
-import { HMSPeerWithMuteStatus } from '../../store/selectors';
+import { HMSPeerWithMuteStatus } from '@100mslive/hms-video-store';
 
 export interface ParticipantListClasses {
   root?: string;

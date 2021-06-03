@@ -1,5 +1,4 @@
 import React from 'react';
-import { CamOffIcon } from '../components/Icons';
 import HMSLogger from './ui-logger';
 
 export class BrowserOSError extends Error {

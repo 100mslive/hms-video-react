@@ -1,46 +1,59 @@
 import React, { createContext, useContext } from 'react';
 import {
-  IHMSBridge,
-  HMSSDKBridge,
-  IHMSStore,
-  createNewStore,
-} from '../store';
-import { HMSSdk } from '@100mslive/hms-video';
+  HMSReactiveStore,
+  HMSStore,
+  IHMSActions,
+} from '@100mslive/hms-video-store';
+import { IHMSStoreReadOnly } from '@100mslive/hms-video-store';
+import create, { EqualityChecker, StateSelector } from 'zustand';
 import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
-import { IHMSStoreReadOnly } from '../store/IHMSStore';
 
-// Data flow is unidirectional following flux. View never directly changes store, it calls an
-// action function(eg. sendMessage, leave etc.) which in turns does the necessary action
-// required and might modify the store if needed. View only reads from the store and shows it.
-
-const store: IHMSStore = createNewStore();
-const sdk: IHMSBridge = new HMSSDKBridge(new HMSSdk(), store);
-
-const HMSContext = createContext<HMSContextProviderProps | null>(null);
-
-export interface HMSRoomProviderProps {
-  sdk?: IHMSBridge;
-  store?: IHMSStoreReadOnly;
+export interface IHMSReactStore extends IHMSStoreReadOnly {
+  <U>(selector: StateSelector<HMSStore, U>, equalityFn?: EqualityChecker<U>): U;
 }
 
-let providerProps: HMSContextProviderProps = { sdk, store };
+export interface HMSRoomProviderProps {
+  actions?: IHMSActions;
+  store?: IHMSReactStore;
+}
 
-export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({ children, ...props }) => {
-  if (props.sdk && props.store) {
-    providerProps = {sdk: props.sdk, store: props.store}
+/**
+ * only one context is being created currently. This would need to be changed if multiple
+ * rooms have to be supported, where every room will have its own context, provider, store and actions.
+ */
+const HMSContext = createContext<HMSContextProviderProps | null>(null);
+
+let providerProps: HMSContextProviderProps;
+export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
+  children,
+  actions,
+  store,
+}) => {
+  if (!providerProps) {
+    if (actions && store) {
+      providerProps = { actions: actions, store: store };
+    } else {
+      const hmsReactiveStore = new HMSReactiveStore();
+      providerProps = {
+        actions: hmsReactiveStore.getHMSActions(),
+        store: create<HMSStore>(hmsReactiveStore.getStore()), // convert vanilla store in react hook
+      };
+    }
   }
   window.onunload = () => {
-    providerProps.sdk.leave();
+    providerProps.actions.leave();
   };
-  return <HMSContext.Provider value={providerProps}>
-    {children}
-  </HMSContext.Provider>
+
+  return React.createElement(
+    HMSContext.Provider,
+    { value: providerProps },
+    children,
+  );
 };
 
 /*
 UseHMSStore is a read only hook which can be passed a selector to read data.
 The hook can only be used in a component if HMSRoomProvider is present in its ancestors.
-One HMSRoomProvider will need to be created per room in the UI.
  */
 export const useHMSStore = makeHMSStoreHook(HMSContext);
 
@@ -52,5 +65,5 @@ export const useHMSActions = () => {
   if (!HMSContextConsumer) {
     throw new Error('HMSContext state variables are not set');
   }
-  return HMSContextConsumer.sdk;
+  return HMSContextConsumer.actions;
 };

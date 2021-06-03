@@ -5,7 +5,7 @@ import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 import { AudioLevelBorder, AudioLevelIndicatorClasses } from './Border';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import { selectPeerAudioByID } from '../../store/selectors';
+import { selectPeerAudioByID } from '@100mslive/hms-video-store';
 
 export interface AudioLevelIndicatorProps {
   peerId?: string;

@@ -6,7 +6,6 @@ import {
   MicOnIcon,
   CamOffIcon,
   CamOnIcon,
-  ChatIcon,
   ShareScreenIcon,
   ChatUnreadIcon,
 } from '../Icons';

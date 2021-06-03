@@ -16,7 +16,7 @@ import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { VideoTileControls } from './Controls';
 import HMSLogger from '../../utils/ui-logger';
 import { Text } from '../Text';
-import { HMSPeer } from '../../store/schema';
+import { HMSPeer } from '@100mslive/hms-video-store';
 
 interface MuteStatus {
   audioMuted?: boolean;

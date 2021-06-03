@@ -1,4 +1,4 @@
-import { HMSTrack } from '../../store/schema';
+import { HMSTrack } from '@100mslive/hms-video-store';
 
 let counter = 100;
 

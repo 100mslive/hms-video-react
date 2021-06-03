@@ -9,7 +9,7 @@ import ClickAwayListener from 'react-click-away-listener';
 import {
   HMSPeerWithMuteStatus,
   selectPeersWithAudioStatus,
-} from '../../store/selectors';
+} from '@100mslive/hms-video-store';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
   ParticipantListClasses,
