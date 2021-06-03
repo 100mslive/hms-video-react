@@ -1,6 +1,6 @@
 import { HMSPeer, HMSTrack, HMSTrackID } from '@100mslive/hms-video-store';
 
-export type TrackWithPeer = { track: HMSTrack; peer: HMSPeer };
+export type TrackWithPeer = { track?: HMSTrack; peer: HMSPeer };
 
 export const getVideoTracksFromPeers = (
   peers: HMSPeer[],
@@ -12,7 +12,9 @@ export const getVideoTracksFromPeers = (
   }
   const videoTracks: TrackWithPeer[] = [];
   for (let peer of peers) {
-    if (peer.videoTrack && tracks[peer.videoTrack]) {
+    if(peer.videoTrack === undefined && peer.audioTrack && tracks[peer.audioTrack]) {
+      videoTracks.push({ peer: peer })  
+    } else if (peer.videoTrack && tracks[peer.videoTrack]) {
       videoTracks.push({ track: tracks[peer.videoTrack], peer: peer });
     }
     if (showScreenFn(peer) && peer.auxiliaryTracks.length > 0) {
