@@ -207,7 +207,7 @@ export const Preview = ({
             goBackOnClick();
           }}
         >
-          Go back{' '}
+          Go back
         </Button>
       </div>
     </div>

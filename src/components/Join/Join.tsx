@@ -145,7 +145,7 @@ const Join = ({
               }}
             >
               {roles.map(({ label, value}) => {
-                return <option value={value}>{label}</option>
+                return <option key={value} value={value}>{label}</option>
               })}
             </Select>
           </div>
