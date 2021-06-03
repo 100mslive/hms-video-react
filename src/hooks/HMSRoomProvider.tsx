@@ -63,7 +63,10 @@ UseHMSActions is a write ony hook which can be used to dispatch actions.
 export const useHMSActions = () => {
   const HMSContextConsumer = useContext(HMSContext);
   if (!HMSContextConsumer) {
-    throw new Error('HMSContext state variables are not set');
+    const error =
+      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
+      'to 100ms react docs to check on the required steps for using this hook.';
+    throw new Error(error);
   }
   return HMSContextConsumer.actions;
 };
