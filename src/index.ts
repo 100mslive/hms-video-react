@@ -14,6 +14,7 @@ export * from './components/ParticipantList';
 export * from './components/ChatBox/ChatBox';
 export * from './components/Settings/Settings';
 export * from './components/Join';
+export * from './components/MessageModal';
 export * from './components/Icons';
 export * from './components/Carousel';
 export * from './components/VerticalDivider';

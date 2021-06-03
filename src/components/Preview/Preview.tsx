@@ -147,11 +147,9 @@ export const Preview = ({
           {/* messageModal */}
           <MessageModal
             show={showModal}
-            setShow={setShowModal}
             title={error.title}
-            message={error.message}
-            allow={false}
-            gobackOnClick={goBackOnClick}
+            body={error.message}
+            onClose={goBackOnClick}
           />
           {/* videoTile */}
           <VideoTile
