@@ -1,55 +1,58 @@
 import React from 'react';
-import { CamOffIcon } from '../components/Icons';
 import HMSLogger from './ui-logger';
 
-const NotAllowedMessage = () => {
-  return (
-    <ol className="flex flex-col">
-      <li className="inline-block">
-        Click the camera blocked icon
-        <div className="space-x-4 ml-2 mr-2">
-          <CamOffIcon />
-        </div>{' '}
-        in your browser's address bar.
-      </li>
-      <li className="flex "> Allow access and refresh the page.</li>
-    </ol>
+export class BrowserOSError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'BrowserOSError';
+  }
+}
+
+export const isBrowserOSValid = () => {
+  const agent = navigator.userAgent.toLowerCase();
+  const isChrome = agent.indexOf('chrome') > -1;
+  const isSafari = agent.indexOf('safari') !== -1 && !isChrome;
+  const isIOS =
+    /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  const safariVersion = parseInt(
+    (function() {
+      var ua = navigator.userAgent,
+        tem,
+        M =
+          ua.match(
+            /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i,
+          ) || [];
+      if (/trident/i.test(M[1])) {
+        tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
+        return `IE ${tem[1] || ''}`;
+      }
+      if (M[1] === 'Chrome') {
+        tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
+        if (tem != null) {
+          return tem
+            .slice(1)
+            .join(' ')
+            .replace('OPR', 'Opera');
+        }
+      }
+      M = M[2] ? [M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+      if ((tem = ua.match(/version\/(\d+)/i)) != null) {
+        M.splice(1, 1, tem[1]);
+      }
+      return M;
+    })() as string,
   );
+
+  if (isChrome && isIOS) {
+    throw new BrowserOSError('iOSChromeError');
+  } else if (isSafari && safariVersion < 14) {
+    throw new BrowserOSError('iOSSafariError');
+  } else {
+    return true;
+  }
 };
 
 const localStreamErrors = new Map();
-//required track is missing
-localStreamErrors.set('NotFoundError', {
-  title: 'Camera/Microphone not detected!',
-  message:
-    'We were unable to detect any camera/microphone devices. Please connect and try again.',
-});
-//webcam or mic are already in use
-localStreamErrors.set('NotReadableError', {
-  title: 'Camera/Microphone not accessible!',
-  message:
-    'Please close any other application using camera/microphone and refresh the page.',
-});
-//constraints can not be satisfied by avb. devices
-localStreamErrors.set('OverconstrainedError', {
-  title: 'Invalid Audio/Video constraints',
-  message: 'The constraints provided for audio/video cannot be met.',
-});
-//permission denied in browser
-localStreamErrors.set('NotAllowedError', {
-  title: 'Your camera/microphone is blocked',
-  message:
-    'We need access to your camera/microphone so that other participants can see and hear you.',
-  secondaryMessage: NotAllowedMessage,
-  secondaryMessageSafari:
-    "Meet requires access to your camera/mic. Choose 'Safari' > Settings for this website.",
-});
-// returning null continues the call without error modal.
-
-localStreamErrors.set('Error', {
-  title: 'Camera/Microphone not accessible!',
-  message: "We don't support Chrome on iOS device, please switch to Safari.",
-});
 
 localStreamErrors.set('iOSChromeError', {
   title: 'Chrome on iOS not supported!',
@@ -58,25 +61,15 @@ localStreamErrors.set('iOSChromeError', {
 });
 
 localStreamErrors.set('iOSSafariError', {
-  title: 'Safari <14 Version not supported!',
+  title: 'Safari < 14 Version not supported!',
   message:
     'This version of Safari is not supported by 100ms. Please upgrade to the latest version. Choose Settings App > General tab > Software Update > Download and Install.',
 });
 
-localStreamErrors.set('TypeError', {
-  title: 'Unable to access camera/microphone!',
-  message: 'Please switch your device and try again.',
-});
-
-const getLocalStreamException = (errorName: any, browser: boolean) => {
+const getLocalStreamException = (errorName: any) => {
   let errorMessage = null;
   if (errorName.length > 0) {
     errorMessage = localStreamErrors.get(errorName);
-    if (errorName === 'NotAllowedError') {
-      errorMessage['secondaryMessage'] = browser
-        ? errorMessage['secondaryMessageSafari']
-        : errorMessage['secondaryMessage'];
-    }
   } else {
     //other errors
     errorMessage = {

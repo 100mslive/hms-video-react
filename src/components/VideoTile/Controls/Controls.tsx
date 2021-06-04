@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { AudioLevelDisplayType } from '../../../types';
-import { Button } from '../../TwButton';
+import { Button } from '../../Button';
 import { MicOffIcon } from '../../Icons';
 import '../index.css';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
+import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
 
 export interface VideoTileControlsClasses {
   root?: string;
@@ -13,6 +14,7 @@ export interface VideoTileControlsClasses {
   controlsStatus?: string;
   hoverHide?: string;
   label?: string;
+  controlsWrapper?: string;
 }
 export interface VideoTileControlsProps {
   label?: string;
@@ -38,6 +40,7 @@ const defaultClasses: VideoTileControlsClasses = {
     'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
   controlsStatus: 'transition-all opacity-1 mx-1',
   label: 'mt-1 mx-1',
+  controlsWrapper: 'flex justify-center',
 };
 
 const customClasses: VideoTileControlsClasses = {
@@ -53,20 +56,23 @@ export const VideoTileControls = ({
   allowRemoteMute = false,
   classes,
 }: VideoTileControlsProps) => {
-  const parseClass = useCallback(
-    hmsUiClassParserGenerator<VideoTileControlsClasses>({
-      classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-videoTileControls',
-    }),
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<VideoTileControlsClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-videoTileControls',
+      }),
     [],
   );
   return (
-    <div className={`${parseClass('root')}`}>
-      <div className={`${showGradient ? parseClass('gradient') : ''}`} />
-      <div className={`${parseClass('controlsInner')}`}>
-        <div className="flex justify-center">
+    <div className={`${styler('root')}`}>
+      <div className={`${showGradient ? styler('gradient') : ''}`} />
+      <div className={`${styler('controlsInner')}`}>
+        <div className={`${styler('controlsWrapper')}`}>
           {showAudioMuteStatus && isAudioMuted && (
             <Button
               iconOnly
@@ -80,8 +86,8 @@ export const VideoTileControls = ({
             </Button>
           )}
         </div>
-        <div className={`${parseClass('label')}`}>{label}</div>
-        <div className={`${parseClass('controls')}`}>
+        <div className={`${styler('label')}`}>{label}</div>
+        <div className={`${styler('controls')}`}>
           {!isLocal && showAudioMuteStatus && !isAudioMuted && allowRemoteMute && (
             <Button iconOnly size={'md'} classes={{ root: 'dark' }}>
               <MicOffIcon />

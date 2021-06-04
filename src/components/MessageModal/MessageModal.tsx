@@ -4,7 +4,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { withClasses } from '../../utils/styles';
 import { combineClasses } from '../../utils';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -61,9 +61,9 @@ const defaultClasses: MessageModalClasses = {
 };
 
 export const StyledMessageModal = ({
-  title = 'Permission Denied!',
-  message = 'Click on camera icon',
-  secondary = 'I dont know',
+  title = '',
+  message = '',
+  secondary = '',
   show = true,
   allow,
   gobackOnClick,

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useMemo } from 'react';
 import { ButtonDisplayType } from '../../types';
 import {
   HangUpIcon,
@@ -6,13 +6,14 @@ import {
   MicOnIcon,
   CamOffIcon,
   CamOnIcon,
-  ChatIcon,
   ShareScreenIcon,
+  ChatUnreadIcon,
 } from '../Icons';
-import { Button as TwButton } from '../TwButton';
+import { Button as TwButton } from '../Button';
 import { Settings } from '../Settings/Settings';
 import { VerticalDivider } from '../VerticalDivider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export interface ControlBarClasses {
   root?: string;
@@ -77,7 +78,7 @@ export const ControlBar = ({
     >
       <ShareScreenIcon />
     </TwButton>,
-    <VerticalDivider key={4} />,
+    <VerticalDivider key={3} />,
     <TwButton
       iconOnly
       variant={'no-fill'}
@@ -85,9 +86,9 @@ export const ControlBar = ({
       shape={buttonDisplay}
       onClick={chatButtonOnClick}
       active={isChatOpen}
-      key={5}
+      key={4}
     >
-      <ChatIcon />
+      <ChatUnreadIcon />
     </TwButton>,
   ],
   centerComponents = [
@@ -96,20 +97,22 @@ export const ControlBar = ({
       variant={'no-fill'}
       iconSize="md"
       shape={buttonDisplay}
-      active={isVideoMuted}
-      onClick={videoButtonOnClick}
+      active={isAudioMuted}
+      onClick={audioButtonOnClick}
+      key={0}
     >
-      {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </TwButton>,
     <TwButton
       iconOnly
       variant={'no-fill'}
       iconSize="md"
       shape={buttonDisplay}
-      active={isAudioMuted}
-      onClick={audioButtonOnClick}
+      active={isVideoMuted}
+      onClick={videoButtonOnClick}
+      key={1}
     >
-      {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+      {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
     </TwButton>,
   ],
   rightComponents = [
@@ -119,18 +122,22 @@ export const ControlBar = ({
       variant={'danger'}
       onClick={leaveButtonOnClick}
       icon={<HangUpIcon />}
+      key={0}
     >
       Leave room
     </TwButton>,
   ],
   classes,
 }: ControlBarProps) => {
-  const combinedClasses = useCallback(
-    hmsUiClassParserGenerator<ControlBarClasses>({
-      classes,
-      defaultClasses,
-      tag: 'hmsui-controlbar',
-    }),
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ControlBarClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-controlbar',
+      }),
     [],
   );
 
@@ -150,10 +157,10 @@ export const ControlBar = ({
   });
 
   return (
-    <div className={combinedClasses('root')}>
-      <div className={combinedClasses('leftRoot')}>{leftItems}</div>
-      <div className={combinedClasses('centerRoot')}>{centerItems}</div>
-      <div className={combinedClasses('rightRoot')}>{rightItems}</div>
+    <div className={styler('root')}>
+      <div className={styler('leftRoot')}>{leftItems}</div>
+      <div className={styler('centerRoot')}>{centerItems}</div>
+      <div className={styler('rightRoot')}>{rightItems}</div>
     </div>
   );
 };

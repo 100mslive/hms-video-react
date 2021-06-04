@@ -1,11 +1,17 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import './index.css';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import Autolinker from 'autolinker';
-import ReactHtmlParser from 'react-html-parser';
 import { Button } from '../Button';
 import { useInView } from 'react-intersection-observer';
+import { HMSMessage } from '@100mslive/hms-video-store';
+import { ChatLink, isTotallyScrolled, scrollToBottom } from './chatBoxUtils';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import {
+  selectHMSMessages,
+  selectUnreadHMSMessagesCount,
+} from '@100mslive/hms-video-store';
 
 interface ChatBoxClasses {
   root?: string;
@@ -66,18 +72,15 @@ const customClasses: ChatBoxClasses = {
   messageBox: 'hmsui-chatBox-no-scrollbar',
   chatInput: 'hmsui-chatBox-no-scrollbar',
 };
-export interface Message {
-  message: string;
-  sender?: string;
-  time: Date;
+export interface Message extends HMSMessage {
   notification?: boolean;
   direction?: 'left' | 'right' | 'center';
 }
 export interface ChatProps {
-  messages: Message[];
-  onSend: (message: string) => void;
-  onClose?: () => void;
-  willScrollToBottom?: boolean;
+  messages?: Message[];
+  onSend?: (message: string) => void;
+  onClose?: () => void; // when the chat box is closed
+  autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
   messageFormatter?: (message: string) => React.ReactNode;
   /**
@@ -91,17 +94,13 @@ export const ChatBox = ({
   messages,
   onSend,
   onClose,
-  willScrollToBottom = true, //TODO shouldn't be exposed as a prop
+  autoScrollToBottom = true, //TODO shouldn't be exposed as a prop
   scrollAnimation = 'auto', //TODO shouldn't be exposed as a prop
   messageFormatter = (message: string) => {
-    let text = Autolinker.link(message, {
-      sanitizeHtml: true,
-      mention: 'twitter',
-      className: 'text-brand-tint',
-    });
-
     return (
-      <div className="whitespace-pre-wrap">{ReactHtmlParser(text.trim())}</div>
+      <div className="whitespace-pre-wrap">
+        <ChatLink text={message} />
+      </div>
     );
   },
   classes,
@@ -111,78 +110,59 @@ export const ChatBox = ({
     return `${date.getHours()}:${minString}`;
   },
 }: ChatProps) => {
-  const hu = useCallback(
-    hmsUiClassParserGenerator<ChatBoxClasses>({
-      classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-chatBox',
-    }),
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ChatBoxClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-chatBox',
+      }),
     [],
   );
-  const [message, setMessage] = useState('');
-  const [localMessages, setLocalMessages] = useState<Message[]>([]);
-  const [toScroll, setToScroll] = useState<ScrollBehavior | 'none'>('none');
-  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
-  const { ref: messagesEndRef, inView, entry } = useInView();
-  const messagesRef = useRef<HTMLDivElement>(null);
-  const scrollToBottom = ({
-    behavior = 'auto',
-  }: {
-    behavior: ScrollBehavior;
-  }) => {
-    messagesRef.current!.scrollTo({
-      top: messagesRef.current!.scrollHeight,
-      behavior: behavior,
-    });
-  };
+  const storeMessages = useHMSStore(selectHMSMessages);
+  const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
+  const hmsActions = useHMSActions();
+
+  messages = messages || storeMessages;
+  const sendMessage = (msg: string) =>
+    onSend ? onSend(msg) : hmsActions.sendMessage(msg);
+  const [messageDraft, setMessageDraft] = useState('');
+  // a dummy element with messagesEndRef is created and put in the end
+  const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
+  const messageListRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (localMessages.length > 0) {
-      // TODO there should be instant chat sending locally. Chat hooks should go here
+    if (messages && messages.length > 0) {
+      const myOwnMessage = messages[messages.length - 1].senderName === 'You';
       if (
-        willScrollToBottom &&
-        (messagesRef.current!.scrollTop ===
-          messagesRef.current!.scrollHeight -
-            messagesRef.current!.clientHeight ||
-          messages[messages.length - 1].sender === 'You')
+        autoScrollToBottom &&
+        (myOwnMessage || isTotallyScrolled(messageListRef))
       ) {
-        setToScroll(scrollAnimation);
-      } else {
-        setUnreadMessagesCount(unreadMessagesCount => unreadMessagesCount + 1);
+        scrollToBottom(messageListRef, scrollAnimation);
+        hmsActions.setMessageRead(true);
       }
-    } else {
-      setToScroll('auto');
     }
-    setLocalMessages(messages);
   }, [messages]);
 
-  useEffect(() => {
-    if (toScroll !== 'none') {
-      scrollToBottom({ behavior: scrollAnimation });
-      setToScroll('none');
-      setUnreadMessagesCount(0);
-    }
-  }, [localMessages, toScroll]);
-
-  useEffect(() => {
-    if (inView) {
-      setUnreadMessagesCount(0);
-    }
-  }, [inView]);
+  if (messagesEndInView && unreadMessagesCount != 0) {
+    hmsActions.setMessageRead(true);
+  }
 
   return (
     <React.Fragment>
       {/* root */}
-      <div className={hu('root')}>
+      <div className={styler('root')}>
         {/* header */}
-        <div className={hu('header')}>
+        <div className={styler('header')}>
           {/* header-line */}
-          <div className={hu('headerLine')}></div>
+          <div className={styler('headerLine')}></div>
           {/* header-root */}
-          <div className={hu('headerRoot')}>
+          <div className={styler('headerRoot')}>
             {/* header-text */}
-            <div className={hu('headerText')}>
+            <div className={styler('headerText')}>
               <span>
                 <PeopleIcon />
               </span>
@@ -190,9 +170,20 @@ export const ChatBox = ({
             </div>
             <div>
               {/* headerCloseButton */}
-              <Button
+              {/* <Button
                 variant={'icon-only'}
                 size={'sm'}
+                onClick={() => {
+                  if (onClose) {
+                    onClose();
+                  }
+                }}
+              ></Button> */}
+              <Button
+                iconOnly
+                variant={'no-fill'}
+                iconSize={'sm'}
+                size="sm"
                 onClick={() => {
                   if (onClose) {
                     onClose();
@@ -207,7 +198,7 @@ export const ChatBox = ({
                     onClose();
                   }
                 }}
-                className={hu('headerCloseButton}
+                className={styler('headerCloseButton}
               >
                 <CloseIcon />
               </button> */}
@@ -216,42 +207,40 @@ export const ChatBox = ({
         </div>
         {/* messageBox */}
         {/* TODO: move no scroll bar css logic to tailwind */}
-        <div className={`${hu('messageBox')}`} ref={messagesRef}>
-          {localMessages.map(message => {
+        <div className={`${styler('messageBox')}`} ref={messageListRef}>
+          {messages.map(message => {
             return message.notification ? (
               /* notificationRoot */
-              <div className={hu('notificationRoot')}>
+              <div className={styler('notificationRoot')}>
                 {/* notificationInfo*/}
-                <div className={hu('notificationInfo')}>
+                <div className={styler('notificationInfo')}>
                   {/*notificationText*/}
-                  <span className={hu('notificationText')}>
+                  <span className={styler('notificationText')}>
                     {messageFormatter
                       ? messageFormatter(message.message)
                       : message.message}
                   </span>
-                  <span className={hu('time')}>
+                  <span className={styler('time')}>
                     {timeFormatter(message.time)}
                   </span>
                 </div>
               </div>
             ) : (
               /* messageRoot */
-              <div className={hu('messageRoot')}>
+              <div className={styler('messageRoot')} key={message.id}>
                 {/* messageInfo */}
-                <div className={hu('messageInfo')}>
+                <div className={styler('messageInfo')}>
                   {/* messageSender */}
-                  <span className={hu('messageSender')}>{message.sender}</span>
+                  <span className={styler('messageSender')}>
+                    {message.senderName}
+                  </span>
                   {/* messageTime */}
-                  <span className={hu('messageTime')}>
+                  <span className={styler('messageTime')}>
                     {timeFormatter(message.time)}
                   </span>
                 </div>
                 {/* messageText */}
-                <div className={hu('messageText')}>
-                  {/* {ReactHtmlParser(
-                      Autolinker.link(message.message, { sanitizeHtml: true }),
-                    )} */}
-                  {/* <ReactMarkdown>{message.message}</ReactMarkdown> */}
+                <div className={styler('messageText')}>
                   {messageFormatter
                     ? messageFormatter(message.message)
                     : message.message}
@@ -259,26 +248,26 @@ export const ChatBox = ({
               </div>
             );
           })}
-          {localMessages.length === 0 && (
+          {messages.length === 0 && (
             /* NoMessageRoot */
-            <div className={hu('noMessageRoot')}>
+            <div className={styler('noMessageRoot')}>
               There are no messages here.
             </div>
           )}
           <div ref={messagesEndRef}></div>
         </div>
         {/* footer */}
-        <div className={hu('footer')}>
+        <div className={styler('footer')}>
           {unreadMessagesCount !== 0 && (
-            <div className={hu('unreadMessagesContainer')}>
+            <div className={styler('unreadMessagesContainer')}>
               <div
-                className={hu('unreadMessagesInner')}
+                className={styler('unreadMessagesInner')}
                 onClick={() => {
-                  scrollToBottom({ behavior: scrollAnimation });
+                  scrollToBottom(messageListRef, scrollAnimation);
                 }}
               >
                 {`New message${unreadMessagesCount > 1 ? 's' : ''}`}
-                <DownCaratIcon className={hu('unreadIcon')} />
+                <DownCaratIcon className={styler('unreadIcon')} />
               </div>
             </div>
           )}
@@ -286,31 +275,33 @@ export const ChatBox = ({
           {/* TODO: move no scrollbar logic to tailwind */}
           <textarea
             rows={2}
-            className={`${hu('chatInput')}`}
+            className={`${styler('chatInput')}`}
             placeholder="Write something here"
-            value={message}
+            value={messageDraft}
             onKeyPress={event => {
               if (event.key === 'Enter') {
                 if (!event.shiftKey) {
                   event.preventDefault();
-                  if (message.trim() !== '') {
-                    onSend(message);
-                    setMessage('');
+                  if (messageDraft.trim() !== '') {
+                    sendMessage(messageDraft);
+                    setMessageDraft('');
                   }
                 }
               }
             }}
             onChange={event => {
-              setMessage(event.target.value);
+              setMessageDraft(event.target.value);
             }}
           />
           {/* sendButton */}
           <Button
-            variant={'icon-only'}
-            size={'sm'}
+            iconOnly
+            variant={'no-fill'}
+            iconSize={'sm'}
+            size="sm"
             onClick={() => {
-              onSend(message);
-              setMessage('');
+              sendMessage(messageDraft);
+              setMessageDraft('');
             }}
           >
             <SendIcon />

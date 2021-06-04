@@ -1,16 +1,15 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { resolveClasses } from '../../utils/classes';
+import React, { useEffect, useState, useMemo } from 'react';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { Select } from '../Select';
 import { Input } from '../Input';
-import { Button } from '../TwButton';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { Button } from '../Button';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { DoorIcon } from '../Icons';
+import { Text } from '../Text';
 
 interface Fields {
   roomId: string;
   role: string;
-  endpoint: string;
 }
 
 interface JoinClasses {
@@ -23,6 +22,11 @@ interface JoinClasses {
   inputField?: string;
   joinRoot?: string;
   joinButton?: string;
+}
+
+interface Option {
+  label: string;
+  value: string;
 }
 
 const defaultClasses: JoinClasses = {
@@ -40,60 +44,70 @@ const defaultClasses: JoinClasses = {
   joinRoot: 'w-full flex justify-end m-2',
   joinButton: 'bg-brand-main  rounded-lg px-5 py-2 focus:outline-none',
 };
+
 export interface JoinProps extends React.DetailsHTMLAttributes<any> {
   /**
    * Initial values to be filled in the form.
    */
   initialValues?: Partial<Fields>;
   /**
+   * Roles to be passed by the user other defaults will be used
+   * Each role should follow { label: string, value: string } format
+   */
+  roles?: Option[];
+  /**
    * Event handler for join button click.
    */
-  submitOnClick: ({ roomId, role, endpoint }: Fields) => void;
+  submitOnClick: ({ roomId, role }: Fields) => void;
   /**
    * extra classes added  by user
    */
   classes?: { [key: string]: string } | JoinClasses;
 }
 
-export const Join = ({
+const Join = ({
   initialValues,
   submitOnClick,
   classes,
+  roles = [],
   ...props
 }: JoinProps) => {
-  const parseClass = useCallback(
-    hmsUiClassParserGenerator<JoinClasses>({
-      classes,
-      defaultClasses,
-      tag: 'hmsui-join',
-    }),
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<JoinClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-join',
+      }),
     [],
   );
 
-  const [role, setRole] = useState(initialValues?.role || 'Student');
-  const [roomId, setRoomId] = useState(
-    initialValues?.roomId || '607d781cdcee704ca43cafb9',
+  const [role, setRole] = useState(
+    initialValues?.role || (roles[0] && roles[0].value),
   );
-  const [endpoint, setEndpoint] = useState(initialValues?.endpoint || 'qa');
+  const [roomId, setRoomId] = useState(initialValues?.roomId || '');
 
   useEffect(() => {
     initialValues?.role && setRole(initialValues.role);
     initialValues?.roomId && setRoomId(initialValues.roomId);
-    initialValues?.endpoint && setEndpoint(initialValues.endpoint);
   }, [initialValues]);
 
   return (
-    <div className={parseClass('root')} {...props}>
-      <div className={parseClass('containerRoot')}>
-        <div className={parseClass('header')}>
+    <div className={styler('root')} {...props}>
+      <div className={styler('containerRoot')}>
+        <div className={styler('header')}>
           <DoorIcon className="mr-2" />
-          Join your class
+          <Text variant="heading">Join your class</Text>
         </div>
-        <div className={parseClass('inputRoot')}>
-          <div className={parseClass('inputName')}>
-            <span>RoomId</span>
+        <div className={styler('inputRoot')}>
+          <div className={styler('inputName')}>
+            <Text variant="heading" size="sm">
+              RoomId
+            </Text>
           </div>
-          <div className={parseClass('inputFieldRoot')}>
+          <div className={styler('inputFieldRoot')}>
             <Input
               compact
               defaultValue={initialValues?.roomId || roomId}
@@ -102,51 +116,39 @@ export const Join = ({
               }}
             ></Input>
           </div>
-          <div className={parseClass('inputName')}>
-            <span>Role</span>
+          <div className={styler('inputName')}>
+            <Text variant="heading" size="sm">
+              Role
+            </Text>
           </div>
-          <div className={parseClass('inputFieldRoot')}>
+          <div className={styler('inputFieldRoot')}>
             <Select
               name="role"
-              defaultValue={initialValues?.role || role}
+              value={role}
               onChange={event => {
                 setRole(event.target.value);
               }}
             >
-              <option value="Teacher">Teacher</option>
-              <option value="Student">Student</option>
-              <option value="Admin">Admin</option>
-              <option value="Viewer">Viewer</option>
+              {roles.map(({ label, value }) => {
+                return (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                );
+              })}
             </Select>
           </div>
-          <div className={parseClass('inputName')}>
-            <span>Environment</span>
-          </div>
-          <div className={parseClass('inputFieldRoot')}>
-            <Select
-              name="endpoint"
-              defaultValue={initialValues?.endpoint || endpoint}
-              onChange={event => {
-                setEndpoint(event.target.value);
-              }}
-            >
-              <option value="qa">qa</option>
-              <option value="prod">prod</option>
-              <option value="dev">dev</option>
-            </Select>
-          </div>
-          <div className={parseClass('joinRoot')}>
+          <div className={styler('joinRoot')}>
             <Button
               variant={'emphasized'}
               onClick={() =>
                 submitOnClick({
                   roomId,
                   role,
-                  endpoint: `https://${endpoint}-init.100ms.live/init`,
                 })
               }
             >
-              Join{' '}
+              Join
             </Button>
           </div>
         </div>
@@ -154,3 +156,14 @@ export const Join = ({
     </div>
   );
 };
+
+Join.defaultProps = {
+  roles: [
+    { label: 'Student', value: 'student' },
+    { label: 'Teacher', value: 'teacher' },
+    { label: 'Viewer', value: 'viewer' },
+    { label: 'Admin', value: 'admin' },
+  ],
+};
+
+export { Join };

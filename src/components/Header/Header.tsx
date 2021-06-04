@@ -1,7 +1,8 @@
-import React, { useCallback } from 'react';
-import { Participant, Peer } from '../../types';
+import React, { useMemo } from 'react';
 import { VolumeIcon, Logo } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { Text } from '../Text';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export interface HeaderClasses {
   root?: string;
@@ -10,7 +11,6 @@ export interface HeaderClasses {
   rightRoot?: string;
 }
 export interface HeaderProps {
-  peer: Peer;
   time: number;
   speaker: string;
   leftComponents: Array<React.ReactNode>;
@@ -29,22 +29,46 @@ const defaultClasses: HeaderClasses = {
   rightRoot:
     'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-5',
 };
+export const LogoButton = () => {
+  let logo;
+  try {
+    const { appBuilder } = useHMSTheme();
+    logo = appBuilder.logo;
+  } catch (e) {}
+  return (
+    <button className=" p-2 focus:outline-none">
+      {Boolean(logo) ? (
+        <img
+          src={logo}
+          alt="brand_logo"
+          // className=" md:object-contain object-scale-down md:h-full"
+          className="object-contain flex justify-center h-6 "
+        />
+      ) : (
+        <Logo />
+      )}
+    </button>
+  );
+};
 
 export const Header = ({
-  peer,
-  time,
   speaker,
-  leftComponents = [<Logo />],
+  leftComponents = [<LogoButton key={0} />],
   centerComponents = [
     speaker ? (
       <div
         className={`self-center focus:outline-none text-lg flex items-center`}
+        key={0}
       >
         <div className="inline-block">
           <VolumeIcon />
         </div>
         {/* TODO figure out why xs:hidden is needed */}
-        <div className="md:pl-1 xs:hidden md:inline-block">{speaker}</div>
+        <div className="md:pl-1 xs:hidden md:inline-block">
+          <Text variant="body" size="md">
+            {speaker}
+          </Text>
+        </div>
       </div>
     ) : (
       <></>
@@ -53,39 +77,23 @@ export const Header = ({
   rightComponents = [],
   classes,
 }: HeaderProps) => {
-  const hu = useCallback(
-    hmsUiClassParserGenerator<HeaderClasses>({
-      classes,
-      defaultClasses,
-      tag: 'hmsui-header',
-    }),
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<HeaderClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-header',
+      }),
     [],
   );
 
-  const teacher = Array<Participant>();
-  const student = Array<Participant>();
-  teacher.push({
-    peer: { id: '123', displayName: 'Sanjana Ma`am (You)' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  });
-  student.push({
-    peer: { id: '123', displayName: 'Alex Tinmayson' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  });
-  student.push({
-    peer: { id: '123', displayName: 'Ankita Bhattacharya ' },
-    isAudioMuted: false,
-    isStarMarked: false,
-  });
   return (
-    <div style={{ padding: '10px 0px 0px 0px', maxHeight: '10%' }}>
-      <div className={hu('root')}>
-        <div className={hu('leftRoot')}>{leftComponents}</div>
-        <div className={hu('centerRoot')}>{centerComponents}</div>
-        <div className={hu('rightRoot')}>{rightComponents}</div>
-      </div>
+    <div className={styler('root')}>
+      <div className={styler('leftRoot')}>{leftComponents}</div>
+      <div className={styler('centerRoot')}>{centerComponents}</div>
+      <div className={styler('rightRoot')}>{rightComponents}</div>
     </div>
   );
 };

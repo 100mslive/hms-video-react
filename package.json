@@ -1,5 +1,5 @@
 {
-  "version": "0.2.16-46",
+  "version": "0.2.6",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -14,7 +14,9 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
-    "lint": "tsdx lint --fix",
+    "test:watch": "tsdx test --watch",
+    "lint": "tsdx lint",
+    "lint:fix": "tsdx lint --fix",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
@@ -26,7 +28,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "tsdx lint --fix"
+      "pre-commit": "tsdx lint"
     }
   },
   "prettier": {
@@ -35,21 +37,22 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
-  "name": "@100mslive/sdk-components",
+  "name": "@100mslive/hms-video-react",
   "author": "100ms",
-  "module": "dist/100ms-sdk-components.esm.js",
+  "module": "dist/hms-video-react.esm.js",
   "size-limit": [
     {
-      "path": "dist/100ms-sdk-components.cjs.production.min.js",
+      "path": "dist/hms-video-react.cjs.production.min.js",
       "limit": "10 KB"
     },
     {
-      "path": "dist/100ms-sdk-components.esm.js",
+      "path": "dist/hms-video-react.esm.js",
       "limit": "10 KB"
     }
   ],
   "devDependencies": {
     "@babel/core": "^7.13.14",
+    "@rollup/plugin-image": "^2.0.6",
     "@size-limit/preset-small-lib": "^4.10.2",
     "@storybook/addon-essentials": "^6.2.3",
     "@storybook/addon-info": "^5.3.21",
@@ -62,7 +65,7 @@
     "@types/lodash": "^4.14.168",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
-    "@types/react-html-parser": "^2.0.1",
+    "@types/react-linkify": "^1.0.0",
     "@types/react-slick": "^0.23.4",
     "@types/react-window": "^1.8.2",
     "babel-loader": "^8.2.2",
@@ -76,19 +79,19 @@
     "size-limit": "^4.10.2",
     "tsdx": "^0.14.1",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.3"
+    "typescript": "4.2.4"
   },
   "dependencies": {
-    "@100mslive/100ms-web-sdk": "0.0.12-32",
+    "@100mslive/hms-video": "^0.0.20",
+    "@100mslive/hms-video-store": "^0.1.8",
     "@material-ui/core": "^4.11.3",
     "@twind/aspect-ratio": "^0.1.4",
-    "autolinker": "^3.14.3",
     "autoprefixer": "^9.8.6",
     "clsx": "^1.1.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "postcss": "^7.0.35",
-    "react-html-parser": "^2.0.2",
+    "react-click-away-listener": "^2.0.3",
     "react-intersection-observer": "^8.31.1",
     "react-markdown": "^6.0.0",
     "react-resize-detector": "^6.6.5",

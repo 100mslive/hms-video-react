@@ -32,14 +32,14 @@ const LightTemplate: Story<PreviewProps> = args => {
 
 export const Default = DarkTemplate.bind({});
 Default.args = {
-  joinOnClick: ({ audioMuted, videoMuted }) =>
-    alert(`Join Clicked, audio and video mute are ${audioMuted} ${videoMuted}`),
+  joinOnClick: values =>
+    alert(`Join Clicked, Submitted Values: ${JSON.stringify(values, null, 1)}`),
   goBackOnClick: () => alert('Go Back Clicked'),
 };
 
 export const Light = LightTemplate.bind({});
 Default.args = {
-  joinOnClick: ({ audioMuted, videoMuted }) =>
-    alert(`Join Clicked, audio and video mute are ${audioMuted} ${videoMuted}`),
+  joinOnClick: values =>
+    alert(`Join Clicked, Submitted Values: ${JSON.stringify(values, null, 1)}`),
   goBackOnClick: () => alert('Go Back Clicked'),
 };

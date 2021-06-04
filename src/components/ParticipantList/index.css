@@ -9,10 +9,11 @@
   background-color: #5e5e5e;
 }
 
-.hmsui-participantList-menuItem .hmsui-participantList-show-on-group-hover{
+.hmsui-participantList-menuItem .hmsui-participantList-show-on-group-hover {
   visibility: hidden;
 }
 
-.hmsui-participantList-menuItem:hover .hmsui-participantList-show-on-group-hover{
+.hmsui-participantList-menuItem:hover
+  .hmsui-participantList-show-on-group-hover {
   visibility: visible;
 }

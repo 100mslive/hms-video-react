@@ -1,8 +1,8 @@
-import React, { useMemo, useCallback } from 'react';
-import { AudioLevelDisplayType, Peer, MediaStreamWithInfo } from '../../types';
-import { VideoTile } from '../VideoTile/index';
+import React, { useMemo } from 'react';
+import { AudioLevelDisplayType } from '../../types';
+import { VideoTile } from '../VideoTile';
 import {
-  chunkStreams,
+  chunkElements,
   getModeAspectRatio,
   calculateLayoutSizes,
 } from '../../utils';
@@ -11,6 +11,13 @@ import { useResizeDetector } from 'react-resize-detector';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { HMSPeer, HMSTrack, HMSTrackID } from '@100mslive/hms-video-store';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectTracksMap } from '@100mslive/hms-video-store';
+import {
+  getVideoTracksFromPeers,
+  TrackWithPeer,
+} from '../../utils/videoListUtils';
 
 export interface VideoListClasses extends VideoTileClasses {
   /**
@@ -44,9 +51,16 @@ export interface VideoListClasses extends VideoTileClasses {
 }
 export interface VideoListProps {
   /**
-    MediaStream to be displayed.
+    HMS Peers who need to be displayed
     */
-  streams: MediaStreamWithInfo[];
+  peers: HMSPeer[];
+  /**
+   * a function which tells whether to show the screenshare for a peer. A peer
+   * id is passed and a boolean value is expected. You can use it to disable
+   * showing main screenshare if you're already showing it in a bigger tile for eg.
+   * @param peerID the peer ID for whom video tile is going to be rendered
+   */
+  showScreenFn?: (peer: HMSPeer) => boolean;
   /**
    * Max tiles in a  page. Overrides maxRowCount and maxColCount
    */
@@ -68,10 +82,6 @@ export interface VideoListProps {
    */
   tileArrangeDirection?: 'row' | 'col';
   /**
-   * Dominant speakers
-   */
-  dominantSpeakers?: Peer[];
-  /**
    Indicates if Audio Status will be shown or not.
    */
   showAudioMuteStatus?: boolean;
@@ -81,7 +91,7 @@ export interface VideoListProps {
   objectFit?: 'contain' | 'cover';
   /**
    Aspect ratio in which the video tile should be shown, will only be applied if display shape is rectangle.
-   If undefined, then the most common aspect ratio among all video streams will be chosen
+   If undefined, then the most common aspect ratio among all peer's feed will be chosen
    */
   aspectRatio?: {
     width: number;
@@ -115,10 +125,9 @@ export interface VideoListProps {
    * videoTileClasses
    */
   videoTileClasses?: VideoTileClasses;
-  /**
-   *
-   */
-  audioLevelEmitter?: any;
+
+  avatarType?: 'initial';
+  compact?: boolean;
 }
 
 const defaultClasses: VideoListClasses = {
@@ -128,11 +137,12 @@ const defaultClasses: VideoListClasses = {
   sliderInner: 'w-full h-full',
   listContainer:
     'relative h-full w-full flex flex-wrap justify-center items-center content-center',
-  videoTileContainer: 'flex justify-center',
+  videoTileContainer: 'flex justify-center p-3',
 };
 
 export const VideoList = ({
-  streams,
+  peers,
+  showScreenFn = () => true,
   overflow = 'scroll-x',
   maxTileCount,
   tileArrangeDirection = 'row',
@@ -144,49 +154,53 @@ export const VideoList = ({
   maxRowCount,
   maxColCount,
   videoTileControls,
-  showAudioMuteStatus,
+  showAudioMuteStatus = true,
   classes,
   videoTileClasses,
-  audioLevelEmitter,
   allowRemoteMute,
+  avatarType,
+  compact = false,
 }: VideoListProps) => {
-  const parseClass = useCallback(
-    hmsUiClassParserGenerator<VideoListClasses>({
-      classes,
-      defaultClasses,
-      tag: 'hmsui-videoList',
-    }),
+  const { tw, appBuilder } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<VideoListClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-videoList',
+      }),
     [],
   );
-
+  const tracksMap: Record<HMSTrackID, HMSTrack> = useHMSStore(selectTracksMap);
   const { width = 0, height = 0, ref } = useResizeDetector();
 
-  try {
-    let context = useHMSTheme();
-    if (aspectRatio === undefined) {
-      aspectRatio = context.appBuilder.videoTileAspectRatio;
-    }
-    if (showAudioMuteStatus === undefined) {
-      showAudioMuteStatus = context.appBuilder.showAvatar;
-    }
-  } catch (e) {}
+  if (aspectRatio === undefined) {
+    aspectRatio = appBuilder.videoTileAspectRatio;
+  }
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
+
+  const tracksWithPeer: TrackWithPeer[] = getVideoTracksFromPeers(
+    peers,
+    tracksMap,
+    showScreenFn,
+  );
 
   const finalAspectRatio = useMemo(() => {
     if (aspectRatio) {
       return aspectRatio;
     } else {
-      const modeAspectRatio = getModeAspectRatio(streams);
+      const modeAspectRatio = getModeAspectRatio(tracksWithPeer);
       //Default to 1 if there are no video tracks
       return {
-        width: !isNaN(modeAspectRatio) && modeAspectRatio ? modeAspectRatio : 1,
+        width: modeAspectRatio ? modeAspectRatio : 1,
         height: 1,
       };
     }
-  }, [aspectRatio, streams]);
+  }, [aspectRatio, tracksWithPeer]);
 
-  const count = streams.length;
+  const count = tracksWithPeer.length;
   const {
     tilesInFirstPage,
     defaultWidth,
@@ -215,9 +229,9 @@ export const VideoList = ({
     finalAspectRatio,
   ]);
 
-  const chunkedStreams = useMemo(() => {
-    return chunkStreams({
-      streams,
+  const chunkedTracksWithPeer = useMemo(() => {
+    return chunkElements<TrackWithPeer>({
+      elements: tracksWithPeer,
       tilesInFirstPage,
       onlyOnePage: overflow === 'hidden',
       isLastPageDifferentFromFirstPage,
@@ -227,7 +241,7 @@ export const VideoList = ({
       lastPageHeight,
     });
   }, [
-    streams,
+    tracksWithPeer,
     tilesInFirstPage,
     overflow,
     width,
@@ -238,14 +252,15 @@ export const VideoList = ({
   ]);
 
   return (
-    <div className={`${parseClass('root')}`} ref={ref}>
-      {chunkedStreams && chunkedStreams.length > 0 && (
-        <Carousel>
-          {chunkedStreams.map((streams, page) => {
+    <div className={`${styler('root')}`}>
+      <Carousel ref={ref}>
+        {chunkedTracksWithPeer &&
+          chunkedTracksWithPeer.length > 0 &&
+          chunkedTracksWithPeer.map((tracksPeersOnOnePage, page) => {
             return (
-              <div className={`${parseClass('sliderInner')}`} key={page}>
+              <div className={`${styler('sliderInner')}`} key={page}>
                 <div
-                  className={` ${parseClass('listContainer')}   flex-${
+                  className={` ${styler('listContainer')}   flex-${
                     maxRowCount
                       ? 'col'
                       : maxColCount
@@ -253,15 +268,19 @@ export const VideoList = ({
                       : tileArrangeDirection
                   } `}
                 >
-                  {streams.map((stream, index) => {
+                  {tracksPeersOnOnePage.map((trackPeer, index) => {
                     return (
                       <div
-                        style={{ height: stream.height, width: stream.width }}
-                        key={stream.peer.id}
-                        className={`${parseClass('videoTileContainer')}`}
+                        key={trackPeer.track ? trackPeer.track.id : trackPeer.peer.id} // track id changes on replace track
+                        style={{
+                          height: trackPeer.height,
+                          width: trackPeer.width,
+                        }}
+                        className={`${styler('videoTileContainer')}`}
                       >
                         <VideoTile
-                          {...stream}
+                          peer={trackPeer.peer}
+                          hmsVideoTrack={trackPeer.track}
                           objectFit={objectFit}
                           displayShape={displayShape}
                           audioLevelDisplayType={audioLevelDisplayType}
@@ -273,7 +292,8 @@ export const VideoList = ({
                           controlsComponent={
                             videoTileControls && videoTileControls[index]
                           }
-                          audioLevelEmitter={audioLevelEmitter}
+                          avatarType={avatarType}
+                          compact={compact}
                         />
                       </div>
                     );
@@ -282,8 +302,7 @@ export const VideoList = ({
               </div>
             );
           })}
-        </Carousel>
-      )}
+      </Carousel>
     </div>
   );
 };

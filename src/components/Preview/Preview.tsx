@@ -1,16 +1,23 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useMemo } from 'react';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { closeMediaStream } from '../../utils';
-import { getLocalStreamException, getUserMedia } from '../../utils/preview';
-import { VideoTile, VideoTileProps } from '../VideoTile';
-import { VideoTileControls } from './Controls';
-import { MessageModal } from '../MessageModal';
-import { VideoTileClasses } from '../VideoTile/VideoTile';
-import { Button } from '../TwButton';
-import HMSLogger from '../../utils/ui-logger';
-import { SettingsFormProps } from '../Settings/Settings';
+import { getLocalStream } from '@100mslive/hms-video';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { Text } from '../Text/index';
+import {
+  BrowserOSError,
+  getLocalStreamException,
+  isBrowserOSValid,
+} from '../../utils/preview';
+import { MessageModal } from '../MessageModal';
+import { SettingsFormProps } from '../Settings/Settings';
+import { Button } from '../Button';
+import { VideoTile, VideoTileProps } from '../VideoTile';
+import { VideoTileClasses } from '../VideoTile/VideoTile';
+import { VideoTileControls } from './Controls';
+import HMSLogger from '../../utils/ui-logger';
+import { HMSPeer } from '@100mslive/hms-video-store';
 import { Input } from '../Input';
+
 interface JoinInfo {
   audioMuted?: boolean;
   videoMuted?: boolean;
@@ -41,8 +48,7 @@ export interface PreviewProps {
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
   onChange: (values: SettingsFormProps) => void;
   goBackOnClick: () => void;
-  toggleMute: (type: 'audio' | 'video') => void;
-  videoTileProps: Partial<VideoTileProps>;
+  videoTileProps?: Partial<VideoTileProps>;
   videoTileClasses?: VideoTileClasses;
   /**
    * extra classes added  by user
@@ -58,22 +64,22 @@ export const Preview = ({
   classes,
   videoTileClasses,
 }: PreviewProps) => {
-  const parseClass = useCallback(
-    hmsUiClassParserGenerator<PreviewClasses>({
-      classes,
-      defaultClasses,
-      tag: 'hmsui-preview',
-    }),
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<PreviewClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-preview',
+      }),
     [],
   );
   const [mediaStream, setMediaStream] = useState(new MediaStream());
-  const [errorState, setErrorState] = useState(false);
-  const [title, setErrorTitle] = useState(String);
-  const [message, setErrorMessage] = useState(String);
-  const [secondaryMessage, setSecondaryErrorMessage] = useState(String);
-  const [videoInput, setVideoInput] = useState(Array);
-  const [audioInput, setAudioInput] = useState(Array);
-  const [audioOutput, setAudioutput] = useState(Array);
+  const [error, setError] = useState({
+    title: '',
+    message: '',
+  });
   const [audioMuted, setAudioMuted] = useState(false);
   const [videoMuted, setVideoMuted] = useState(false);
   const [selectedAudioInput, setSelectedAudioInput] = useState('default');
@@ -82,136 +88,40 @@ export const Preview = ({
 
   const toggleMediaState = (type: string) => {
     if (type === 'audio') {
-      if (!audioMuted) {
-        mediaStream.getAudioTracks()[0].enabled = false;
-        //TODO add handling for green light later
-        //mediaStream.getAudioTracks()[0].stop();
-      } else {
-        mediaStream.getAudioTracks()[0].enabled = true;
-        //startMediaStream();
-      }
+      mediaStream.getAudioTracks()[0].enabled = audioMuted;
       setAudioMuted(prevMuted => !prevMuted);
-      //toggleMute('audio');
     } else if (type === 'video') {
-      if (!videoMuted) {
-        mediaStream.getVideoTracks()[0].enabled = false;
-        //mediaStream.getVideoTracks()[0].stop();
-      } else {
-        mediaStream.getVideoTracks()[0].enabled = true;
-        //startMediaStream();
-      }
+      mediaStream.getVideoTracks()[0].enabled = videoMuted;
       setVideoMuted(prevMuted => !prevMuted);
-      //toggleMute('video');
     }
   };
-  const agent = navigator.userAgent.toLowerCase();
-  const chrome = agent.indexOf('chrome') > -1;
-  const safari = agent.indexOf('safari') !== -1 && !chrome;
-  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  const sayswho = (function() {
-    var ua = navigator.userAgent,
-      tem,
-      M =
-        ua.match(
-          /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i,
-        ) || [];
-    if (/trident/i.test(M[1])) {
-      tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
-      return `IE ${tem[1] || ''}`;
-    }
-    if (M[1] === 'Chrome') {
-      tem = ua.match(/\b(OPR|Edge)\/(\d+)/);
-      if (tem != null) {
-        return tem
-          .slice(1)
-          .join(' ')
-          .replace('OPR', 'Opera');
-      }
-    }
-    M = M[2] ? [M[2]] : [navigator.appName, navigator.appVersion, '-?'];
-    if ((tem = ua.match(/version\/(\d+)/i)) != null) {
-      M.splice(1, 1, tem[1]);
-    }
-    return M;
-  })();
-  const [allow, setAllow] = useState(true);
+
   const [showModal, setShowModal] = useState(false);
   useEffect(() => {
-    setShowModal(errorState);
-  }, [errorState]);
+    setShowModal(Boolean(error.title));
+  }, [error.title]);
 
-  const startMediaStream = () => {
-    if (chrome && isIOS) {
-      var errorMessage = getLocalStreamException('iOSChromeError', true);
-      setErrorTitle(errorMessage['title']);
-      setErrorMessage(errorMessage['message']);
-      setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-      setErrorState(true);
-      setAllow(false);
-    } else if (safari && parseInt(sayswho as string) < 14) {
-      errorMessage = getLocalStreamException('iOSSafariError', true);
-      setErrorTitle(errorMessage['title']);
-      setErrorMessage(errorMessage['message']);
-      setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-      setErrorState(true);
-      setAllow(false);
-    } else {
-      // window.navigator.mediaDevices
-      getUserMedia({
-        audio: { deviceId: selectedAudioInput },
-        video: { deviceId: selectedVideoInput },
-      })
-        .then((stream: MediaStream) => setMediaStream(stream))
-        .catch((error: any) => {
-          HMSLogger.e('[Preview]', error);
-          if (
-            error.name === 'NotAllowedError' ||
-            error.error === 'NotAllowedError'
-          ) {
-            var errorMessage = getLocalStreamException(error.name, safari);
-            setErrorTitle(errorMessage['title']);
-            setErrorMessage(errorMessage['message']);
-            setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-            setErrorState(true);
-          } else {
-            navigator.mediaDevices
-              .enumerateDevices()
-              .then(devices => {
-                for (let device of devices) {
-                  if (device.kind === 'videoinput') {
-                    setVideoInput(videoDevices => [...videoDevices, device]);
-                  } else if (device.kind === 'audioinput') {
-                    setAudioInput([...audioInput, device]);
-                  } else if (device.kind === 'audiooutput') {
-                    setAudioutput([...audioOutput, device]);
-                  }
-                }
-                if (videoInput.length === 0 || audioInput.length === 0) {
-                  var errorMessage = getLocalStreamException(
-                    error.name,
-                    safari,
-                  );
-                  setErrorTitle(errorMessage['title']);
-                  setErrorMessage(errorMessage['message']);
-                  setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-                  setErrorState(true);
-                } else {
-                  errorMessage = getLocalStreamException(error.name, safari);
-                  setErrorTitle(errorMessage['title']);
-                  setErrorMessage(errorMessage['message']);
-                  setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-                  setErrorState(true);
-                }
-              })
-              .catch(error => {
-                var errorMessage = getLocalStreamException(error.name, safari);
-                setErrorTitle(errorMessage['title']);
-                setErrorMessage(errorMessage['message']);
-                setSecondaryErrorMessage(errorMessage['secondaryMessage']);
-                setErrorState(true);
-              });
-          }
+  const startMediaStream = async () => {
+    closeMediaStream(mediaStream);
+    try {
+      if (isBrowserOSValid()) {
+        const stream = await getLocalStream({
+          audio: { deviceId: selectedAudioInput },
+          video: { deviceId: selectedVideoInput },
         });
+        setMediaStream(stream);
+      }
+    } catch (err) {
+      HMSLogger.e('[Preview]', err.name, err.message);
+      if (err instanceof BrowserOSError) {
+        const localStreamError = getLocalStreamException(err.name);
+        setError(localStreamError);
+      } else {
+        setError({
+          title: err.description,
+          message: err.message,
+        });
+      }
     }
   };
 
@@ -219,6 +129,9 @@ export const Preview = ({
 
   useEffect(() => {
     startMediaStream();
+    return () => {
+      closeMediaStream(mediaStream);
+    };
   }, [selectedAudioInput, selectedVideoInput]);
 
   const handleDeviceChange = useCallback((values: SettingsFormProps) => {
@@ -231,31 +144,34 @@ export const Preview = ({
 
   return (
     // root
-    <div className={parseClass('root')}>
-      <div className={parseClass('containerRoot')}>
+    <div className={styler('root')}>
+      <div className={styler('containerRoot')}>
         {/* header */}
-        <div className={parseClass('header')}>
+        <div className={styler('header')}>
           {/* messageModal */}
           <MessageModal
             show={showModal}
             setShow={setShowModal}
-            title={title}
-            message={message}
-            secondary={secondaryMessage}
-            allow={allow}
+            title={error.title}
+            message={error.message}
+            allow={false}
             gobackOnClick={goBackOnClick}
           />
           {/* videoTile */}
           <VideoTile
             {...videoTileProps}
             videoTrack={mediaStream.getVideoTracks()[0]}
+            isAudioMuted={audioMuted}
+            isVideoMuted={videoMuted}
             audioTrack={mediaStream.getAudioTracks()[0]}
-            peer={{
-              id: name,
-              displayName: name,
-            }}
+            peer={
+              {
+                id: name,
+                name: name,
+                isLocal: true,
+              } as HMSPeer
+            }
             objectFit="cover"
-            isLocal={true}
             aspectRatio={{
               width: 1,
               height: 1,
@@ -273,11 +189,11 @@ export const Preview = ({
           />
         </div>
         {/* helloDiv */}
-        <div className={parseClass('helloDiv')}>Hi There</div>
+        <div className={styler('helloDiv')}>Hi There</div>
         {/* nameDiv */}
-        <div className={parseClass('nameDiv')}>What's your name?</div>
+        <div className={styler('nameDiv')}>What's your name?</div>
         {/* inputFieldRoot */}
-        <div className={parseClass('inputRoot')}>
+        <div className={styler('inputRoot')}>
           <Input
             compact
             onChange={e => {
@@ -307,7 +223,7 @@ export const Preview = ({
             goBackOnClick();
           }}
         >
-          Go back{' '}
+          Go back
         </Button>
       </div>
     </div>

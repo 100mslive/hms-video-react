@@ -1,5 +1,10 @@
-import React, { useState, useEffect, useCallback, createRef } from 'react';
-import { useInView } from 'react-intersection-observer';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  MouseEventHandler,
+  useRef,
+} from 'react';
 import {
   LeftCaratIcon,
   RightCaratIcon,
@@ -7,8 +12,8 @@ import {
   UpCaratIcon,
   DotIcon,
 } from '../Icons';
-import { scrollTo, mergeRefs } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import './index.css';
 
 export interface CarouselProps {
@@ -23,12 +28,15 @@ interface CarouselClasses {
   rootHorizontal?: string;
   rootVertical?: string;
   pageContainer?: string;
+  carouselContainer?: string;
+  carouselInner?: string;
   videoTileContainer?: string;
   navContainer?: string;
   navContainerHorizontal?: string;
   navContainerVertical?: string;
   caratActive?: string;
   caratInactive?: string;
+  dotButton?: string;
   dotActive?: string;
   dotInactive?: string;
   carat?: string;
@@ -36,10 +44,12 @@ interface CarouselClasses {
 }
 
 const defaultClasses: CarouselClasses = {
-  root: `w-full h-full flex`,
+  root: `w-full h-full`,
   rootHorizontal: 'overflow-x-auto pb-6',
   rootVertical: 'overflow-y-auto flex-col pr-6',
-  pageContainer: 'flex-shrink-0 w-full h-full',
+  pageContainer: 'inline-block align-top w-full h-full',
+  carouselContainer: 'overflow-hidden w-full h-full',
+  carouselInner: 'w-full h-full whitespace-nowrap',
   videoTileContainer: 'flex justify-center',
   navContainer: 'absolute w-full flex justify-center items-center',
   navContainerHorizontal: 'bottom-0 left-0',
@@ -50,178 +60,171 @@ const defaultClasses: CarouselClasses = {
   dotInactive: 'text-transparent-700 dark:text-transparent-300 cursor-pointer',
   carat: 'w-4 h-4 m-1',
   dot: 'w-2 h-2 m-1',
+  dotButton:
+    'inline-block focus:outline-none focus-visible:ring-4 focus-visible:blue-tint',
 };
 
 const customClasses: CarouselClasses = {
   root: 'no-scrollbar',
 };
 
-export const Carousel = ({
-  direction = 'horizontal',
-  showNavigation = true,
-  classes,
-  children,
-}: CarouselProps) => {
-  const hu = useCallback(
-    hmsUiClassParserGenerator<CarouselClasses>({
+export const Carousel = React.forwardRef(
+  (
+    {
+      direction = 'horizontal',
+      showNavigation = true,
       classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-carousel',
-    }),
-    [],
-  );
+      children,
+    }: CarouselProps,
+    ref: React.ForwardedRef<HTMLDivElement>,
+  ) => {
+    const [currentPageIndex, setCurrentPageIndex] = useState(0);
+    const pages = Array.isArray(children) ? children : [children];
+    const carouselRef = useRef(null);
 
-  const pages = Array.isArray(children) ? children : [children];
-  const showNav = showNavigation && Array.isArray(children) && pages.length > 1;
-  const [currentPage, setCurrentPage] = useState(0);
-  const { ref: prevRef, inView: prevInView } = useInView({ threshold: 0.5 });
-  const { ref: nextRef, inView: nextInView } = useInView({ threshold: 0.5 });
-
-  const [refs, setRefs] = React.useState<
-    React.MutableRefObject<HTMLDivElement | null>[]
-  >([]);
-
-  useEffect(() => {
-    setRefs(refs =>
-      Array(pages.length)
-        .fill({})
-        .map((page, index) => refs[index] || createRef<HTMLDivElement>()),
+    const { tw } = useHMSTheme();
+    const styler = useMemo(
+      () =>
+        hmsUiClassParserGenerator<CarouselClasses>({
+          tw,
+          classes,
+          customClasses,
+          defaultClasses,
+          tag: 'hmsui-carousel',
+        }),
+      [],
     );
-  }, [children]);
 
-  useEffect(() => {
-    if (prevInView) {
-      setCurrentPage(currentPage => currentPage - 1);
-    }
-  }, [prevInView]);
+    const showNav = showNavigation && pages.length > 1;
 
-  useEffect(() => {
-    if (nextInView) {
-      setCurrentPage(currentPage => currentPage + 1);
-    }
-  }, [nextInView]);
+    const navClassName = `${styler('navContainer')} ${
+      direction === 'horizontal'
+        ? styler('navContainerHorizontal')
+        : styler('navContainerVertical')
+    }`;
 
-  return (
-    <>
-      <div
-        className={`${hu('root')} ${
-          direction === 'horizontal' ? hu('rootHorizontal') : hu('rootVertical')
-        }`}
-        style={{
-          scrollBehavior: 'smooth',
-          WebkitOverflowScrolling: 'touch',
-          scrollSnapType: `${direction === 'horizontal' ? 'x' : 'y'} mandatory`,
-          msOverflowStyle: 'none',
-          scrollbarWidth: 'none',
-        }}
-      >
-        {pages.map((page, index) => {
-          switch (index) {
-            case currentPage - 1:
-              return (
+    useEffect(() => {
+      if (carouselRef) {
+        const el: HTMLElement = carouselRef.current!;
+        const width = el.clientWidth;
+        const scrollAmount = currentPageIndex * width;
+        el.scrollTo({
+          left: scrollAmount,
+          behavior: 'smooth',
+        });
+      }
+    }, [currentPageIndex]);
+
+    return (
+      <>
+        <div
+          className={`${styler('root')} ${
+            direction === 'horizontal'
+              ? styler('rootHorizontal')
+              : styler('rootVertical')
+          }`}
+        >
+          <div className={`${styler('carouselContainer')}`} ref={carouselRef}>
+            <div className={`${styler('carouselInner')}`} ref={ref}>
+              {pages.map((page, index) => (
                 <div
-                  key={index}
-                  ref={mergeRefs(prevRef, refs[index])}
-                  className={hu('pageContainer')}
-                  style={{ scrollSnapAlign: 'start' }}
-                ></div>
-              );
-            case currentPage + 1:
-              return (
-                <div
-                  key={index}
-                  ref={mergeRefs(nextRef, refs[index])}
-                  className={hu('pageContainer')}
-                  style={{ scrollSnapAlign: 'start' }}
-                ></div>
-              );
-            case currentPage:
-              return (
-                <div
-                  key={index}
-                  ref={refs[index]}
-                  className={hu('pageContainer')}
-                  style={{ scrollSnapAlign: 'start' }}
+                  className={`${styler('pageContainer')}`}
+                  key={`slide=${index}`}
                 >
-                  {page}
+                  {pages[index]}
                 </div>
-              );
-            default:
-              return (
-                <div
-                  key={index}
-                  ref={refs[index]}
-                  className={hu('pageContainer')}
-                  style={{ scrollSnapAlign: 'start' }}
-                ></div>
-              );
-          }
-        })}
-        {showNav && (
-          <div
-            className={`${hu('navContainer')} ${
-              direction === 'horizontal'
-                ? hu('navContainerHorizontal')
-                : hu('navContainerVertical')
-            }`}
-          >
-            <button
-              onClick={
-                currentPage !== 0 ? scrollTo(refs[currentPage - 1]) : () => {}
-              }
-            >
-              {direction === 'horizontal' ? (
-                <LeftCaratIcon
-                  className={`${
-                    currentPage !== 0 ? hu('caratActive') : hu('caratInactive')
-                  } ${hu('carat')}`}
-                />
-              ) : (
-                <UpCaratIcon
-                  className={`${
-                    currentPage !== 0 ? hu('caratActive') : hu('caratInactive')
-                  } ${hu('carat')}`}
-                />
-              )}
-            </button>
+              ))}
+            </div>
+          </div>
+        </div>
+        {showNav ? (
+          <div className={navClassName}>
+            <PrevButton
+              direction={direction}
+              isActive={currentPageIndex !== 0}
+              onClick={e => {
+                if (currentPageIndex > 0) {
+                  setCurrentPageIndex(currentPageIndex - 1);
+                }
+              }}
+              styler={styler}
+            />
+
             {pages.map((page, index) => (
-              <button className="inline-block" onClick={scrollTo(refs[index])}>
+              <button
+                className={`${styler('dotButton')}`}
+                onClick={e => {
+                  setCurrentPageIndex(index);
+                }}
+              >
                 <DotIcon
                   className={`${
-                    index === currentPage ? hu('dotActive') : hu('dotInactive')
-                  } ${hu('dot')}`}
+                    index === currentPageIndex
+                      ? styler('dotActive')
+                      : styler('dotInactive')
+                  } ${styler('dot')}`}
                 />
               </button>
             ))}
-            <button
-              onClick={
-                currentPage !== pages.length - 1
-                  ? scrollTo(refs[currentPage + 1])
-                  : () => {}
-              }
-            >
-              {direction === 'horizontal' ? (
-                <RightCaratIcon
-                  className={`${
-                    currentPage !== pages.length - 1
-                      ? hu('caratActive')
-                      : hu('caratInactive')
-                  } ${hu('carat')}`}
-                />
-              ) : (
-                <DownCaratIcon
-                  className={`${
-                    currentPage !== pages.length - 1
-                      ? hu('caratActive')
-                      : hu('caratInactive')
-                  } ${hu('carat')}`}
-                />
-              )}
-            </button>
+
+            <NextButton
+              direction={direction}
+              isActive={currentPageIndex !== pages.length - 1}
+              onClick={e => {
+                if (currentPageIndex < pages.length - 1) {
+                  setCurrentPageIndex(currentPageIndex + 1);
+                }
+              }}
+              styler={styler}
+            />
           </div>
-        )}
-      </div>
-    </>
+        ) : null}
+      </>
+    );
+  },
+);
+
+interface ButtonProps {
+  direction: 'horizontal' | 'vertical';
+  isActive: boolean;
+  onClick: MouseEventHandler;
+  styler: Function;
+}
+
+function NextButton({ direction, isActive, onClick, styler }: ButtonProps) {
+  const className = `${
+    isActive ? styler('caratActive') : styler('caratInactive')
+  } ${styler('carat')}`;
+
+  return (
+    <button
+      className="focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+      onClick={onClick}
+    >
+      {direction === 'horizontal' ? (
+        <RightCaratIcon className={className} />
+      ) : (
+        <DownCaratIcon className={className} />
+      )}
+    </button>
   );
-};
+}
+
+function PrevButton({ direction, isActive, onClick, styler }: ButtonProps) {
+  const className = `${
+    isActive ? styler('caratActive') : styler('caratInactive')
+  } ${styler('carat')}`;
+
+  return (
+    <button
+      className="focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500"
+      onClick={onClick}
+    >
+      {direction === 'horizontal' ? (
+        <LeftCaratIcon className={className} />
+      ) : (
+        <UpCaratIcon className={className} />
+      )}
+    </button>
+  );
+}

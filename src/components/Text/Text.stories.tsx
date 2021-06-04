@@ -1,7 +1,8 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Text, TextProps } from './index';
+import { Text, TextProps } from './Text';
 import { css } from 'twind/css';
+import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
   title: 'Typography',
@@ -12,9 +13,11 @@ export default meta;
 
 const Basic: Story<TextProps> = args => {
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Text {...args}>Hello World</Text>
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div className="w-full h-1/2 flex justify-center bg-white py-4">
+        <Text {...args}>Hello World</Text>
+      </div>
+    </HMSThemeProvider>
   );
 };
 
@@ -23,11 +26,13 @@ const Class: Story<TextProps> = args => {
     rootBodyLg: 'font-bold text-red-800 text-7xl',
   };
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Text classes={userClasses} {...args}>
-        Override By Classes
-      </Text>
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div className="w-full h-1/2 flex justify-center bg-white py-4">
+        <Text classes={userClasses} {...args}>
+          Override By Classes
+        </Text>
+      </div>
+    </HMSThemeProvider>
   );
 };
 
@@ -37,11 +42,13 @@ const Style: Story<TextProps> = args => {
     font-size: 4rem;
   `;
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Text styles={styles} {...args}>
-        Override By Styles Props
-      </Text>
-    </div>
+    <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+      <div className="w-full h-1/2 flex justify-center bg-white py-4">
+        <Text styles={styles} {...args}>
+          Override By Styles Props
+        </Text>
+      </div>
+    </HMSThemeProvider>
   );
 };
 

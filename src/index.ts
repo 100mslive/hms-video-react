@@ -1,12 +1,11 @@
-import './components/Button/Button.css';
 import './components/VideoTile/index.css';
 import './components/Carousel/index.css';
-import './components/TwButton/Button.css';
+import './components/Button/Button.css';
 import './components/ParticipantList/index.css';
 import './components/ChatBox/index.css';
 export { Silence } from './components/Silence';
 export { VideoTile, VideoTileProps } from './components/VideoTile/index';
-export { Avatar } from './components/Avatar/index';
+export { Avatar } from './components/TwAvatar/index';
 export { VideoList, VideoListProps } from './components/VideoList/index';
 export * from './components/ControlBar/index';
 export * from './components/Header/index';
@@ -16,11 +15,17 @@ export * from './components/ChatBox/ChatBox';
 export * from './components/Settings/Settings';
 export * from './components/Join';
 export * from './components/Icons';
-export * from './components/Button';
 export * from './components/Carousel';
 export * from './components/VerticalDivider';
-export { Button as TwButton } from './components/TwButton';
-export { HMSRoomProvider, useHMSRoom } from './hooks/HMSRoomProvider';
-export { useHMSMessage } from './hooks/MessageProvider';
-export { useHMSSpeaker, audioLevelEmitter } from './hooks/SpeakerProvider';
+export * from './components/FirstPersonDisplay';
+export * from './components/ScreenShareDisplay';
+export * from './components/PostLeaveDisplay';
+export * from './components/Button';
+export * from './components/Text';
+export {
+  HMSRoomProvider,
+  useHMSStore,
+  useHMSActions,
+} from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';
+export * from '@100mslive/hms-video-store';
