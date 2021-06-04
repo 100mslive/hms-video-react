@@ -28,7 +28,8 @@ export const theme: { theme: ThemeConfiguration } = {
           300: '#5E5E5E',
           400: '#8E8E8E',
           500: '#C7C7C7',
-          600: '#F2F2F2',
+          600: '#E3E3E3',
+          700: '#F2F2F2',
         },
         transparent: {
           0: 'rgba(0,0,0,0)',

@@ -8,7 +8,6 @@ import { DoorIcon } from '../Icons';
 import { Text } from '../Text';
 
 interface Fields {
-  username: string;
   roomId: string;
   role: string;
 }
@@ -26,22 +25,22 @@ interface JoinClasses {
 }
 
 interface Option {
-  label: string,
-  value: string
+  label: string;
+  value: string;
 }
 
 const defaultClasses: JoinClasses = {
   root:
     'flex bg-white dark:bg-black justify-center items-center w-screen h-screen ',
   containerRoot:
-    'bg-white dark:bg-gray-100 text-gray-100 dark:text-white w-1/2 m-2 p-3 rounded-xl divide-solid shadow-2 dark:shadow-none',
+    'bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-white w-1/2 m-2 p-3 rounded-xl divide-solid shadow-2 dark:shadow-none',
   header:
     'text-2xl mb-3 p-3 border-b-2 border-gray-600 dark:border-gray-200 flex items-center',
   inputRoot: 'flex flex-wrap text-lg',
   inputName:
     'w-1/3 flex justify-end items-center text-gray-100 dark:text-gray-500 pr-8',
   inputFieldRoot: 'p-2 w-2/3',
-  inputField: 'rounded-lg bg-gray-700 dark:bg-gray-200 w-full p-1',
+  inputField: 'rounded-lg bg-red-700 dark:bg-gray-200 w-full p-1',
   joinRoot: 'w-full flex justify-end m-2',
   joinButton: 'bg-brand-main  rounded-lg px-5 py-2 focus:outline-none',
 };
@@ -53,13 +52,13 @@ export interface JoinProps extends React.DetailsHTMLAttributes<any> {
   initialValues?: Partial<Fields>;
   /**
    * Roles to be passed by the user other defaults will be used
-   * Each role should follow { label: string, value: string } format 
+   * Each role should follow { label: string, value: string } format
    */
-  roles?: Option[],
+  roles?: Option[];
   /**
    * Event handler for join button click.
    */
-  submitOnClick: ({ username, roomId, role }: Fields) => void;
+  submitOnClick: ({ roomId, role }: Fields) => void;
   /**
    * extra classes added  by user
    */
@@ -85,12 +84,12 @@ const Join = ({
     [],
   );
 
-  const [username, setUsername] = useState(initialValues?.username || '');
-  const [role, setRole] = useState(initialValues?.role || roles[0].value);
+  const [role, setRole] = useState(
+    initialValues?.role || (roles[0] && roles[0].value),
+  );
   const [roomId, setRoomId] = useState(initialValues?.roomId || '');
 
   useEffect(() => {
-    initialValues?.username && setUsername(initialValues.username);
     initialValues?.role && setRole(initialValues.role);
     initialValues?.roomId && setRoomId(initialValues.roomId);
   }, [initialValues]);
@@ -103,20 +102,6 @@ const Join = ({
           <Text variant="heading">Join your class</Text>
         </div>
         <div className={styler('inputRoot')}>
-          <div className={styler('inputName')}>
-            <Text variant="heading" size="sm">
-              Username
-            </Text>
-          </div>
-          <div className={styler('inputFieldRoot')}>
-            <Input
-              compact
-              defaultValue={initialValues?.username || username}
-              onChange={event => {
-                setUsername(event.target.value);
-              }}
-            ></Input>
-          </div>
           <div className={styler('inputName')}>
             <Text variant="heading" size="sm">
               RoomId
@@ -144,8 +129,12 @@ const Join = ({
                 setRole(event.target.value);
               }}
             >
-              {roles.map(({ label, value}) => {
-                return <option key={value} value={value}>{label}</option>
+              {roles.map(({ label, value }) => {
+                return (
+                  <option key={value} value={value}>
+                    {label}
+                  </option>
+                );
               })}
             </Select>
           </div>
@@ -154,7 +143,6 @@ const Join = ({
               variant={'emphasized'}
               onClick={() =>
                 submitOnClick({
-                  username,
                   roomId,
                   role,
                 })
@@ -171,11 +159,11 @@ const Join = ({
 
 Join.defaultProps = {
   roles: [
-    { label: "Student", value: "student" },
-    { label: "Teacher", value: "teacher" },
-    { label: "Viewer", value: "viewer" },
-    { label: "Admin", value: "admin" },
-  ]
-}
+    { label: 'Student', value: 'student' },
+    { label: 'Teacher', value: 'teacher' },
+    { label: 'Viewer', value: 'viewer' },
+    { label: 'Admin', value: 'admin' },
+  ],
+};
 
 export { Join };
