@@ -36,7 +36,7 @@ export interface PreviewClasses {
 }
 const defaultClasses: PreviewClasses = {
   root:
-    'flex h-screen w-screen bg-white dark:bg-black justify-center items-center',
+    'flex h-full w-screen bg-white dark:bg-black justify-center items-center',
   containerRoot:
     'flex flex-col items-center w-37.5 h-400 box-border bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
   header: 'w-22.5 h-22.5 mt-1.875 mb-7',
@@ -64,11 +64,7 @@ export const Preview = ({
   classes,
   videoTileClasses,
 }: PreviewProps) => {
-  const { tw, appBuilder } = useHMSTheme();
-
-  if(appBuilder.headerPresent){
-    defaultClasses.root = 'flex w-screen h-header bg-white dark:bg-black justify-center items-center'
-  }
+  const { tw } = useHMSTheme();
 
   const styler = useMemo(
     () =>

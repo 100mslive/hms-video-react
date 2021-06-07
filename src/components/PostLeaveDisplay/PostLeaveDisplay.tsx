@@ -38,10 +38,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
     divider: `bg-gray-600  h-px w-96 my-8`,
     buttonWrapper: `space-x-5`,
   };
-  const { tw, appBuilder } = useHMSTheme();
-  if(appBuilder.headerPresent){
-    defaultClasses.root = 'h-header text-white flex items-center justify-center'
-  }
+  const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<PostLeaveDisplayClasses>({
