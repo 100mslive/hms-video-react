@@ -30,10 +30,11 @@ const defaultClasses: HeaderClasses = {
     'flex md:flex-none md:right-0 md:absolute md:self-center md:p-3 md:mr-5',
 };
 export const LogoButton = () => {
-  let logo;
+  let logo, logoClass;
   try {
     const { appBuilder } = useHMSTheme();
     logo = appBuilder.logo;
+    logoClass = appBuilder.logoClass;
   } catch (e) {}
   return (
     <button className=" p-2 focus:outline-none">
@@ -42,7 +43,7 @@ export const LogoButton = () => {
           src={logo}
           alt="brand_logo"
           // className=" md:object-contain object-scale-down md:h-full"
-          className="object-contain flex justify-center h-6 "
+          className={`object-contain flex justify-center ${logoClass ? logoClass : "h-6"}`}
         />
       ) : (
         <Logo />
