@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
 interface InputPropsWithoutNativeAttrs {
   /**
    * Smaller Width for InputField
@@ -42,37 +42,46 @@ const defaultClasses: InputClasses = {
   rootValidationText: `text-red-main mt-2`,
 };
 
-export const Input = ({
-  compact,
-  validation,
-  placeHolder,
-  classes,
-  children,
-  ...props
-}: InputProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<InputClasses>({
-      tw,
+export const Input = React.forwardRef<HTMLInputElement>(
+  (
+    {
+      compact,
+      validation,
+      placeHolder,
       classes,
-      defaultClasses,
-      tag: 'hmsui-input',
-    }),[]);
+      children,
+      ...props
+    }: InputProps,
+    ref: React.ForwardedRef<HTMLInputElement>,
+  ) => {
+    const { tw } = useHMSTheme();
+    const styler = useMemo(
+      () =>
+        hmsUiClassParserGenerator<InputClasses>({
+          tw,
+          classes,
+          defaultClasses,
+          tag: 'hmsui-input',
+        }),
+      [],
+    );
 
-  return (
-    <>
-      <input
-        placeholder={placeHolder}
-        className={`${styler('root')} ${
-          compact ? styler('rootCompact') : styler('rootNonCompact')
-        } ${validation ? styler('rootValidationRing') : styler('rootRing')}`}
-        {...props}
-      >
-        {children}
-      </input>
-      {validation && (
-        <p className={`${styler('rootValidationText')}`}>{validation}</p>
-      )}
-    </>
-  );
-};
+    return (
+      <>
+        <input
+          ref={ref}
+          placeholder={placeHolder}
+          className={`${styler('root')} ${
+            compact ? styler('rootCompact') : styler('rootNonCompact')
+          } ${validation ? styler('rootValidationRing') : styler('rootRing')}`}
+          {...props}
+        >
+          {children}
+        </input>
+        {validation && (
+          <p className={`${styler('rootValidationText')}`}>{validation}</p>
+        )}
+      </>
+    );
+  },
+);
