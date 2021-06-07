@@ -64,7 +64,12 @@ export const Preview = ({
   classes,
   videoTileClasses,
 }: PreviewProps) => {
-  const { tw } = useHMSTheme();
+  const { tw, appBuilder } = useHMSTheme();
+
+  if(appBuilder.headerPresent){
+    defaultClasses.root = 'flex w-screen h-header bg-white dark:bg-black justify-center items-center'
+  }
+
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<PreviewClasses>({

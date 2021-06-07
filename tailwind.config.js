@@ -102,6 +102,7 @@ module.exports = {
         37.5: '37.5rem',
         400: '40rem',
         42.5: '42.5rem',
+        'header': '93vh',
       },
       scale: {
         '-100': '-1',
