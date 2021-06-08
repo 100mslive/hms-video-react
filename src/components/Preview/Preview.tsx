@@ -221,7 +221,7 @@ export const Preview = ({
           variant={'emphasized'}
           size={'lg'}
           onClick={() => {
-            if (!name) {
+            if (!name || !name.trim()) {
               inputRef.current && inputRef.current.focus();
               setShowValidation(true);
               return;
