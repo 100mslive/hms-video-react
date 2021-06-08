@@ -210,6 +210,7 @@ export const Preview = ({
           variant={'emphasized'}
           size={'lg'}
           onClick={() => {
+            if(!name || name.trim() === "") return;
             closeMediaStream(mediaStream);
             joinOnClick({ audioMuted, videoMuted, name });
           }}
