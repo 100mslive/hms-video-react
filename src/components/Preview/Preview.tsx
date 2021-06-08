@@ -234,16 +234,6 @@ export const Preview = ({
         >
           Join
         </Button>
-        <Button
-          classes={{ rootNoFill: 'mt-3 text-brand-main' }}
-          variant={'no-fill'}
-          onClick={() => {
-            closeMediaStream(mediaStream);
-            goBackOnClick();
-          }}
-        >
-          Go back
-        </Button>
       </div>
     </div>
   );
