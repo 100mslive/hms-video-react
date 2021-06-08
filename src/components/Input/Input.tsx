@@ -21,7 +21,7 @@ interface InputPropsWithoutNativeAttrs {
 }
 
 export type InputProps = InputPropsWithoutNativeAttrs &
-  JSX.IntrinsicElements['input'];
+  React.ComponentPropsWithoutRef<'input'>;
 
 export interface InputClasses {
   root?: string;
@@ -42,7 +42,7 @@ const defaultClasses: InputClasses = {
   rootValidationText: `text-red-main mt-2`,
 };
 
-export const Input = React.forwardRef<HTMLInputElement>(
+export const Input = React.forwardRef<HTMLInputElement, InputProps>(
   (
     {
       compact,
