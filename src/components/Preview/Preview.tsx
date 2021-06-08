@@ -82,6 +82,7 @@ export const Preview = ({
     [],
   );
   const [mediaStream, setMediaStream] = useState(new MediaStream());
+  /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
   const [error, setError] = useState({
     title: '',
@@ -157,7 +158,8 @@ export const Preview = ({
       setShowValidation(true);
     },
     value: name,
-    validation: showValidation && !name ? 'Please enter name' : '',
+    validation:
+      showValidation && (!name || !name.trim()) ? 'Please enter name' : '',
     required: true,
   };
 
