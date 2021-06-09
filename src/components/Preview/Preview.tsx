@@ -5,7 +5,11 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { getLocalStream } from '@100mslive/hms-video';
+import {
+  getLocalStream,
+  parsedUserAgent,
+  isSupported,
+} from '@100mslive/hms-video';
 import { HMSPeer } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
@@ -128,21 +132,24 @@ export const Preview = ({
     };
 
     try {
-      if (isBrowserOSValid()) {
+      if (isSupported) {
         const stream = await getLocalStream(constraints);
         setMediaStream(stream);
-      }
-    } catch (err) {
-      HMSLogger.e('[Preview]', err.name, err.message);
-      if (err instanceof BrowserOSError) {
-        const localStreamError = getLocalStreamException(err.name);
-        setError(localStreamError);
       } else {
         setError({
-          title: err.description,
-          message: err.message,
+          title:
+            'Please update to latest version of Google Chrome to continue.',
+          message: `We currently do not support ${parsedUserAgent.getBrowserName()}(${
+            parsedUserAgent.getBrowserVersion().split('.')[0]
+          }) on ${parsedUserAgent.getOSName()}.`,
         });
       }
+    } catch (error) {
+      HMSLogger.e('[Preview]', { error });
+      setError({
+        title: error.description || 'Unable to Access Camera/Microphone',
+        message: error.message,
+      });
     }
   };
 
