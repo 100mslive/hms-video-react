@@ -5,7 +5,11 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { getLocalStream } from '@100mslive/hms-video';
+import {
+  getLocalStream,
+  parsedUserAgent,
+  isSupported,
+} from '@100mslive/hms-video';
 import { HMSPeer } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
@@ -18,11 +22,7 @@ import { Input } from '../Input';
 import HMSLogger from '../../utils/ui-logger';
 import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import {
-  BrowserOSError,
-  getLocalStreamException,
-  isBrowserOSValid,
-} from '../../utils/preview';
+
 interface JoinInfo {
   audioMuted?: boolean;
   videoMuted?: boolean;
@@ -81,6 +81,7 @@ export const Preview = ({
       }),
     [],
   );
+
   const [mediaStream, setMediaStream] = useState(new MediaStream());
   /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
@@ -96,12 +97,14 @@ export const Preview = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const toggleMediaState = (type: string) => {
-    if (type === 'audio') {
-      mediaStream.getAudioTracks()[0].enabled = audioMuted;
-      setAudioMuted(prevMuted => !prevMuted);
-    } else if (type === 'video') {
-      mediaStream.getVideoTracks()[0].enabled = videoMuted;
-      setVideoMuted(prevMuted => !prevMuted);
+    if (mediaStream) {
+      if (type === 'audio') {
+        mediaStream.getAudioTracks()[0].enabled = audioMuted;
+        setAudioMuted(prevMuted => !prevMuted);
+      } else if (type === 'video') {
+        mediaStream.getVideoTracks()[0].enabled = videoMuted;
+        setVideoMuted(prevMuted => !prevMuted);
+      }
     }
   };
 
@@ -112,25 +115,37 @@ export const Preview = ({
 
   const startMediaStream = async () => {
     closeMediaStream(mediaStream);
+
     try {
-      if (isBrowserOSValid()) {
-        const stream = await getLocalStream({
-          audio: { deviceId: selectedAudioInput },
-          video: { deviceId: selectedVideoInput },
-        });
+      if (isSupported) {
+        const constraints = {
+          audio:
+            !audioMuted && selectedAudioInput
+              ? { deviceId: selectedAudioInput }
+              : true,
+          video:
+            !videoMuted && selectedVideoInput
+              ? { deviceId: selectedVideoInput }
+              : true,
+        };
+
+        const stream = await getLocalStream(constraints);
         setMediaStream(stream);
-      }
-    } catch (err) {
-      HMSLogger.e('[Preview]', err.name, err.message);
-      if (err instanceof BrowserOSError) {
-        const localStreamError = getLocalStreamException(err.name);
-        setError(localStreamError);
       } else {
         setError({
-          title: err.description,
-          message: err.message,
+          title:
+            'Please update to latest version of Google Chrome to continue.',
+          message: `We currently do not support ${parsedUserAgent.getBrowserName()}(${
+            parsedUserAgent.getBrowserVersion().split('.')[0]
+          }) on ${parsedUserAgent.getOSName()}.`,
         });
       }
+    } catch (error) {
+      HMSLogger.e('[Preview]', { error });
+      setError({
+        title: error.description || 'Unable to Access Camera/Microphone',
+        message: error.message,
+      });
     }
   };
 
@@ -172,11 +187,9 @@ export const Preview = ({
           {/* messageModal */}
           <MessageModal
             show={showModal}
-            setShow={setShowModal}
             title={error.title}
-            message={error.message}
-            allow={false}
-            gobackOnClick={goBackOnClick}
+            body={error.message}
+            onClose={goBackOnClick}
           />
           {/* videoTile */}
           <VideoTile

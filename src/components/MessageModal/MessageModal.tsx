@@ -25,17 +25,16 @@ export interface MessageModalClasses {
   title?: string;
   closeRoot?: string;
   closeButton?: string;
-  message?: string;
+  body?: string;
+  footer?: string;
 }
 
 export interface StyledMessageModalProps {
-  title: string;
-  message: string;
-  secondary?: string;
   show: boolean;
-  allow: boolean;
-  gobackOnClick: () => void;
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  title: string;
+  body: React.ReactNode;
+  footer?: React.ReactNode;
+  onClose: () => void;
   defaultClasses?: MessageModalClasses;
   classes?: MessageModalClasses;
 }
@@ -48,26 +47,24 @@ const defaultClasses: MessageModalClasses = {
   boxTransition:
     'focus:outline-none insert-y-20 inline-block align-bottom text-left overflow-hidden transform transition-all sm:align-middle sm:max-w-lg sm:w-full',
   boxRoot:
-    'flex flex-col md:flex-row md:flex-wrap bg-white dark:bg-gray-100 rounded-lg sm:items-start md:w-100 focus:outline-none rounded-tr-lg text-center font-normal pb-4 sm:text-left',
-  header: 'flex flex-grow flex-row px-5 pt-5 items-center',
+    'flex flex-col md:flex-row md:flex-wrap bg-white dark:bg-gray-100 rounded-lg sm:items-start md:w-100 focus:outline-none rounded-tr-lg text-center font-normal sm:text-left md:text-base text-sm text-gray-100 dark:text-gray-500 px-5 py-5',
+  header: 'flex flex-grow flex-row items-center mb-4',
   title:
     'flex flex-grow lg:text-2xl sm:text-xl self-center items-center text-gray-100 dark:text-white font-medium',
   closeRoot:
     'flex flex-none self-center justify-end items-end right-0 bg-white dark:bg-gray-100 hover:bg-gray-600 dark:hover:bg-gray-200 sm:flex sm:flex-row-reverse',
   closeButton:
     'w-full justify-end text-base font-medium rounded-xl focus:outline-none',
-  message:
-    'flex flex-col space-y-2.5 px-5 py-3 md:text-base text-sm text-gray-100 dark:text-gray-500',
+  body: 'w-full',
+  footer: 'mt-4 w-full flex justify-end',
 };
 
 export const StyledMessageModal = ({
   title = '',
-  message = '',
-  secondary = '',
   show = true,
-  allow,
-  gobackOnClick,
-  setShow,
+  body,
+  footer,
+  onClose,
   classes: extraClasses,
 }: StyledMessageModalProps) => {
   //@ts-expect-error
@@ -95,19 +92,15 @@ export const StyledMessageModal = ({
                   <div className={combinedClasses?.closeRoot}>
                     <Button
                       variant={'no-fill'}
-                      onClick={() => {
-                        setShow(false);
-                        !allow && gobackOnClick();
-                      }}
-                    >
-                      <CloseIcon />
-                    </Button>
+                      onClick={onClose}
+                      icon={<CloseIcon className="text-red-main" />}
+                      iconOnly={true}
+                      iconSize="md"
+                    />
                   </div>
                 </div>
-                <div className={combinedClasses?.message}>
-                  <p>{message}</p>
-                  <p>{secondary}</p>
-                </div>
+                <div className={combinedClasses?.body}>{body}</div>
+                <div className={combinedClasses?.footer}>{footer}</div>
               </div>
             </div>
           </div>
