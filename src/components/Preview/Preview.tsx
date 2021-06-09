@@ -17,7 +17,7 @@ import { SettingsFormProps } from '../Settings/Settings';
 import { Button } from '../Button';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
-import { VideoTileControls } from './Controls';
+import { PreviewControls } from './Controls';
 import { Input } from '../Input';
 import HMSLogger from '../../utils/ui-logger';
 import { closeMediaStream } from '../../utils';
@@ -214,7 +214,7 @@ export const Preview = ({
             }}
             classes={videoTileClasses}
             controlsComponent={
-              <VideoTileControls
+              <PreviewControls
                 audioButtonOnClick={() => toggleMediaState('audio')}
                 videoButtonOnClick={() => toggleMediaState('video')}
                 isAudioMuted={audioMuted}

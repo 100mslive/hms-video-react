@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.npmjs.org/@100mslive/hms-video-store/-/hms-video-store-0.1.11.tgz"
-  integrity sha512-BB2AyluTukJRxb0aDOswLWpEph9Hhp56o7/dd1WaNtRFtqvjay+3+jB6xwVyvCgh/acwc2yyYlIZyEtBBBWCyw==
+"@100mslive/hms-video-store@^0.1.14":
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.14.tgz#f0762d2974ce8ac49106c8323a3ffe3272909bd1"
+  integrity sha512-bymvVC983cawAGzRXSjP8+ZGAViFUWSBiZ7rvQjJaEm44xUiCALAda2phXBFsqoAz69/mXU8RljwvgbWP2jhGw==
   dependencies:
     immer "^9.0.2"
     reselect "^4.0.0"
