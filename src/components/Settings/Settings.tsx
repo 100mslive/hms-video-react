@@ -46,6 +46,7 @@ export interface SettingsProps {
   initialValues?: SettingsFormProps;
   onChange?: (values: SettingsFormProps) => void;
   classes?: SettingsClasses;
+  previewMode?: boolean;
 }
 
 const defaultClasses: SettingsClasses = {
@@ -116,6 +117,7 @@ export const Settings = ({
   onChange,
   initialValues,
   classes,
+  previewMode = false,
 }: SettingsProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -154,7 +156,7 @@ export const Settings = ({
   initialValues.selectedAudioOutput =
     initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
 
-  const [values, setValues] = useState<SettingsFormProps>({
+  const deviceValues = {
     selectedAudioInput: initialValues?.selectedAudioInput
       ? initialValues?.selectedAudioInput
       : 'default',
@@ -164,6 +166,10 @@ export const Settings = ({
     selectedAudioOutput: initialValues?.selectedAudioOutput
       ? initialValues?.selectedAudioOutput
       : 'default',
+  };
+
+  const [values, setValues] = useState<SettingsFormProps>({
+    ...deviceValues,
     maxTileCount: initialValues?.maxTileCount ? initialValues?.maxTileCount : 9,
   });
 
@@ -180,6 +186,10 @@ export const Settings = ({
 
   const handleClickOpen = () => {
     setOpen(true);
+    if (!previewMode) {
+      // sync with store on open
+      setValues({ ...values, ...deviceValues });
+    }
   };
 
   const handleClose = () => {

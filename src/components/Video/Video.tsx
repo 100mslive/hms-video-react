@@ -150,7 +150,14 @@ export const Video = ({
         }
       }
     })();
-  }, [inView, videoRef, videoTrack, hmsVideoTrack?.id, hmsVideoTrack?.enabled]);
+  }, [
+    inView,
+    videoRef,
+    videoTrack,
+    hmsVideoTrack?.id,
+    hmsVideoTrack?.enabled,
+    hmsVideoTrack?.deviceID,
+  ]);
 
   useEffect(() => {
     if (videoRef && videoRef.current && videoTrack && !hmsVideoTrack) {
