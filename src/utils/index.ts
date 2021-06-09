@@ -30,9 +30,37 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
   if (!stream) {
     return;
   }
+  if (
+    MediaStreamTrack &&
+    MediaStreamTrack.prototype &&
+    // @ts-ignore
+    MediaStreamTrack.prototype.stop
+  ) {
+    var tracks, i, len;
 
-  const tracks = stream.getTracks();
-  tracks.forEach(track => track.stop());
+    if (stream.getTracks) {
+      tracks = stream.getTracks();
+      for (i = 0, len = tracks.length; i < len; i += 1) {
+        tracks[i].stop();
+      }
+    } else {
+      tracks = stream.getAudioTracks();
+      for (i = 0, len = tracks.length; i < len; i += 1) {
+        tracks[i].stop();
+      }
+
+      tracks = stream.getVideoTracks();
+      for (i = 0, len = tracks.length; i < len; i += 1) {
+        tracks[i].stop();
+      }
+    }
+    // Deprecated by the spec, but still in use.
+    // @ts-ignore
+  } else if (typeof stream.stop === 'function') {
+    console.log('closeMediaStream() | calling stop() on the MediaStream');
+    // @ts-ignore
+    stream.stop();
+  }
 };
 
 const chunk = <T>(elements: T[], chunkSize: number, onlyOnePage: boolean) => {

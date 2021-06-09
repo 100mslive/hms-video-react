@@ -81,6 +81,7 @@ export const Preview = ({
       }),
     [],
   );
+
   const [mediaStream, setMediaStream] = useState(new MediaStream());
   /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
@@ -96,12 +97,14 @@ export const Preview = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const toggleMediaState = (type: string) => {
-    if (type === 'audio') {
-      mediaStream.getAudioTracks()[0].enabled = audioMuted;
-      setAudioMuted(prevMuted => !prevMuted);
-    } else if (type === 'video') {
-      mediaStream.getVideoTracks()[0].enabled = videoMuted;
-      setVideoMuted(prevMuted => !prevMuted);
+    if (mediaStream) {
+      if (type === 'audio') {
+        mediaStream.getAudioTracks()[0].enabled = audioMuted;
+        setAudioMuted(prevMuted => !prevMuted);
+      } else if (type === 'video') {
+        mediaStream.getVideoTracks()[0].enabled = videoMuted;
+        setVideoMuted(prevMuted => !prevMuted);
+      }
     }
   };
 
@@ -112,12 +115,21 @@ export const Preview = ({
 
   const startMediaStream = async () => {
     closeMediaStream(mediaStream);
+
+    const constraints = {
+      audio:
+        !audioMuted && selectedAudioInput
+          ? { deviceId: selectedAudioInput }
+          : true,
+      video:
+        !videoMuted && selectedVideoInput
+          ? { deviceId: selectedVideoInput }
+          : true,
+    };
+
     try {
       if (isBrowserOSValid()) {
-        const stream = await getLocalStream({
-          audio: { deviceId: selectedAudioInput },
-          video: { deviceId: selectedVideoInput },
-        });
+        const stream = await getLocalStream(constraints);
         setMediaStream(stream);
       }
     } catch (err) {
