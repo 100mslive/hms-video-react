@@ -117,21 +117,20 @@ export const Preview = ({
     closeMediaStream(mediaStream);
 
     try {
-      if (isSupported) {
-        const constraints = {
-          audio:
-            !audioMuted && selectedAudioInput
-              ? { deviceId: selectedAudioInput }
-              : true,
-          video:
-            !videoMuted && selectedVideoInput
-              ? { deviceId: selectedVideoInput }
-              : true,
-        };
+      const constraints = {
+        audio:
+          !audioMuted && selectedAudioInput
+            ? { deviceId: selectedAudioInput }
+            : true,
+        video:
+          !videoMuted && selectedVideoInput
+            ? { deviceId: selectedVideoInput }
+            : true,
+      };
 
-        const stream = await getLocalStream(constraints);
-        setMediaStream(stream);
-      } else {
+      const stream = await getLocalStream(constraints);
+      setMediaStream(stream);
+      if (!isSupported) {
         setError({
           title:
             'Please update to latest version of Google Chrome to continue.',
@@ -189,7 +188,10 @@ export const Preview = ({
             show={showModal}
             title={error.title}
             body={error.message}
-            onClose={goBackOnClick}
+            onClose={() => {
+              setShowModal(false);
+              goBackOnClick();
+            }}
           />
           {/* videoTile */}
           <VideoTile
