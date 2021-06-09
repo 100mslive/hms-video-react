@@ -22,11 +22,7 @@ import { Input } from '../Input';
 import HMSLogger from '../../utils/ui-logger';
 import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import {
-  BrowserOSError,
-  getLocalStreamException,
-  isBrowserOSValid,
-} from '../../utils/preview';
+
 interface JoinInfo {
   audioMuted?: boolean;
   videoMuted?: boolean;
@@ -120,19 +116,19 @@ export const Preview = ({
   const startMediaStream = async () => {
     closeMediaStream(mediaStream);
 
-    const constraints = {
-      audio:
-        !audioMuted && selectedAudioInput
-          ? { deviceId: selectedAudioInput }
-          : true,
-      video:
-        !videoMuted && selectedVideoInput
-          ? { deviceId: selectedVideoInput }
-          : true,
-    };
-
     try {
       if (isSupported) {
+        const constraints = {
+          audio:
+            !audioMuted && selectedAudioInput
+              ? { deviceId: selectedAudioInput }
+              : true,
+          video:
+            !videoMuted && selectedVideoInput
+              ? { deviceId: selectedVideoInput }
+              : true,
+        };
+
         const stream = await getLocalStream(constraints);
         setMediaStream(stream);
       } else {
