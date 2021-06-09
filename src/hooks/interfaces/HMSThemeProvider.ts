@@ -2,6 +2,7 @@ import { TW } from 'twind';
 
 export interface appBuilder {
   logo?: string;
+  logoClass?: string;
   theme?: 'light' | 'dark';
   videoTileAspectRatio?: {
     width: number;

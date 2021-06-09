@@ -24,7 +24,7 @@ export const AudioLevelIndicator = ({
   displayShape = 'rectangle',
   classes,
 }: AudioLevelIndicatorProps) => {
-  let audioLevel = useHMSStore(store => selectPeerAudioByID(store, peerId));
+  let audioLevel = useHMSStore(selectPeerAudioByID(peerId));
   audioLevel = level || audioLevel;
 
   switch (type) {

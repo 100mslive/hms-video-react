@@ -93,8 +93,7 @@ export interface VideoTileClasses extends VideoClasses {
 
 const defaultClasses: VideoTileClasses = {
   root: 'group w-full h-full flex relative justify-center rounded-lg ',
-  videoContainer:
-    'relative rounded-lg object-cover relative max-w-full max-h-full',
+  videoContainer: 'relative rounded-lg object-cover relative w-full max-h-full',
   avatarContainer:
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
   videoContainerCircle: 'rounded-full',
@@ -145,15 +144,9 @@ export const VideoTile = ({
   const selectVideoByPeerID = showScreen
     ? selectScreenShareByPeerID
     : selectCameraStreamByPeerID;
-  const storeHmsVideoTrack = useHMSStore(store =>
-    selectVideoByPeerID(store, peer.id),
-  );
-  const storeIsAudioMuted = !useHMSStore(store =>
-    selectIsPeerAudioEnabled(store, peer.id),
-  );
-  const storeIsVideoMuted = !useHMSStore(store =>
-    selectIsPeerVideoEnabled(store, peer.id),
-  );
+  const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
+  const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
+  const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
 
   if (showAudioLevel === undefined) {
     showAudioLevel = !showScreen; // don't show audio levels for screenshare

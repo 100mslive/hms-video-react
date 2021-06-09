@@ -161,7 +161,7 @@ export const VideoList = ({
   avatarType,
   compact = false,
 }: VideoListProps) => {
-  const { tw, appBuilder } = useHMSTheme();
+  const { tw, appBuilder, tailwindConfig } = useHMSTheme();
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<VideoListClasses>({
@@ -180,6 +180,8 @@ export const VideoList = ({
   }
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
+
+  const audioLevelDisplayColor = tailwindConfig.theme.extend.colors.brand.main;
 
   const tracksWithPeer: TrackWithPeer[] = getVideoTracksFromPeers(
     peers,
@@ -271,7 +273,7 @@ export const VideoList = ({
                   {tracksPeersOnOnePage.map((trackPeer, index) => {
                     return (
                       <div
-                        key={trackPeer.track.id} // track id changes on replace track
+                        key={trackPeer.track ? trackPeer.track.id : trackPeer.peer.id} // track id changes on replace track
                         style={{
                           height: trackPeer.height,
                           width: trackPeer.width,
@@ -284,6 +286,7 @@ export const VideoList = ({
                           objectFit={objectFit}
                           displayShape={displayShape}
                           audioLevelDisplayType={audioLevelDisplayType}
+                          audioLevelDisplayColor={audioLevelDisplayColor}
                           allowRemoteMute={allowRemoteMute}
                           showAudioLevel={showAudioLevel}
                           showAudioMuteStatus={showAudioMuteStatus}

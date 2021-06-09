@@ -70,10 +70,10 @@ interface GetTileSizesInList {
 const getModeAspectRatio = (tracks: TrackWithPeer[]): number | null => {
   return mode(
     tracks
-      .filter(track => track?.track.width && track?.track.height)
+      .filter(track => track.track?.width && track.track?.height)
       .map(track => {
-        const width = track?.track.width;
-        const height = track?.track.height;
+        const width = track.track?.width;
+        const height = track.track?.height;
         //Default to 1 if there are no video tracks
         return (width ? width : 1) / (height ? height : 1);
       }),
