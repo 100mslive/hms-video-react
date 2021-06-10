@@ -43,11 +43,11 @@ const defaultClasses: PreviewClasses = {
   root:
     'flex h-full w-screen bg-white dark:bg-black justify-center items-center',
   containerRoot:
-    'flex flex-col items-center w-37.5 h-400 box-border bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
-  header: 'w-22.5 h-22.5 mt-1.875 mb-7',
+    'flex flex-col justify-center items-center w-37.5 h-400 pb-4 box-border bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden md:rounded-2xl',
+  header: 'w-4/5 md:w-22.5 md:h-22.5 mt-1.875 mb-7',
   helloDiv: 'text-2xl font-medium mb-2',
   nameDiv: 'text-lg leading-6 mb-2',
-  inputRoot: 'w-1/3 p-2 mb-3 ',
+  inputRoot: 'p-2 mb-3',
 };
 export interface PreviewProps {
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
