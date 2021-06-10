@@ -86,6 +86,7 @@ export const Preview = ({
   /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
   const [error, setError] = useState({
+    allowJoin: false,
     title: '',
     message: '',
   });
@@ -132,6 +133,7 @@ export const Preview = ({
       setMediaStream(stream);
       if (!isSupported) {
         setError({
+          allowJoin: true,
           title:
             'Please update to latest version of Google Chrome to continue.',
           message: `We currently do not support ${parsedUserAgent.getBrowserName()}(${
@@ -142,6 +144,7 @@ export const Preview = ({
     } catch (error) {
       HMSLogger.e('[Preview]', { error });
       setError({
+        allowJoin: false,
         title: error.description || 'Unable to Access Camera/Microphone',
         message: error.message,
       });
@@ -189,7 +192,10 @@ export const Preview = ({
             title={error.title}
             body={error.message}
             onClose={() => {
-              setShowModal(false);
+              if (error.allowJoin) {
+                setShowModal(false);
+                return;
+              }
               goBackOnClick();
             }}
           />
