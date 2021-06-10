@@ -45,7 +45,7 @@ interface CarouselClasses {
 
 const defaultClasses: CarouselClasses = {
   root: `w-full h-full`,
-  rootHorizontal: 'overflow-x-auto pb-6',
+  rootHorizontal: 'overflow-x-auto md:pb-6',
   rootVertical: 'overflow-y-auto flex-col pr-6',
   pageContainer: 'inline-block align-top w-full h-full',
   carouselContainer: 'overflow-hidden w-full h-full',
