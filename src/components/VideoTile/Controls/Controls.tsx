@@ -39,7 +39,7 @@ const defaultClasses: VideoTileControlsClasses = {
   gradient:
     'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
   controlsStatus: 'transition-all opacity-1 mx-1',
-  label: 'mt-1 mx-1',
+  label: 'mt-1 mx-1 text-sm md:text-base',
   controlsWrapper: 'flex justify-center',
 };
 
