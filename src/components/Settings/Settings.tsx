@@ -219,9 +219,9 @@ export const Settings = ({
   const audioInput = deviceGroups['audioinput']
     ? deviceGroups['audioinput']
     : [];
-  const audioOutput = deviceGroups['audiooutput']
-    ? deviceGroups['audiooutput']
-    : [];
+  // const audioOutput = deviceGroups['audiooutput']
+  //   ? deviceGroups['audiooutput']
+  //   : [];
   //TODO handle case where selected device is not in list
   // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
   // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
@@ -325,7 +325,8 @@ export const Settings = ({
                     )}
                   </div>
                 </div>
-                <div className={`${styler('formInner')}`}>
+                {/** Enabled this when the output is handled properly */}
+                {/* <div className={`${styler('formInner')}`}>
                   <div className={`${styler('selectLabel')}`}>
                     <Text variant="heading" size="sm">
                       Audio Output:
@@ -351,7 +352,7 @@ export const Settings = ({
                       </select>
                     )}
                   </div>
-                </div>
+                </div> */}
               </>
             ) : (
               <div className={styler('errorContainer')}>
