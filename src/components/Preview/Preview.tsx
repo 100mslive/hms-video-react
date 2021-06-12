@@ -110,6 +110,7 @@ export const Preview = ({
   };
 
   const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     setShowModal(Boolean(error.title));
   }, [error.title]);
@@ -159,6 +160,28 @@ export const Preview = ({
       closeMediaStream(mediaStream);
     };
   }, [selectedAudioInput, selectedVideoInput]);
+
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        closeMediaStream(mediaStream);
+      } else {
+        startMediaStream();
+      }
+    }
+    document.addEventListener(
+      'visibilitychange',
+      handleVisibilityChange,
+      false,
+    );
+    return () => {
+      document.removeEventListener(
+        'visibilitychange',
+        handleVisibilityChange,
+        false,
+      );
+    };
+  }, [mediaStream]);
 
   const handleDeviceChange = useCallback((values: SettingsFormProps) => {
     values?.selectedAudioInput &&
