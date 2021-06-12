@@ -128,7 +128,6 @@ export interface VideoListProps {
 
   avatarType?: 'initial';
   compact?: boolean;
-  isChatOpen: boolean;
 }
 
 const defaultClasses: VideoListClasses = {
@@ -161,7 +160,6 @@ export const VideoList = ({
   allowRemoteMute,
   avatarType,
   compact = false,
-  isChatOpen,
 }: VideoListProps) => {
   const { tw, appBuilder, tailwindConfig } = useHMSTheme();
   const styler = useMemo(
@@ -257,7 +255,7 @@ export const VideoList = ({
 
   return (
     <div className={`${styler('root')}`}>
-      <Carousel ref={ref} isChatOpen={isChatOpen}>
+      <Carousel ref={ref} width={width}>
         {chunkedTracksWithPeer &&
           chunkedTracksWithPeer.length > 0 &&
           chunkedTracksWithPeer.map((tracksPeersOnOnePage, page) => {
