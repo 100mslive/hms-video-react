@@ -1,10 +1,11 @@
-import React from 'react';
-import { CloseIcon } from '../Icons';
+import React, { useMemo } from 'react';
 import Backdrop from '@material-ui/core/Backdrop';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
 import { Button } from '../Button';
+import { CloseIcon } from '../Icons';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { withClasses } from '../../utils/styles';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -65,31 +66,40 @@ export const StyledMessageModal = ({
   body,
   footer,
   onClose,
-  classes: extraClasses,
+  classes,
 }: StyledMessageModalProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  const classes = useStyles();
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<MessageModalClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'message-modal',
+      }),
+    [],
+  );
+  const styles = useStyles();
 
   return (
     <div
-      className={combinedClasses?.root}
+      className={styler('root')}
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
     >
       {show && (
-        <Backdrop className={classes.backdrop} open={true}>
-          <div className={combinedClasses?.containerRoot}>
-            <span className={combinedClasses?.spanRoot} aria-hidden="true">
+        <Backdrop className={styles.backdrop} open={true}>
+          <div className={styler('containerRoot')}>
+            <span className={styler('spanRoot')} aria-hidden="true">
               &#8203;
             </span>
 
-            <div className={combinedClasses?.boxTransition}>
-              <div className={combinedClasses?.boxRoot}>
-                <div className={combinedClasses?.header}>
-                  <div className={combinedClasses?.title}>{title}</div>
-                  <div className={combinedClasses?.closeRoot}>
+            <div className={styler('boxTransition')}>
+              <div className={styler('boxRoot')}>
+                <div className={styler('header')}>
+                  <div className={styler('title')}>{title}</div>
+                  <div className={styler('closeRoot')}>
                     <Button
                       variant={'no-fill'}
                       onClick={onClose}
@@ -99,8 +109,8 @@ export const StyledMessageModal = ({
                     />
                   </div>
                 </div>
-                <div className={combinedClasses?.body}>{body}</div>
-                <div className={combinedClasses?.footer}>{footer}</div>
+                <div className={styler('body')}>{body}</div>
+                <div className={styler('footer')}>{footer}</div>
               </div>
             </div>
           </div>
