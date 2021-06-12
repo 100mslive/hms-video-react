@@ -21,6 +21,7 @@ export interface CarouselProps {
   direction?: 'horizontal' | 'vertical';
   showNavigation?: boolean;
   classes?: CarouselClasses;
+  isChatOpen: boolean;
 }
 
 interface CarouselClasses {
@@ -74,6 +75,7 @@ export const Carousel = React.forwardRef(
       direction = 'horizontal',
       showNavigation = true,
       classes,
+      isChatOpen,
       children,
     }: CarouselProps,
     ref: React.ForwardedRef<HTMLDivElement>,
@@ -104,7 +106,7 @@ export const Carousel = React.forwardRef(
     }`;
 
     useEffect(() => {
-      if (carouselRef) {
+      if (carouselRef || !isChatOpen) {
         const el: HTMLElement = carouselRef.current!;
         const width = el.clientWidth;
         const scrollAmount = currentPageIndex * width;
@@ -113,7 +115,7 @@ export const Carousel = React.forwardRef(
           behavior: 'smooth',
         });
       }
-    }, [currentPageIndex]);
+    }, [currentPageIndex, isChatOpen]);
 
     return (
       <>
