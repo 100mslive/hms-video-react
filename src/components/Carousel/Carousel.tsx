@@ -21,6 +21,7 @@ export interface CarouselProps {
   direction?: 'horizontal' | 'vertical';
   showNavigation?: boolean;
   classes?: CarouselClasses;
+  width: number;
 }
 
 interface CarouselClasses {
@@ -74,6 +75,7 @@ export const Carousel = React.forwardRef(
       direction = 'horizontal',
       showNavigation = true,
       classes,
+      width,
       children,
     }: CarouselProps,
     ref: React.ForwardedRef<HTMLDivElement>,
@@ -106,14 +108,13 @@ export const Carousel = React.forwardRef(
     useEffect(() => {
       if (carouselRef) {
         const el: HTMLElement = carouselRef.current!;
-        const width = el.clientWidth;
         const scrollAmount = currentPageIndex * width;
         el.scrollTo({
           left: scrollAmount,
           behavior: 'smooth',
         });
       }
-    }, [currentPageIndex]);
+    }, [currentPageIndex, width]);
 
     return (
       <>

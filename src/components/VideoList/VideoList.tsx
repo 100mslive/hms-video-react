@@ -255,7 +255,7 @@ export const VideoList = ({
 
   return (
     <div className={`${styler('root')}`}>
-      <Carousel ref={ref}>
+      <Carousel ref={ref} width={width}>
         {chunkedTracksWithPeer &&
           chunkedTracksWithPeer.length > 0 &&
           chunkedTracksWithPeer.map((tracksPeersOnOnePage, page) => {
