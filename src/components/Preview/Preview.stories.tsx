@@ -34,12 +34,12 @@ export const Default = DarkTemplate.bind({});
 Default.args = {
   joinOnClick: values =>
     alert(`Join Clicked, Submitted Values: ${JSON.stringify(values, null, 1)}`),
-  goBackOnClick: () => alert('Go Back Clicked'),
+  errorOnClick: () => alert('Error Modal close!'),
 };
 
 export const Light = LightTemplate.bind({});
 Default.args = {
   joinOnClick: values =>
     alert(`Join Clicked, Submitted Values: ${JSON.stringify(values, null, 1)}`),
-  goBackOnClick: () => alert('Go Back Clicked'),
+  errorOnClick: () => alert('Error Modal close!'),
 };
