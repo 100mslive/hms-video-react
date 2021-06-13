@@ -9,6 +9,7 @@ import {
   getLocalStream,
   parsedUserAgent,
   isSupported,
+  validateDeviceAV,
 } from '@100mslive/hms-video';
 import { HMSPeer } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
@@ -19,7 +20,6 @@ import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { PreviewControls } from './Controls';
 import { Input } from '../Input';
-import HMSLogger from '../../utils/ui-logger';
 import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
@@ -52,7 +52,15 @@ const defaultClasses: PreviewClasses = {
 export interface PreviewProps {
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
   onChange: (values: SettingsFormProps) => void;
-  goBackOnClick: () => void;
+  /**
+   * Click handler for error modal close.
+   * Ignored when either of the allowWithError properties is true.
+   */
+  errorOnClick: () => void;
+  allowWithError?: {
+    capture: boolean;
+    unsupported: boolean;
+  };
   videoTileProps?: Partial<VideoTileProps>;
   videoTileClasses?: VideoTileClasses;
   /**
@@ -63,8 +71,12 @@ export interface PreviewProps {
 
 export const Preview = ({
   joinOnClick,
-  goBackOnClick,
+  errorOnClick,
   onChange,
+  allowWithError = {
+    capture: true,
+    unsupported: true,
+  },
   videoTileProps,
   classes,
   videoTileClasses,
@@ -82,7 +94,7 @@ export const Preview = ({
     [],
   );
 
-  const [mediaStream, setMediaStream] = useState(new MediaStream());
+  const [mediaStream, setMediaStream] = useState<MediaStream>();
   /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
   const [error, setError] = useState({
@@ -90,21 +102,34 @@ export const Preview = ({
     title: '',
     message: '',
   });
-  const [audioMuted, setAudioMuted] = useState(false);
-  const [videoMuted, setVideoMuted] = useState(false);
+  const [audioMuted, setAudioMuted] = useState(true);
+  const [videoMuted, setVideoMuted] = useState(true);
   const [selectedAudioInput, setSelectedAudioInput] = useState('default');
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const getMediaEnabled = useCallback(
+    (type: string) => {
+      const track =
+        type === 'video'
+          ? mediaStream?.getVideoTracks()[0]
+          : mediaStream?.getAudioTracks()[0];
+      return Boolean(track?.enabled);
+    },
+    [mediaStream],
+  );
+
   const toggleMediaState = (type: string) => {
     if (mediaStream) {
-      if (type === 'audio') {
-        mediaStream.getAudioTracks()[0].enabled = audioMuted;
-        setAudioMuted(prevMuted => !prevMuted);
-      } else if (type === 'video') {
-        mediaStream.getVideoTracks()[0].enabled = videoMuted;
-        setVideoMuted(prevMuted => !prevMuted);
+      const videoTrack = mediaStream.getVideoTracks()[0];
+      const audioTrack = mediaStream.getAudioTracks()[0];
+      if (type === 'audio' && audioTrack) {
+        audioTrack.enabled = !getMediaEnabled('audio');
+        setAudioMuted(!audioTrack.enabled);
+      } else if (type === 'video' && videoTrack) {
+        videoTrack.enabled = !getMediaEnabled('video');
+        setVideoMuted(!videoTrack.enabled);
       }
     }
   };
@@ -119,6 +144,18 @@ export const Preview = ({
     closeMediaStream(mediaStream);
 
     try {
+      if (!isSupported) {
+        setError({
+          allowJoin: allowWithError.unsupported,
+          title:
+            'Please update to latest version of Google Chrome to continue.',
+          message: `We currently do not support ${parsedUserAgent.getBrowserName()}(${
+            parsedUserAgent.getBrowserVersion().split('.')[0]
+          }) on ${parsedUserAgent.getOSName()}.`,
+        });
+      }
+
+      await validateDeviceAV();
       const constraints = {
         audio:
           !audioMuted && selectedAudioInput
@@ -129,28 +166,34 @@ export const Preview = ({
             ? { deviceId: selectedVideoInput }
             : true,
       };
-
       const stream = await getLocalStream(constraints);
       setMediaStream(stream);
-      if (!isSupported) {
-        setError({
-          allowJoin: true,
-          title:
-            'Please update to latest version of Google Chrome to continue.',
-          message: `We currently do not support ${parsedUserAgent.getBrowserName()}(${
-            parsedUserAgent.getBrowserVersion().split('.')[0]
-          }) on ${parsedUserAgent.getOSName()}.`,
-        });
-      }
     } catch (error) {
-      HMSLogger.e('[Preview]', { error });
       setError({
-        allowJoin: false,
+        allowJoin: allowWithError.capture,
         title: error.description || 'Unable to Access Camera/Microphone',
         message: error.message,
       });
+
+      // Start stream if any one is available
+      const audioFailure = error.message.includes('audio');
+      const videoFailure = error.message.includes('video');
+      if (!(audioFailure && videoFailure)) {
+        const stream = await getLocalStream({
+          audio: !audioFailure && { deviceId: selectedAudioInput },
+          video: !videoFailure && { deviceId: selectedVideoInput },
+        });
+
+        setMediaStream(stream);
+      }
     }
   };
+
+  useEffect(() => {
+    // Init mute values
+    setAudioMuted(!getMediaEnabled('audio'));
+    setVideoMuted(!getMediaEnabled('video'));
+  }, [mediaStream]);
 
   window.onunload = () => closeMediaStream(mediaStream);
 
@@ -165,6 +208,11 @@ export const Preview = ({
     function handleVisibilityChange() {
       if (document.hidden) {
         closeMediaStream(mediaStream);
+        setError({
+          allowJoin: false,
+          title: '',
+          message: '',
+        });
       } else {
         startMediaStream();
       }
@@ -219,16 +267,16 @@ export const Preview = ({
                 setShowModal(false);
                 return;
               }
-              goBackOnClick();
+              errorOnClick();
             }}
           />
           {/* videoTile */}
           <VideoTile
             {...videoTileProps}
-            videoTrack={mediaStream.getVideoTracks()[0]}
+            videoTrack={mediaStream?.getVideoTracks()[0]}
             isAudioMuted={audioMuted}
             isVideoMuted={videoMuted}
-            audioTrack={mediaStream.getAudioTracks()[0]}
+            audioTrack={mediaStream?.getAudioTracks()[0]}
             peer={
               {
                 id: name,
