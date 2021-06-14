@@ -1,8 +1,15 @@
-import React, { createContext, useContext } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useRef,
+  useReducer,
+} from 'react';
 import {
   HMSReactiveStore,
   HMSStore,
   IHMSActions,
+  HMSNotification,
 } from '@100mslive/hms-video-store';
 import { IHMSStoreReadOnly } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
@@ -74,11 +81,33 @@ export const useHMSActions = () => {
 
 export const useHMSNotifications = () => {
   const HMSContextConsumer = useContext(HMSContext);
+  const notification = useRef<HMSNotification>(null);
+  const notificationList = useRef<Array<HMSNotification>>([]);
+  const [, forceUpdate] = useReducer(c => c + 1, 0) as [never, () => void];
   if (!HMSContextConsumer) {
     const error =
       'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
       'to 100ms react docs to check on the required steps for using this hook.';
     throw new Error(error);
   }
-  return HMSContextConsumer.notificationHandler;
+
+  useEffect(() => {
+    if (notificationList.current.length) {
+      notification.current = notificationList.current.shift();
+    }
+  });
+
+  useEffect(() => {
+    if (!HMSContextConsumer.notificationHandler) {
+      return;
+    }
+    const unsubscribe = HMSContextConsumer.notificationHandler(
+      (notification: HMSNotification) => {
+        notificationList.current.push(notification);
+        forceUpdate();
+      },
+    );
+    return unsubscribe;
+  }, [HMSContextConsumer.notificationHandler]);
+  return notification.current;
 };
