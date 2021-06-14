@@ -37,6 +37,7 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       providerProps = {
         actions: hmsReactiveStore.getHMSActions(),
         store: create<HMSStore>(hmsReactiveStore.getStore()), // convert vanilla store in react hook
+        notificationHandler: hmsReactiveStore.getHMSNotificationHandler(),
       };
     }
   }
@@ -69,4 +70,15 @@ export const useHMSActions = () => {
     throw new Error(error);
   }
   return HMSContextConsumer.actions;
+};
+
+export const useHMSNotifications = () => {
+  const HMSContextConsumer = useContext(HMSContext);
+  if (!HMSContextConsumer) {
+    const error =
+      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
+      'to 100ms react docs to check on the required steps for using this hook.';
+    throw new Error(error);
+  }
+  return HMSContextConsumer.notificationHandler;
 };
