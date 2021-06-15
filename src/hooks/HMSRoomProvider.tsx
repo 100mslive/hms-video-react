@@ -15,6 +15,7 @@ export interface IHMSReactStore extends IHMSStoreReadOnly {
 export interface HMSRoomProviderProps {
   actions?: IHMSActions;
   store?: IHMSReactStore;
+  notifications?: (cb: (notification: HMSNotification) => void) => () => void;
 }
 
 /**
@@ -28,10 +29,15 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
   children,
   actions,
   store,
+  notifications,
 }) => {
   if (!providerProps) {
-    if (actions && store) {
-      providerProps = { actions: actions, store: store };
+    if (actions && store && notifications) {
+      providerProps = {
+        actions: actions,
+        store: store,
+        notifications: notifications,
+      };
     } else {
       const hmsReactiveStore = new HMSReactiveStore();
       providerProps = {
