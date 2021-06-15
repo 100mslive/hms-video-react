@@ -32,12 +32,14 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
   notifications,
 }) => {
   if (!providerProps) {
-    if (actions && store && notifications) {
+    if (actions && store) {
       providerProps = {
         actions: actions,
         store: store,
-        notifications: notifications,
       };
+      if (notifications) {
+        providerProps.notifications = notifications;
+      }
     } else {
       const hmsReactiveStore = new HMSReactiveStore();
       providerProps = {
