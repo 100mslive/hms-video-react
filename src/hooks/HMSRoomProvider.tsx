@@ -94,6 +94,7 @@ export const useHMSNotifications = () => {
   useEffect(() => {
     if (notificationList.current.length) {
       notification.current = notificationList.current.shift();
+      forceUpdate();
     }
   });
 
