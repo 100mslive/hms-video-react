@@ -27,6 +27,7 @@ export {
   HMSRoomProvider,
   useHMSStore,
   useHMSActions,
+  useHMSNotifications,
 } from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';
 export * from '@100mslive/hms-video-store';
