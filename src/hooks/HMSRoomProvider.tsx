@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   HMSReactiveStore,
   HMSStore,
@@ -12,12 +12,6 @@ import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
 export interface IHMSReactStore extends IHMSStoreReadOnly {
   <U>(selector: StateSelector<HMSStore, U>, equalityFn?: EqualityChecker<U>): U;
 }
-
-interface INotificationStore {
-  notification: HMSNotification | null;
-  setNotification: (notification: HMSNotification) => void;
-}
-
 export interface HMSRoomProviderProps {
   actions?: IHMSActions;
   store?: IHMSReactStore;
@@ -78,16 +72,11 @@ export const useHMSActions = () => {
   return HMSContextConsumer.actions;
 };
 
-const useNotificationStore = create<INotificationStore>(set => ({
-  notification: null,
-  setNotification: (notification: HMSNotification) => {
-    set(() => ({ notification }));
-  },
-}));
-
 export const useHMSNotifications = () => {
   const HMSContextConsumer = useContext(HMSContext);
-  const { notification, setNotification } = useNotificationStore();
+  const [notification, setNotification] = useState<HMSNotification | null>(
+    null,
+  );
 
   if (!HMSContextConsumer) {
     const error =
@@ -100,7 +89,9 @@ export const useHMSNotifications = () => {
     if (!HMSContextConsumer.notifications) {
       return;
     }
-    const unsubscribe = HMSContextConsumer.notifications(setNotification);
+    const unsubscribe = HMSContextConsumer.notifications(
+      (notification: HMSNotification) => setNotification(notification),
+    );
     return unsubscribe;
   }, [HMSContextConsumer.notifications]);
 
