@@ -6,13 +6,13 @@ import { IHMSReactStore } from './HMSRoomProvider';
 import {
   IHMSActions,
   HMSStore,
-  HMSNotification,
+  IHMSNotifications,
 } from '@100mslive/hms-video-store';
 
 export interface HMSContextProviderProps {
   actions: IHMSActions; // for actions which may also mutate store
   store: IHMSReactStore; // readonly store, don't mutate this
-  notifications?: (cb: (notification: HMSNotification) => void) => () => void;
+  notifications?: IHMSNotifications;
 }
 
 export function makeHMSStoreHook(

@@ -4,8 +4,9 @@ import {
   HMSStore,
   IHMSActions,
   HMSNotification,
+  IHMSNotifications,
+  IHMSStoreReadOnly,
 } from '@100mslive/hms-video-store';
-import { IHMSStoreReadOnly } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
 
@@ -15,7 +16,7 @@ export interface IHMSReactStore extends IHMSStoreReadOnly {
 export interface HMSRoomProviderProps {
   actions?: IHMSActions;
   store?: IHMSReactStore;
-  notifications?: (cb: (notification: HMSNotification) => void) => () => void;
+  notifications?: IHMSNotifications;
 }
 
 /**
@@ -97,7 +98,7 @@ export const useHMSNotifications = () => {
     if (!HMSContextConsumer.notifications) {
       return;
     }
-    const unsubscribe = HMSContextConsumer.notifications(
+    const unsubscribe = HMSContextConsumer.notifications.onNotification(
       (notification: HMSNotification) => setNotification(notification),
     );
     return unsubscribe;
