@@ -12,7 +12,7 @@ import {
 export interface HMSContextProviderProps {
   actions: IHMSActions; // for actions which may also mutate store
   store: IHMSReactStore; // readonly store, don't mutate this
-  notificationHandler?: (notification: HMSNotification) => () => void;
+  notifications?: (cb: (notification: HMSNotification) => void) => () => void;
 }
 
 export function makeHMSStoreHook(

@@ -14,7 +14,7 @@ export interface IHMSReactStore extends IHMSStoreReadOnly {
 }
 
 interface INotificationStore {
-  notification: HMSNotification;
+  notification: HMSNotification | null;
   setNotification: (notification: HMSNotification) => void;
 }
 
@@ -43,7 +43,7 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       providerProps = {
         actions: hmsReactiveStore.getHMSActions(),
         store: create<HMSStore>(hmsReactiveStore.getStore()), // convert vanilla store in react hook
-        notificationHandler: hmsReactiveStore.getHMSNotificationHandler(),
+        notifications: hmsReactiveStore.getNotifications(),
       };
     }
   }
@@ -97,12 +97,12 @@ export const useHMSNotifications = () => {
   }
 
   useEffect(() => {
-    if (!HMSContextConsumer.notificationHandler) {
+    if (!HMSContextConsumer.notifications) {
       return;
     }
-    const unsubscribe = HMSContextConsumer.notificationHandler(setNotification);
+    const unsubscribe = HMSContextConsumer.notifications(setNotification);
     return unsubscribe;
-  }, [HMSContextConsumer.notificationHandler]);
+  }, [HMSContextConsumer.notifications]);
 
   return notification;
 };
