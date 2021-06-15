@@ -19,6 +19,11 @@ export interface IHMSReactStore extends IHMSStoreReadOnly {
   <U>(selector: StateSelector<HMSStore, U>, equalityFn?: EqualityChecker<U>): U;
 }
 
+interface INotificationStore {
+  notification: HMSNotification;
+  setNotification: (notification: HMSNotification) => void;
+}
+
 export interface HMSRoomProviderProps {
   actions?: IHMSActions;
   store?: IHMSReactStore;
@@ -79,11 +84,17 @@ export const useHMSActions = () => {
   return HMSContextConsumer.actions;
 };
 
+const useNotificationStore = create<INotificationStore>(set => ({
+  notification: null,
+  setNotification: (notification: HMSNotification) => {
+    set(() => ({ notification }));
+  },
+}));
+
 export const useHMSNotifications = () => {
   const HMSContextConsumer = useContext(HMSContext);
-  const notification = useRef<HMSNotification>(null);
-  const notificationList = useRef<Array<HMSNotification>>([]);
-  const [, forceUpdate] = useReducer(c => c + 1, 0) as [never, () => void];
+  const { notification, setNotification } = useNotificationStore();
+
   if (!HMSContextConsumer) {
     const error =
       'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
@@ -92,23 +103,12 @@ export const useHMSNotifications = () => {
   }
 
   useEffect(() => {
-    if (notificationList.current.length) {
-      notification.current = notificationList.current.shift();
-      forceUpdate();
-    }
-  });
-
-  useEffect(() => {
     if (!HMSContextConsumer.notificationHandler) {
       return;
     }
-    const unsubscribe = HMSContextConsumer.notificationHandler(
-      (notification: HMSNotification) => {
-        notificationList.current.push(notification);
-        forceUpdate();
-      },
-    );
+    const unsubscribe = HMSContextConsumer.notificationHandler(setNotification);
     return unsubscribe;
   }, [HMSContextConsumer.notificationHandler]);
-  return notification.current;
+
+  return notification;
 };
