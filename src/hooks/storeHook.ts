@@ -3,11 +3,16 @@ import React, { useContext } from 'react';
 import HMSLogger from '../utils/ui-logger';
 import shallow from 'zustand/shallow';
 import { IHMSReactStore } from './HMSRoomProvider';
-import { IHMSActions, HMSStore } from '@100mslive/hms-video-store';
+import {
+  IHMSActions,
+  HMSStore,
+  IHMSNotifications,
+} from '@100mslive/hms-video-store';
 
 export interface HMSContextProviderProps {
   actions: IHMSActions; // for actions which may also mutate store
   store: IHMSReactStore; // readonly store, don't mutate this
+  notifications?: IHMSNotifications;
 }
 
 export function makeHMSStoreHook(
