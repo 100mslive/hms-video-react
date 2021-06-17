@@ -5,7 +5,7 @@ import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 import { AudioLevelBorder, AudioLevelIndicatorClasses } from './Border';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import { selectPeerAudioByID } from '../../store/selectors';
+import { selectPeerAudioByID } from '@100mslive/hms-video-store';
 
 export interface AudioLevelIndicatorProps {
   peerId?: string;
@@ -24,7 +24,7 @@ export const AudioLevelIndicator = ({
   displayShape = 'rectangle',
   classes,
 }: AudioLevelIndicatorProps) => {
-  let audioLevel = useHMSStore(store => selectPeerAudioByID(store, peerId));
+  let audioLevel = useHMSStore(selectPeerAudioByID(peerId));
   audioLevel = level || audioLevel;
 
   switch (type) {

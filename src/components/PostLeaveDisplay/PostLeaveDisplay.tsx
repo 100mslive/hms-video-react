@@ -3,13 +3,15 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { SunWithFace } from '../Icons';
 import { Text } from '../Text';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
+import post_leave_img from './post_leave.png';
 
 interface Props {
   username?: string;
   classes?: PostLeaveDisplayClasses;
   joinRoomOnClick?: (event: React.MouseEvent) => void;
   goToDashboardOnClick?: (event: React.MouseEvent) => void;
+  src?: string;
 }
 
 interface PostLeaveDisplayClasses {
@@ -26,6 +28,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
   classes,
   joinRoomOnClick,
   goToDashboardOnClick,
+  src,
 }) => {
   const defaultClasses: PostLeaveDisplayClasses = {
     root: `h-full text-white flex items-center justify-center`,
@@ -51,7 +54,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
       <div
         className={styler('rootBg')}
         style={{
-          backgroundImage: `url(https://i.postimg.cc/GtwwMnLL/back.png)`,
+          backgroundImage: `url(${src || post_leave_img})`,
         }}
       >
         <div
@@ -67,7 +70,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
             You left the room
           </Text>
           <Text tag="h1" variant="heading">
-            Have a nice day, {username}
+            Have a nice day {username} !
           </Text>
           <div className={styler('divider')}></div>
           <div className={styler('buttonWrapper')}>

@@ -6,10 +6,10 @@ import {
   MicOnIcon,
   CamOffIcon,
   CamOnIcon,
-  ChatIcon,
   ShareScreenIcon,
+  ChatUnreadIcon,
 } from '../Icons';
-import { Button as TwButton } from '../TwButton';
+import { Button as TwButton } from '../Button';
 import { Settings } from '../Settings/Settings';
 import { VerticalDivider } from '../VerticalDivider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -88,7 +88,7 @@ export const ControlBar = ({
       active={isChatOpen}
       key={4}
     >
-      <ChatIcon />
+      <ChatUnreadIcon />
     </TwButton>,
   ],
   centerComponents = [
@@ -129,14 +129,17 @@ export const ControlBar = ({
   ],
   classes,
 }: ControlBarProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<ControlBarClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-controlbar',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ControlBarClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-controlbar',
+      }),
+    [],
+  );
 
   const leftItems = Array<React.ReactNode>();
   const centerItems = Array<React.ReactNode>();

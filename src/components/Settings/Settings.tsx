@@ -5,12 +5,12 @@ import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { Button as TwButton } from '../TwButton';
+import { Button as TwButton } from '../Button';
 import { Text } from '../Text';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import { selectLocalMediaSettings } from '../../store/selectors';
+import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { getLocalDevices, getLocalStream } from '@100mslive/100ms-web-sdk';
+import { getLocalDevices, getLocalStream } from '@100mslive/hms-video';
 
 interface SettingsClasses {
   root?: string;
@@ -46,6 +46,7 @@ export interface SettingsProps {
   initialValues?: SettingsFormProps;
   onChange?: (values: SettingsFormProps) => void;
   classes?: SettingsClasses;
+  previewMode?: boolean;
 }
 
 const defaultClasses: SettingsClasses = {
@@ -116,6 +117,7 @@ export const Settings = ({
   onChange,
   initialValues,
   classes,
+  previewMode = false,
 }: SettingsProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -154,7 +156,7 @@ export const Settings = ({
   initialValues.selectedAudioOutput =
     initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
 
-  const [values, setValues] = useState<SettingsFormProps>({
+  const deviceValues = {
     selectedAudioInput: initialValues?.selectedAudioInput
       ? initialValues?.selectedAudioInput
       : 'default',
@@ -164,6 +166,10 @@ export const Settings = ({
     selectedAudioOutput: initialValues?.selectedAudioOutput
       ? initialValues?.selectedAudioOutput
       : 'default',
+  };
+
+  const [values, setValues] = useState<SettingsFormProps>({
+    ...deviceValues,
     maxTileCount: initialValues?.maxTileCount ? initialValues?.maxTileCount : 9,
   });
 
@@ -180,6 +186,10 @@ export const Settings = ({
 
   const handleClickOpen = () => {
     setOpen(true);
+    if (!previewMode) {
+      // sync with store on open
+      setValues({ ...values, ...deviceValues });
+    }
   };
 
   const handleClose = () => {
@@ -209,9 +219,9 @@ export const Settings = ({
   const audioInput = deviceGroups['audioinput']
     ? deviceGroups['audioinput']
     : [];
-  const audioOutput = deviceGroups['audiooutput']
-    ? deviceGroups['audiooutput']
-    : [];
+  // const audioOutput = deviceGroups['audiooutput']
+  //   ? deviceGroups['audiooutput']
+  //   : [];
   //TODO handle case where selected device is not in list
   // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
   // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
@@ -315,7 +325,8 @@ export const Settings = ({
                     )}
                   </div>
                 </div>
-                <div className={`${styler('formInner')}`}>
+                {/** Enabled this when the output is handled properly */}
+                {/* <div className={`${styler('formInner')}`}>
                   <div className={`${styler('selectLabel')}`}>
                     <Text variant="heading" size="sm">
                       Audio Output:
@@ -341,7 +352,7 @@ export const Settings = ({
                       </select>
                     )}
                   </div>
-                </div>
+                </div> */}
               </>
             ) : (
               <div className={styler('errorContainer')}>

@@ -1,27 +1,32 @@
-import React, { useEffect, useState, useCallback, useMemo } from 'react';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import startCase from 'lodash/startCase';
-import { closeMediaStream } from '../../utils';
-import { getLocalStream } from '@100mslive/100ms-web-sdk';
-import { hmsUiClassParserGenerator } from '../../utils/classes';
+import React, {
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useRef,
+} from 'react';
 import {
-  BrowserOSError,
-  getLocalStreamException,
-  isBrowserOSValid,
-} from '../../utils/preview';
+  getLocalStream,
+  parsedUserAgent,
+  isSupported,
+  validateDeviceAV,
+} from '@100mslive/hms-video';
+import { HMSPeer } from '@100mslive/hms-video-store';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
 import { SettingsFormProps } from '../Settings/Settings';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
-import { VideoTileControls } from './Controls';
-import HMSLogger from '../../utils/ui-logger';
-import { Text } from '../Text';
-import { HMSPeer } from '../../store/schema';
+import { PreviewControls } from './Controls';
+import { Input } from '../Input';
+import { closeMediaStream } from '../../utils';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 
-interface MuteStatus {
+interface JoinInfo {
   audioMuted?: boolean;
   videoMuted?: boolean;
+  name?: string;
 }
 export interface PreviewClasses {
   root?: string;
@@ -29,22 +34,33 @@ export interface PreviewClasses {
   header?: string;
   messageModal?: string;
   helloDiv?: string;
+  nameDiv?: string;
+  inputRoot?: string;
   joinButton?: string;
   goBackButton?: string;
 }
 const defaultClasses: PreviewClasses = {
   root:
-    'flex h-screen w-screen bg-white dark:bg-black justify-center items-center',
+    'flex h-full w-screen bg-white dark:bg-black justify-center items-center',
   containerRoot:
-    'flex flex-col items-center w-37.5 h-400 box-border bg-gray-600 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden rounded-2xl',
-  header: 'w-22.5 h-22.5 mt-1.875 mb-7',
-  helloDiv: 'text-2xl font-medium mb-12',
+    'flex flex-col justify-center items-center w-37.5 h-full md:h-400 pb-4 box-border bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden md:rounded-2xl',
+  header: 'w-4/5 md:w-22.5 md:h-22.5 mt-1.875 mb-7',
+  helloDiv: 'text-2xl font-medium mb-2',
+  nameDiv: 'text-lg leading-6 mb-2',
+  inputRoot: 'p-2 mb-3',
 };
 export interface PreviewProps {
-  name: string;
-  joinOnClick: ({ audioMuted, videoMuted }: MuteStatus) => void;
+  joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
   onChange: (values: SettingsFormProps) => void;
-  goBackOnClick: () => void;
+  /**
+   * Click handler for error modal close.
+   * Ignored when either of the allowWithError properties is true.
+   */
+  errorOnClick: () => void;
+  allowWithError?: {
+    capture: boolean;
+    unsupported: boolean;
+  };
   videoTileProps?: Partial<VideoTileProps>;
   videoTileClasses?: VideoTileClasses;
   /**
@@ -54,15 +70,19 @@ export interface PreviewProps {
 }
 
 export const Preview = ({
-  name,
   joinOnClick,
-  goBackOnClick,
+  errorOnClick,
   onChange,
+  allowWithError = {
+    capture: true,
+    unsupported: true,
+  },
   videoTileProps,
   classes,
   videoTileClasses,
 }: PreviewProps) => {
   const { tw } = useHMSTheme();
+
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<PreviewClasses>({
@@ -73,54 +93,107 @@ export const Preview = ({
       }),
     [],
   );
-  const [mediaStream, setMediaStream] = useState(new MediaStream());
+
+  const [mediaStream, setMediaStream] = useState<MediaStream>();
+  /** This is to show error message only when input it touched or button is clicked */
+  const [showValidation, setShowValidation] = useState(false);
   const [error, setError] = useState({
+    allowJoin: false,
     title: '',
     message: '',
   });
-  const [audioMuted, setAudioMuted] = useState(false);
-  const [videoMuted, setVideoMuted] = useState(false);
+  const [audioMuted, setAudioMuted] = useState(true);
+  const [videoMuted, setVideoMuted] = useState(true);
   const [selectedAudioInput, setSelectedAudioInput] = useState('default');
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
+  const [name, setName] = useState('');
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const getMediaEnabled = useCallback(
+    (type: string) => {
+      const track =
+        type === 'video'
+          ? mediaStream?.getVideoTracks()[0]
+          : mediaStream?.getAudioTracks()[0];
+      return Boolean(track?.enabled);
+    },
+    [mediaStream],
+  );
 
   const toggleMediaState = (type: string) => {
-    if (type === 'audio') {
-      mediaStream.getAudioTracks()[0].enabled = audioMuted;
-      setAudioMuted(prevMuted => !prevMuted);
-    } else if (type === 'video') {
-      mediaStream.getVideoTracks()[0].enabled = videoMuted;
-      setVideoMuted(prevMuted => !prevMuted);
+    if (mediaStream) {
+      const videoTrack = mediaStream.getVideoTracks()[0];
+      const audioTrack = mediaStream.getAudioTracks()[0];
+      if (type === 'audio' && audioTrack) {
+        audioTrack.enabled = !getMediaEnabled('audio');
+        setAudioMuted(!audioTrack.enabled);
+      } else if (type === 'video' && videoTrack) {
+        videoTrack.enabled = !getMediaEnabled('video');
+        setVideoMuted(!videoTrack.enabled);
+      }
     }
   };
 
   const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
   const startMediaStream = async () => {
     closeMediaStream(mediaStream);
+
     try {
-      if (isBrowserOSValid()) {
-        const stream = await getLocalStream({
-          audio: { deviceId: selectedAudioInput },
-          video: { deviceId: selectedVideoInput },
-        });
-        setMediaStream(stream);
-      }
-    } catch (err) {
-      HMSLogger.e('[Preview]', err.name, err.message);
-      if (err instanceof BrowserOSError) {
-        const localStreamError = getLocalStreamException(err.name);
-        setError(localStreamError);
-      } else {
+      if (!isSupported) {
         setError({
-          title: startCase(err.title),
-          message: err.message,
+          allowJoin: allowWithError.unsupported,
+          title:
+            'Please update to latest version of Google Chrome to continue.',
+          message: `We currently do not support ${parsedUserAgent.getBrowserName()}(${
+            parsedUserAgent.getBrowserVersion().split('.')[0]
+          }) on ${parsedUserAgent.getOSName()}.`,
         });
+      }
+
+      await validateDeviceAV();
+      const constraints = {
+        audio:
+          !audioMuted && selectedAudioInput
+            ? { deviceId: selectedAudioInput }
+            : true,
+        video:
+          !videoMuted && selectedVideoInput
+            ? { deviceId: selectedVideoInput }
+            : true,
+      };
+      const stream = await getLocalStream(constraints);
+      setMediaStream(stream);
+    } catch (error) {
+      setError({
+        allowJoin: allowWithError.capture,
+        title: error.description || 'Unable to Access Camera/Microphone',
+        message: error.message,
+      });
+
+      // Start stream if any one is available
+      const audioFailure = error.message.includes('audio');
+      const videoFailure = error.message.includes('video');
+      if (!(audioFailure && videoFailure)) {
+        const stream = await getLocalStream({
+          audio: !audioFailure && { deviceId: selectedAudioInput },
+          video: !videoFailure && { deviceId: selectedVideoInput },
+        });
+
+        setMediaStream(stream);
       }
     }
   };
+
+  useEffect(() => {
+    // Init mute values
+    setAudioMuted(!getMediaEnabled('audio'));
+    setVideoMuted(!getMediaEnabled('video'));
+  }, [mediaStream]);
 
   window.onunload = () => closeMediaStream(mediaStream);
 
@@ -131,6 +204,33 @@ export const Preview = ({
     };
   }, [selectedAudioInput, selectedVideoInput]);
 
+  useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        closeMediaStream(mediaStream);
+        setError({
+          allowJoin: false,
+          title: '',
+          message: '',
+        });
+      } else {
+        startMediaStream();
+      }
+    }
+    document.addEventListener(
+      'visibilitychange',
+      handleVisibilityChange,
+      false,
+    );
+    return () => {
+      document.removeEventListener(
+        'visibilitychange',
+        handleVisibilityChange,
+        false,
+      );
+    };
+  }, [mediaStream]);
+
   const handleDeviceChange = useCallback((values: SettingsFormProps) => {
     values?.selectedAudioInput &&
       setSelectedAudioInput(values.selectedAudioInput);
@@ -138,6 +238,18 @@ export const Preview = ({
       setSelectedVideoInput(values.selectedVideoInput);
     onChange(values);
   }, []);
+
+  const inputProps = {
+    compact: true,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+      setName(e.target.value);
+      setShowValidation(true);
+    },
+    value: name,
+    validation:
+      showValidation && (!name || !name.trim()) ? 'Please enter name' : '',
+    required: true,
+  };
 
   return (
     // root
@@ -148,34 +260,38 @@ export const Preview = ({
           {/* messageModal */}
           <MessageModal
             show={showModal}
-            setShow={setShowModal}
             title={error.title}
-            message={error.message}
-            allow={false}
-            gobackOnClick={goBackOnClick}
+            body={error.message}
+            onClose={() => {
+              if (error.allowJoin) {
+                setShowModal(false);
+                return;
+              }
+              errorOnClick();
+            }}
           />
           {/* videoTile */}
           <VideoTile
             {...videoTileProps}
-            videoTrack={mediaStream.getVideoTracks()[0]}
+            videoTrack={mediaStream?.getVideoTracks()[0]}
             isAudioMuted={audioMuted}
             isVideoMuted={videoMuted}
-            audioTrack={mediaStream.getAudioTracks()[0]}
+            audioTrack={mediaStream?.getAudioTracks()[0]}
             peer={
               {
                 id: name,
                 name: name,
+                isLocal: true,
               } as HMSPeer
             }
             objectFit="cover"
-            isLocal={true}
             aspectRatio={{
               width: 1,
               height: 1,
             }}
             classes={videoTileClasses}
             controlsComponent={
-              <VideoTileControls
+              <PreviewControls
                 audioButtonOnClick={() => toggleMediaState('audio')}
                 videoButtonOnClick={() => toggleMediaState('video')}
                 isAudioMuted={audioMuted}
@@ -186,29 +302,29 @@ export const Preview = ({
           />
         </div>
         {/* helloDiv */}
-        <div className={styler('helloDiv')}>
-          <Text variant="heading">Hello, {name}</Text>
+        <div className={styler('helloDiv')}>Hi There</div>
+        {/* nameDiv */}
+        <div className={styler('nameDiv')}>What's your name?</div>
+        {/* inputFieldRoot */}
+        <div className={styler('inputRoot')}>
+          <Input ref={inputRef} {...inputProps} />
         </div>
+
         {/* joinButton */}
         <Button
           variant={'emphasized'}
           size={'lg'}
           onClick={() => {
+            if (!name || !name.trim()) {
+              inputRef.current && inputRef.current.focus();
+              setShowValidation(true);
+              return;
+            }
             closeMediaStream(mediaStream);
-            joinOnClick({ audioMuted, videoMuted });
+            joinOnClick({ audioMuted, videoMuted, name });
           }}
         >
           Join
-        </Button>
-        <Button
-          classes={{ rootNoFill: 'mt-4 text-brand-main' }}
-          variant={'no-fill'}
-          onClick={() => {
-            closeMediaStream(mediaStream);
-            goBackOnClick();
-          }}
-        >
-          Go back{' '}
         </Button>
       </div>
     </div>
