@@ -1,4 +1,10 @@
-import React, { useState, useMemo, MouseEventHandler, useRef } from 'react';
+import React, {
+  useState,
+  useMemo,
+  MouseEventHandler,
+  useEffect,
+  useRef,
+} from 'react';
 import {
   LeftCaratIcon,
   RightCaratIcon,
@@ -112,6 +118,13 @@ export const Carousel = React.forwardRef(
 
     const showNav = showNavigation && pages.length > 1;
 
+    useEffect(() => {
+      // currentPageIndex should not exceed pages length
+      if (currentPageIndex >= pages.length) {
+        setCurrentPageIndex(0);
+      }
+    }, [pages.length, currentPageIndex]);
+
     const navClassName = `${styler('navContainer')} ${
       direction === 'horizontal'
         ? styler('navContainerHorizontal')
@@ -149,7 +162,7 @@ export const Carousel = React.forwardRef(
             <PrevButton
               direction={direction}
               isActive={currentPageIndex !== 0}
-              onClick={e => {
+              onClick={() => {
                 if (currentPageIndex > 0) {
                   setCurrentPageIndex(currentPageIndex - 1);
                 }
@@ -157,8 +170,9 @@ export const Carousel = React.forwardRef(
               styler={styler}
             />
 
-            {pages.map((page, index) => (
+            {pages.map((_, index) => (
               <button
+                key={index}
                 className={`${styler('dotButton')}`}
                 onClick={e => {
                   setCurrentPageIndex(index);
@@ -177,7 +191,7 @@ export const Carousel = React.forwardRef(
             <NextButton
               direction={direction}
               isActive={currentPageIndex !== pages.length - 1}
-              onClick={e => {
+              onClick={() => {
                 if (currentPageIndex < pages.length - 1) {
                   setCurrentPageIndex(currentPageIndex + 1);
                 }
