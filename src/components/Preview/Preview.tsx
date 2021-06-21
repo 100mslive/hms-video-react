@@ -307,7 +307,12 @@ export const Preview = ({
         <div className={styler('nameDiv')}>What's your name?</div>
         {/* inputFieldRoot */}
         <div className={styler('inputRoot')}>
-          <Input ref={inputRef} {...inputProps} />
+          <Input
+            ref={inputRef}
+            {...inputProps}
+            autoCorrect="off"
+            autoComplete="name"
+          />
         </div>
 
         {/* joinButton */}

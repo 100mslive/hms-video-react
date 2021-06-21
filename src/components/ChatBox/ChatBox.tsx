@@ -136,10 +136,9 @@ export const ChatBox = ({
 
   /** Effect to scroll to bottom when chat is opened */
   useEffect(() => {
-    if (!messageListRef) {
-      return;
+    if (messageListRef.current) {
+      scrollToBottom(messageListRef, scrollAnimation);
     }
-    scrollToBottom(messageListRef, scrollAnimation);
   }, []); //eslint-disable-line
 
   useEffect(() => {
