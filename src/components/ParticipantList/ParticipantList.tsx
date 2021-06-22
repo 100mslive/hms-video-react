@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { DownCaratIcon, UpCaratIcon } from '../Icons';
 import { ParticipantInList } from './ParticipantInList';
@@ -50,6 +50,7 @@ type RoleMap = Map<string, HMSPeerWithMuteStatus[]>;
 export const ParticipantList = ({
   participantList,
   classes,
+  onToggle,
 }: ParticipantListProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -73,6 +74,12 @@ export const ParticipantList = ({
     participant => participant.peer.role,
   );
   const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
+
+  useEffect(() => {
+    if (onToggle) {
+      onToggle(listOpen);
+    }
+  }, [listOpen]);
 
   return (
     <ClickAwayListener onClickAway={handleClose}>

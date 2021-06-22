@@ -20,4 +20,5 @@ export interface ParticipantListClasses {
 export interface ParticipantListProps {
   participantList?: HMSPeerWithMuteStatus[];
   classes?: ParticipantListClasses;
+  onToggle?: (open: boolean) => void;
 }
