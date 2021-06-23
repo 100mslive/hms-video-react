@@ -8,4 +8,4 @@ Install using
 npm install --save @100mslive/hms-video-react@latest
 ```
 
-For detailed documentation visit [our documentation page](https://100ms.gitbook.io/100ms-v2/web/getting-started-react)
+For detailed documentation visit [our documentation page](https://docs.100ms.live/v2/web-frameworks/Getting-started-react)
