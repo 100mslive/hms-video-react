@@ -23,7 +23,7 @@ export * from './components/ScreenShareDisplay';
 export * from './components/PostLeaveDisplay';
 export * from './components/Button';
 export * from './components/Text';
-export * from './components/Notifications';
+export { hmsToast, HMSToastContainer } from './components/Notifications';
 export {
   HMSRoomProvider,
   useHMSStore,

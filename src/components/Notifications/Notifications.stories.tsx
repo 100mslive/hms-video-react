@@ -1,8 +1,13 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { Notifications } from './Notifications';
+import {
+  hmsToast,
+  HMSToastContainer,
+  NotificationProps,
+  Notifications,
+} from './Notifications';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
-import { Button } from '../TwButton';
+import { Button } from '../Button';
 import { Text } from '../Text';
 import { CloseIcon, ShareScreenIcon } from '../Icons';
 
@@ -20,11 +25,9 @@ const Left = () => {
 const Center = () => {
   return (
     <>
-      <p>
-        <Text variant="body">
-          Sanjana Ma’am is requesting you to share your screen
-        </Text>
-      </p>
+      <Text variant="body">
+        Sanjana Ma’am is requesting you to share your screen
+      </Text>
       <Button>Share Screen</Button>
     </>
   );
@@ -34,17 +37,20 @@ const Right = () => {
   return <CloseIcon className="text-gray-400" />;
 };
 
+const handleClick = (args: NotificationProps) => {
+  hmsToast('', {
+    left: <Left />,
+    center: <Center />,
+    right: <Right />,
+    ...args,
+  });
+};
+
 const Template: Story = args => {
   return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
-      <div>
-        <Notifications
-          leftComponent={<Left />}
-          centerComponent={<Center />}
-          rightComponent={<Right />}
-          {...args}
-        />
-      </div>
+      <Button onClick={() => handleClick(args)}>Trigger Notification</Button>
+      <HMSToastContainer />
     </HMSThemeProvider>
   );
 };
@@ -52,14 +58,8 @@ const Template: Story = args => {
 const Light: Story = args => {
   return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
-      <div>
-        <Notifications
-          leftComponent={<Left />}
-          centerComponent={<Center />}
-          rightComponent={<Right />}
-          {...args}
-        />
-      </div>
+      <Button onClick={() => handleClick(args)}>Trigger Notification</Button>
+      <HMSToastContainer />
     </HMSThemeProvider>
   );
 };
@@ -67,15 +67,8 @@ const Light: Story = args => {
 const CustomProps: Story = args => {
   return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
-      <div>
-        <Notifications
-          leftComponent={<Left />}
-          centerComponent={<Center />}
-          rightComponent={<Right />}
-          toastProps={{ position: 'top-center', hideProgressBar: true }}
-          {...args}
-        />
-      </div>
+      <Button onClick={() => handleClick(args)}>Trigger Notification</Button>
+      <HMSToastContainer />
     </HMSThemeProvider>
   );
 };
