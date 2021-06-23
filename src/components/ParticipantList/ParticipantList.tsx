@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { DownCaratIcon, UpCaratIcon } from '../Icons';
 import { ParticipantInList } from './ParticipantInList';
@@ -9,7 +9,7 @@ import ClickAwayListener from 'react-click-away-listener';
 import {
   HMSPeerWithMuteStatus,
   selectPeersWithAudioStatus,
-} from '../../store/selectors';
+} from '@100mslive/hms-video-store';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
   ParticipantListClasses,
@@ -17,19 +17,18 @@ import {
 } from './ParticipantProps';
 
 const defaultClasses: ParticipantListClasses = {
-  root:
-    'flex flex-grow justify-content:center border-opacity-0 sm:hidden md:inline-block relative',
+  root: 'flex flex-grow border-opacity-0 sm:hidden md:inline-block relative',
   buttonRoot:
-    'text-gray-300 dark:text-gray-500 flex border-opacity-0 focus:outline-none w-60 py-1.5 bg-white',
+    'text-gray-300 dark:text-gray-500 flex border-opacity-0 focus:outline-none w-52 md:w-60 py-1.5 bg-white',
   buttonOpen: 'rounded-t-xl dark:bg-gray-100 shadow-1 dark:shadow-none',
   buttonClosed: 'rounded-xl dark:bg-black',
   buttonInner:
-    'flex flex-grow justify-center px-3 m-0 my-1 tracking-wide self-center',
+    'flex flex-grow justify-end md:justify-center px-3 m-0 my-1 tracking-wide self-center',
   buttonText: 'pl-2 self-center',
   carat: 'w-3 h-3',
   // TODO fix shadow border
   menuRoot:
-    'w-60 max-h-116 pb-2 overflow-y-auto rounded-b-xl bg-white shadow-1 dark:shadow-none dark:bg-gray-100 focus:outline-none z-50 absolute',
+    'w-52 md:w-60 max-h-116 pb-2 overflow-y-auto rounded-b-xl bg-white shadow-1 dark:shadow-none dark:bg-gray-100 focus:outline-none z-50 absolute',
   menuSection:
     'text-gray-200 dark:text-gray-500 group flex items-center px-3 pt-3 pb-2 text-base',
   menuItem:
@@ -51,6 +50,7 @@ type RoleMap = Map<string, HMSPeerWithMuteStatus[]>;
 export const ParticipantList = ({
   participantList,
   classes,
+  onToggle,
 }: ParticipantListProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -74,6 +74,12 @@ export const ParticipantList = ({
     participant => participant.peer.role,
   );
   const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
+
+  useEffect(() => {
+    if (onToggle) {
+      onToggle(listOpen);
+    }
+  }, [listOpen]);
 
   return (
     <ClickAwayListener onClickAway={handleClose}>
@@ -108,16 +114,11 @@ export const ParticipantList = ({
               //@ts-expect-error
               roles.map(role => (
                 <div key={role}>
-                  <div>
-                    <span
-                      className={`${styler('menuSection')}`}
-                      role="menuitem"
-                    >
-                      {role === 'undefined' ? 'Unknown' : role}
-                      {rolesMap[role].length > 1 ? 's' : ''}{' '}
-                      {rolesMap[role].length}
-                    </span>
-                  </div>
+                  <span className={`${styler('menuSection')}`} role="menuitem">
+                    {role === 'undefined' ? 'Unknown' : role}
+                    {rolesMap[role].length > 1 ? 's' : ''}{' '}
+                    {rolesMap[role].length}
+                  </span>
                   <div>
                     {rolesMap[role] &&
                       rolesMap[role].map(participant => (

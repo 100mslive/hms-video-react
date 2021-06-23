@@ -1,10 +1,10 @@
-import React, {useMemo} from 'react';
-import {useHMSTheme} from '../../../hooks/HMSThemeProvider'
+import React, { useMemo } from 'react';
+import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
 import '../index.css';
 import { ButtonDisplayType } from '../../../types';
 import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
-import { Button } from '../../TwButton';
+import { Button } from '../../Button';
 import { Settings, SettingsFormProps } from '../../Settings/Settings';
 
 interface PreviewControlsClasses {
@@ -12,7 +12,7 @@ interface PreviewControlsClasses {
   controls?: string;
   rightcontrols?: string;
 }
-export interface VideoTileControlsProps {
+export interface PreviewControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   showGradient?: boolean;
@@ -23,22 +23,22 @@ export interface VideoTileControlsProps {
   buttonDisplay?: ButtonDisplayType;
 }
 
-interface PreviewControlsClasses  {
-  root?:string;
-  controls?:string;
-  rightControls?:string;
+interface PreviewControlsClasses {
+  root?: string;
+  controls?: string;
+  rightControls?: string;
 }
 
-const defaultClasses:PreviewControlsClasses = {
-    root:
-      'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg focus:outline-none',
-    controls:
-      'dark flex flex-grow self-center justify-center hover-hide space-x-1 relative',
-    rightControls:
-      'dark flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide absolute right-3',
-}
+const defaultClasses: PreviewControlsClasses = {
+  root:
+    'flex absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg focus:outline-none',
+  controls:
+    'dark flex flex-1 self-center justify-center hover-hide space-x-1 relative',
+  rightControls:
+    'dark flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide absolute right-3',
+};
 
-export const VideoTileControls = ({
+export const PreviewControls = ({
   isAudioMuted = false,
   isVideoMuted = false,
   buttonDisplay = 'rectangle',
@@ -46,15 +46,18 @@ export const VideoTileControls = ({
   videoButtonOnClick,
   onChange,
   classes,
-}: VideoTileControlsProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<PreviewControlsClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-preview',
-    }),[]);
+}: PreviewControlsProps) => {
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<PreviewControlsClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-preview',
+      }),
+    [],
+  );
   return (
     <div className={`${styler('root')}`}>
       <div className={`${styler('controls')}`}>
@@ -78,7 +81,7 @@ export const VideoTileControls = ({
         </Button>
       </div>
       <div className={`${styler('rightControls')}`}>
-        <Settings onChange={onChange} key={0} />
+        <Settings onChange={onChange} key={0} previewMode={true} />
       </div>
     </div>
   );

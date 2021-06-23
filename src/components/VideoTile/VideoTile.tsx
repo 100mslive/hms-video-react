@@ -6,13 +6,14 @@ import { Avatar } from '../TwAvatar';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { HMSPeer } from '../../store/schema';
+import { HMSPeer } from '@100mslive/hms-video-store';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
   selectCameraStreamByPeerID,
   selectIsPeerAudioEnabled,
   selectIsPeerVideoEnabled,
-  selectScreenShareByPeerID } from '../../store/selectors';
+  selectScreenShareByPeerID,
+} from '@100mslive/hms-video-store';
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
@@ -60,7 +61,7 @@ export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
    */
   classes?: VideoTileClasses;
 
-  avatarType?: 'initial' | 'pebble';
+  avatarType?: 'initial';
   /**
    * Boolean variable to specify if videoTile is small or not
    */
@@ -92,8 +93,7 @@ export interface VideoTileClasses extends VideoClasses {
 
 const defaultClasses: VideoTileClasses = {
   root: 'group w-full h-full flex relative justify-center rounded-lg ',
-  videoContainer:
-    'relative rounded-lg object-cover relative max-w-full max-h-full',
+  videoContainer: 'relative rounded-lg object-cover relative w-full max-h-full',
   avatarContainer:
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
   videoContainerCircle: 'rounded-full',
@@ -137,26 +137,28 @@ export const VideoTile = ({
     [],
   );
 
-  if (hmsVideoTrack?.source === "screen") {
+  if (hmsVideoTrack?.source === 'screen') {
     showScreen = true;
   }
 
-  const selectVideoByPeerID = showScreen ? selectScreenShareByPeerID : selectCameraStreamByPeerID;
-  const storeHmsVideoTrack = useHMSStore((store) => selectVideoByPeerID(store, peer.id));
-  const storeIsAudioMuted = !useHMSStore(store => selectIsPeerAudioEnabled(store, peer.id));
-  const storeIsVideoMuted = !useHMSStore(store => selectIsPeerVideoEnabled(store, peer.id));
+  const selectVideoByPeerID = showScreen
+    ? selectScreenShareByPeerID
+    : selectCameraStreamByPeerID;
+  const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
+  const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
+  const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
 
   if (showAudioLevel === undefined) {
-    showAudioLevel = !showScreen;  // don't show audio levels for screenshare
+    showAudioLevel = !showScreen; // don't show audio levels for screenshare
   }
 
   hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
 
-  if (!showScreen && (isAudioMuted === undefined || isAudioMuted ===  null)) {
+  if (!showScreen && (isAudioMuted === undefined || isAudioMuted === null)) {
     isAudioMuted = storeIsAudioMuted;
   }
 
-  if (!showScreen && (isVideoMuted === undefined || isVideoMuted ===  null)) {
+  if (!showScreen && (isVideoMuted === undefined || isVideoMuted === null)) {
     isVideoMuted = storeIsVideoMuted;
   }
 

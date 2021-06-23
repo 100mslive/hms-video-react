@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { MessageModal, MessageModalProps } from './index';
+import { MessageModal, MessageModalProps } from './MessageModal';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
+import { Button } from '../Button';
 
 const meta: Meta = {
   title: 'MessageModal',
@@ -11,10 +12,22 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<MessageModalProps> = args => {
+  const [show, setShow] = useState(true);
+
   return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+      <Button variant="emphasized" onClick={() => setShow(show => !show)}>
+        {show ? 'Hide Modal' : 'Show Modal'}
+      </Button>
       <div>
-        <MessageModal {...args} />
+        <MessageModal
+          {...args}
+          show={show}
+          onClose={() => {
+            setShow(show => !show);
+            args.onClose();
+          }}
+        />
       </div>
     </HMSThemeProvider>
   );
@@ -22,6 +35,9 @@ const Template: Story<MessageModalProps> = args => {
 
 export const Default = Template.bind({});
 Default.args = {
-  setShow: (value) => {alert("Modal show status changed to - " + value)},
-  gobackOnClick: () => {}
-}
+  title: 'This is a modal!',
+  body: 'This is some message about the modal.',
+  onClose: () => {
+    alert('Clicked close!');
+  },
+};

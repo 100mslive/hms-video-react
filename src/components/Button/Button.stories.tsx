@@ -1,9 +1,8 @@
 import React from 'react';
-import { HangUpIcon, MicOnIcon, MicOffIcon, CloseIcon } from '../Icons';
 import { Meta, Story } from '@storybook/react';
 import { Button, ButtonProps } from './index';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
-import './ButtonStory.css';
+import { MicOffIcon, MicOnIcon } from '../Icons';
 
 const meta: Meta = {
   title: 'Button',
@@ -12,103 +11,115 @@ const meta: Meta = {
 
 export default meta;
 
-const Leave: Story<ButtonProps> = args => {
-  return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Button {...args}>
-        <HangUpIcon className="mr-2" />
-        Leave room
-      </Button>
-    </div>
-  );
+const config = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          tint: '#74AAFF',
+          main: '#424874',
+          shade: '#0B326F',
+        },
+        red: {
+          tint: '#E66977',
+          main: '#424874',
+          shade: '#6F2229',
+        },
+      },
+    },
+  },
 };
 
-const MicWithDangerActive: Story<ButtonProps> = args => {
-  const { classes, ...argsWithoutClasses } = args;
-  return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
-        <Button {...argsWithoutClasses} classes={{ root: 'to-be-overridden' }}>
-          {args.active ? <MicOffIcon /> : <MicOnIcon />}
-        </Button>
-      </HMSThemeProvider>
-    </div>
-  );
-};
-
-const DarkMic: Story<ButtonProps> = args => {
+const Basic: Story<ButtonProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center py-4">
       <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
-        <Button {...args}>
-          {args.active ? <MicOffIcon /> : <MicOnIcon />}
-        </Button>
+        <Button {...args}>Leave Room</Button>
       </HMSThemeProvider>
     </div>
   );
 };
 
-const LightMic: Story<ButtonProps> = args => {
-  return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
-        <Button {...args}>
-          {args.active ? <MicOffIcon /> : <MicOnIcon />}
-        </Button>
-      </HMSThemeProvider>
-    </div>
-  );
-};
-
-const Close: Story<ButtonProps> = args => {
+const WithIcon: Story<ButtonProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center py-4">
       <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
-        <Button {...args}>
-          <CloseIcon />
+        <Button icon={<MicOffIcon />} {...args}>
+          Leave Room
         </Button>
       </HMSThemeProvider>
     </div>
   );
 };
 
-const Join: Story<ButtonProps> = args => {
+const IconRight: Story<ButtonProps> = args => {
   return (
-    <div className="w-full h-1/2 flex justify-center bg-white py-4">
-      <Button {...args}>Join</Button>
+    <div className="w-full h-1/2 flex justify-center py-4">
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+        <Button icon={<MicOffIcon />} iconRight={true} {...args}>
+          Leave Room
+        </Button>
+      </HMSThemeProvider>
     </div>
   );
 };
 
-export const Default = Leave.bind({});
-Default.args = {
-  variant: 'danger',
+const Classes: Story<ButtonProps> = args => {
+  return (
+    <div className="w-full h-1/2 flex justify-center py-4">
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+        <Button
+          classes={{
+            rootStandard: 'bg-red-main',
+            rootRectangle: 'rounded-none',
+          }}
+          icon={<MicOnIcon />}
+          onClick={() => alert('Hello World')}
+          {...args}
+        >
+          Red Standard
+        </Button>
+      </HMSThemeProvider>
+    </div>
+  );
 };
 
-export const LightMicStory = LightMic.bind({});
-LightMicStory.args = {
-  variant: 'icon-only',
-  shape: 'circle',
+const IconOnly: Story<ButtonProps> = args => {
+  return (
+    <div className="w-full h-1/2 flex justify-center py-4">
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
+        <Button iconOnly iconSize="sm" {...args}>
+          <MicOffIcon fill="white" />
+        </Button>
+      </HMSThemeProvider>
+    </div>
+  );
 };
 
-export const MicWithDangerActiveStory = MicWithDangerActive.bind({});
-MicWithDangerActiveStory.args = {
-  variant: 'danger',
-  shape: 'circle',
+const Custom: Story<ButtonProps> = args => {
+  return (
+    <div className="w-full h-1/2 flex justify-center py-4">
+      <HMSThemeProvider config={config} appBuilder={{ theme: 'dark' }}>
+        <Button {...args}>Custom Config</Button>
+      </HMSThemeProvider>
+    </div>
+  );
 };
 
-export const DarkMicStory = DarkMic.bind({});
-DarkMicStory.args = {
-  variant: 'icon-only',
-  shape: 'circle',
-};
+export const Default = Basic.bind({});
+Basic.args = {};
 
-export const CloseStory = Close.bind({});
-CloseStory.args = {
-  variant: 'no-fill',
-};
+export const IconButton = WithIcon.bind({});
+Basic.args = {};
 
-export const JoinStory = Join.bind({});
-JoinStory.args = {
-  variant: 'emphasized',
-};
+export const IconRightButton = IconRight.bind({});
+Basic.args = {};
+
+export const ButtonClasses = Classes.bind({});
+Basic.args = {};
+
+export const IconOnlyButton = IconOnly.bind({});
+Basic.args = {};
+
+export const CustomConfig = Custom.bind({});
+Basic.args = {};

@@ -1,4 +1,4 @@
-import { HMSPeerWithMuteStatus } from '../../store/selectors';
+import { HMSPeerWithMuteStatus } from '@100mslive/hms-video-store';
 
 export interface ParticipantListClasses {
   root?: string;
@@ -20,4 +20,5 @@ export interface ParticipantListClasses {
 export interface ParticipantListProps {
   participantList?: HMSPeerWithMuteStatus[];
   classes?: ParticipantListClasses;
+  onToggle?: (open: boolean) => void;
 }

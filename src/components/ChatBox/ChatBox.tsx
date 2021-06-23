@@ -1,16 +1,17 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import {useHMSTheme} from '../../hooks/HMSThemeProvider'
-import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
-import './index.css';
-import { hmsUiClassParserGenerator } from '../../utils/classes';
-import Autolinker from 'autolinker';
-import ReactHtmlParser from 'react-html-parser';
-import { Button } from '../TwButton';
 import { useInView } from 'react-intersection-observer';
-import { HMSMessage } from '../../store/schema';
-import { isTotallyScrolled, scrollToBottom } from './chatBoxUtils';
+import { HMSMessage } from '@100mslive/hms-video-store';
+import {
+  selectHMSMessages,
+  selectUnreadHMSMessagesCount,
+} from '@100mslive/hms-video-store';
+import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
+import { Button } from '../Button';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
-import { selectHMSMessages } from '../../store/selectors';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { ChatLink, scrollToBottom } from './chatBoxUtils';
+import './index.css';
 
 interface ChatBoxClasses {
   root?: string;
@@ -78,7 +79,7 @@ export interface Message extends HMSMessage {
 export interface ChatProps {
   messages?: Message[];
   onSend?: (message: string) => void;
-  onClose?: () => void;  // when the chat box is closed
+  onClose?: () => void; // when the chat box is closed
   autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
   messageFormatter?: (message: string) => React.ReactNode;
@@ -96,14 +97,10 @@ export const ChatBox = ({
   autoScrollToBottom = true, //TODO shouldn't be exposed as a prop
   scrollAnimation = 'auto', //TODO shouldn't be exposed as a prop
   messageFormatter = (message: string) => {
-    let text = Autolinker.link(message, {
-      sanitizeHtml: true,
-      mention: 'twitter',
-      className: 'text-brand-tint',
-    });
-
     return (
-      <div className="whitespace-pre-wrap">{ReactHtmlParser(text.trim())}</div>
+      <div className="whitespace-pre-wrap">
+        <ChatLink text={message} />
+      </div>
     );
   },
   classes,
@@ -113,44 +110,49 @@ export const ChatBox = ({
     return `${date.getHours()}:${minString}`;
   },
 }: ChatProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<ChatBoxClasses>({
-      tw,
-      classes,
-      customClasses,
-      defaultClasses,
-      tag: 'hmsui-chatBox',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ChatBoxClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-chatBox',
+      }),
+    [],
+  );
   const storeMessages = useHMSStore(selectHMSMessages);
+  const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
   const hmsActions = useHMSActions();
 
   messages = messages || storeMessages;
-  const sendMessage = (msg: string) => onSend ? onSend(msg) : hmsActions.sendMessage(msg);
+  const sendMessage = (msg: string) =>
+    onSend ? onSend(msg) : hmsActions.sendMessage(msg);
   const [messageDraft, setMessageDraft] = useState('');
-  const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   // a dummy element with messagesEndRef is created and put in the end
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
   const messageListRef = useRef<HTMLDivElement>(null);
 
+  /** Effect to scroll to bottom when chat is opened */
+  useEffect(() => {
+    if (messageListRef.current) {
+      scrollToBottom(messageListRef, scrollAnimation);
+    }
+  }, []); //eslint-disable-line
+
   useEffect(() => {
     if (messages && messages.length > 0) {
       const myOwnMessage = messages[messages.length - 1].senderName === 'You';
-      if (
-        autoScrollToBottom &&
-        (myOwnMessage || isTotallyScrolled(messageListRef))
-      ) {
+      if (autoScrollToBottom && (myOwnMessage || messagesEndInView)) {
         scrollToBottom(messageListRef, scrollAnimation);
-        setUnreadMessagesCount(0);
-      } else {
-        // unread should be read/updated from/to central store
-        setUnreadMessagesCount(unreadMessagesCount => unreadMessagesCount + 1);
+        hmsActions.setMessageRead(true);
       }
     }
-  }, [messages])
+  }, [messages]);
 
   if (messagesEndInView && unreadMessagesCount != 0) {
-    setUnreadMessagesCount(0);
+    hmsActions.setMessageRead(true);
   }
 
   return (
@@ -243,10 +245,6 @@ export const ChatBox = ({
                 </div>
                 {/* messageText */}
                 <div className={styler('messageText')}>
-                  {/* {ReactHtmlParser(
-                      Autolinker.link(message.message, { sanitizeHtml: true }),
-                    )} */}
-                  {/* <ReactMarkdown>{message.message}</ReactMarkdown> */}
                   {messageFormatter
                     ? messageFormatter(message.message)
                     : message.message}

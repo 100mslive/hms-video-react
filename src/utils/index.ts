@@ -6,7 +6,7 @@ import reduce from 'lodash/reduce';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
 
 import { theme as defaultTailwindConfig } from '../defaultTheme';
-import { HMSTrackSource } from '../store/schema';
+import { HMSTrackSource } from '@100mslive/hms-video-store';
 import { TrackWithPeer } from './videoListUtils';
 
 const getVideoTileLabel = (
@@ -30,9 +30,37 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
   if (!stream) {
     return;
   }
+  if (
+    MediaStreamTrack &&
+    MediaStreamTrack.prototype &&
+    // @ts-ignore
+    MediaStreamTrack.prototype.stop
+  ) {
+    var tracks, i, len;
 
-  const tracks = stream.getTracks();
-  tracks.forEach(track => track.stop());
+    if (stream.getTracks) {
+      tracks = stream.getTracks();
+      for (i = 0, len = tracks.length; i < len; i += 1) {
+        tracks[i].stop();
+      }
+    } else {
+      tracks = stream.getAudioTracks();
+      for (i = 0, len = tracks.length; i < len; i += 1) {
+        tracks[i].stop();
+      }
+
+      tracks = stream.getVideoTracks();
+      for (i = 0, len = tracks.length; i < len; i += 1) {
+        tracks[i].stop();
+      }
+    }
+    // Deprecated by the spec, but still in use.
+    // @ts-ignore
+  } else if (typeof stream.stop === 'function') {
+    console.log('closeMediaStream() | calling stop() on the MediaStream');
+    // @ts-ignore
+    stream.stop();
+  }
 };
 
 const chunk = <T>(elements: T[], chunkSize: number, onlyOnePage: boolean) => {
@@ -70,10 +98,10 @@ interface GetTileSizesInList {
 const getModeAspectRatio = (tracks: TrackWithPeer[]): number | null => {
   return mode(
     tracks
-      .filter(track => track?.track.width && track?.track.height)
+      .filter(track => track.track?.width && track.track?.height)
       .map(track => {
-        const width = track?.track.width;
-        const height = track?.track.height;
+        const width = track.track?.width;
+        const height = track.track?.height;
         //Default to 1 if there are no video tracks
         return (width ? width : 1) / (height ? height : 1);
       }),

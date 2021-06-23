@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import HMSLogger from '../../utils/ui-logger';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions } from '../../hooks/HMSRoomProvider';
-import { HMSTrack } from '../../store/schema';
+import { HMSTrack } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export type DisplayShapes = 'circle' | 'rectangle';
@@ -150,7 +150,14 @@ export const Video = ({
         }
       }
     })();
-  }, [inView, videoRef, videoTrack, hmsVideoTrack]);
+  }, [
+    inView,
+    videoRef,
+    videoTrack,
+    hmsVideoTrack?.id,
+    hmsVideoTrack?.enabled,
+    hmsVideoTrack?.deviceID,
+  ]);
 
   useEffect(() => {
     if (videoRef && videoRef.current && videoTrack && !hmsVideoTrack) {
