@@ -2,19 +2,19 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@^0.1.21":
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.21.tgz#15074ba052174c8cb60cc70a26990ea09922c5d1"
-  integrity sha512-NGUBlzSUT5gJwOc74fsQOkWuPZY6eBlaxFb19oNC/JfjF28z4koVsNDeFjnFSc/Q3u7UaWCmy9+2mJ9sYjeefg==
+"@100mslive/hms-video-store@^0.1.25":
+  version "0.1.25"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.25.tgz#46fb7e8abb896d7e1908770b2f0c69aa34ec91c6"
+  integrity sha512-RoXh3EUTS/GhDRXjZgQCQMjvMTUOMjfXbfeHir6naHcrZ0un3u9IbmTD8udRO3XVfpLwRCUym0sO7CFKsiwQ7A==
   dependencies:
     immer "^9.0.2"
     reselect "^4.0.0"
     zustand "^3.5.1"
 
-"@100mslive/hms-video@^0.0.36":
-  version "0.0.36"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.36.tgz#f2727fc53f9294cbb980f6095e340b2b156d2af5"
-  integrity sha512-bx1KYb7sszttZjgI5PlTiCnRE9WgzHsXfzcO6KAQI059Q888Y72dEu3wn4WapEc0JNvBmhHz1FN+TkGWwMgKtA==
+"@100mslive/hms-video@^0.0.38":
+  version "0.0.38"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.38.tgz#1aca55b67a5ffaf6e12972320e18753877b97b01"
+  integrity sha512-2fRf3+xvsdTS//r26/gi+44zGlZgNKcuMB8e5/L02jC+SY5C9W8Bs7khBheC2Len2ko9ANIjDuQT5xzGrJYbXA==
   dependencies:
     bowser "^2.11.0"
     events "^3.3.0"
@@ -12026,6 +12026,13 @@ react-textarea-autosize@^8.3.0:
     "@babel/runtime" "^7.10.2"
     use-composed-ref "^1.0.0"
     use-latest "^1.0.0"
+
+react-toastify@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-7.0.4.tgz#7d0b743f2b96f65754264ca6eae31911a82378db"
+  integrity sha512-Rol7+Cn39hZp5hQ/k6CbMNE2CKYV9E5OQdC/hBLtIQU2xz7DdAm7xil4NITQTHR6zEbE5RVFbpgSwTD7xRGLeQ==
+  dependencies:
+    clsx "^1.1.1"
 
 react-transition-group@^4.4.0:
   version "4.4.2"
