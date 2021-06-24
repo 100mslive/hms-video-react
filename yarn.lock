@@ -2,22 +2,23 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@^0.1.18":
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.18.tgz#e303730f561a79557964ab2334f1d5812e3b3781"
-  integrity sha512-J6/7APulAq3Ae1j6j5jEZNvEj+MV31KLR/DbHZAQ6ZrNSVCoM1eWaAtFIbKumBm1ae1B069GjjDaNyAMBLTxqw==
+"@100mslive/hms-video-store@^0.1.25":
+  version "0.1.25"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.25.tgz#46fb7e8abb896d7e1908770b2f0c69aa34ec91c6"
+  integrity sha512-RoXh3EUTS/GhDRXjZgQCQMjvMTUOMjfXbfeHir6naHcrZ0un3u9IbmTD8udRO3XVfpLwRCUym0sO7CFKsiwQ7A==
   dependencies:
     immer "^9.0.2"
     reselect "^4.0.0"
     zustand "^3.5.1"
 
-"@100mslive/hms-video@^0.0.27":
-  version "0.0.27"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.27.tgz#c5a8f9fcac1126b669a23989afb3191675bfc6e0"
-  integrity sha512-s5rNdV2hRQuJzPOJBDXc/jkGByq/A5xurVsNgz38CZGPq08IJA0RG/LCRp5KzUH4doozNbceuO6ZXKb3lmvfsQ==
+"@100mslive/hms-video@^0.0.38":
+  version "0.0.38"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.38.tgz#1aca55b67a5ffaf6e12972320e18753877b97b01"
+  integrity sha512-2fRf3+xvsdTS//r26/gi+44zGlZgNKcuMB8e5/L02jC+SY5C9W8Bs7khBheC2Len2ko9ANIjDuQT5xzGrJYbXA==
   dependencies:
     bowser "^2.11.0"
     events "^3.3.0"
+    sdp-transform "^2.14.1"
     uuid "^8.3.2"
     webrtc-adapter "^8.0.0"
 
@@ -12026,6 +12027,13 @@ react-textarea-autosize@^8.3.0:
     use-composed-ref "^1.0.0"
     use-latest "^1.0.0"
 
+react-toastify@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-7.0.4.tgz#7d0b743f2b96f65754264ca6eae31911a82378db"
+  integrity sha512-Rol7+Cn39hZp5hQ/k6CbMNE2CKYV9E5OQdC/hBLtIQU2xz7DdAm7xil4NITQTHR6zEbE5RVFbpgSwTD7xRGLeQ==
+  dependencies:
+    clsx "^1.1.1"
+
 react-transition-group@^4.4.0:
   version "4.4.2"
   resolved "https://registry.npmjs.org/react-transition-group/-/react-transition-group-4.4.2.tgz"
@@ -12771,6 +12779,11 @@ schema-utils@^3.0.0:
     "@types/json-schema" "^7.0.6"
     ajv "^6.12.5"
     ajv-keywords "^3.5.2"
+
+sdp-transform@^2.14.1:
+  version "2.14.1"
+  resolved "https://registry.yarnpkg.com/sdp-transform/-/sdp-transform-2.14.1.tgz#2bb443583d478dee217df4caa284c46b870d5827"
+  integrity sha512-RjZyX3nVwJyCuTo5tGPx+PZWkDMCg7oOLpSlhjDdZfwUoNqG1mM8nyj31IGHyaPWXhjbP7cdK3qZ2bmkJ1GzRw==
 
 sdp@^3.0.2:
   version "3.0.2"
