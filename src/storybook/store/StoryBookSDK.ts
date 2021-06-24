@@ -4,6 +4,7 @@ import {
   IHMSStore,
   HMSPeer,
   HMSRoom,
+  HMSTrackSource,
 } from '@100mslive/hms-video-store';
 import {
   HMSAudioTrackSettings,
@@ -22,6 +23,15 @@ export class StoryBookSDK implements IHMSActions {
 
   constructor(store: IHMSStore) {
     this.store = store;
+  }
+  addTrack(track: MediaStreamTrack, type: HMSTrackSource): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  removeTrack(trackId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  setEnabledTrack(trackId: string, enabled: boolean): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 
   setMessageRead(readStatus: boolean, messageId: string): void {
@@ -62,21 +72,27 @@ export class StoryBookSDK implements IHMSActions {
     });
   }
 
-  attachVideo(trackID: string, videoElement: HTMLVideoElement): void {
+  async attachVideo(
+    trackID: string,
+    videoElement: HTMLVideoElement,
+  ): Promise<void> {
     if (this.dummyTrackURLs[trackID]) {
       videoElement.src = this.dummyTrackURLs[trackID];
     }
     this.log('video attached');
   }
 
-  leave(): void {
+  async leave(): Promise<void> {
     this.log('user left room');
     this.store.setState(store => {
       store.room.isConnected = false;
     });
   }
 
-  detachVideo(trackID: string, videoElement: HTMLVideoElement): void {
+  async detachVideo(
+    trackID: string,
+    videoElement: HTMLVideoElement,
+  ): Promise<void> {
     videoElement.srcObject = null;
     this.log('video removed');
   }
@@ -91,15 +107,15 @@ export class StoryBookSDK implements IHMSActions {
     this.log('message sent - ', message);
   }
 
-  setLocalAudioEnabled(enabled: boolean): void {
+  async setLocalAudioEnabled(enabled: boolean): Promise<void> {
     this.log('set local audio enabled state - ', enabled);
   }
 
-  setLocalVideoEnabled(enabled: boolean): void {
+  async setLocalVideoEnabled(enabled: boolean): Promise<void> {
     this.log('set local video enabled state - ', enabled);
   }
 
-  setScreenShareEnabled(enabled: boolean): void {
+  async setScreenShareEnabled(enabled: boolean): Promise<void> {
     this.log('set screenshare enabled state - ', enabled);
   }
 
@@ -176,7 +192,7 @@ export class StoryBookSDK implements IHMSActions {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  setAudioSettings(settings: HMSAudioTrackSettings): void {}
+  async setAudioSettings(settings: HMSAudioTrackSettings): Promise<void> {}
 
-  setVideoSettings(settings: HMSVideoTrackSettings): void {}
+  async setVideoSettings(settings: HMSVideoTrackSettings): Promise<void> {}
 }
