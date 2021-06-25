@@ -1,5 +1,12 @@
 import React, { useMemo } from 'react';
-import { toast, ToastProps, ToastContainer } from 'react-toastify';
+import {
+  toast,
+  ToastProps,
+  ToastContainer,
+  Slide,
+  Zoom,
+  Bounce,
+} from 'react-toastify';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { CloseIcon } from '../Icons';
 import { Text } from '../Text';
@@ -35,6 +42,10 @@ export interface NotificationProps {
    * Toast Props based on React-Toastify
    */
   toastProps?: Partial<ToastProps>;
+  /**
+   * transition type for notification
+   */
+  transitionType?: 'bounce' | 'zoom' | 'slide';
 }
 
 const defaultClasses: NotificationClasses = {
@@ -70,6 +81,12 @@ export const Notifications = ({
   );
 };
 
+const transitionMapping = {
+  slide: Slide,
+  bounce: Bounce,
+  zoom: Zoom,
+};
+
 export const hmsToast = (message: string, options?: NotificationProps) => {
   toast(
     <Notifications
@@ -79,6 +96,9 @@ export const hmsToast = (message: string, options?: NotificationProps) => {
     />,
     {
       ...options?.toastProps,
+      transition: options?.transitionType
+        ? transitionMapping[options?.transitionType]
+        : options?.toastProps?.transition || Bounce,
     },
   );
 };
@@ -87,6 +107,7 @@ export const HMSToastContainer: React.FC<Partial<ToastProps>> = props => {
   return (
     <ToastContainer
       {...props}
+      className="hms-toast"
       autoClose={3000}
       hideProgressBar
       closeButton={false}
