@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@^0.1.25":
-  version "0.1.25"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.25.tgz#46fb7e8abb896d7e1908770b2f0c69aa34ec91c6"
-  integrity sha512-RoXh3EUTS/GhDRXjZgQCQMjvMTUOMjfXbfeHir6naHcrZ0un3u9IbmTD8udRO3XVfpLwRCUym0sO7CFKsiwQ7A==
+"@100mslive/hms-video-store@^0.1.26":
+  version "0.1.27"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.27.tgz#cdbd38e4fc0cd6a7f69a66fcb764367da2879d12"
+  integrity sha512-Yng9xprX6NX9gxhVE5KqLz1/djwpgVQRLkSsyrlDdGgqNda+Y7ySTvr/9sNjaBlDOCW1rr7wR4TfiQUNU6Jhcw==
   dependencies:
     immer "^9.0.2"
     reselect "^4.0.0"
@@ -6301,9 +6301,9 @@ eventemitter3@^4.0.4:
   resolved "https://registry.npmjs.org/eventemitter3/-/eventemitter3-4.0.7.tgz"
   integrity sha512-8guHBZCwKnFhYdHr2ysuRWErTwhoN2X8XELRlrRwpmfeY2jjuUN4taQMsULKUVo1K4DvZl+0pgfyoysHxvmvEw==
 
-events@^3.0.0:
+events@^3.0.0, events@^3.3.0:
   version "3.3.0"
-  resolved "https://registry.npmjs.org/events/-/events-3.3.0.tgz"
+  resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
   integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
 
 evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
