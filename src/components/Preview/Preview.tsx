@@ -11,6 +11,7 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
 import { SettingsFormProps } from '../Settings/Settings';
 import { Button } from '../Button';
+import { ProgressIcon } from '../Icons';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { PreviewControls } from './Controls';
@@ -92,6 +93,7 @@ export const Preview = ({
   const [mediaStream, setMediaStream] = useState<MediaStream>();
   /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
   const [error, setError] = useState({
     allowJoin: false,
     title: '',
@@ -301,16 +303,21 @@ export const Preview = ({
 
         {/* joinButton */}
         <Button
-          variant={'emphasized'}
-          size={'lg'}
-          onClick={() => {
+          variant="emphasized"
+          size="lg"
+          iconRight={inProgress}
+          icon={inProgress ? <ProgressIcon /> : undefined}
+          disabled={inProgress}
+          onClick={async () => {
             if (!name || !name.trim()) {
               inputRef.current && inputRef.current.focus();
               setShowValidation(true);
               return;
             }
             closeMediaStream(mediaStream);
-            joinOnClick({ audioMuted, videoMuted, name });
+            setInProgress(true);
+            await joinOnClick({ audioMuted, videoMuted, name });
+            setInProgress(false);
           }}
         >
           Join
