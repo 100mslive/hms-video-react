@@ -5,12 +5,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import {
-  getLocalStream,
-  parsedUserAgent,
-  isSupported,
-  validateDeviceAV,
-} from '@100mslive/hms-video';
+import { getLocalStream, validateDeviceAV } from '@100mslive/hms-video';
 import { HMSPeer } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
@@ -144,17 +139,6 @@ export const Preview = ({
     closeMediaStream(mediaStream);
 
     try {
-      if (!isSupported) {
-        setError({
-          allowJoin: allowWithError.unsupported,
-          title:
-            'Please update to latest version of Google Chrome to continue.',
-          message: `We currently do not support ${parsedUserAgent.getBrowserName()}(${
-            parsedUserAgent.getBrowserVersion().split('.')[0]
-          }) on ${parsedUserAgent.getOSName()}.`,
-        });
-      }
-
       await validateDeviceAV();
       const constraints = {
         audio:
