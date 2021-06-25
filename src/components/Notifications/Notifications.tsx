@@ -88,6 +88,10 @@ const transitionMapping = {
 };
 
 export const hmsToast = (message: string, options?: NotificationProps) => {
+  const transition = options?.transitionType
+    ? transitionMapping[options?.transitionType]
+    : options?.toastProps?.transition || Bounce;
+
   toast(
     <Notifications
       left={options?.left || <Text variant="body">{message}</Text>}
@@ -96,9 +100,7 @@ export const hmsToast = (message: string, options?: NotificationProps) => {
     />,
     {
       ...options?.toastProps,
-      transition: options?.transitionType
-        ? transitionMapping[options?.transitionType]
-        : options?.toastProps?.transition || Bounce,
+      transition,
     },
   );
 };
