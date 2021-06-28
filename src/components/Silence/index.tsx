@@ -4,7 +4,7 @@ import React from 'react';
 export const Silence = () => {
   return (
     <audio
-      src="https://res.cloudinary.com/dlzh3j8em/video/upload/v1619210717/silence_xko7fm.mp3"
+      src="https://100ms-website-100mslive.vercel.app//silence.mp3"
       autoPlay
       className="hidden"
     />
