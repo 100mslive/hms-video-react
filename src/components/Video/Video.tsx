@@ -90,6 +90,10 @@ export interface VideoProps {
    * extra classes added  by user
    */
   classes?: VideoClasses;
+  /**
+   * Whether audio is enabled or not
+   */
+  isAudioMuted?: boolean;
 }
 
 const defaultClasses: VideoClasses = {
@@ -108,6 +112,7 @@ export const Video = ({
   objectFit,
   isLocal,
   showAudioLevel,
+  isAudioMuted,
   audioLevel = 0,
   audioLevelDisplayType,
   audioLevelDisplayColor,
@@ -183,7 +188,7 @@ export const Video = ({
           ${objectFit === 'cover' ? styler('videoCover') : ''}
         `}
       ></video>
-      {showAudioLevel && audioLevelDisplayType === 'border' && (
+      {!isAudioMuted && showAudioLevel && audioLevelDisplayType === 'border' && (
         <AudioLevelIndicator
           peerId={peerId}
           type={'border'}

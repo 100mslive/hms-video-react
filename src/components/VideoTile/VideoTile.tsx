@@ -219,6 +219,7 @@ export const VideoTile = ({
             videoTrack={videoTrack}
             objectFit={objectFit}
             isLocal={peer.isLocal}
+            isAudioMuted={isAudioMuted}
             showAudioLevel={showAudioLevel}
             audioLevel={audioLevel}
             audioLevelDisplayType={audioLevelDisplayType}
