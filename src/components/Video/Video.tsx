@@ -143,10 +143,12 @@ export const Video = ({
     (async () => {
       if (videoRef.current && hmsVideoTrack) {
         HMSLogger.d('Video InView', videoTrack, inView);
-        if (inView && hmsVideoTrack.enabled) {
-          await hmsActions.attachVideo(hmsVideoTrack.id, videoRef.current);
-        } else {
-          await hmsActions.detachVideo(hmsVideoTrack.id, videoRef.current);
+        if (hmsVideoTrack.enabled) {
+          if (inView) {
+            await hmsActions.attachVideo(hmsVideoTrack.id, videoRef.current);
+          } else {
+            await hmsActions.detachVideo(hmsVideoTrack.id, videoRef.current);
+          }
         }
       }
     })();
