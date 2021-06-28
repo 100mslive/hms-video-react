@@ -39,7 +39,7 @@ const defaultClasses: VideoTileControlsClasses = {
   gradient:
     'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
   controlsStatus: 'transition-all opacity-1 mx-1',
-  label: 'mt-1 mx-1 text-sm md:text-base',
+  label: 'mt-1 mx-1 text-sm md:text-base w-11/12 truncate',
   controlsWrapper: 'flex justify-center',
 };
 
@@ -86,7 +86,9 @@ export const VideoTileControls = ({
             </Button>
           )}
         </div>
-        <div className={`${styler('label')}`}>{label}</div>
+        <div className={`${styler('label')}`} title={label}>
+          {label}
+        </div>
         <div className={`${styler('controls')}`}>
           {!isLocal && showAudioMuteStatus && !isAudioMuted && allowRemoteMute && (
             <Button iconOnly size={'md'} classes={{ root: 'dark' }}>
