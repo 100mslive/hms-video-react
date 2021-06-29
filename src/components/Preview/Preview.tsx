@@ -105,7 +105,7 @@ export const Preview = ({
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const streamIdRef = useRef<string | undefined>();
+  // const streamIdRef = useRef<string | undefined>();
 
   const getMediaEnabled = useCallback(
     (type: string) => {
@@ -139,10 +139,10 @@ export const Preview = ({
   }, [error.title]);
 
   const startMediaStream = useCallback(async () => {
-    if (streamIdRef.current && streamIdRef.current === mediaStream?.id) {
-      return;
-    }
-    alert(JSON.stringify({ olderstream: mediaStream }));
+    // if (streamIdRef.current && streamIdRef.current === mediaStream?.id) {
+    //   alert(JSON.stringify({ id: streamIdRef.current  }));
+    //   return;
+    // }
     closeMediaStream(mediaStream);
 
     try {
@@ -158,7 +158,7 @@ export const Preview = ({
             : true,
       };
       const stream = await getLocalStream(constraints);
-      streamIdRef.current = stream.id;
+      // streamIdRef.current = stream.id;
       setMediaStream(stream);
       alert(JSON.stringify({ newStream: stream }));
     } catch (error) {
@@ -178,7 +178,7 @@ export const Preview = ({
           video: !videoFailure && { deviceId: selectedVideoInput },
         });
 
-        streamIdRef.current = stream.id;
+        // streamIdRef.current = stream.id;
         setMediaStream(stream);
       }
     }
