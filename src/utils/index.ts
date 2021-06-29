@@ -3,10 +3,10 @@ import { css } from 'twind/css';
 import { create } from 'twind';
 import clsx from 'clsx';
 import reduce from 'lodash/reduce';
-import { useHMSTheme } from '../hooks/HMSThemeProvider';
-
-import { theme as defaultTailwindConfig } from '../defaultTheme';
 import { HMSTrackSource } from '@100mslive/hms-video-store';
+import { parsedUserAgent } from '@100mslive/hms-video';
+import { useHMSTheme } from '../hooks/HMSThemeProvider';
+import { theme as defaultTailwindConfig } from '../defaultTheme';
 import { TrackWithPeer } from './videoListUtils';
 
 const getVideoTileLabel = (
@@ -616,6 +616,10 @@ const scrollTo = (element: React.MutableRefObject<any>) => () => {
 const sigmoid = (z: number) => {
   return 1 / (1 + Math.exp(-z));
 };
+
+export function isMobileDevice() {
+  return parsedUserAgent.getPlatformType(true) === 'mobile';
+}
 
 export {
   closeMediaStream,

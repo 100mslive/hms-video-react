@@ -106,6 +106,7 @@ export const Preview = ({
   const [name, setName] = useState('');
   const [showModal, setShowModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const prevStream = useRef<MediaStream | undefined>();
 
   const getMediaEnabled = useCallback(
     (type: string) => {
@@ -136,8 +137,12 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
+  useEffect(() => {
+    prevStream.current = mediaStream;
+  }, [mediaStream]);
+
   const startMediaStream = useCallback(async () => {
-    closeMediaStream(mediaStream);
+    closeMediaStream(prevStream.current);
 
     try {
       await validateDeviceAV();
