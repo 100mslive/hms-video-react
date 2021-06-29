@@ -139,10 +139,10 @@ export const Preview = ({
   }, [error.title]);
 
   const startMediaStream = useCallback(async () => {
-    alert(JSON.stringify({ olderstream: mediaStream }));
     if (streamIdRef.current && streamIdRef.current === mediaStream?.id) {
       return;
     }
+    alert(JSON.stringify({ olderstream: mediaStream }));
     closeMediaStream(mediaStream);
 
     try {
@@ -160,6 +160,7 @@ export const Preview = ({
       const stream = await getLocalStream(constraints);
       streamIdRef.current = stream.id;
       setMediaStream(stream);
+      alert(JSON.stringify({ newStream: stream }));
     } catch (error) {
       setError({
         allowJoin: allowWithError.capture,
