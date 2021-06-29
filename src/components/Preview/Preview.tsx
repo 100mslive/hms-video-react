@@ -137,7 +137,7 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  const startMediaStream = async () => {
+  const startMediaStream = async (mediaStream?: MediaStream) => {
     closeMediaStream(mediaStream);
 
     try {
@@ -184,11 +184,14 @@ export const Preview = ({
   window.onunload = () => closeMediaStream(mediaStream);
 
   useEffect(() => {
-    startMediaStream();
+    if (!mediaStream) {
+      return;
+    }
+    startMediaStream(mediaStream);
     return () => {
       closeMediaStream(mediaStream);
     };
-  }, [selectedAudioInput, selectedVideoInput]);
+  }, [selectedAudioInput, selectedVideoInput, mediaStream]);
 
   useEffect(() => {
     function handleVisibilityChange() {
@@ -200,7 +203,7 @@ export const Preview = ({
           message: '',
         });
       } else {
-        startMediaStream();
+        startMediaStream(mediaStream);
       }
     }
     document.addEventListener(
