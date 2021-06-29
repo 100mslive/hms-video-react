@@ -105,7 +105,6 @@ export const Preview = ({
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  const streamIdRef = useRef<string | undefined>();
 
   const getMediaEnabled = useCallback(
     (type: string) => {
@@ -138,15 +137,11 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  const startMediaStream = useCallback(async () => {
+  const startMediaStream = async () => {
     closeMediaStream(mediaStream);
-    alert(
-      `media trackenabled ${mediaStream
-        ?.getTracks()
-        .some(track => track.enabled)}`,
-    );
+
     try {
-      // await validateDeviceAV();
+      await validateDeviceAV();
       const constraints = {
         audio:
           !audioMuted && selectedAudioInput
@@ -158,16 +153,13 @@ export const Preview = ({
             : true,
       };
       const stream = await getLocalStream(constraints);
-      streamIdRef.current = stream.id;
       setMediaStream(stream);
-      alert(JSON.stringify({ newStream: stream }));
     } catch (error) {
       setError({
         allowJoin: allowWithError.capture,
         title: error.description || 'Unable to Access Camera/Microphone',
         message: error.message,
       });
-      alert(JSON.stringify({ error, mediaStream }));
 
       // Start stream if any one is available
       const audioFailure = error.message.includes('audio');
@@ -181,7 +173,7 @@ export const Preview = ({
         setMediaStream(stream);
       }
     }
-  }, [selectedVideoInput, selectedAudioInput]);
+  };
 
   useEffect(() => {
     // Init mute values
@@ -223,7 +215,7 @@ export const Preview = ({
         false,
       );
     };
-  }, [mediaStream, startMediaStream]);
+  }, [mediaStream]);
 
   const handleDeviceChange = useCallback((values: SettingsFormProps) => {
     values?.selectedAudioInput &&
