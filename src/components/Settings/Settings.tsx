@@ -356,8 +356,9 @@ export const Settings = ({
               </>
             ) : (
               <div className={styler('errorContainer')}>
-                Error in accessing devices. Please check permissions. Are all
-                devices plugged in?
+                {/* Error in accessing devices. Please check permissions. Are all
+                devices plugged in? */}
+                {JSON.stringify(error)}
               </div>
             )}
             {/* <div className="w-full my-1.5">
