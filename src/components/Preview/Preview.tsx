@@ -105,7 +105,7 @@ export const Preview = ({
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-  // const streamIdRef = useRef<string | undefined>();
+  const streamIdRef = useRef<string | undefined>();
 
   const getMediaEnabled = useCallback(
     (type: string) => {
@@ -139,10 +139,10 @@ export const Preview = ({
   }, [error.title]);
 
   const startMediaStream = useCallback(async () => {
-    // if (streamIdRef.current && streamIdRef.current === mediaStream?.id) {
-    //   alert(JSON.stringify({ id: streamIdRef.current  }));
-    //   return;
-    // }
+    if (streamIdRef.current && streamIdRef.current === mediaStream?.id) {
+      alert(JSON.stringify({ id: streamIdRef.current, mediaStream }));
+      return;
+    }
     closeMediaStream(mediaStream);
 
     try {
@@ -178,11 +178,11 @@ export const Preview = ({
           video: !videoFailure && { deviceId: selectedVideoInput },
         });
 
-        // streamIdRef.current = stream.id;
+        streamIdRef.current = stream.id;
         setMediaStream(stream);
       }
     }
-  }, [mediaStream, selectedAudioInput, selectedVideoInput]);
+  }, [mediaStream]);
 
   useEffect(() => {
     // Init mute values
@@ -197,7 +197,7 @@ export const Preview = ({
     return () => {
       closeMediaStream(mediaStream);
     };
-  }, [startMediaStream]);
+  }, [selectedAudioInput, selectedVideoInput, startMediaStream]);
 
   useEffect(() => {
     function handleVisibilityChange() {
