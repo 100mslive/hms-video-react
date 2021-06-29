@@ -105,6 +105,7 @@ export const Preview = ({
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const streamIdRef = useRef<string | undefined>();
 
   const getMediaEnabled = useCallback(
     (type: string) => {
@@ -137,8 +138,11 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  const startMediaStream = async () => {
+  const startMediaStream = useCallback(async () => {
     alert(JSON.stringify({ olderstream: mediaStream }));
+    if (streamIdRef.current === mediaStream?.id) {
+      return;
+    }
     closeMediaStream(mediaStream);
 
     try {
@@ -154,6 +158,7 @@ export const Preview = ({
             : true,
       };
       const stream = await getLocalStream(constraints);
+      streamIdRef.current = stream.id;
       setMediaStream(stream);
     } catch (error) {
       if (error.code !== 3003) {
@@ -175,10 +180,11 @@ export const Preview = ({
           video: !videoFailure && { deviceId: selectedVideoInput },
         });
 
+        streamIdRef.current = stream.id;
         setMediaStream(stream);
       }
     }
-  };
+  }, [mediaStream?.id]);
 
   useEffect(() => {
     // Init mute values
@@ -193,7 +199,7 @@ export const Preview = ({
     return () => {
       closeMediaStream(mediaStream);
     };
-  }, [selectedAudioInput, selectedVideoInput]);
+  }, [selectedAudioInput, selectedVideoInput, startMediaStream]);
 
   useEffect(() => {
     function handleVisibilityChange() {
@@ -220,7 +226,7 @@ export const Preview = ({
         false,
       );
     };
-  }, [mediaStream]);
+  }, [mediaStream, startMediaStream]);
 
   const handleDeviceChange = useCallback((values: SettingsFormProps) => {
     values?.selectedAudioInput &&
