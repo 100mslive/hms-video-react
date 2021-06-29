@@ -137,7 +137,7 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  const startMediaStream = async (mediaStream?: MediaStream) => {
+  const startMediaStream = useCallback(async () => {
     closeMediaStream(mediaStream);
 
     try {
@@ -173,7 +173,7 @@ export const Preview = ({
         setMediaStream(stream);
       }
     }
-  };
+  }, [selectedAudioInput, selectedVideoInput]);
 
   useEffect(() => {
     // Init mute values
@@ -184,7 +184,7 @@ export const Preview = ({
   window.onunload = () => closeMediaStream(mediaStream);
 
   useEffect(() => {
-    startMediaStream(mediaStream);
+    startMediaStream();
     return () => {
       closeMediaStream(mediaStream);
     };
@@ -200,7 +200,7 @@ export const Preview = ({
           message: '',
         });
       } else {
-        startMediaStream(mediaStream);
+        startMediaStream();
       }
     }
     document.addEventListener(
