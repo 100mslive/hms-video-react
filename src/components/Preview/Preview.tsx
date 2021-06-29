@@ -188,7 +188,7 @@ export const Preview = ({
     return () => {
       closeMediaStream(mediaStream);
     };
-  }, [selectedAudioInput, selectedVideoInput, mediaStream?.id]);
+  }, [selectedAudioInput, selectedVideoInput]);
 
   useEffect(() => {
     function handleVisibilityChange() {
