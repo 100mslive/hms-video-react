@@ -139,12 +139,12 @@ export const Preview = ({
   }, [error.title]);
 
   const startMediaStream = useCallback(async () => {
-    if (streamIdRef.current && streamIdRef.current === mediaStream?.id) {
-      alert(JSON.stringify({ id: streamIdRef.current, mediaStream }));
-      return;
-    }
     closeMediaStream(mediaStream);
-
+    alert(
+      `media trackenabled ${mediaStream
+        ?.getTracks()
+        .some(track => track.enabled)}`,
+    );
     try {
       await validateDeviceAV();
       const constraints = {
@@ -178,11 +178,10 @@ export const Preview = ({
           video: !videoFailure && { deviceId: selectedVideoInput },
         });
 
-        streamIdRef.current = stream.id;
         setMediaStream(stream);
       }
     }
-  }, [mediaStream]);
+  }, [selectedVideoInput, selectedAudioInput]);
 
   useEffect(() => {
     // Init mute values
@@ -197,7 +196,7 @@ export const Preview = ({
     return () => {
       closeMediaStream(mediaStream);
     };
-  }, [selectedAudioInput, selectedVideoInput, startMediaStream]);
+  }, [selectedAudioInput, selectedVideoInput]);
 
   useEffect(() => {
     function handleVisibilityChange() {
