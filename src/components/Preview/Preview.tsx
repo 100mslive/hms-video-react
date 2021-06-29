@@ -137,12 +137,9 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  useEffect(() => {
-    prevStream.current = mediaStream;
-  }, [mediaStream]);
-
   const startMediaStream = useCallback(async () => {
     closeMediaStream(prevStream.current);
+    closeMediaStream(mediaStream);
 
     try {
       await validateDeviceAV();
@@ -158,6 +155,7 @@ export const Preview = ({
       };
       const stream = await getLocalStream(constraints);
       setMediaStream(stream);
+      prevStream.current = stream;
     } catch (error) {
       setError({
         allowJoin: allowWithError.capture,
@@ -175,6 +173,7 @@ export const Preview = ({
         });
 
         setMediaStream(stream);
+        prevStream.current = stream;
       }
     }
   }, [selectedAudioInput, selectedVideoInput]);
