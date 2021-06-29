@@ -146,7 +146,7 @@ export const Preview = ({
         .some(track => track.enabled)}`,
     );
     try {
-      await validateDeviceAV();
+      // await validateDeviceAV();
       const constraints = {
         audio:
           !audioMuted && selectedAudioInput
