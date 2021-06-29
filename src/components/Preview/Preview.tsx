@@ -184,7 +184,7 @@ export const Preview = ({
         setMediaStream(stream);
       }
     }
-  }, [mediaStream?.id]);
+  }, [mediaStream]);
 
   useEffect(() => {
     // Init mute values
