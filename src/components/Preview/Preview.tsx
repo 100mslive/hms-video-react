@@ -158,7 +158,7 @@ export const Preview = ({
             : true,
       };
       const stream = await getLocalStream(constraints);
-      // streamIdRef.current = stream.id;
+      streamIdRef.current = stream.id;
       setMediaStream(stream);
       alert(JSON.stringify({ newStream: stream }));
     } catch (error) {
