@@ -184,9 +184,6 @@ export const Preview = ({
   window.onunload = () => closeMediaStream(mediaStream);
 
   useEffect(() => {
-    if (!mediaStream) {
-      return;
-    }
     startMediaStream(mediaStream);
     return () => {
       closeMediaStream(mediaStream);
