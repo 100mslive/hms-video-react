@@ -138,6 +138,7 @@ export const Preview = ({
   }, [error.title]);
 
   const startMediaStream = async () => {
+    alert(JSON.stringify({ olderstream: mediaStream }));
     closeMediaStream(mediaStream);
 
     try {
@@ -155,11 +156,15 @@ export const Preview = ({
       const stream = await getLocalStream(constraints);
       setMediaStream(stream);
     } catch (error) {
-      setError({
-        allowJoin: allowWithError.capture,
-        title: error.description || 'Unable to Access Camera/Microphone',
-        message: error.message,
-      });
+      if (error.code !== 3003) {
+        setError({
+          allowJoin: allowWithError.capture,
+          title: error.description || 'Unable to Access Camera/Microphone',
+          message: error.message,
+        });
+      }
+      alert(JSON.stringify({ error, mediaStream }));
+      closeMediaStream(mediaStream);
 
       // Start stream if any one is available
       const audioFailure = error.message.includes('audio');
