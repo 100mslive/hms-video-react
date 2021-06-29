@@ -175,12 +175,12 @@ export const Settings = ({
 
   useEffect(() => {
     if (open) {
-      getLocalStream({ video: true, audio: true })
-        .then(stream => {
-          closeMediaStream(stream);
-          getLocalDevices().then(deviceGroups => setDeviceGroups(deviceGroups));
-        })
-        .catch(err => setError(err.message));
+      // getLocalStream({ video: true, audio: true })
+      // .then(stream => {
+      // closeMediaStream(stream);
+      getLocalDevices().then(deviceGroups => setDeviceGroups(deviceGroups));
+      // })
+      // .catch(err => setError(err.message));
     }
   }, [open]);
 
