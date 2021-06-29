@@ -181,7 +181,7 @@ export const Preview = ({
         setMediaStream(stream);
       }
     }
-  }, [mediaStream]);
+  }, [mediaStream, selectedAudioInput, selectedVideoInput]);
 
   useEffect(() => {
     // Init mute values
@@ -196,7 +196,7 @@ export const Preview = ({
     return () => {
       closeMediaStream(mediaStream);
     };
-  }, [selectedAudioInput, selectedVideoInput, startMediaStream]);
+  }, [startMediaStream]);
 
   useEffect(() => {
     function handleVisibilityChange() {
