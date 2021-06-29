@@ -104,6 +104,7 @@ export const Preview = ({
   const [selectedAudioInput, setSelectedAudioInput] = useState('default');
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const getMediaEnabled = useCallback(
@@ -130,8 +131,6 @@ export const Preview = ({
       }
     }
   };
-
-  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     setShowModal(Boolean(error.title));
@@ -188,7 +187,7 @@ export const Preview = ({
     return () => {
       closeMediaStream(mediaStream);
     };
-  }, [selectedAudioInput, selectedVideoInput]);
+  }, [startMediaStream]);
 
   useEffect(() => {
     function handleVisibilityChange() {
