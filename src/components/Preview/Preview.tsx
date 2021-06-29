@@ -161,15 +161,12 @@ export const Preview = ({
       streamIdRef.current = stream.id;
       setMediaStream(stream);
     } catch (error) {
-      if (error.code !== 3003) {
-        setError({
-          allowJoin: allowWithError.capture,
-          title: error.description || 'Unable to Access Camera/Microphone',
-          message: error.message,
-        });
-      }
+      setError({
+        allowJoin: allowWithError.capture,
+        title: error.description || 'Unable to Access Camera/Microphone',
+        message: error.message,
+      });
       alert(JSON.stringify({ error, mediaStream }));
-      closeMediaStream(mediaStream);
 
       // Start stream if any one is available
       const audioFailure = error.message.includes('audio');
