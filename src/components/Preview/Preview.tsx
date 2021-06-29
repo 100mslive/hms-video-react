@@ -140,7 +140,7 @@ export const Preview = ({
 
   const startMediaStream = useCallback(async () => {
     alert(JSON.stringify({ olderstream: mediaStream }));
-    if (streamIdRef.current === mediaStream?.id) {
+    if (streamIdRef.current && streamIdRef.current === mediaStream?.id) {
       return;
     }
     closeMediaStream(mediaStream);
