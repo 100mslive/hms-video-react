@@ -104,9 +104,7 @@ export const Preview = ({
   const [selectedAudioInput, setSelectedAudioInput] = useState('default');
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
-  const [showModal, setShowModal] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const prevStream = useRef<MediaStream | undefined>();
 
   const getMediaEnabled = useCallback(
     (type: string) => {
@@ -133,12 +131,13 @@ export const Preview = ({
     }
   };
 
+  const [showModal, setShowModal] = useState(false);
+
   useEffect(() => {
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  const startMediaStream = useCallback(async () => {
-    closeMediaStream(prevStream.current);
+  const startMediaStream = async () => {
     closeMediaStream(mediaStream);
 
     try {
@@ -155,7 +154,6 @@ export const Preview = ({
       };
       const stream = await getLocalStream(constraints);
       setMediaStream(stream);
-      prevStream.current = stream;
     } catch (error) {
       setError({
         allowJoin: allowWithError.capture,
@@ -173,10 +171,9 @@ export const Preview = ({
         });
 
         setMediaStream(stream);
-        prevStream.current = stream;
       }
     }
-  }, [selectedAudioInput, selectedVideoInput]);
+  };
 
   useEffect(() => {
     // Init mute values
@@ -191,7 +188,7 @@ export const Preview = ({
     return () => {
       closeMediaStream(mediaStream);
     };
-  }, [startMediaStream]);
+  }, [selectedAudioInput, selectedVideoInput]);
 
   useEffect(() => {
     function handleVisibilityChange() {
