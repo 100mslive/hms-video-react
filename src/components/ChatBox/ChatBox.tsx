@@ -1,3 +1,4 @@
+// @ts-ignore
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { HMSMessage } from '@100mslive/hms-video-store';

@@ -44,6 +44,7 @@ const LightTemplate: Story<ControlBarProps> = args => {
 const defaultArgs = {
   isAudioMuted: true,
   isVideoMuted: true,
+  isDetection: false,
   isChatOpen: true,
 };
 

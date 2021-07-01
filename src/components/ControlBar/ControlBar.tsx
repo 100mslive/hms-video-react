@@ -8,6 +8,8 @@ import {
   CamOnIcon,
   ShareScreenIcon,
   ChatUnreadIcon,
+  DetectOffIcon,
+  DetectOnIcon,
 } from '../Icons';
 import { Button as TwButton } from '../Button';
 import { Settings } from '../Settings/Settings';
@@ -25,10 +27,14 @@ export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   isChatOpen?: boolean;
+  isDetection?: boolean;
+  isRendering?: boolean,
   buttonDisplay: ButtonDisplayType;
 
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
+  detectButtonOnClick: React.MouseEventHandler;
+  detectRenderingButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
   chatButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
@@ -54,9 +60,13 @@ export const ControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
   isChatOpen = false,
+  isDetection = false,
+  isRendering = true,
   buttonDisplay = 'rectangle',
   audioButtonOnClick,
   videoButtonOnClick,
+  detectButtonOnClick,
+  detectRenderingButtonOnClick,
   leaveButtonOnClick,
   chatButtonOnClick,
   screenshareButtonOnClick,
@@ -101,6 +111,7 @@ export const ControlBar = ({
       onClick={audioButtonOnClick}
       key={0}
     >
+      {console.log("hgyh",isDetection)}
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </TwButton>,
     <TwButton
@@ -114,6 +125,29 @@ export const ControlBar = ({
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
     </TwButton>,
+     <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
+      shape={buttonDisplay}
+      active={isDetection}
+      onClick={detectButtonOnClick}
+      key={2}
+     >
+      {isDetection ? <DetectOffIcon /> : <DetectOnIcon />}
+    </TwButton>,
+     <TwButton
+      iconOnly
+      variant={'no-fill'}
+      iconSize="md"
+      shape={buttonDisplay}
+      active={isRendering}
+      onClick={detectRenderingButtonOnClick}
+      key={2}
+     >
+      {isRendering ? <DetectOffIcon /> : <DetectOnIcon />}
+    </TwButton>,
+    
   ],
   rightComponents = [
     <TwButton
