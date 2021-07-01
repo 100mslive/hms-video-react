@@ -27,7 +27,7 @@ export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   isChatOpen?: boolean;
-  isDetection?: boolean;
+  isDetecting?: boolean;
   isRendering?: boolean,
   buttonDisplay: ButtonDisplayType;
 
@@ -60,7 +60,7 @@ export const ControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
   isChatOpen = false,
-  isDetection = false,
+  isDetecting = false,
   isRendering = true,
   buttonDisplay = 'rectangle',
   audioButtonOnClick,
@@ -111,7 +111,7 @@ export const ControlBar = ({
       onClick={audioButtonOnClick}
       key={0}
     >
-      {console.log("hgyh",isDetection)}
+      {console.log("hgyh",isDetecting)}
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </TwButton>,
     <TwButton
@@ -130,11 +130,11 @@ export const ControlBar = ({
       variant={'no-fill'}
       iconSize="md"
       shape={buttonDisplay}
-      active={isDetection}
+      active={isDetecting}
       onClick={detectButtonOnClick}
       key={2}
      >
-      {isDetection ? <DetectOffIcon /> : <DetectOnIcon />}
+      {isDetecting ? <DetectOffIcon /> : <DetectOnIcon />}
     </TwButton>,
      <TwButton
       iconOnly
