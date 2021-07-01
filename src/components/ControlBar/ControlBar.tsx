@@ -10,6 +10,8 @@ import {
   ChatUnreadIcon,
   DetectOffIcon,
   DetectOnIcon,
+  RenderOnIcon,
+  RenderOffIcon
 } from '../Icons';
 import { Button } from '../Button';
 import { Settings } from '../Settings/Settings';
@@ -134,7 +136,7 @@ export const ControlBar = ({
       onClick={detectButtonOnClick}
       key={2}
      >
-      {isDetecting ? <DetectOffIcon /> : <DetectOnIcon />}
+      {isDetecting ? <DetectOnIcon /> : <DetectOffIcon />}
     </Button>,
      <Button
       iconOnly
@@ -143,9 +145,9 @@ export const ControlBar = ({
       shape={buttonDisplay}
       active={isRendering}
       onClick={detectRenderingButtonOnClick}
-      key={2}
+      key={3}
      >
-      {isRendering ? <DetectOffIcon /> : <DetectOnIcon />}
+      {isRendering ? <RenderOnIcon /> : <RenderOffIcon />}
     </Button>,
     
   ],
