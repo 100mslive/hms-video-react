@@ -44,7 +44,7 @@ const defaultClasses: ControlBarClasses = {
   root:
     'flex bg-white dark:bg-black h-full items-center p-3 mr-2 ml-2 justify-center md:justify-between ',
   leftRoot: 'flex justify-center justify-between w-10 md:w-44',
-  centerRoot: 'flex md:flex-1 mr-4 md:mr-0 justify-center',
+  centerRoot: 'flex md:flex-1 mr-4 md:mr-0 justify-center md:-translate-x-5',
   rightRoot: '',
 };
 
