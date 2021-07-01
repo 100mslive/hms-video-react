@@ -11,7 +11,7 @@ import {
   DetectOffIcon,
   DetectOnIcon,
 } from '../Icons';
-import { Button as TwButton } from '../Button';
+import { Button } from '../Button';
 import { Settings } from '../Settings/Settings';
 import { VerticalDivider } from '../VerticalDivider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -45,15 +45,13 @@ export interface ControlBarProps {
   classes?: ControlBarClasses;
 }
 
+// Note: Column Gap is not supported in safari
 const defaultClasses: ControlBarClasses = {
   root:
-    'flex flex-grow bg-white dark:bg-black h-full items-center p-3 relative gap-x-4 mr-2 ml-2 self-center justify-center',
-  leftRoot:
-    'flex md:flex-none md:self-center md:justify-center gap-x-4 md:left-0 md:ml-2 md:absolute items-center',
-  centerRoot:
-    'flex md:flex-grow gap-x-4 md:mr-2 md:self-center md:justify-center',
-  rightRoot:
-    'flex md:flex-none gap-x-4 md:right-0 md:absolute md:self-center md:p-3 md:mr-2',
+    'flex bg-white dark:bg-black h-full items-center p-3 mr-2 ml-2 justify-center md:justify-between ',
+  leftRoot: 'flex justify-center justify-between w-10 md:w-44',
+  centerRoot: 'flex md:flex-1 mr-4 md:mr-0 justify-center',
+  rightRoot: '',
 };
 
 export const ControlBar = ({
@@ -78,20 +76,21 @@ export const ControlBar = ({
       key={0}
     />,
     <VerticalDivider key={1} />,
-    <TwButton
+    <Button
       iconOnly
-      variant={'no-fill'}
+      variant="no-fill"
       iconSize="md"
+      classes={{ root: 'w-14' }}
       shape={buttonDisplay}
       onClick={screenshareButtonOnClick}
       key={2}
     >
       <ShareScreenIcon />
-    </TwButton>,
+    </Button>,
     <VerticalDivider key={3} />,
-    <TwButton
+    <Button
       iconOnly
-      variant={'no-fill'}
+      variant="no-fill"
       iconSize="md"
       shape={buttonDisplay}
       onClick={chatButtonOnClick}
@@ -99,13 +98,14 @@ export const ControlBar = ({
       key={4}
     >
       <ChatUnreadIcon />
-    </TwButton>,
+    </Button>,
   ],
   centerComponents = [
-    <TwButton
+    <Button
       iconOnly
-      variant={'no-fill'}
+      variant="no-fill"
       iconSize="md"
+      classes={{ root: 'mr-2' }}
       shape={buttonDisplay}
       active={isAudioMuted}
       onClick={audioButtonOnClick}
@@ -113,10 +113,10 @@ export const ControlBar = ({
     >
       {console.log("hgyh",isDetecting)}
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
-    </TwButton>,
-    <TwButton
+    </Button>,
+    <Button
       iconOnly
-      variant={'no-fill'}
+      variant="no-fill"
       iconSize="md"
       shape={buttonDisplay}
       active={isVideoMuted}
@@ -124,8 +124,8 @@ export const ControlBar = ({
       key={1}
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
-    </TwButton>,
-     <TwButton
+    </Button>,
+     <Button
       iconOnly
       variant={'no-fill'}
       iconSize="md"
@@ -135,8 +135,8 @@ export const ControlBar = ({
       key={2}
      >
       {isDetecting ? <DetectOffIcon /> : <DetectOnIcon />}
-    </TwButton>,
-     <TwButton
+    </Button>,
+     <Button
       iconOnly
       variant={'no-fill'}
       iconSize="md"
@@ -146,20 +146,20 @@ export const ControlBar = ({
       key={2}
      >
       {isRendering ? <DetectOffIcon /> : <DetectOnIcon />}
-    </TwButton>,
+    </Button>,
     
   ],
   rightComponents = [
-    <TwButton
+    <Button
       size="md"
       shape={buttonDisplay}
-      variant={'danger'}
+      variant="danger"
       onClick={leaveButtonOnClick}
       icon={<HangUpIcon />}
       key={0}
     >
       Leave room
-    </TwButton>,
+    </Button>,
   ],
   classes,
 }: ControlBarProps) => {

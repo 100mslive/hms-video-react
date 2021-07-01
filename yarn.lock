@@ -2,23 +2,23 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@^0.1.21":
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.21.tgz#15074ba052174c8cb60cc70a26990ea09922c5d1"
-  integrity sha512-NGUBlzSUT5gJwOc74fsQOkWuPZY6eBlaxFb19oNC/JfjF28z4koVsNDeFjnFSc/Q3u7UaWCmy9+2mJ9sYjeefg==
+"@100mslive/hms-video-store@^0.1.28":
+  version "0.1.28"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.28.tgz#ea12d14be83b789822553f26c2bca68830eb6fa6"
+  integrity sha512-YRjo5Dt3fk7YjLQ3B8o2gqXemd6s7W1Lo/Q/KWqZUq4G32TQSSwQFgPQ/PtMwHlJDly0ON46SfRtQelBn6gHGA==
   dependencies:
     immer "^9.0.2"
     reselect "^4.0.0"
     zustand "^3.5.1"
 
-"@100mslive/hms-video@^0.0.36":
-  version "0.0.36"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.36.tgz#f2727fc53f9294cbb980f6095e340b2b156d2af5"
-  integrity sha512-bx1KYb7sszttZjgI5PlTiCnRE9WgzHsXfzcO6KAQI059Q888Y72dEu3wn4WapEc0JNvBmhHz1FN+TkGWwMgKtA==
+"@100mslive/hms-video@^0.0.54":
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.54.tgz#aaa42e48fc8329185482a7569163af713773ffd1"
+  integrity sha512-HXTyfxITs4aYcJm4oLtJM6hhwulLAiT1BfL2YJTmDlNfP97JFPNUbFVCqRVglsKwlUPedR77SZbjhtLQuNUY5w==
   dependencies:
-    bowser "^2.11.0"
     events "^3.3.0"
     sdp-transform "^2.14.1"
+    ua-parser-js "^0.7.28"
     uuid "^8.3.2"
     webrtc-adapter "^8.0.0"
 
@@ -4030,11 +4030,6 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.npmjs.org/boolbase/-/boolbase-1.0.0.tgz"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bowser@^2.11.0:
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/bowser/-/bowser-2.11.0.tgz#5ca3c35757a7aa5771500c70a73a9f91ef420a8f"
-  integrity sha512-AlcaJBi/pqqJBIQ8U9Mcpc9i8Aqxn88Skv5d+xBX006BY5u8N3mGLHa5Lgppa7L/HfwgwLgZ6NYs+Ag6uUmJRA==
-
 boxen@^4.2.0:
   version "4.2.0"
   resolved "https://registry.npmjs.org/boxen/-/boxen-4.2.0.tgz"
@@ -6303,7 +6298,7 @@ eventemitter3@^4.0.4:
 
 events@^3.0.0, events@^3.3.0:
   version "3.3.0"
-  resolved "https://registry.npmjs.org/events/-/events-3.3.0.tgz"
+  resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
   integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
 
 evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
@@ -12027,6 +12022,13 @@ react-textarea-autosize@^8.3.0:
     use-composed-ref "^1.0.0"
     use-latest "^1.0.0"
 
+react-toastify@^7.0.4:
+  version "7.0.4"
+  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-7.0.4.tgz#7d0b743f2b96f65754264ca6eae31911a82378db"
+  integrity sha512-Rol7+Cn39hZp5hQ/k6CbMNE2CKYV9E5OQdC/hBLtIQU2xz7DdAm7xil4NITQTHR6zEbE5RVFbpgSwTD7xRGLeQ==
+  dependencies:
+    clsx "^1.1.1"
+
 react-transition-group@^4.4.0:
   version "4.4.2"
   resolved "https://registry.npmjs.org/react-transition-group/-/react-transition-group-4.4.2.tgz"
@@ -14085,9 +14087,9 @@ typescript@^3.7.3:
   resolved "https://registry.npmjs.org/typescript/-/typescript-3.9.9.tgz"
   integrity sha512-kdMjTiekY+z/ubJCATUPlRDl39vXYiMV9iyeMuEuXZh2we6zz80uovNN2WlAxmmdE/Z/YQe+EbOEXB5RHEED3w==
 
-ua-parser-js@^0.7.18:
+ua-parser-js@^0.7.18, ua-parser-js@^0.7.28:
   version "0.7.28"
-  resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.28.tgz"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.28.tgz#8ba04e653f35ce210239c64661685bf9121dec31"
   integrity sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==
 
 unbox-primitive@^1.0.1:
