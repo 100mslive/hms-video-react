@@ -5,17 +5,13 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import {
-  getLocalStream,
-  parsedUserAgent,
-  isSupported,
-  validateDeviceAV,
-} from '@100mslive/hms-video';
+import { getLocalStream, validateDeviceAV } from '@100mslive/hms-video';
 import { HMSPeer } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
 import { SettingsFormProps } from '../Settings/Settings';
 import { Button } from '../Button';
+import { ProgressIcon } from '../Icons';
 import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { PreviewControls } from './Controls';
@@ -44,7 +40,7 @@ const defaultClasses: PreviewClasses = {
     'flex h-full w-screen bg-white dark:bg-black justify-center items-center',
   containerRoot:
     'flex flex-col justify-center items-center w-37.5 h-full md:h-400 pb-4 box-border bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden md:rounded-2xl',
-  header: 'w-4/5 md:w-22.5 md:h-22.5 mt-1.875 mb-7',
+  header: 'w-4/5 h-2/5 md:w-22.5 md:h-22.5 mt-1.875 mb-7',
   helloDiv: 'text-2xl font-medium mb-2',
   nameDiv: 'text-lg leading-6 mb-2',
   inputRoot: 'p-2 mb-3',
@@ -97,6 +93,7 @@ export const Preview = ({
   const [mediaStream, setMediaStream] = useState<MediaStream>();
   /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
+  const [inProgress, setInProgress] = useState(false);
   const [error, setError] = useState({
     allowJoin: false,
     title: '',
@@ -144,17 +141,6 @@ export const Preview = ({
     closeMediaStream(mediaStream);
 
     try {
-      if (!isSupported) {
-        setError({
-          allowJoin: allowWithError.unsupported,
-          title:
-            'Please update to latest version of Google Chrome to continue.',
-          message: `We currently do not support ${parsedUserAgent.getBrowserName()}(${
-            parsedUserAgent.getBrowserVersion().split('.')[0]
-          }) on ${parsedUserAgent.getOSName()}.`,
-        });
-      }
-
       await validateDeviceAV();
       const constraints = {
         audio:
@@ -317,16 +303,21 @@ export const Preview = ({
 
         {/* joinButton */}
         <Button
-          variant={'emphasized'}
-          size={'lg'}
-          onClick={() => {
+          variant="emphasized"
+          size="lg"
+          iconRight={inProgress}
+          icon={inProgress ? <ProgressIcon /> : undefined}
+          disabled={inProgress}
+          onClick={async () => {
             if (!name || !name.trim()) {
               inputRef.current && inputRef.current.focus();
               setShowValidation(true);
               return;
             }
             closeMediaStream(mediaStream);
-            joinOnClick({ audioMuted, videoMuted, name });
+            setInProgress(true);
+            await joinOnClick({ audioMuted, videoMuted, name });
+            setInProgress(false);
           }}
         >
           Join

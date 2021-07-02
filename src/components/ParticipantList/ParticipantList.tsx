@@ -33,9 +33,8 @@ const defaultClasses: ParticipantListClasses = {
     'text-gray-200 dark:text-gray-500 group flex items-center px-3 pt-3 pb-2 text-base',
   menuItem:
     'text-gray-100 dark:text-white group flex items-center flex-nowrap px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
-  menuText:
-    'w-52 whitespace-nowrap overflow-hidden overflow-ellipsis flex items-center',
-  menuIconContainer: 'flex flex-grow justify-self-end justify-end',
+  menuText: 'flex-1 flex items-center',
+  menuIconContainer: 'flex flex-shrink-0 justify-self-end justify-end',
   onIcon: '',
   offIcon: '',
 };
