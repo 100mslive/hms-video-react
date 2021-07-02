@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { isMobileDevice } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Text } from '../Text';
 import first_person_img from './first_person.png';
@@ -13,6 +14,7 @@ interface Props {
 interface FirstPersonDisplayClasses {
   root: string;
   rootBg: string;
+  content: string;
 }
 
 export const FirstPersonDisplay: React.FC<Props> = ({
@@ -21,8 +23,10 @@ export const FirstPersonDisplay: React.FC<Props> = ({
   src,
 }) => {
   const defaultClasses: FirstPersonDisplayClasses = {
-    root: `h-full text-white flex items-center justify-center`,
-    rootBg: `w-37.5 h-42.5 rounded-2xl relative flex flex-col text-center space-y-4 pt-44 items-center`,
+    root: 'h-full text-white flex items-center justify-center',
+    rootBg:
+      'w-37.5 h-42.5 rounded-2xl relative flex flex-col text-center space-y-4 justify-center items-center bg-contain',
+    content: 'flex flex-col transform -translate-y-full mls:translate-y-0',
   };
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -43,16 +47,18 @@ export const FirstPersonDisplay: React.FC<Props> = ({
           backgroundImage: `url(${src || first_person_img})`,
         }}
       >
-        <Text tag="h1" variant="heading">
-          Welcome {username} !
-        </Text>
-        <div>
-          <Text tag="p" variant="heading" size="sm">
-            You’re the first one here.
+        <div className={styler('content')}>
+          <Text tag="h1" variant="heading">
+            Welcome {username} !
           </Text>
-          <Text tag="p" variant="heading" size="sm">
-            Sit back and relax till the others join.
-          </Text>
+          <div className="mt-2">
+            <Text tag="p" variant="heading" size="sm">
+              You’re the first one here.
+            </Text>
+            <Text tag="p" variant="heading" size="sm">
+              Sit back and relax till the others join.
+            </Text>
+          </div>
         </div>
       </div>
     </div>

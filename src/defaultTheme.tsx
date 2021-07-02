@@ -100,6 +100,11 @@ export const theme: { theme: ThemeConfiguration } = {
         2.5: '0.625rem',
         3.5: '0.875rem',
       },
+      screens: {
+        mls: {
+          raw: 'screen and (max-width: 992px) and (orientation: landscape)',
+        },
+      },
     },
   },
 };
