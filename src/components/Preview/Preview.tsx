@@ -36,8 +36,7 @@ export interface PreviewClasses {
   goBackButton?: string;
 }
 const defaultClasses: PreviewClasses = {
-  root:
-    'flex h-full w-screen bg-white dark:bg-black justify-center items-center',
+  root: 'flex w-screen bg-white dark:bg-black justify-center items-center',
   containerRoot:
     'flex flex-col justify-center items-center w-37.5 h-full md:h-400 pb-4 box-border bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden md:rounded-2xl',
   header: 'w-4/5 h-2/5 md:w-22.5 md:h-22.5 mt-1.875 mb-7',
@@ -233,7 +232,9 @@ export const Preview = ({
     },
     value: name,
     validation:
-      showValidation && (!name || !name.trim()) ? 'Please enter name' : '',
+      showValidation && (!name || !name.replace(/\u200b/g, ' ').trim())
+        ? 'Please enter name'
+        : '',
     required: true,
   };
 
