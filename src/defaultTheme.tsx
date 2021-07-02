@@ -86,6 +86,7 @@ export const theme: { theme: ThemeConfiguration } = {
         37.5: '37.5rem',
         400: '40rem',
         42.5: '42.5rem',
+        auto: 'auto',
       },
       scale: {
         '-100': '-1',
