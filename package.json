@@ -1,5 +1,5 @@
 {
-  "version": "0.2.44",
+  "version": "0.2.46",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -25,7 +25,7 @@
   },
   "peerDependencies": {
     "react": ">=16",
-    "@100mslive/hms-video": "^0.0.59"
+    "@100mslive/hms-video": "^0.0.63"
   },
   "husky": {
     "hooks": {
