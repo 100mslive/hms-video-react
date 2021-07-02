@@ -310,7 +310,7 @@ export const Preview = ({
           icon={inProgress ? <ProgressIcon /> : undefined}
           disabled={inProgress}
           onClick={async () => {
-            if (!name || !name.trim()) {
+            if (!name || !name.replace(/\u200b/g, ' ').trim()) {
               inputRef.current && inputRef.current.focus();
               setShowValidation(true);
               return;
