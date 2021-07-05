@@ -179,7 +179,7 @@ export const Settings = ({
       if (
         Object.values(deviceGroups)
           .flat()
-          .every(val => val.deviceId === '' && val.label === '')
+          .every(val => !val.deviceId || !val.label) // deviceid is always present in firefox
       ) {
         // No permissions get permissions now
         const stream = await getLocalStream({ video: true, audio: true });
