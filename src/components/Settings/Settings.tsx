@@ -173,14 +173,28 @@ export const Settings = ({
     maxTileCount: initialValues?.maxTileCount ? initialValues?.maxTileCount : 9,
   });
 
+  async function getDevices() {
+    try {
+      let deviceGroups = await getLocalDevices();
+      if (
+        Object.values(deviceGroups)
+          .flat()
+          .every(val => val.deviceId === '' && val.label === '')
+      ) {
+        // No permissions get permissions now
+        const stream = await getLocalStream({ video: true, audio: true });
+        closeMediaStream(stream);
+        deviceGroups = await getLocalDevices();
+      }
+      setDeviceGroups(deviceGroups);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
   useEffect(() => {
     if (open) {
-      // getLocalStream({ video: true, audio: true })
-      // .then(stream => {
-      // closeMediaStream(stream);
-      getLocalDevices().then(deviceGroups => setDeviceGroups(deviceGroups));
-      // })
-      // .catch(err => setError(err.message));
+      getDevices();
     }
   }, [open]);
 
