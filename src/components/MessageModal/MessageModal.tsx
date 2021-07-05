@@ -51,9 +51,8 @@ const defaultClasses: MessageModalClasses = {
     'flex flex-col md:flex-row md:flex-wrap bg-white dark:bg-gray-100 rounded-lg sm:items-start md:w-100 focus:outline-none rounded-tr-lg text-center font-normal sm:text-left md:text-base text-sm text-gray-100 dark:text-gray-500 px-5 py-5',
   header: 'flex flex-grow flex-row items-center mb-4',
   title:
-    'flex flex-grow lg:text-2xl sm:text-xl self-center items-center text-gray-100 dark:text-white font-medium',
-  closeRoot:
-    'flex flex-none self-center justify-end items-end right-0 bg-white dark:bg-gray-100 hover:bg-gray-600 dark:hover:bg-gray-200 sm:flex sm:flex-row-reverse',
+    'flex flex-1 lg:text-2xl sm:text-xl self-center items-center text-gray-100 dark:text-white font-medium',
+  closeRoot: 'self-start',
   closeButton:
     'w-full justify-end text-base font-medium rounded-xl focus:outline-none',
   body: 'w-full',
@@ -101,12 +100,13 @@ export const StyledMessageModal = ({
                   <div className={styler('title')}>{title}</div>
                   <div className={styler('closeRoot')}>
                     <Button
-                      variant={'no-fill'}
+                      variant="no-fill"
                       onClick={onClose}
-                      icon={<CloseIcon className="text-red-main" />}
-                      iconOnly={true}
-                      iconSize="md"
-                    />
+                      iconOnly
+                      size="sm"
+                    >
+                      <CloseIcon />
+                    </Button>
                   </div>
                 </div>
                 <div className={styler('body')}>{body}</div>

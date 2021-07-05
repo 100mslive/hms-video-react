@@ -110,6 +110,7 @@ export const HMSToastContainer: React.FC<Partial<ToastProps>> = props => {
     <ToastContainer
       {...props}
       className="hms-toast"
+      position={props.position || 'bottom-left'}
       autoClose={3000}
       hideProgressBar
       closeButton={false}

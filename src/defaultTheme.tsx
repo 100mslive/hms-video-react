@@ -86,6 +86,7 @@ export const theme: { theme: ThemeConfiguration } = {
         37.5: '37.5rem',
         400: '40rem',
         42.5: '42.5rem',
+        auto: 'auto',
       },
       scale: {
         '-100': '-1',
@@ -99,6 +100,11 @@ export const theme: { theme: ThemeConfiguration } = {
         0.5: '0.03125rem',
         2.5: '0.625rem',
         3.5: '0.875rem',
+      },
+      screens: {
+        mls: {
+          raw: 'screen and (max-width: 992px) and (orientation: landscape)',
+        },
       },
     },
   },

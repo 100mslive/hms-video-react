@@ -1,16 +1,16 @@
 import React, { ChangeEventHandler, useMemo, useEffect, useState } from 'react';
-import { SettingsIcon, CloseIcon } from '../Icons';
 import Dialog from '@material-ui/core/Dialog';
 import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
-import { closeMediaStream } from '../../utils';
-import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
+import { getLocalDevices, getLocalStream } from '@100mslive/hms-video';
 import { Button as TwButton } from '../Button';
 import { Text } from '../Text';
+import { SettingsIcon, CloseIcon } from '../Icons';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { getLocalDevices, getLocalStream } from '@100mslive/hms-video';
+import { closeMediaStream, isMobileDevice } from '../../utils';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 interface SettingsClasses {
   root?: string;
@@ -58,7 +58,7 @@ const defaultClasses: SettingsClasses = {
   titleContainer: 'flex items-center',
   titleIcon: 'pr-4',
   titleText: 'text-2xl leading-7',
-  formContainer: 'flex flex-wrap text-base',
+  formContainer: 'flex flex-wrap text-base mb-2 md:mb-0',
   formInner: 'w-full flex my-1.5',
   selectLabel: 'w-1/3 flex justify-end items-center',
   selectContainer: 'rounded-lg w-1/2 bg-gray-600 dark:bg-gray-200 p-2 mx-2',
@@ -472,38 +472,41 @@ export const Settings = ({
                 </div>
               </div>
             </div> */}
-            <div className={styler('divider')}></div>
-            <div className={styler('sliderContainer')}>
-              <div className={styler('sliderInner')}>
-                <div className={styler('sliderLabelContainer')}>
-                  <Text variant="heading" size="sm">
-                    Participants in view:
-                  </Text>
-                </div>
-                <div className={styler('slider')}>
-                  <HMSSlider
-                    name="maxTileCount"
-                    defaultValue={9}
-                    value={values.maxTileCount}
-                    onChange={handleSliderChange}
-                    aria-labelledby="continuous-slider"
-                    valueLabelDisplay="auto"
-                    min={1}
-                    max={49}
-                    step={null}
-                    marks={[
-                      { value: 1 },
-                      { value: 4 },
-                      { value: 9 },
-                      { value: 16 },
-                      { value: 25 },
-                      { value: 36 },
-                      { value: 49 },
-                    ]}
-                  />
-                </div>
-              </div>
-              {/* <div className="w-full flex">
+            {/** Hide participants view for mobile */}
+            {!isMobileDevice() && (
+              <>
+                <div className={styler('divider')}></div>
+                <div className={styler('sliderContainer')}>
+                  <div className={styler('sliderInner')}>
+                    <div className={styler('sliderLabelContainer')}>
+                      <Text variant="heading" size="sm">
+                        Participants in view:
+                      </Text>
+                    </div>
+                    <div className={styler('slider')}>
+                      <HMSSlider
+                        name="maxTileCount"
+                        defaultValue={9}
+                        value={values.maxTileCount}
+                        onChange={handleSliderChange}
+                        aria-labelledby="continuous-slider"
+                        valueLabelDisplay="auto"
+                        min={1}
+                        max={49}
+                        step={null}
+                        marks={[
+                          { value: 1 },
+                          { value: 4 },
+                          { value: 9 },
+                          { value: 16 },
+                          { value: 25 },
+                          { value: 36 },
+                          { value: 49 },
+                        ]}
+                      />
+                    </div>
+                  </div>
+                  {/* <div className="w-full flex">
                 <div className="w-1/3 flex justify-end items-center "></div>
                 <div className="rounded-lg w-1/2  px-2 mx-2 flex my-1 items-center ">
                   <input
@@ -516,7 +519,7 @@ export const Settings = ({
                   <span className="mx-2">Always stay in small view.</span>
                 </div>
               </div> */}
-              {/* <div className="w-full flex ">
+                  {/* <div className="w-full flex ">
                 <div className="w-1/3 flex justify-end items-center "></div>
                 <div className="rounded-lg w-1/2  px-2 mx-2 flex my-1 items-center ">
                   <Slider
@@ -530,7 +533,7 @@ export const Settings = ({
                   />
                 </div>
               </div> */}
-              {/* <div className="w-full flex m-1">
+                  {/* <div className="w-full flex m-1">
                 <div className="w-1/3 flex justify-end items-center "></div>
                 <div className="rounded-lg w-1/4 bg-gray-200 p-1 mx-5">
                   <select
@@ -553,7 +556,9 @@ export const Settings = ({
                   </select>
                 </div>
               </div> */}
-            </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </HMSDialog>
