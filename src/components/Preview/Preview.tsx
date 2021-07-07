@@ -5,8 +5,13 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { getLocalStream, validateDeviceAV } from '@100mslive/hms-video';
-import { HMSPeer } from '@100mslive/hms-video-store';
+import {
+  HMSRoomState,
+  selectIsLocalAudioEnabled,
+  selectIsLocalVideoDisplayEnabled,
+  selectLocalPeer,
+  selectRoomState,
+} from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
 import { SettingsFormProps } from '../Settings/Settings';
@@ -16,8 +21,9 @@ import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { PreviewControls } from './Controls';
 import { Input } from '../Input';
-import { closeMediaStream } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import HMSConfig from '@100mslive/hms-video/dist/interfaces/config';
 
 interface JoinInfo {
   audioMuted?: boolean;
@@ -46,6 +52,7 @@ const defaultClasses: PreviewClasses = {
   inputRoot: 'p-2 mb-3',
 };
 export interface PreviewProps {
+  config: HMSConfig;
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
   onChange: (values: SettingsFormProps) => void;
   /**
@@ -66,6 +73,7 @@ export interface PreviewProps {
 }
 
 export const Preview = ({
+  config,
   joinOnClick,
   errorOnClick,
   onChange,
@@ -78,6 +86,9 @@ export const Preview = ({
   videoTileClasses,
 }: PreviewProps) => {
   const { tw } = useHMSTheme();
+  const localPeer = useHMSStore(selectLocalPeer);
+  const hmsActions = useHMSActions();
+  const roomState = useHMSStore(selectRoomState);
 
   const styler = useMemo(
     () =>
@@ -90,7 +101,6 @@ export const Preview = ({
     [],
   );
 
-  const [mediaStream, setMediaStream] = useState<MediaStream>();
   /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
   const [inProgress, setInProgress] = useState(false);
@@ -99,37 +109,17 @@ export const Preview = ({
     title: '',
     message: '',
   });
-  const [audioMuted, setAudioMuted] = useState(true);
-  const [videoMuted, setVideoMuted] = useState(true);
+
+  const audioEnabled = useHMSStore(selectIsLocalAudioEnabled);
+  const videoEnabled = useHMSStore(selectIsLocalVideoDisplayEnabled);
+
+  const setAudioEnabled = hmsActions.setLocalAudioEnabled.bind(hmsActions);
+  const setVideoEnabled = hmsActions.setLocalVideoEnabled.bind(hmsActions);
+
   const [selectedAudioInput, setSelectedAudioInput] = useState('default');
   const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const getMediaEnabled = useCallback(
-    (type: string) => {
-      const track =
-        type === 'video'
-          ? mediaStream?.getVideoTracks()[0]
-          : mediaStream?.getAudioTracks()[0];
-      return Boolean(track?.enabled);
-    },
-    [mediaStream],
-  );
-
-  const toggleMediaState = (type: string) => {
-    if (mediaStream) {
-      const videoTrack = mediaStream.getVideoTracks()[0];
-      const audioTrack = mediaStream.getAudioTracks()[0];
-      if (type === 'audio' && audioTrack) {
-        audioTrack.enabled = !getMediaEnabled('audio');
-        setAudioMuted(!audioTrack.enabled);
-      } else if (type === 'video' && videoTrack) {
-        videoTrack.enabled = !getMediaEnabled('video');
-        setVideoMuted(!videoTrack.enabled);
-      }
-    }
-  };
 
   const [showModal, setShowModal] = useState(false);
 
@@ -137,85 +127,18 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  const startMediaStream = async () => {
-    closeMediaStream(mediaStream);
-
-    try {
-      await validateDeviceAV();
-      const constraints = {
-        audio:
-          !audioMuted && selectedAudioInput
-            ? { deviceId: selectedAudioInput }
-            : true,
-        video:
-          !videoMuted && selectedVideoInput
-            ? { deviceId: selectedVideoInput }
-            : true,
-      };
-      const stream = await getLocalStream(constraints);
-      setMediaStream(stream);
-    } catch (error) {
-      setError({
-        allowJoin: allowWithError.capture,
-        title: error.description || 'Unable to Access Camera/Microphone',
-        message: error.message,
-      });
-
-      // Start stream if any one is available
-      const audioFailure = error.message.includes('audio');
-      const videoFailure = error.message.includes('video');
-      if (!(audioFailure && videoFailure)) {
-        const stream = await getLocalStream({
-          audio: !audioFailure && { deviceId: selectedAudioInput },
-          video: !videoFailure && { deviceId: selectedVideoInput },
-        });
-
-        setMediaStream(stream);
-      }
-    }
-  };
+  window.onunload = () => hmsActions.leave();
 
   useEffect(() => {
-    // Init mute values
-    setAudioMuted(!getMediaEnabled('audio'));
-    setVideoMuted(!getMediaEnabled('video'));
-  }, [mediaStream]);
-
-  window.onunload = () => closeMediaStream(mediaStream);
+    hmsActions.preview(config);
+  }, [config.authToken]);
 
   useEffect(() => {
-    startMediaStream();
-    return () => {
-      closeMediaStream(mediaStream);
-    };
+    // @ts-ignore
+    hmsActions.setVideoSettings({ deviceId: selectedVideoInput });
+    // @ts-ignore
+    hmsActions.setAudioSettings({ deviceId: selectedAudioInput });
   }, [selectedAudioInput, selectedVideoInput]);
-
-  useEffect(() => {
-    function handleVisibilityChange() {
-      if (document.hidden) {
-        closeMediaStream(mediaStream);
-        setError({
-          allowJoin: false,
-          title: '',
-          message: '',
-        });
-      } else {
-        startMediaStream();
-      }
-    }
-    document.addEventListener(
-      'visibilitychange',
-      handleVisibilityChange,
-      false,
-    );
-    return () => {
-      document.removeEventListener(
-        'visibilitychange',
-        handleVisibilityChange,
-        false,
-      );
-    };
-  }, [mediaStream]);
 
   const handleDeviceChange = useCallback((values: SettingsFormProps) => {
     values?.selectedAudioInput &&
@@ -259,35 +182,27 @@ export const Preview = ({
             }}
           />
           {/* videoTile */}
-          <VideoTile
-            {...videoTileProps}
-            videoTrack={mediaStream?.getVideoTracks()[0]}
-            isAudioMuted={audioMuted}
-            isVideoMuted={videoMuted}
-            audioTrack={mediaStream?.getAudioTracks()[0]}
-            peer={
-              {
-                id: name,
-                name: name,
-                isLocal: true,
-              } as HMSPeer
-            }
-            objectFit="cover"
-            aspectRatio={{
-              width: 1,
-              height: 1,
-            }}
-            classes={videoTileClasses}
-            controlsComponent={
-              <PreviewControls
-                audioButtonOnClick={() => toggleMediaState('audio')}
-                videoButtonOnClick={() => toggleMediaState('video')}
-                isAudioMuted={audioMuted}
-                isVideoMuted={videoMuted}
-                onChange={handleDeviceChange}
-              />
-            }
-          />
+          {localPeer && (
+            <VideoTile
+              {...videoTileProps}
+              peer={localPeer}
+              objectFit="cover"
+              aspectRatio={{
+                width: 1,
+                height: 1,
+              }}
+              classes={videoTileClasses}
+              controlsComponent={
+                <PreviewControls
+                  audioButtonOnClick={() => setAudioEnabled(!audioEnabled)}
+                  videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
+                  isAudioMuted={!audioEnabled}
+                  isVideoMuted={!videoEnabled}
+                  onChange={handleDeviceChange}
+                />
+              }
+            />
+          )}
         </div>
         {/* helloDiv */}
         <div className={styler('helloDiv')}>Hi There</div>
@@ -307,18 +222,21 @@ export const Preview = ({
         <Button
           variant="emphasized"
           size="lg"
-          iconRight={inProgress}
+          iconRight={inProgress || roomState === HMSRoomState.Connecting}
           icon={inProgress ? <ProgressIcon /> : undefined}
-          disabled={inProgress}
+          disabled={inProgress || roomState === HMSRoomState.Connecting}
           onClick={async () => {
             if (!name || !name.replace(/\u200b/g, ' ').trim()) {
               inputRef.current && inputRef.current.focus();
               setShowValidation(true);
               return;
             }
-            closeMediaStream(mediaStream);
             setInProgress(true);
-            await joinOnClick({ audioMuted, videoMuted, name });
+            await joinOnClick({
+              audioMuted: !audioEnabled,
+              videoMuted: !videoEnabled,
+              name,
+            });
             setInProgress(false);
           }}
         >
