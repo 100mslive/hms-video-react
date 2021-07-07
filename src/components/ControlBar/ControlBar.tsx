@@ -8,6 +8,8 @@ import {
   CamOnIcon,
   ShareScreenIcon,
   ChatUnreadIcon,
+  VbOffIcon,
+  VbOnIcon,
 } from '../Icons';
 import { Button } from '../Button';
 import { Settings } from '../Settings/Settings';
@@ -24,11 +26,13 @@ export interface ControlBarClasses {
 export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
+  isVirtualBackground?: boolean;
   isChatOpen?: boolean;
   buttonDisplay: ButtonDisplayType;
 
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
+  vbButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
   chatButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
@@ -52,12 +56,14 @@ export const ControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
   isChatOpen = false,
+  isVirtualBackground = false,
   buttonDisplay = 'rectangle',
   audioButtonOnClick,
   videoButtonOnClick,
   leaveButtonOnClick,
   chatButtonOnClick,
   screenshareButtonOnClick,
+  vbButtonOnClick,
   leftComponents = [
     <Settings
       onChange={props => {
@@ -113,6 +119,17 @@ export const ControlBar = ({
       key={1}
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+    </Button>,
+     <Button
+      iconOnly
+      variant="no-fill"
+      iconSize="md"
+      shape={buttonDisplay}
+      active={isVirtualBackground}
+      onClick={vbButtonOnClick}
+      key={2}
+    >
+      {isVirtualBackground ? <VbOffIcon /> : <VbOnIcon />}
     </Button>,
   ],
   rightComponents = [
