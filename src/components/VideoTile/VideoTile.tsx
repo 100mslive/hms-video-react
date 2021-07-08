@@ -10,9 +10,9 @@ import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../TwAvatar';
-import { MicOffIcon } from '../Icons';
+import { MicOffIcon, MicOnIcon } from '../Icons';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
@@ -69,6 +69,11 @@ export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
    * Boolean variable to specify if videoTile is small or not
    */
   compact?: boolean;
+  /**
+   * To render or hide the context menu with options like
+   * Mute/spotlight etc. can be used in preview to hide
+   */
+  showContextMenu?: boolean;
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -126,8 +131,10 @@ export const VideoTile = ({
   classes,
   avatarType,
   compact = false,
+  showContextMenu = true,
 }: VideoTileProps) => {
   const { appBuilder, tw } = useHMSTheme();
+  const hmsActions = useHMSActions();
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<VideoTileClasses>({
@@ -197,13 +204,21 @@ export const VideoTile = ({
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
     <div className={styler('root')}>
-      <ContextMenu>
-        <ContextMenuItem
-          label="Mute"
-          icon={<MicOffIcon className="fill-current text-white" />}
-          onClick={() => {}}
-        />
-      </ContextMenu>
+      {showContextMenu && (
+        <ContextMenu>
+          <ContextMenuItem
+            label={isAudioMuted ? 'Unmute' : 'Mute'}
+            icon={
+              isAudioMuted ? (
+                <MicOnIcon className="fill-current text-white" />
+              ) : (
+                <MicOffIcon className="fill-current text-white" />
+              )
+            }
+            onClick={() => hmsActions.mutePeer(peer.id, !isAudioMuted)}
+          />
+        </ContextMenu>
+      )}
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
         objectFit === 'contain') && (
         <div
