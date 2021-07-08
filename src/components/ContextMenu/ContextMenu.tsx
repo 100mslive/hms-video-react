@@ -42,9 +42,8 @@ const defaultClasses: ContextMenuClasses = {
   menu: 'bg-gray-200 mt-2.5 rounded-lg w-44 h-auto py-2 text-white',
   menuItem:
     'flex items-center px-2 h-10 hover:bg-gray-300 bg-gray-200 cursor-pointer',
-  menuIcon: 'w-6',
-  menuTitle:
-    'ml-2 text-gray-100 dark:text-white text-base flex-1 min-w-0 truncate',
+  menuIcon: 'w-6 mr-2',
+  menuTitle: 'text-gray-100 dark:text-white text-base flex-1 min-w-0 truncate',
 };
 
 export const ContextMenuItem = ({
@@ -67,7 +66,7 @@ export const ContextMenuItem = ({
 
   return (
     <div className={styler('menuItem')} onClick={onClick}>
-      <span className={styler('menuIcon')}>{icon}</span>
+      {icon && <span className={styler('menuIcon')}>{icon}</span>}
       <span className={styler('menuTitle')}>{label}</span>
     </div>
   );
