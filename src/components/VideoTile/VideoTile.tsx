@@ -1,19 +1,22 @@
 import React, { useMemo } from 'react';
-import './index.css';
-import { Video, VideoProps, VideoClasses } from '../Video/Video';
-import { VideoTileControls } from './Controls';
-import { Avatar } from '../TwAvatar';
-import { getVideoTileLabel } from '../../utils';
-import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { HMSPeer } from '@100mslive/hms-video-store';
-import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
+  HMSPeer,
   selectCameraStreamByPeerID,
   selectIsPeerAudioEnabled,
   selectIsPeerVideoEnabled,
   selectScreenShareByPeerID,
 } from '@100mslive/hms-video-store';
+import { ContextMenu, ContextMenuItem } from '../ContextMenu';
+import { Video, VideoProps, VideoClasses } from '../Video/Video';
+import { VideoTileControls } from './Controls';
+import { Avatar } from '../TwAvatar';
+import { MicOffIcon } from '../Icons';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { getVideoTileLabel } from '../../utils';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+import './index.css';
+
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
@@ -194,6 +197,13 @@ export const VideoTile = ({
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
     <div className={styler('root')}>
+      <ContextMenu>
+        <ContextMenuItem
+          label="Mute"
+          icon={<MicOffIcon className="fill-current text-white" />}
+          onClick={() => {}}
+        />
+      </ContextMenu>
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
         objectFit === 'contain') && (
         <div
