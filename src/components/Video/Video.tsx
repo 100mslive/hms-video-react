@@ -145,6 +145,7 @@ export const Video = ({
         HMSLogger.d('Video InView', videoTrack, inView);
         if (hmsVideoTrack.enabled) {
           if (inView) {
+            console.log("Add sink is called trackid", hmsVideoTrack.id);
             await hmsActions.attachVideo(hmsVideoTrack.id, videoRef.current);
           } else {
             await hmsActions.detachVideo(hmsVideoTrack.id, videoRef.current);
@@ -159,6 +160,7 @@ export const Video = ({
     hmsVideoTrack?.id,
     hmsVideoTrack?.enabled,
     hmsVideoTrack?.deviceID,
+    hmsVideoTrack?.processors
   ]);
 
   useEffect(() => {
