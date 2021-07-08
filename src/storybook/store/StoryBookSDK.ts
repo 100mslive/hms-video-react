@@ -23,6 +23,12 @@ export class StoryBookSDK implements IHMSActions {
   constructor(store: IHMSStore) {
     this.store = store;
   }
+  mutePeer(peerID: string, mute: boolean): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  muteAllPeers(mute: boolean): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   preview(config: config): void {
     throw new Error('Method not implemented.');
   }
