@@ -25,7 +25,28 @@ const Template: Story<ContextMenuProps> = args => {
         <ContextMenu>
           <ContextMenuItem
             label="Mute"
-            icon={<MicOffIcon className="fill-current text-white" />}
+            icon={<MicOffIcon />}
+            onClick={() => {}}
+          />
+        </ContextMenu>
+      </HMSThemeProvider>
+    </div>
+  );
+};
+
+const LightTemplate: Story<ContextMenuProps> = args => {
+  return (
+    <div>
+      <HMSThemeProvider
+        config={{}}
+        appBuilder={{
+          theme: 'light',
+        }}
+      >
+        <ContextMenu>
+          <ContextMenuItem
+            label="Mute"
+            icon={<MicOffIcon />}
             onClick={() => {}}
           />
         </ContextMenu>
@@ -35,3 +56,4 @@ const Template: Story<ContextMenuProps> = args => {
 };
 
 export const Default = Template.bind({});
+export const Light = LightTemplate.bind({});

@@ -39,10 +39,11 @@ const defaultClasses: ContextMenuClasses = {
   root: 'absolute right-2.5 top-2.5 flex flex-col z-50',
   trigger:
     'self-end w-9 h-9 rounded-full bg-gray-300 cursor-pointer flex items-center justify-center',
-  menu: 'bg-gray-200 mt-2.5 rounded-lg w-44 h-auto py-2 text-white',
+  menu:
+    'bg-white dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto py-2 text-white',
   menuItem:
-    'flex items-center px-2 h-10 hover:bg-gray-300 bg-gray-200 cursor-pointer',
-  menuIcon: 'w-6 mr-2',
+    'flex items-center px-2 h-10 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
+  menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
   menuTitle: 'text-gray-100 dark:text-white text-base flex-1 min-w-0 truncate',
 };
 
