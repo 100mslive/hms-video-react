@@ -69,11 +69,6 @@ export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
    * Boolean variable to specify if videoTile is small or not
    */
   compact?: boolean;
-  /**
-   * To render or hide the context menu with options like
-   * Mute/spotlight etc. can be used in preview to hide
-   */
-  showContextMenu?: boolean;
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -131,7 +126,6 @@ export const VideoTile = ({
   classes,
   avatarType,
   compact = false,
-  showContextMenu = true,
 }: VideoTileProps) => {
   const { appBuilder, tw } = useHMSTheme();
   const hmsActions = useHMSActions();
@@ -204,7 +198,7 @@ export const VideoTile = ({
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
     <div className={styler('root')}>
-      {showContextMenu && (
+      {!peer.isLocal && (
         <ContextMenu>
           <ContextMenuItem
             label={isAudioMuted ? 'Unmute' : 'Mute'}

@@ -191,7 +191,6 @@ export const Preview = ({
                 width: 1,
                 height: 1,
               }}
-              showContextMenu={false}
               classes={videoTileClasses}
               controlsComponent={
                 <PreviewControls
