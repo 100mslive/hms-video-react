@@ -3,6 +3,7 @@ import { Meta, Story } from '@storybook/react';
 import { ContextMenuProps, ContextMenu } from './index';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 import { MicOffIcon, StarIcon } from '../Icons';
+import { ContextMenuItem } from './ContextMenu';
 
 const meta: Meta = {
   title: 'ContextMenu',
@@ -21,17 +22,13 @@ const Template: Story<ContextMenuProps> = args => {
           theme: 'dark',
         }}
       >
-        <ContextMenu
-          items={[
-            {
-              label: 'Mute',
-              value: false,
-              icon: <MicOffIcon className="fill-current text-white" />,
-            },
-            { label: 'Spotlight', value: false, icon: <StarIcon /> },
-          ]}
-          onItemClick={item => alert(`${item.label} clicked`)}
-        />
+        <ContextMenu>
+          <ContextMenuItem
+            label="Mute"
+            icon={<MicOffIcon className="fill-current text-white" />}
+            onClick={() => {}}
+          />
+        </ContextMenu>
       </HMSThemeProvider>
     </div>
   );

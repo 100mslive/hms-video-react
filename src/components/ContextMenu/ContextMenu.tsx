@@ -1,8 +1,8 @@
-import React, { useState, useMemo, Fragment } from 'react';
+import React, { useState, useMemo } from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { DotMenuIcon, MicOffIcon, StarIcon } from '../Icons';
+import { DotMenuIcon } from '../Icons';
 
 export interface ContextMenuClasses {
   root?: string;
@@ -13,18 +13,26 @@ export interface ContextMenuClasses {
   menuIcon?: string;
 }
 
-export interface ContextMenuItem {
+export type ContextMenuItemClasses = Omit<
+  ContextMenuClasses,
+  'root' | 'trigger' | 'menu'
+>;
+
+export interface ContextMenuDataItem {
   label: string;
-  value: any;
   icon?: JSX.Element;
 }
 
 export interface ContextMenuProps {
   classes?: ContextMenuClasses;
-  position?: 'left' | 'right';
-  items: Array<ContextMenuItem>;
-  renderItem?: (item: ContextMenuItem) => JSX.Element;
-  onItemClick: (item: ContextMenuItem) => void;
+  children:
+    | React.ReactElement<ContextMenuItemProps>
+    | React.ReactElement<ContextMenuItemProps>[];
+}
+
+export interface ContextMenuItemProps extends ContextMenuDataItem {
+  classes?: ContextMenuItemClasses;
+  onClick: () => void;
 }
 
 const defaultClasses: ContextMenuClasses = {
@@ -39,12 +47,33 @@ const defaultClasses: ContextMenuClasses = {
     'ml-2 text-gray-100 dark:text-white text-base flex-1 min-w-0 truncate',
 };
 
-export const ContextMenu = ({
+export const ContextMenuItem = ({
   classes,
-  items,
-  renderItem,
-  onItemClick,
-}: ContextMenuProps) => {
+  icon,
+  label,
+  onClick,
+}: ContextMenuItemProps) => {
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ContextMenuClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-videoTileControls',
+      }),
+    [],
+  );
+
+  return (
+    <div className={styler('menuItem')} onClick={onClick}>
+      <span className={styler('menuIcon')}>{icon}</span>
+      <span className={styler('menuTitle')}>{label}</span>
+    </div>
+  );
+};
+
+export const ContextMenu = ({ classes, children }: ContextMenuProps) => {
   const [open, setOpen] = useState(false);
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -64,27 +93,7 @@ export const ContextMenu = ({
         <div className={styler('trigger')}>
           <DotMenuIcon className="fill-current text-white w-5" />
         </div>
-        {open && (
-          <div className={`${styler('menu')}`}>
-            {items.map(item => {
-              return (
-                <div
-                  className={styler('menuItem')}
-                  onClick={() => onItemClick(item)}
-                >
-                  {renderItem ? (
-                    renderItem(item)
-                  ) : (
-                    <Fragment>
-                      <span className={styler('menuIcon')}>{item.icon}</span>
-                      <span className={styler('menuTitle')}>{item.label}</span>
-                    </Fragment>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
+        {open && <div className={`${styler('menu')}`}>{children}</div>}
       </div>
     </ClickAwayListener>
   );
