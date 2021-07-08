@@ -1,8 +1,8 @@
 import React, {
   useState,
-  useEffect,
   useMemo,
   MouseEventHandler,
+  useEffect,
   useRef,
 } from 'react';
 import {
@@ -45,15 +45,15 @@ interface CarouselClasses {
 
 const defaultClasses: CarouselClasses = {
   root: `w-full h-full`,
-  rootHorizontal: 'overflow-x-auto pb-6',
+  rootHorizontal: 'overflow-x-auto md:pb-6',
   rootVertical: 'overflow-y-auto flex-col pr-6',
-  pageContainer: 'inline-block align-top w-full h-full',
+  pageContainer: 'absolute w-full h-full',
   carouselContainer: 'overflow-hidden w-full h-full',
-  carouselInner: 'w-full h-full whitespace-nowrap',
+  carouselInner: 'w-full h-full whitespace-nowrap relative',
   videoTileContainer: 'flex justify-center',
   navContainer: 'absolute w-full flex justify-center items-center',
-  navContainerHorizontal: 'bottom-0 left-0',
-  navContainerVertical: 'top-0 right-0 flex-col',
+  navContainerHorizontal: 'bottom-0 left-0 z-30',
+  navContainerVertical: 'top-0 right-0 flex-col z-30',
   caratActive: 'text-gray-100 dark:text-white cursor-pointer',
   caratInactive: 'text-transparent-700 dark:text-transparent-300',
   dotActive: 'text-gray-100 dark:text-white',
@@ -67,6 +67,27 @@ const defaultClasses: CarouselClasses = {
 const customClasses: CarouselClasses = {
   root: 'no-scrollbar',
 };
+
+function getLeft(index: number, currentPageIndex: number) {
+  //active slide
+  if (index === currentPageIndex) {
+    return 0;
+  }
+  //prev slide
+  if (index + 1 === currentPageIndex) {
+    return '-100%';
+  }
+  //next slide
+  if (index - 1 === currentPageIndex) {
+    return '100%';
+  }
+  //all slides before prev
+  if (index < currentPageIndex) {
+    return '-200%';
+  }
+  //all slides after next
+  return '200%';
+}
 
 export const Carousel = React.forwardRef(
   (
@@ -97,23 +118,18 @@ export const Carousel = React.forwardRef(
 
     const showNav = showNavigation && pages.length > 1;
 
+    useEffect(() => {
+      // currentPageIndex should not exceed pages length
+      if (currentPageIndex >= pages.length) {
+        setCurrentPageIndex(0);
+      }
+    }, [pages.length, currentPageIndex]);
+
     const navClassName = `${styler('navContainer')} ${
       direction === 'horizontal'
         ? styler('navContainerHorizontal')
         : styler('navContainerVertical')
     }`;
-
-    useEffect(() => {
-      if (carouselRef) {
-        const el: HTMLElement = carouselRef.current!;
-        const width = el.clientWidth;
-        const scrollAmount = currentPageIndex * width;
-        el.scrollTo({
-          left: scrollAmount,
-          behavior: 'smooth',
-        });
-      }
-    }, [currentPageIndex]);
 
     return (
       <>
@@ -130,8 +146,12 @@ export const Carousel = React.forwardRef(
                 <div
                   className={`${styler('pageContainer')}`}
                   key={`slide=${index}`}
+                  style={{
+                    left: getLeft(index, currentPageIndex),
+                    transition: 'left 0.3s ease-in-out',
+                  }}
                 >
-                  {pages[index]}
+                  {page}
                 </div>
               ))}
             </div>
@@ -142,7 +162,7 @@ export const Carousel = React.forwardRef(
             <PrevButton
               direction={direction}
               isActive={currentPageIndex !== 0}
-              onClick={e => {
+              onClick={() => {
                 if (currentPageIndex > 0) {
                   setCurrentPageIndex(currentPageIndex - 1);
                 }
@@ -150,8 +170,9 @@ export const Carousel = React.forwardRef(
               styler={styler}
             />
 
-            {pages.map((page, index) => (
+            {pages.map((_, index) => (
               <button
+                key={index}
                 className={`${styler('dotButton')}`}
                 onClick={e => {
                   setCurrentPageIndex(index);
@@ -170,7 +191,7 @@ export const Carousel = React.forwardRef(
             <NextButton
               direction={direction}
               isActive={currentPageIndex !== pages.length - 1}
-              onClick={e => {
+              onClick={() => {
                 if (currentPageIndex < pages.length - 1) {
                   setCurrentPageIndex(currentPageIndex + 1);
                 }

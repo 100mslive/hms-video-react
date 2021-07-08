@@ -28,7 +28,8 @@ export const theme: { theme: ThemeConfiguration } = {
           300: '#5E5E5E',
           400: '#8E8E8E',
           500: '#C7C7C7',
-          600: '#F2F2F2',
+          600: '#E3E3E3',
+          700: '#F2F2F2',
         },
         transparent: {
           0: 'rgba(0,0,0,0)',
@@ -85,6 +86,7 @@ export const theme: { theme: ThemeConfiguration } = {
         37.5: '37.5rem',
         400: '40rem',
         42.5: '42.5rem',
+        auto: 'auto',
       },
       scale: {
         '-100': '-1',
@@ -98,6 +100,11 @@ export const theme: { theme: ThemeConfiguration } = {
         0.5: '0.03125rem',
         2.5: '0.625rem',
         3.5: '0.875rem',
+      },
+      screens: {
+        mls: {
+          raw: 'screen and (max-width: 992px) and (orientation: landscape)',
+        },
       },
     },
   },

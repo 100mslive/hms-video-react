@@ -1,17 +1,21 @@
-import { IHMSBridge } from '../../store';
-import { IHMSStore } from '../../store';
 import { makeFakeMessage } from '../fixtures/chatFixtures';
-import { HMSPeer, HMSRoom } from '../../store/schema';
+import {
+  IHMSActions,
+  IHMSStore,
+  HMSPeer,
+  HMSRoom,
+  HMSTrackSource,
+} from '@100mslive/hms-video-store';
 import {
   HMSAudioTrackSettings,
   HMSVideoTrackSettings,
-} from '../../store/hmsSDKBridge/sdkTypes';
+} from '@100mslive/hms-video-store';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
 storybook or writing functional tests.
  */
-export class StoryBookSDK implements IHMSBridge {
+export class StoryBookSDK implements IHMSActions {
   private readonly store: IHMSStore;
   private videoURLs: string[] = [];
   private dummyTrackURLs: Record<string, string> = {};
@@ -20,6 +24,16 @@ export class StoryBookSDK implements IHMSBridge {
   constructor(store: IHMSStore) {
     this.store = store;
   }
+  addTrack(track: MediaStreamTrack, type: HMSTrackSource): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  removeTrack(trackId: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+  setEnabledTrack(trackId: string, enabled: boolean): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
+
   setMessageRead(readStatus: boolean, messageId: string): void {
     this.store.setState(store => {
       if (messageId) {
@@ -58,21 +72,27 @@ export class StoryBookSDK implements IHMSBridge {
     });
   }
 
-  attachVideo(trackID: string, videoElement: HTMLVideoElement): void {
+  async attachVideo(
+    trackID: string,
+    videoElement: HTMLVideoElement,
+  ): Promise<void> {
     if (this.dummyTrackURLs[trackID]) {
       videoElement.src = this.dummyTrackURLs[trackID];
     }
     this.log('video attached');
   }
 
-  leave(): void {
+  async leave(): Promise<void> {
     this.log('user left room');
     this.store.setState(store => {
       store.room.isConnected = false;
     });
   }
 
-  detachVideo(trackID: string, videoElement: HTMLVideoElement): void {
+  async detachVideo(
+    trackID: string,
+    videoElement: HTMLVideoElement,
+  ): Promise<void> {
     videoElement.srcObject = null;
     this.log('video removed');
   }
@@ -87,15 +107,15 @@ export class StoryBookSDK implements IHMSBridge {
     this.log('message sent - ', message);
   }
 
-  setLocalAudioEnabled(enabled: boolean): void {
+  async setLocalAudioEnabled(enabled: boolean): Promise<void> {
     this.log('set local audio enabled state - ', enabled);
   }
 
-  setLocalVideoEnabled(enabled: boolean): void {
+  async setLocalVideoEnabled(enabled: boolean): Promise<void> {
     this.log('set local video enabled state - ', enabled);
   }
 
-  setScreenShareEnabled(enabled: boolean): void {
+  async setScreenShareEnabled(enabled: boolean): Promise<void> {
     this.log('set screenshare enabled state - ', enabled);
   }
 
@@ -172,7 +192,7 @@ export class StoryBookSDK implements IHMSBridge {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  setAudioSettings(settings: HMSAudioTrackSettings): void {}
+  async setAudioSettings(settings: HMSAudioTrackSettings): Promise<void> {}
 
-  setVideoSettings(settings: HMSVideoTrackSettings): void {}
+  async setVideoSettings(settings: HMSVideoTrackSettings): Promise<void> {}
 }

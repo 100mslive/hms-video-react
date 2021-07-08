@@ -40,7 +40,15 @@ const defaultClasses: VideoTileControlsClasses = {
   contextMenuInner:
     'flex py-2 pl-2 hover:bg-gray-300 bg-gray-200 text-white cursor-pointer',
   contextMenuSpan: 'ml-2',
-  label: 'absolute z-50 w-full flex justify-center bottom-2 left-0 text-white',
+  // label: 'absolute z-50 w-full flex justify-center bottom-2 left-0 text-white',
+  // controlsInner:
+  //   'absolute bottom-0 w-full h-full z-20 pb-2 text-white px-2 text-center flex flex-col justify-end items-center',
+  // controls: 'invisible max-h-0 transition-all text-center mt-1',
+  // gradient:
+  //   'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
+  // controlsStatus: 'transition-all opacity-1 mx-1',
+  label: 'mt-1 mx-1 text-sm md:text-base w-11/12 truncate',
+  controlsWrapper: 'flex justify-center',
 };
 
 const customClasses: VideoTileControlsClasses = {
@@ -78,6 +86,30 @@ export const VideoTileControls = ({
           onClick={() => setOpenMenu(!openMenu)}
         >
           <DotMenuIcon />
+        </div>
+        <div className={`${styler('controlsWrapper')}`}>
+          {showAudioMuteStatus && isAudioMuted && (
+            <Button
+              iconOnly
+              active
+              size={'md'}
+              shape="circle"
+              variant="danger"
+              classes={{ root: 'dark' }}
+            >
+              <MicOffIcon />
+            </Button>
+          )}
+        </div>
+        <div className={`${styler('label')}`} title={label}>
+          {label}
+        </div>
+        <div className={`${styler('controls')}`}>
+          {!isLocal && showAudioMuteStatus && !isAudioMuted && allowRemoteMute && (
+            <Button iconOnly size={'md'} classes={{ root: 'dark' }}>
+              <MicOffIcon />
+            </Button>
+          )}
         </div>
       </div>
 

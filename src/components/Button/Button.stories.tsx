@@ -2,7 +2,7 @@ import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Button, ButtonProps } from './index';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
-import { MicOffIcon, MicOnIcon } from '../Icons';
+import { MicOffIcon, MicOnIcon, ProgressIcon } from '../Icons';
 
 const meta: Meta = {
   title: 'Button',
@@ -64,6 +64,18 @@ const IconRight: Story<ButtonProps> = args => {
   );
 };
 
+const ProgressRight: Story<ButtonProps> = args => {
+  return (
+    <div className="w-full h-1/2 flex justify-center py-4">
+      <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
+        <Button {...args} icon={<ProgressIcon />} iconRight={true}>
+          Join
+        </Button>
+      </HMSThemeProvider>
+    </div>
+  );
+};
+
 const Classes: Story<ButtonProps> = args => {
   return (
     <div className="w-full h-1/2 flex justify-center py-4">
@@ -113,6 +125,9 @@ export const IconButton = WithIcon.bind({});
 Basic.args = {};
 
 export const IconRightButton = IconRight.bind({});
+Basic.args = {};
+
+export const ProgressRightButton = ProgressRight.bind({});
 Basic.args = {};
 
 export const ButtonClasses = Classes.bind({});

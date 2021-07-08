@@ -1,5 +1,5 @@
 {
-  "version": "0.1.30",
+  "version": "0.2.48",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -13,9 +13,10 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "test": "tsdx test",
+    "test": "tsdx test --passWithNoTests",
     "test:watch": "tsdx test --watch",
     "lint": "tsdx lint",
+    "lint:fix": "tsdx lint --fix",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why",
@@ -23,7 +24,8 @@
     "build-storybook": "build-storybook"
   },
   "peerDependencies": {
-    "react": ">=16"
+    "react": ">=16",
+    "@100mslive/hms-video": "^0.0.67"
   },
   "husky": {
     "hooks": {
@@ -50,6 +52,7 @@
     }
   ],
   "devDependencies": {
+    "@100mslive/hms-video": "^0.0.67",
     "@babel/core": "^7.13.14",
     "@rollup/plugin-image": "^2.0.6",
     "@size-limit/preset-small-lib": "^4.10.2",
@@ -81,12 +84,11 @@
     "typescript": "4.2.4"
   },
   "dependencies": {
-    "@100mslive/hms-video": "^0.0.17",
+    "@100mslive/hms-video-store": "^0.1.31",
     "@material-ui/core": "^4.11.3",
     "@twind/aspect-ratio": "^0.1.4",
     "autoprefixer": "^9.8.6",
     "clsx": "^1.1.1",
-    "immer": "^9.0.2",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "postcss": "^7.0.35",
@@ -94,12 +96,11 @@
     "react-intersection-observer": "^8.31.1",
     "react-markdown": "^6.0.0",
     "react-resize-detector": "^6.6.5",
+    "react-toastify": "^7.0.4",
     "remark-gfm": "^1.0.0",
-    "reselect": "^4.0.0",
-    "reselect-tools": "^0.0.7",
     "tailwind-percentage-heights-plugin": "^0.1.4",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
     "twind": "^0.16.12",
-    "zustand": "^3.5.1"
+    "zustand": "^3.5.5"
   }
 }

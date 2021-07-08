@@ -32,7 +32,7 @@ interface AvatarPropsWithoutNativeAttrs {
    * Extra class names
    */
   classes?: AvatarClasses;
-  avatarType?: 'initial' | 'pebble' | 'icon' | 'image' | 'gradient';
+  avatarType?: 'initial' | 'icon' | 'image' | 'gradient';
 }
 
 export type AvatarProps = AvatarPropsWithoutNativeAttrs &
@@ -128,7 +128,6 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     [],
   );
 
-  if (avatarType === 'pebble') shape = 'square';
   const classList = [`${styler('root')}`];
   shape === 'circle'
     ? classList.push(`${styler('rootShapeCircle')}`)
@@ -146,7 +145,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     classList.push(`${styler('rootSizeXl')}`);
   }
 
-  const indexFactor = avatarType === 'pebble' ? 6 : 20;
+  const indexFactor = 20;
   const colorIndex = useMemo(
     () => ((label?.codePointAt(0) || 0) % indexFactor) + 1,
     [],
@@ -175,13 +174,6 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
       >
         {getInitialsFromName(label)}
       </div>
-    ),
-    pebble: (
-      <img
-        {...props}
-        className={classList.join(' ')}
-        src={`https://bc-public-static-assets.s3.ap-south-1.amazonaws.com/dashboard/images/Pebble%20People/${colorIndex}.svg`}
-      />
     ),
     icon: (
       <div

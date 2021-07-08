@@ -1,10 +1,11 @@
-import React from 'react';
-import { CloseIcon } from '../Icons';
+import React, { useMemo } from 'react';
 import Backdrop from '@material-ui/core/Backdrop';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
-import { withClasses } from '../../utils/styles';
-import { combineClasses } from '../../utils';
 import { Button } from '../Button';
+import { CloseIcon } from '../Icons';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { withClasses } from '../../utils/styles';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -25,17 +26,16 @@ export interface MessageModalClasses {
   title?: string;
   closeRoot?: string;
   closeButton?: string;
-  message?: string;
+  body?: string;
+  footer?: string;
 }
 
 export interface StyledMessageModalProps {
-  title: string;
-  message: string;
-  secondary?: string;
   show: boolean;
-  allow: boolean;
-  gobackOnClick: () => void;
-  setShow: React.Dispatch<React.SetStateAction<boolean>>;
+  title: string;
+  body: React.ReactNode;
+  footer?: React.ReactNode;
+  onClose: () => void;
   defaultClasses?: MessageModalClasses;
   classes?: MessageModalClasses;
 }
@@ -48,66 +48,69 @@ const defaultClasses: MessageModalClasses = {
   boxTransition:
     'focus:outline-none insert-y-20 inline-block align-bottom text-left overflow-hidden transform transition-all sm:align-middle sm:max-w-lg sm:w-full',
   boxRoot:
-    'flex flex-col md:flex-row md:flex-wrap bg-white dark:bg-gray-100 rounded-lg sm:items-start md:w-100 focus:outline-none rounded-tr-lg text-center font-normal pb-4 sm:text-left',
-  header: 'flex flex-grow flex-row px-5 pt-5 items-center',
+    'flex flex-col md:flex-row md:flex-wrap bg-white dark:bg-gray-100 rounded-lg sm:items-start md:w-100 focus:outline-none rounded-tr-lg text-center font-normal sm:text-left md:text-base text-sm text-gray-100 dark:text-gray-500 px-5 py-5',
+  header: 'flex flex-grow flex-row items-center mb-4',
   title:
-    'flex flex-grow lg:text-2xl sm:text-xl self-center items-center text-gray-100 dark:text-white font-medium',
-  closeRoot:
-    'flex flex-none self-center justify-end items-end right-0 bg-white dark:bg-gray-100 hover:bg-gray-600 dark:hover:bg-gray-200 sm:flex sm:flex-row-reverse',
+    'flex flex-1 lg:text-2xl sm:text-xl self-center items-center text-gray-100 dark:text-white font-medium',
+  closeRoot: 'self-start',
   closeButton:
     'w-full justify-end text-base font-medium rounded-xl focus:outline-none',
-  message:
-    'flex flex-col space-y-2.5 px-5 py-3 md:text-base text-sm text-gray-100 dark:text-gray-500',
+  body: 'w-full',
+  footer: 'mt-4 w-full flex justify-end',
 };
 
 export const StyledMessageModal = ({
   title = '',
-  message = '',
-  secondary = '',
   show = true,
-  allow,
-  gobackOnClick,
-  setShow,
-  classes: extraClasses,
+  body,
+  footer,
+  onClose,
+  classes,
 }: StyledMessageModalProps) => {
-  //@ts-expect-error
-  const combinedClasses = combineClasses(defaultClasses, extraClasses);
-  const classes = useStyles();
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<MessageModalClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'message-modal',
+      }),
+    [],
+  );
+  const styles = useStyles();
 
   return (
     <div
-      className={combinedClasses?.root}
+      className={styler('root')}
       aria-labelledby="modal-title"
       role="dialog"
       aria-modal="true"
     >
       {show && (
-        <Backdrop className={classes.backdrop} open={true}>
-          <div className={combinedClasses?.containerRoot}>
-            <span className={combinedClasses?.spanRoot} aria-hidden="true">
+        <Backdrop className={styles.backdrop} open={true}>
+          <div className={styler('containerRoot')}>
+            <span className={styler('spanRoot')} aria-hidden="true">
               &#8203;
             </span>
 
-            <div className={combinedClasses?.boxTransition}>
-              <div className={combinedClasses?.boxRoot}>
-                <div className={combinedClasses?.header}>
-                  <div className={combinedClasses?.title}>{title}</div>
-                  <div className={combinedClasses?.closeRoot}>
+            <div className={styler('boxTransition')}>
+              <div className={styler('boxRoot')}>
+                <div className={styler('header')}>
+                  <div className={styler('title')}>{title}</div>
+                  <div className={styler('closeRoot')}>
                     <Button
-                      variant={'no-fill'}
-                      onClick={() => {
-                        setShow(false);
-                        !allow && gobackOnClick();
-                      }}
+                      variant="no-fill"
+                      onClick={onClose}
+                      iconOnly
+                      size="sm"
                     >
                       <CloseIcon />
                     </Button>
                   </div>
                 </div>
-                <div className={combinedClasses?.message}>
-                  <p>{message}</p>
-                  <p>{secondary}</p>
-                </div>
+                <div className={styler('body')}>{body}</div>
+                <div className={styler('footer')}>{footer}</div>
               </div>
             </div>
           </div>

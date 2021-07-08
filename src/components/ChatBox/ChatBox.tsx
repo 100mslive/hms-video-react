@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
-import './index.css';
-import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { Button } from '../Button';
 import { useInView } from 'react-intersection-observer';
-import { HMSMessage } from '../../store/schema';
-import { ChatLink, isTotallyScrolled, scrollToBottom } from './chatBoxUtils';
-import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import { HMSMessage } from '@100mslive/hms-video-store';
 import {
   selectHMSMessages,
   selectUnreadHMSMessagesCount,
-} from '../../store/selectors';
+} from '@100mslive/hms-video-store';
+import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
+import { Button } from '../Button';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { ChatLink, scrollToBottom } from './chatBoxUtils';
+import './index.css';
 
 interface ChatBoxClasses {
   root?: string;
@@ -134,13 +134,17 @@ export const ChatBox = ({
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
   const messageListRef = useRef<HTMLDivElement>(null);
 
+  /** Effect to scroll to bottom when chat is opened */
+  useEffect(() => {
+    if (messageListRef.current) {
+      scrollToBottom(messageListRef, scrollAnimation);
+    }
+  }, []); //eslint-disable-line
+
   useEffect(() => {
     if (messages && messages.length > 0) {
       const myOwnMessage = messages[messages.length - 1].senderName === 'You';
-      if (
-        autoScrollToBottom &&
-        (myOwnMessage || isTotallyScrolled(messageListRef))
-      ) {
+      if (autoScrollToBottom && (myOwnMessage || messagesEndInView)) {
         scrollToBottom(messageListRef, scrollAnimation);
         hmsActions.setMessageRead(true);
       }
@@ -158,7 +162,7 @@ export const ChatBox = ({
         {/* header */}
         <div className={styler('header')}>
           {/* header-line */}
-          <div className={styler('headerLine')}></div>
+          {/* <div className={styler('headerLine')}></div> */}
           {/* header-root */}
           <div className={styler('headerRoot')}>
             {/* header-text */}

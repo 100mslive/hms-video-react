@@ -12,7 +12,7 @@ interface PreviewControlsClasses {
   controls?: string;
   rightcontrols?: string;
 }
-export interface VideoTileControlsProps {
+export interface PreviewControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   showGradient?: boolean;
@@ -31,14 +31,14 @@ interface PreviewControlsClasses {
 
 const defaultClasses: PreviewControlsClasses = {
   root:
-    'flex flex-grow absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg focus:outline-none',
+    'flex absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg min-h-0 focus:outline-none',
   controls:
-    'dark flex flex-grow self-center justify-center hover-hide space-x-1 relative',
+    'dark flex flex-1 self-center justify-center hover-hide space-x-1 relative',
   rightControls:
     'dark flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide absolute right-3',
 };
 
-export const VideoTileControls = ({
+export const PreviewControls = ({
   isAudioMuted = false,
   isVideoMuted = false,
   buttonDisplay = 'rectangle',
@@ -46,7 +46,7 @@ export const VideoTileControls = ({
   videoButtonOnClick,
   onChange,
   classes,
-}: VideoTileControlsProps) => {
+}: PreviewControlsProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
@@ -81,7 +81,7 @@ export const VideoTileControls = ({
         </Button>
       </div>
       <div className={`${styler('rightControls')}`}>
-        <Settings onChange={onChange} key={0} />
+        <Settings onChange={onChange} key={0} previewMode={true} />
       </div>
     </div>
   );
