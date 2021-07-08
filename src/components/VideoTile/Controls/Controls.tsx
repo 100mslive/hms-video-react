@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { AudioLevelDisplayType } from '../../../types';
 import { Button } from '../../Button';
-import { DotMenuIcon, MicOffIcon, StarIcon } from '../../Icons';
+import { MicOffIcon } from '../../Icons';
 import '../index.css';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
 import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
@@ -10,10 +10,10 @@ export interface VideoTileControlsClasses {
   root?: string;
   controlsInner?: string;
   controls?: string;
-  contextMenu?: string;
-  contextMenuInner?: string;
+  gradient?: string;
+  controlsStatus?: string;
+  hoverHide?: string;
   label?: string;
-  contextMenuSpan?: string;
   controlsWrapper?: string;
 }
 export interface VideoTileControlsProps {
@@ -31,22 +31,14 @@ export interface VideoTileControlsProps {
 
 //TODO group hover is not working
 const defaultClasses: VideoTileControlsClasses = {
-  root: 'w-full z-20 rounded-none h-full overflow-hidden',
+  root: 'absolute bottom-0 w-full z-20 rounded-none h-24 overflow-hidden',
   // TODO solve for smaller tiles
-  controlsInner: 'absolute right-0',
-  controls:
-    'w-9 h-9 m-2 rounded-full bg-gray-300 opacity-50 cursor-pointer flex items-center justify-center fill-current text-white',
-  contextMenu: 'absolute right-0 top-12 mr-2 bg-gray-200 rounded-lg w-44 py-2',
-  contextMenuInner:
-    'flex py-2 pl-2 hover:bg-gray-300 bg-gray-200 text-white cursor-pointer',
-  contextMenuSpan: 'ml-2',
-  // label: 'absolute z-50 w-full flex justify-center bottom-2 left-0 text-white',
-  // controlsInner:
-  //   'absolute bottom-0 w-full h-full z-20 pb-2 text-white px-2 text-center flex flex-col justify-end items-center',
-  // controls: 'invisible max-h-0 transition-all text-center mt-1',
-  // gradient:
-  //   'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
-  // controlsStatus: 'transition-all opacity-1 mx-1',
+  controlsInner:
+    'absolute bottom-0 w-full h-full z-20 pb-2 text-white px-2 text-center flex flex-col justify-end items-center',
+  controls: 'invisible max-h-0 transition-all text-center mt-1',
+  gradient:
+    'absolute bottom-0 z-0 h-16 w-full bg-gradient-to-t from-transparent-400 to-transparent-0',
+  controlsStatus: 'transition-all opacity-1 mx-1',
   label: 'mt-1 mx-1 text-sm md:text-base w-11/12 truncate',
   controlsWrapper: 'flex justify-center',
 };
@@ -64,7 +56,6 @@ export const VideoTileControls = ({
   allowRemoteMute = false,
   classes,
 }: VideoTileControlsProps) => {
-  const [openMenu, setOpenMenu] = React.useState(false);
   const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
@@ -77,16 +68,10 @@ export const VideoTileControls = ({
       }),
     [],
   );
-
   return (
     <div className={`${styler('root')}`}>
+      <div className={`${showGradient ? styler('gradient') : ''}`} />
       <div className={`${styler('controlsInner')}`}>
-        <div
-          className={`${styler('controls')}`}
-          onClick={() => setOpenMenu(!openMenu)}
-        >
-          <DotMenuIcon />
-        </div>
         <div className={`${styler('controlsWrapper')}`}>
           {showAudioMuteStatus && isAudioMuted && (
             <Button
@@ -112,21 +97,6 @@ export const VideoTileControls = ({
           )}
         </div>
       </div>
-
-      {openMenu ? (
-        <div style={{ zIndex: 9999999 }} className={`${styler('contextMenu')}`}>
-          <div className={`${styler('contextMenuInner')}`}>
-            <MicOffIcon className="fill-current" />{' '}
-            <span className="ml-2">Mute</span>
-          </div>
-          <div className={`${styler('contextMenuInner')}`}>
-            <StarIcon />{' '}
-            <span className={`${styler('contextMenuSpan')}`}>Spotlight</span>
-          </div>
-        </div>
-      ) : null}
-
-      <div className={`${styler('label')}`}>{label}</div>
     </div>
   );
 };
