@@ -9,8 +9,8 @@ import {
   HMSRoomState,
   selectIsLocalAudioEnabled,
   selectIsLocalVideoDisplayEnabled,
-  selectLocalPeer,
   selectRoomState,
+  selectLocalPeer,
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
