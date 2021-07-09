@@ -3,6 +3,7 @@ import ClickAwayListener from 'react-click-away-listener';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { DotMenuIcon } from '../Icons';
+import './index.css';
 
 export interface ContextMenuClasses {
   root?: string;
@@ -60,7 +61,7 @@ export const ContextMenuItem = ({
         tw,
         classes,
         defaultClasses,
-        tag: 'hmsui-videoTileControls',
+        tag: 'hmsui-contextmenu',
       }),
     [],
   );
@@ -82,14 +83,14 @@ export const ContextMenu = ({ classes, children }: ContextMenuProps) => {
         tw,
         classes,
         defaultClasses,
-        tag: 'hmsui-videoTileControls',
+        tag: 'hmsui-contextmenu',
       }),
     [],
   );
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div className={styler('root')} style={{ width: 'calc(100% - 0.5rem)' }}>
+      <div className={styler('root')}>
         <div className={styler('trigger')} onClick={() => setOpen(!open)}>
           <DotMenuIcon className="fill-current text-white w-5" />
         </div>
