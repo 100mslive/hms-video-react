@@ -36,11 +36,11 @@ export interface ContextMenuItemProps extends ContextMenuDataItem {
 }
 
 const defaultClasses: ContextMenuClasses = {
-  root: 'absolute right-2.5 top-2.5 flex flex-col z-50',
+  root: 'absolute right-2.5 top-2.5 flex flex-col items-end z-50',
   trigger:
-    'self-end w-9 h-9 rounded-full bg-gray-300 cursor-pointer flex items-center justify-center',
+    'w-9 h-9 rounded-full bg-gray-300 cursor-pointer flex items-center justify-center',
   menu:
-    'bg-white dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto py-2 text-white',
+    'bg-white max-w-full dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto py-2 text-white',
   menuItem:
     'flex items-center px-2 h-10 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
@@ -89,8 +89,8 @@ export const ContextMenu = ({ classes, children }: ContextMenuProps) => {
 
   return (
     <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div className={styler('root')} onClick={() => setOpen(!open)}>
-        <div className={styler('trigger')}>
+      <div className={styler('root')} style={{ width: 'calc(100% - 0.5rem)' }}>
+        <div className={styler('trigger')} onClick={() => setOpen(!open)}>
           <DotMenuIcon className="fill-current text-white w-5" />
         </div>
         {open && <div className={`${styler('menu')}`}>{children}</div>}
