@@ -31,7 +31,7 @@ interface PreviewControlsClasses {
 
 const defaultClasses: PreviewControlsClasses = {
   root:
-    'flex absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg focus:outline-none',
+    'flex absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg min-h-0 focus:outline-none',
   controls:
     'dark flex flex-1 self-center justify-center hover-hide space-x-1 relative',
   rightControls:

@@ -162,7 +162,7 @@ export const ChatBox = ({
         {/* header */}
         <div className={styler('header')}>
           {/* header-line */}
-          <div className={styler('headerLine')}></div>
+          {/* <div className={styler('headerLine')}></div> */}
           {/* header-root */}
           <div className={styler('headerRoot')}>
             {/* header-text */}

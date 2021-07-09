@@ -5,3 +5,7 @@
     rgba(0, 0, 0, 0) 100%
   );
 }
+
+.hmsui-preview-root {
+  min-height: 30rem;
+}
