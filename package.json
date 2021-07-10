@@ -101,9 +101,6 @@
     "tailwind-percentage-heights-plugin": "^0.1.4",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
     "twind": "^0.16.12",
-    "zustand": "^3.5.1"
-  },
-  "resolutions": {
     "zustand": "3.5.4"
   }
 }
