@@ -3,6 +3,7 @@ import {
   HMSPeer,
   selectCameraStreamByPeerID,
   selectIsPeerAudioEnabled,
+  selectIsPeerLocallyMuted,
   selectIsPeerVideoEnabled,
   selectScreenShareByPeerID,
 } from '@100mslive/hms-video-store';
@@ -151,6 +152,7 @@ export const VideoTile = ({
   const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
+  const storeIsLocallyMuted = useHMSStore(selectIsPeerLocallyMuted(peer.id));
 
   if (showAudioLevel === undefined) {
     showAudioLevel = !showScreen; // don't show audio levels for screenshare
@@ -170,6 +172,7 @@ export const VideoTile = ({
     peer.name,
     peer.isLocal,
     hmsVideoTrack?.source,
+    storeIsLocallyMuted,
   );
 
   try {
@@ -201,15 +204,15 @@ export const VideoTile = ({
       {!peer.isLocal && (
         <ContextMenu>
           <ContextMenuItem
-            label={isAudioMuted ? 'Unmute' : 'Mute'}
+            label={`${storeIsLocallyMuted ? 'Unmute' : 'Mute'} locally`}
             icon={
-              isAudioMuted ? (
+              storeIsLocallyMuted ? (
                 <MicOnIcon className="fill-current text-white" />
               ) : (
                 <MicOffIcon className="fill-current text-white" />
               )
             }
-            onClick={() => hmsActions.mutePeer(peer.id, !isAudioMuted)}
+            onClick={() => hmsActions.mutePeer(peer.id, !storeIsLocallyMuted)}
           />
         </ContextMenu>
       )}
