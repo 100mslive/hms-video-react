@@ -89,13 +89,15 @@ export const ContextMenu = ({ classes, children }: ContextMenuProps) => {
   );
 
   return (
-    <ClickAwayListener onClickAway={() => setOpen(false)}>
-      <div className={styler('root')}>
-        <div className={styler('trigger')} onClick={() => setOpen(!open)}>
-          <DotMenuIcon className="fill-current text-white w-5" />
-        </div>
-        {open && <div className={`${styler('menu')}`}>{children}</div>}
+    <div className={styler('root')}>
+      <div className={styler('trigger')} onClick={() => setOpen(!open)}>
+        <DotMenuIcon className="fill-current text-white w-5" />
       </div>
-    </ClickAwayListener>
+      {open && (
+        <ClickAwayListener onClickAway={() => setOpen(false)}>
+          <div className={`${styler('menu')}`}>{children}</div>
+        </ClickAwayListener>
+      )}
+    </div>
   );
 };
