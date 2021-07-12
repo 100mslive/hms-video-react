@@ -12,6 +12,7 @@ export interface ContextMenuClasses {
   menuItem?: string;
   menuTitle?: string;
   menuIcon?: string;
+  menuItemChildren?: string;
 }
 
 export type ContextMenuItemClasses = Omit<
@@ -34,6 +35,7 @@ export interface ContextMenuProps {
 export interface ContextMenuItemProps extends ContextMenuDataItem {
   classes?: ContextMenuItemClasses;
   onClick: () => void;
+  children?: JSX.Element;
 }
 
 const defaultClasses: ContextMenuClasses = {
@@ -41,17 +43,19 @@ const defaultClasses: ContextMenuClasses = {
   trigger:
     'w-9 h-9 rounded-full bg-gray-300 cursor-pointer flex items-center justify-center',
   menu:
-    'bg-white max-w-full dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto py-2 text-white',
+    'bg-white max-w-full dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto max-h-15 py-2 text-white',
   menuItem:
-    'flex items-center px-2 h-10 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
+    'flex flex-row flex-wrap items-center px-2 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
-  menuTitle: 'text-gray-100 dark:text-white text-base flex-1 min-w-0 truncate',
+  menuTitle: 'text-gray-100 dark:text-white text-base w-4/5 min-w-0 truncate',
+  menuItemChildren: 'w-11/12 ml-1 justify-self-center',
 };
 
 export const ContextMenuItem = ({
   classes,
   icon,
   label,
+  children,
   onClick,
 }: ContextMenuItemProps) => {
   const { tw } = useHMSTheme();
@@ -67,9 +71,14 @@ export const ContextMenuItem = ({
   );
 
   return (
-    <div className={styler('menuItem')} onClick={onClick}>
+    <div
+      className={styler('menuItem')}
+      onClick={onClick}
+      style={{ minHeight: 40 }}
+    >
       {icon && <span className={styler('menuIcon')}>{icon}</span>}
       <span className={styler('menuTitle')}>{label}</span>
+      {children && <div className={styler('menuItemChildren')}>{children}</div>}
     </div>
   );
 };

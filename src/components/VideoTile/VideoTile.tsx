@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -11,7 +11,8 @@ import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../TwAvatar';
-import { MicOffIcon, MicOnIcon } from '../Icons';
+import { MicOffIcon, MicOnIcon, VolumeIcon } from '../Icons';
+import { Slider } from '../Slider/Slider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { getVideoTileLabel } from '../../utils';
@@ -153,6 +154,7 @@ export const VideoTile = ({
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
   const storeIsLocallyMuted = useHMSStore(selectIsPeerLocallyMuted(peer.id));
+  const [volume, setVolume] = useState(100);
 
   if (showAudioLevel === undefined) {
     showAudioLevel = !showScreen; // don't show audio levels for screenshare
@@ -205,15 +207,24 @@ export const VideoTile = ({
         <ContextMenu>
           <ContextMenuItem
             label={`${storeIsLocallyMuted ? 'Unmute' : 'Mute'} locally`}
-            icon={
-              storeIsLocallyMuted ? (
-                <MicOnIcon className="fill-current text-white" />
-              ) : (
-                <MicOffIcon className="fill-current text-white" />
-              )
-            }
+            icon={storeIsLocallyMuted ? <MicOnIcon /> : <MicOffIcon />}
             onClick={() => hmsActions.mutePeer(peer.id, !storeIsLocallyMuted)}
           />
+          <ContextMenuItem
+            label="volume"
+            icon={<VolumeIcon />}
+            onClick={() => {}}
+          >
+            <Slider
+              value={volume}
+              onChange={(_, newValue) => {
+                if (typeof newValue === 'number') {
+                  setVolume(newValue);
+                }
+              }}
+              aria-labelledby="continuous-slider"
+            />
+          </ContextMenuItem>
         </ContextMenu>
       )}
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
