@@ -7,7 +7,7 @@ import {
   selectIsPeerVideoEnabled,
   selectScreenShareByPeerID,
   selectAudioTrackVolume,
-  selectAuxiliaryAudioByPeerID,
+  selectScreenShareAudioByPeerID,
 } from '@100mslive/hms-video-store';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
@@ -156,10 +156,13 @@ export const VideoTile = ({
   const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
-  const auxiliaryAudioTrack = useHMSStore(
-    selectAuxiliaryAudioByPeerID(peer.id),
+  const screenshareAudioTrack = useHMSStore(
+    selectScreenShareAudioByPeerID(peer.id),
   );
-  const tileAudioTrack = showScreen ? auxiliaryAudioTrack?.id : peer.audioTrack;
+  const tileAudioTrack = showScreen
+    ? screenshareAudioTrack?.id
+    : peer.audioTrack;
+
   const storeAudioTrackVolume = useHMSStore(
     selectAudioTrackVolume(tileAudioTrack),
   );
