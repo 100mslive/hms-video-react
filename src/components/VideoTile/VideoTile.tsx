@@ -215,9 +215,12 @@ export const VideoTile = ({
           <ContextMenuItem
             label={`${storeIsLocallyMuted ? 'Unmute' : 'Mute'} locally`}
             icon={storeIsLocallyMuted ? <MicOnIcon /> : <MicOffIcon />}
-            onClick={() =>
-              hmsActions.setVolume(peer.id, storeIsLocallyMuted ? 100 : 0)
-            }
+            onClick={() => {
+              const track = showScreen
+                ? auxiliaryAudioTrack?.id
+                : peer.audioTrack;
+              hmsActions.setVolume(track!, storeIsLocallyMuted ? 100 : 0);
+            }}
           />
           <ContextMenuItem
             label="volume"
