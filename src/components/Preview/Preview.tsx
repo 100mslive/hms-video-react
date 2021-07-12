@@ -186,7 +186,7 @@ export const Preview = ({
           {localPeer ? (
             <VideoTile
               {...videoTileProps}
-              peer={localPeer}
+              peer={{ ...localPeer, name }}
               objectFit="cover"
               aspectRatio={{
                 width: 1,
