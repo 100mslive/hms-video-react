@@ -7,6 +7,7 @@ import {
   selectIsPeerVideoEnabled,
   selectScreenShareByPeerID,
   selectPeerVolume,
+  selectAuxiliaryAudioByPeerID,
 } from '@100mslive/hms-video-store';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
@@ -155,6 +156,9 @@ export const VideoTile = ({
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
   const storeIsLocallyMuted = useHMSStore(selectIsPeerLocallyMuted(peer.id));
+  const auxiliaryAudioTrack = useHMSStore(
+    selectAuxiliaryAudioByPeerID(peer.id),
+  );
   const storeAudioTrackVolume: number | undefined = useHMSStore(
     selectPeerVolume(peer.id),
   );
@@ -224,7 +228,10 @@ export const VideoTile = ({
               value={storeAudioTrackVolume}
               onChange={(_, newValue) => {
                 if (typeof newValue === 'number') {
-                  hmsActions.setLoudness(peer.id, newValue);
+                  const track = showScreen
+                    ? auxiliaryAudioTrack?.id
+                    : peer.audioTrack;
+                  hmsActions.setLoudness(track!, newValue);
                 }
               }}
               aria-labelledby="continuous-slider"
