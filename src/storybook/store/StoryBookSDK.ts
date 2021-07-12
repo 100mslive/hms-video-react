@@ -5,11 +5,10 @@ import {
   HMSPeer,
   HMSRoom,
   HMSTrackSource,
-} from '@100mslive/hms-video-store';
-import {
   HMSAudioTrackSettings,
   HMSVideoTrackSettings,
 } from '@100mslive/hms-video-store';
+import config from '@100mslive/hms-video/dist/interfaces/config';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
@@ -23,6 +22,12 @@ export class StoryBookSDK implements IHMSActions {
 
   constructor(store: IHMSStore) {
     this.store = store;
+  }
+  setVolume(trackId: string, value: number): void {
+    throw new Error('Method not implemented.');
+  }
+  preview(config: config): void {
+    throw new Error('Method not implemented.');
   }
   addTrack(track: MediaStreamTrack, type: HMSTrackSource): Promise<void> {
     throw new Error('Method not implemented.');

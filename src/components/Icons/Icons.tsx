@@ -250,6 +250,21 @@ export const Logo = (props: React.SVGProps<SVGSVGElement>) => (
     </defs>
   </svg>
 );
+
+export const DotMenuIcon = (props: React.SVGProps<SVGSVGElement>) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={24}
+      height={24}
+      viewBox="0 0 24 24"
+      {...props}
+    >
+      <path d="M6 12a3 3 0 11-6 0 3 3 0 016 0zm9 0a3 3 0 11-6 0 3 3 0 016 0zm9 0a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  );
+};
+
 export const MicOffIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
