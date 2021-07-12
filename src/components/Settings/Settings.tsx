@@ -1,6 +1,5 @@
 import React, { ChangeEventHandler, useMemo, useEffect, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
-import Slider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
 import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
 import { getLocalDevices, getLocalStream } from '@100mslive/hms-video';
@@ -11,6 +10,7 @@ import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { closeMediaStream, isMobileDevice } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { Slider } from '../Slider/Slider';
 
 interface SettingsClasses {
   root?: string;
@@ -77,33 +77,6 @@ const defaultClasses: SettingsClasses = {
 const customClasses: SettingsClasses = {
   dialogContainer: 'no-scrollbar ',
 };
-
-//TODO replce with own slider
-const HMSSlider = withStyles({
-  root: {
-    color: document.documentElement.classList.contains('dark')
-      ? 'white'
-      : 'black',
-  },
-  thumb: {
-    backgroundColor: document.documentElement.classList.contains('dark')
-      ? 'black'
-      : 'white',
-    border: '2px solid currentColor',
-    '&:focus, &:hover, &$active': {
-      boxShadow: 'inherit',
-    },
-    color: document.documentElement.classList.contains('dark')
-      ? 'white'
-      : 'black',
-  },
-  active: {},
-  valueLabel: {
-    color: document.documentElement.classList.contains('dark')
-      ? 'white'
-      : 'black',
-  },
-})(Slider);
 
 const HMSDialog = withStyles({
   paper: {
@@ -484,7 +457,7 @@ export const Settings = ({
                       </Text>
                     </div>
                     <div className={styler('slider')}>
-                      <HMSSlider
+                      <Slider
                         name="maxTileCount"
                         defaultValue={9}
                         value={values.maxTileCount}
