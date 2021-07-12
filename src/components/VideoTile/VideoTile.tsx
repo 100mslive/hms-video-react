@@ -216,7 +216,7 @@ export const VideoTile = ({
             label={`${storeIsLocallyMuted ? 'Unmute' : 'Mute'} locally`}
             icon={storeIsLocallyMuted ? <MicOnIcon /> : <MicOffIcon />}
             onClick={() =>
-              hmsActions.setLoudness(peer.id, storeIsLocallyMuted ? 100 : 0)
+              hmsActions.setVolume(peer.id, storeIsLocallyMuted ? 100 : 0)
             }
           />
           <ContextMenuItem
@@ -231,7 +231,7 @@ export const VideoTile = ({
                   const track = showScreen
                     ? auxiliaryAudioTrack?.id
                     : peer.audioTrack;
-                  hmsActions.setLoudness(track!, newValue);
+                  hmsActions.setVolume(track!, newValue);
                 }
               }}
               aria-labelledby="continuous-slider"
