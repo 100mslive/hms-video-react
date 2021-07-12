@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -6,6 +6,7 @@ import {
   selectIsPeerLocallyMuted,
   selectIsPeerVideoEnabled,
   selectScreenShareByPeerID,
+  selectPeerVolume,
 } from '@100mslive/hms-video-store';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
@@ -154,7 +155,9 @@ export const VideoTile = ({
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
   const storeIsLocallyMuted = useHMSStore(selectIsPeerLocallyMuted(peer.id));
-  const [volume, setVolume] = useState(100);
+  const storeAudioTrackVolume: number | undefined = useHMSStore(
+    selectPeerVolume(peer.id),
+  );
 
   if (showAudioLevel === undefined) {
     showAudioLevel = !showScreen; // don't show audio levels for screenshare
@@ -208,7 +211,9 @@ export const VideoTile = ({
           <ContextMenuItem
             label={`${storeIsLocallyMuted ? 'Unmute' : 'Mute'} locally`}
             icon={storeIsLocallyMuted ? <MicOnIcon /> : <MicOffIcon />}
-            onClick={() => hmsActions.mutePeer(peer.id, !storeIsLocallyMuted)}
+            onClick={() =>
+              hmsActions.setLoudness(peer.id, storeIsLocallyMuted ? 100 : 0)
+            }
           />
           <ContextMenuItem
             label="volume"
@@ -216,13 +221,20 @@ export const VideoTile = ({
             onClick={() => {}}
           >
             <Slider
-              value={volume}
+              value={storeAudioTrackVolume}
               onChange={(_, newValue) => {
                 if (typeof newValue === 'number') {
-                  setVolume(newValue);
+                  hmsActions.setLoudness(peer.id, newValue);
                 }
               }}
               aria-labelledby="continuous-slider"
+              marks={[
+                { value: 0 },
+                { value: 25 },
+                { value: 50 },
+                { value: 75 },
+                { value: 100 },
+              ]}
             />
           </ContextMenuItem>
         </ContextMenu>
