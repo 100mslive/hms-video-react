@@ -3,13 +3,13 @@
 
 
 "@100mslive/hms-video-store@^0.1.31":
-  version "0.1.35"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.35.tgz#2c4bbeda5a790d9d7dc24d2c58a0d9af949c8070"
-  integrity sha512-Qcsc29Rs2AOYKEpGBS+X8yebzkryVbsoA3sSlc/nGK9sKs372fjAzU5LZ6jg+w+GmNGKaHhqwEMoxTfcjLKqWQ==
+  version "0.1.37"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.37.tgz#959c9ed6f829bce67e7edadf6bc6c2dc0e87946f"
+  integrity sha512-dz/eFnbsnyY7JmqRyZBbhwf+L5IIsmtwuwAYX7WkfCZc4P9n1/Keom8Jh3R7aeq8vjhQXxDruDA2f83dZazjCQ==
   dependencies:
     immer "^9.0.2"
     reselect "^4.0.0"
-    zustand "^3.5.1"
+    zustand "3.5.4"
 
 "@100mslive/hms-video@^0.0.74":
   version "0.0.74"
@@ -14946,7 +14946,12 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zustand@^3.5.1, zustand@^3.5.5:
+zustand@3.5.4:
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.4.tgz#9050a15042ced663b10588327b9210df91f0e13e"
+  integrity sha512-EtS3D83il8eiydRS+xUcpczffT0MpD9ePIqAT10ns2tfzPvq85nmMmYJl9mOLOJjPLaXAMK8lgk0iCz2h7CxGg==
+
+zustand@^3.5.5:
   version "3.5.6"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.6.tgz#c28cfbdfdd999d26d1a94ea105a6fd1da56ed38a"
   integrity sha512-8XrpRO5scF8MSxeAlu7vFupmLG+5MTWhT+6+3QNsihs0QZfOjaArFyvenUgrk30WdZVGVHLHXBhbqC2/QzLeMA==

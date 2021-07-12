@@ -229,6 +229,9 @@ export const Preview = ({
           icon={inProgress ? <ProgressIcon /> : undefined}
           disabled={inProgress || roomState === HMSRoomState.Connecting}
           onClick={async () => {
+            if (inProgress) {
+              return;
+            }
             if (!name || !name.replace(/\u200b/g, ' ').trim()) {
               inputRef.current && inputRef.current.focus();
               setShowValidation(true);
