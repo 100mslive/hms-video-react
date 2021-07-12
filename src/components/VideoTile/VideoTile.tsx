@@ -223,12 +223,15 @@ export const VideoTile = ({
             }}
           />
           <ContextMenuItem
-            label="volume"
+            label="Volume"
             icon={<VolumeIcon />}
             onClick={() => {}}
           >
             <Slider
               value={storeAudioTrackVolume}
+              classes={{
+                root: 'ml-1',
+              }}
               onChange={(_, newValue) => {
                 if (typeof newValue === 'number') {
                   const track = showScreen
