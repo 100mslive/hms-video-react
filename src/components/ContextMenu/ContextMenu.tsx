@@ -8,6 +8,7 @@ import './index.css';
 export interface ContextMenuClasses {
   root?: string;
   trigger?: string;
+  triggerIcon?: string;
   menu?: string;
   menuItem?: string;
   menuTitle?: string;
@@ -42,6 +43,7 @@ const defaultClasses: ContextMenuClasses = {
   root: 'absolute right-2.5 top-2.5 flex flex-col items-end',
   trigger:
     'w-9 h-9 rounded-full bg-gray-300 cursor-pointer flex items-center justify-center z-20',
+  triggerIcon: 'fill-current text-white w-5',
   menu:
     'bg-white max-w-full dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto max-h-15 py-2 text-white z-20',
   menuItem:
@@ -100,7 +102,7 @@ export const ContextMenu = ({ classes, children }: ContextMenuProps) => {
   return (
     <div className={styler('root')}>
       <div className={styler('trigger')} onClick={() => setOpen(!open)}>
-        <DotMenuIcon className="fill-current text-white w-5" />
+        <DotMenuIcon className={styler('triggerIcon')} />
       </div>
       {open && (
         <ClickAwayListener onClickAway={() => setOpen(false)}>
