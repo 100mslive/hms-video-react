@@ -22,6 +22,7 @@ export class StoryBookSDK implements IHMSActions {
   private videoURLs: string[] = [];
   private dummyTrackURLs: Record<string, string> = {};
   private counter: number = 100;
+  private localPeer?: HMSPeer;
 
   constructor(store: IHMSStore) {
     this.store = store;
@@ -60,14 +61,14 @@ export class StoryBookSDK implements IHMSActions {
     this.log('User called preview');
     this.store.setState(store => {
       store.room.roomState = HMSRoomState.Preview;
-      const newPeer: HMSPeer = {
+      this.localPeer = {
         name: config?.userName,
         isLocal: true,
         id: String(this.randomNumber()),
         auxiliaryTracks: [],
       };
-      store.room.peers.push(newPeer.id);
-      store.peers[newPeer.id] = newPeer;
+      store.room.peers.push(this.localPeer.id);
+      store.peers[this.localPeer.id] = this.localPeer;
     });
   }
 
@@ -81,15 +82,18 @@ export class StoryBookSDK implements IHMSActions {
     this.store.setState(store => {
       store.room.isConnected = true;
       store.room.id = joinParams.roomId;
-      const newPeer: HMSPeer = {
-        name: joinParams?.username,
-        role: joinParams?.role,
-        isLocal: true,
-        id: String(this.randomNumber()),
-        auxiliaryTracks: [],
-      };
-      store.room.peers.push(newPeer.id);
-      store.peers[newPeer.id] = newPeer;
+
+      if (!this.localPeer) {
+        this.localPeer = {
+          name: joinParams?.username,
+          role: joinParams?.role,
+          isLocal: true,
+          id: String(this.randomNumber()),
+          auxiliaryTracks: [],
+        };
+        store.room.peers.push(this.localPeer.id);
+        store.peers[this.localPeer.id] = this.localPeer;
+      }
     });
   }
 
