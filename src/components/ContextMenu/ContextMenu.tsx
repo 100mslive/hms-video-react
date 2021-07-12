@@ -39,11 +39,11 @@ export interface ContextMenuItemProps extends ContextMenuDataItem {
 }
 
 const defaultClasses: ContextMenuClasses = {
-  root: 'absolute right-2.5 top-2.5 flex flex-col items-end z-50',
+  root: 'absolute right-2.5 top-2.5 flex flex-col items-end',
   trigger:
-    'w-9 h-9 rounded-full bg-gray-300 cursor-pointer flex items-center justify-center',
+    'w-9 h-9 rounded-full bg-gray-300 cursor-pointer flex items-center justify-center z-20',
   menu:
-    'bg-white max-w-full dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto max-h-15 py-2 text-white',
+    'bg-white max-w-full dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto max-h-15 py-2 text-white z-20',
   menuItem:
     'flex flex-row flex-wrap items-center px-2 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
