@@ -5,11 +5,13 @@ import {
   HMSPeer,
   HMSRoom,
   HMSTrackSource,
+  HMSRoomState,
 } from '@100mslive/hms-video-store';
 import {
   HMSAudioTrackSettings,
   HMSVideoTrackSettings,
 } from '@100mslive/hms-video-store';
+import HMSConfig from '@100mslive/hms-video/dist/interfaces/config';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
@@ -47,6 +49,25 @@ export class StoryBookSDK implements IHMSActions {
           store.messages.byID[id].read = readStatus;
         });
       }
+    });
+  }
+
+  preview(config: HMSConfig) {
+    if (!config.authToken) {
+      this.log('invalid params');
+      return;
+    }
+    this.log('User called preview');
+    this.store.setState(store => {
+      store.room.roomState = HMSRoomState.Preview;
+      const newPeer: HMSPeer = {
+        name: config?.userName,
+        isLocal: true,
+        id: String(this.randomNumber()),
+        auxiliaryTracks: [],
+      };
+      store.room.peers.push(newPeer.id);
+      store.peers[newPeer.id] = newPeer;
     });
   }
 
