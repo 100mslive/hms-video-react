@@ -3,10 +3,10 @@ import {
   HMSPeer,
   selectCameraStreamByPeerID,
   selectIsPeerAudioEnabled,
-  selectIsPeerLocallyMuted,
+  selectIsAudioLocallyMuted,
   selectIsPeerVideoEnabled,
   selectScreenShareByPeerID,
-  selectPeerVolume,
+  selectAudioTrackVolume,
   selectAuxiliaryAudioByPeerID,
 } from '@100mslive/hms-video-store';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
@@ -152,15 +152,19 @@ export const VideoTile = ({
   const selectVideoByPeerID = showScreen
     ? selectScreenShareByPeerID
     : selectCameraStreamByPeerID;
+
   const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
-  const storeIsLocallyMuted = useHMSStore(selectIsPeerLocallyMuted(peer.id));
   const auxiliaryAudioTrack = useHMSStore(
     selectAuxiliaryAudioByPeerID(peer.id),
   );
-  const storeAudioTrackVolume: number | undefined = useHMSStore(
-    selectPeerVolume(peer.id),
+  const tileAudioTrack = showScreen ? auxiliaryAudioTrack?.id : peer.audioTrack;
+  const storeAudioTrackVolume = useHMSStore(
+    selectAudioTrackVolume(tileAudioTrack),
+  );
+  const storeIsLocallyMuted = useHMSStore(
+    selectIsAudioLocallyMuted(tileAudioTrack),
   );
 
   if (showAudioLevel === undefined) {
@@ -216,10 +220,10 @@ export const VideoTile = ({
             label={`${storeIsLocallyMuted ? 'Unmute' : 'Mute'} locally`}
             icon={storeIsLocallyMuted ? <MicOnIcon /> : <MicOffIcon />}
             onClick={() => {
-              const track = showScreen
-                ? auxiliaryAudioTrack?.id
-                : peer.audioTrack;
-              hmsActions.setVolume(track!, storeIsLocallyMuted ? 100 : 0);
+              hmsActions.setVolume(
+                tileAudioTrack!,
+                storeIsLocallyMuted ? 100 : 0,
+              );
             }}
           />
           <ContextMenuItem
@@ -234,10 +238,7 @@ export const VideoTile = ({
               }}
               onChange={(_, newValue) => {
                 if (typeof newValue === 'number') {
-                  const track = showScreen
-                    ? auxiliaryAudioTrack?.id
-                    : peer.audioTrack;
-                  hmsActions.setVolume(track!, newValue);
+                  hmsActions.setVolume(tileAudioTrack!, newValue);
                 }
               }}
               aria-labelledby="continuous-slider"
