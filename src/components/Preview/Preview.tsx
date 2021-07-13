@@ -9,6 +9,7 @@ import {
   HMSRoomState,
   selectIsLocalAudioEnabled,
   selectIsLocalVideoDisplayEnabled,
+  selectLocalMediaSettings,
   selectLocalPeer,
   selectRoomState,
 } from '@100mslive/hms-video-store';
@@ -90,6 +91,9 @@ export const Preview = ({
   const localPeer = useHMSStore(selectLocalPeer);
   const hmsActions = useHMSActions();
   const roomState = useHMSStore(selectRoomState);
+  const { audioInputDeviceId, videoInputDeviceId } = useHMSStore(
+    selectLocalMediaSettings,
+  );
 
   const styler = useMemo(
     () =>
@@ -117,8 +121,6 @@ export const Preview = ({
   const setAudioEnabled = hmsActions.setLocalAudioEnabled.bind(hmsActions);
   const setVideoEnabled = hmsActions.setLocalVideoEnabled.bind(hmsActions);
 
-  const [selectedAudioInput, setSelectedAudioInput] = useState('default');
-  const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -134,20 +136,22 @@ export const Preview = ({
     hmsActions.preview(config);
   }, [config.authToken]);
 
-  useEffect(() => {
-    // @ts-ignore
-    hmsActions.setVideoSettings({ deviceId: selectedVideoInput });
-    // @ts-ignore
-    hmsActions.setAudioSettings({ deviceId: selectedAudioInput });
-  }, [selectedAudioInput, selectedVideoInput]);
+  const handleDeviceChange = (values: SettingsFormProps) => {
+    const {
+      selectedVideoInput: newSelectedVideoInput,
+      selectedAudioInput: newSelectedAudioInput,
+    } = values;
+    if (newSelectedAudioInput && audioInputDeviceId !== newSelectedAudioInput) {
+      // @ts-ignore
+      hmsActions.setAudioSettings({ deviceId: newSelectedAudioInput });
+    }
 
-  const handleDeviceChange = useCallback((values: SettingsFormProps) => {
-    values?.selectedAudioInput &&
-      setSelectedAudioInput(values.selectedAudioInput);
-    values?.selectedVideoInput &&
-      setSelectedVideoInput(values.selectedVideoInput);
+    if (newSelectedVideoInput && videoInputDeviceId !== newSelectedVideoInput) {
+      // @ts-ignore
+      hmsActions.setVideoSettings({ deviceId: newSelectedVideoInput });
+    }
     onChange(values);
-  }, []);
+  };
 
   const inputProps = {
     compact: true,
