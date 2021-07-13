@@ -13,7 +13,7 @@ import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../TwAvatar';
-import { MicOffIcon, MicOnIcon, VolumeIcon } from '../Icons';
+import { VolumeIcon } from '../Icons';
 import { Slider } from '../Slider/Slider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
