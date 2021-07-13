@@ -28,7 +28,7 @@ const getVideoTileLabel = (
   if (isLocallyMuted === undefined || isLocallyMuted === null) {
     return label;
   }
-  return `${label}${isLocallyMuted ? '(Muted for you)' : ''}`;
+  return `${label}${isLocallyMuted ? ' (Muted for you)' : ''}`;
 };
 
 const closeMediaStream = (stream: MediaStream | undefined) => {

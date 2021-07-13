@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -13,7 +13,7 @@ import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../TwAvatar';
-import { MicOffIcon, MicOnIcon, VolumeIcon } from '../Icons';
+import { VolumeIcon } from '../Icons';
 import { Slider } from '../Slider/Slider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
@@ -217,18 +217,8 @@ export const VideoTile = ({
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
     <div className={styler('root')}>
-      {!peer.isLocal && (
-        <ContextMenu>
-          <ContextMenuItem
-            label={`${storeIsLocallyMuted ? 'Unmute' : 'Mute'} locally`}
-            icon={storeIsLocallyMuted ? <MicOnIcon /> : <MicOffIcon />}
-            onClick={() => {
-              hmsActions.setVolume(
-                tileAudioTrack!,
-                storeIsLocallyMuted ? 100 : 0,
-              );
-            }}
-          />
+      {!peer.isLocal && (showScreen ? !!screenshareAudioTrack : true) && (
+        <ContextMenu classes={{ root: 'invisible' }}>
           <ContextMenuItem
             label="Volume"
             icon={<VolumeIcon />}
