@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -217,8 +217,8 @@ export const VideoTile = ({
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
     <div className={styler('root')}>
-      {!peer.isLocal && (
-        <ContextMenu>
+      {!peer.isLocal && (showScreen ? !!screenshareAudioTrack : true) && (
+        <ContextMenu classes={{ root: 'invisible' }}>
           <ContextMenuItem
             label="Volume"
             icon={<VolumeIcon />}

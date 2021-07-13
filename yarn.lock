@@ -14954,14 +14954,6 @@ zustand@3.5.4:
   version "3.5.4"
   resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.4.tgz#9050a15042ced663b10588327b9210df91f0e13e"
   integrity sha512-EtS3D83il8eiydRS+xUcpczffT0MpD9ePIqAT10ns2tfzPvq85nmMmYJl9mOLOJjPLaXAMK8lgk0iCz2h7CxGg==
-<<<<<<< HEAD
-
-zustand@^3.5.5:
-  version "3.5.6"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.6.tgz#c28cfbdfdd999d26d1a94ea105a6fd1da56ed38a"
-  integrity sha512-8XrpRO5scF8MSxeAlu7vFupmLG+5MTWhT+6+3QNsihs0QZfOjaArFyvenUgrk30WdZVGVHLHXBhbqC2/QzLeMA==
-=======
->>>>>>> origin/develop
 
 zwitch@^1.0.0:
   version "1.0.5"
