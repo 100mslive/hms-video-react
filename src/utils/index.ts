@@ -13,7 +13,7 @@ const getVideoTileLabel = (
   peerName: string,
   isLocal: boolean,
   videoSource: HMSTrackSource = 'regular',
-  isLocallyMuted: boolean | undefined,
+  isLocallyMuted?: boolean | undefined,
 ) => {
   // Map [isLocal, videoSource] to the label to be displayed.
   const labelMap = new Map<string, string>([
