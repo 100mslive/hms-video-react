@@ -8,6 +8,7 @@ import {
   CamOnIcon,
   ShareScreenIcon,
   ChatUnreadIcon,
+  VirtualBackgroundIcon,
 } from '../Icons';
 import { Button } from '../Button';
 import { Settings } from '../Settings/Settings';
@@ -29,6 +30,7 @@ export interface ControlBarProps {
 
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
+  backgroundButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
   chatButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
@@ -55,6 +57,7 @@ export const ControlBar = ({
   buttonDisplay = 'rectangle',
   audioButtonOnClick,
   videoButtonOnClick,
+  backgroundButtonOnClick,
   leaveButtonOnClick,
   chatButtonOnClick,
   screenshareButtonOnClick,
@@ -102,6 +105,9 @@ export const ControlBar = ({
       key={0}
     >
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+    </Button>,
+    <Button iconOnly variant="no-fill" onClick={backgroundButtonOnClick}>
+      <VirtualBackgroundIcon />
     </Button>,
     <Button
       iconOnly
