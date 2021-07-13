@@ -14,4 +14,9 @@
 
 
 
-* **Other information (how was it tested? any open issues or future ideas?) **:
+* **Other information (screenshots, how was it tested? any open issues or future ideas?) **:
+
+
+## Checklist:
+- [ ] The change requires a change to the documentation.
+- [ ] The documentation is updated accordingly.
