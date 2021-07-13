@@ -25,6 +25,7 @@ export interface ControlBarClasses {
 export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
+  isBackgroundEnabled?: boolean;
   isChatOpen?: boolean;
   buttonDisplay: ButtonDisplayType;
 
@@ -53,6 +54,7 @@ const defaultClasses: ControlBarClasses = {
 export const ControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
+  isBackgroundEnabled = false,
   isChatOpen = false,
   buttonDisplay = 'rectangle',
   audioButtonOnClick,
@@ -106,19 +108,27 @@ export const ControlBar = ({
     >
       {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
     </Button>,
-    <Button iconOnly variant="no-fill" onClick={backgroundButtonOnClick}>
-      <VirtualBackgroundIcon />
-    </Button>,
     <Button
       iconOnly
       variant="no-fill"
       iconSize="md"
+      classes={{ root: 'mr-2' }}
       shape={buttonDisplay}
       active={isVideoMuted}
       onClick={videoButtonOnClick}
       key={1}
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+    </Button>,
+    <Button
+      iconOnly
+      variant="no-fill"
+      shape={buttonDisplay}
+      active={isBackgroundEnabled}
+      onClick={backgroundButtonOnClick}
+      key={2}
+    >
+      <VirtualBackgroundIcon />
     </Button>,
   ],
   rightComponents = [
