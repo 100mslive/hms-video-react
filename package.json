@@ -25,7 +25,7 @@
   },
   "peerDependencies": {
     "react": ">=16",
-    "@100mslive/hms-video": "^0.0.75"
+    "@100mslive/hms-video": "^0.0.77"
   },
   "husky": {
     "hooks": {
