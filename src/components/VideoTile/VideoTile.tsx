@@ -8,6 +8,7 @@ import {
   selectScreenShareByPeerID,
   selectAudioTrackVolume,
   selectScreenShareAudioByPeerID,
+  selectTrackAudioByID,
 } from '@100mslive/hms-video-store';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
@@ -162,6 +163,9 @@ export const VideoTile = ({
   const tileAudioTrack = showScreen
     ? screenshareAudioTrack?.id
     : peer.audioTrack;
+  const storeAudioLevel = useHMSStore(selectTrackAudioByID(tileAudioTrack));
+
+  audioLevel = audioLevel || storeAudioLevel;
 
   const storeAudioTrackVolume = useHMSStore(
     selectAudioTrackVolume(tileAudioTrack),
