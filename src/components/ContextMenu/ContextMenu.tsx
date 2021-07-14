@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -28,6 +28,7 @@ export interface ContextMenuDataItem {
 
 export interface ContextMenuProps {
   classes?: ContextMenuClasses;
+  menuOpen?: boolean;
   children:
     | React.ReactElement<ContextMenuItemProps>
     | React.ReactElement<ContextMenuItemProps>[];
@@ -85,8 +86,12 @@ export const ContextMenuItem = ({
   );
 };
 
-export const ContextMenu = ({ classes, children }: ContextMenuProps) => {
-  const [open, setOpen] = useState(false);
+export const ContextMenu = ({
+  classes,
+  children,
+  menuOpen = false,
+}: ContextMenuProps) => {
+  const [open, setOpen] = useState(menuOpen);
   const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
@@ -98,6 +103,10 @@ export const ContextMenu = ({ classes, children }: ContextMenuProps) => {
       }),
     [],
   );
+
+  useEffect(() => {
+    setOpen(menuOpen);
+  }, [menuOpen]);
 
   return (
     <div className={styler('root')}>

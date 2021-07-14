@@ -22,6 +22,13 @@ import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
 
+enum HMSSimulcastLayer {
+  NONE = 'none',
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+}
+
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
@@ -248,6 +255,33 @@ export const VideoTile = ({
               ]}
             />
           </ContextMenuItem>
+          <ContextMenuItem
+            label="Low"
+            onClick={() => {
+              hmsActions.setPreferredLayer(
+                peer.videoTrack!,
+                HMSSimulcastLayer.LOW,
+              );
+            }}
+          />
+          <ContextMenuItem
+            label="Medium"
+            onClick={() => {
+              hmsActions.setPreferredLayer(
+                peer.videoTrack!,
+                HMSSimulcastLayer.MEDIUM,
+              );
+            }}
+          />
+          <ContextMenuItem
+            label="High"
+            onClick={() => {
+              hmsActions.setPreferredLayer(
+                peer.videoTrack!,
+                HMSSimulcastLayer.HIGH,
+              );
+            }}
+          />
         </ContextMenu>
       )}
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
