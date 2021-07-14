@@ -130,20 +130,14 @@ export const Settings = ({
     initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
 
   const deviceValues = {
-    selectedAudioInput: initialValues?.selectedAudioInput
-      ? initialValues?.selectedAudioInput
-      : 'default',
-    selectedVideoInput: initialValues?.selectedVideoInput
-      ? initialValues?.selectedVideoInput
-      : 'default',
-    selectedAudioOutput: initialValues?.selectedAudioOutput
-      ? initialValues?.selectedAudioOutput
-      : 'default',
+    selectedAudioInput: initialValues.selectedAudioInput || 'default',
+    selectedVideoInput: initialValues.selectedVideoInput || 'default',
+    selectedAudioOutput: initialValues.selectedAudioOutput || 'default',
   };
 
   const [values, setValues] = useState<SettingsFormProps>({
     ...deviceValues,
-    maxTileCount: initialValues?.maxTileCount ? initialValues?.maxTileCount : 9,
+    maxTileCount: initialValues.maxTileCount || 9,
   });
 
   async function getDevices() {
@@ -195,20 +189,14 @@ export const Settings = ({
     const newValues = { ...values };
     //TODO make this generic
     if (typeof newValue === 'number') {
-      newValues['maxTileCount'] = newValue;
+      newValues.maxTileCount = newValue;
     }
     setValues(newValues);
   };
 
-  const videoInput = deviceGroups['videoinput']
-    ? deviceGroups['videoinput']
-    : [];
-  const audioInput = deviceGroups['audioinput']
-    ? deviceGroups['audioinput']
-    : [];
-  // const audioOutput = deviceGroups['audiooutput']
-  //   ? deviceGroups['audiooutput']
-  //   : [];
+  const videoInput = deviceGroups['videoinput'] || [];
+  const audioInput = deviceGroups['audioinput'] || [];
+  const audioOutput = deviceGroups['audiooutput'] || [];
   //TODO handle case where selected device is not in list
   // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
   // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
@@ -313,7 +301,7 @@ export const Settings = ({
                   </div>
                 </div>
                 {/** Enabled this when the output is handled properly */}
-                {/* <div className={`${styler('formInner')}`}>
+                <div className={`${styler('formInner')}`}>
                   <div className={`${styler('selectLabel')}`}>
                     <Text variant="heading" size="sm">
                       Audio Output:
@@ -339,7 +327,7 @@ export const Settings = ({
                       </select>
                     )}
                   </div>
-                </div> */}
+                </div>
               </>
             ) : (
               <div className={styler('errorContainer')}>
