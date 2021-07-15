@@ -159,6 +159,7 @@ export const Video = ({
     hmsVideoTrack?.id,
     hmsVideoTrack?.enabled,
     hmsVideoTrack?.deviceID,
+    hmsVideoTrack?.processors,
   ]);
 
   useEffect(() => {
