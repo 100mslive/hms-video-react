@@ -7,7 +7,6 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions } from '../../hooks/HMSRoomProvider';
 import { HMSTrack } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import HMSVideoTrack from '../../../../hms-video-web/dist/media/tracks/HMSVideoTrack';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
@@ -146,7 +145,7 @@ export const Video = ({
         HMSLogger.d('Video InView', videoTrack, inView);
         if (hmsVideoTrack.enabled) {
           if (inView) {
-            console.log("Add sink is called trackid", hmsVideoTrack.id);
+            console.log('Add sink is called trackid', hmsVideoTrack.id);
             await hmsActions.attachVideo(hmsVideoTrack.id, videoRef.current);
           } else {
             await hmsActions.detachVideo(hmsVideoTrack.id, videoRef.current);
@@ -161,7 +160,7 @@ export const Video = ({
     hmsVideoTrack?.id,
     hmsVideoTrack?.enabled,
     hmsVideoTrack?.deviceID,
-    hmsVideoTrack?.processors
+    hmsVideoTrack?.processors,
   ]);
 
   useEffect(() => {
