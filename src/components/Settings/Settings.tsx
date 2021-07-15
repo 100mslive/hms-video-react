@@ -1,4 +1,10 @@
-import React, { ChangeEventHandler, useMemo, useEffect, useState } from 'react';
+import React, {
+  ChangeEventHandler,
+  useMemo,
+  useEffect,
+  useState,
+  useRef,
+} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
@@ -11,6 +17,7 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { closeMediaStream, isMobileDevice } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Slider } from '../Slider/Slider';
+import TestAudio from './TestAudio';
 
 interface SettingsClasses {
   root?: string;
@@ -34,6 +41,7 @@ interface SettingsClasses {
   sliderLabel?: string;
   slider?: string;
   errorContainer?: string;
+  testAudioContainer?: string;
 }
 
 export interface SettingsFormProps {
@@ -72,6 +80,7 @@ const defaultClasses: SettingsClasses = {
   sliderLabel: 'text-right',
   slider: 'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
   errorContainer: 'flex justify-center items-center w-full px-8 py-4',
+  testAudioContainer: 'mx-2',
 };
 
 const customClasses: SettingsClasses = {
@@ -183,7 +192,6 @@ export const Settings = ({
     newValues[event.currentTarget.name as keyof SettingsFormProps] =
       event.currentTarget.value;
     setValues(newValues);
-    onChange && onChange(newValues);
   };
 
   const handleSliderChange = (event: any, newValue: number | number[]) => {
@@ -327,6 +335,16 @@ export const Settings = ({
                         ))}
                       </select>
                     )}
+                  </div>
+                </div>
+                <div className={`${styler('formInner')}`}>
+                  <div className={`${styler('selectLabel')}`}>
+                    <Text variant="heading" size="sm">
+                      Test Audio Level:
+                    </Text>
+                  </div>
+                  <div className={`${styler('testAudioContainer')}`}>
+                    <TestAudio outputDeviceId={values.selectedAudioOutput} />
                   </div>
                 </div>
               </>
