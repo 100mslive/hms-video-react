@@ -27,14 +27,17 @@ export const AudioLevelBorder = ({
   displayShape,
   classes,
 }: AudioLevelBorderProps) => {
-  const {tw} = useHMSTheme();
-  const styler = useMemo(()=>
-    hmsUiClassParserGenerator<AudioLevelIndicatorClasses>({
-      tw,
-      classes,
-      defaultClasses,
-      tag: 'hmsui-audioLevelIndicator',
-    }),[]);
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<AudioLevelIndicatorClasses>({
+        tw,
+        classes,
+        defaultClasses,
+        tag: 'hmsui-audioLevelIndicator',
+      }),
+    [],
+  );
 
   const borderStyle = {
     transition: 'box-shadow 0.4s ease-in-out',

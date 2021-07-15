@@ -43,7 +43,9 @@ export const LogoButton = () => {
           src={logo}
           alt="brand_logo"
           // className=" md:object-contain object-scale-down md:h-full"
-          className={`object-contain flex justify-center ${logoClass ? logoClass : "h-6"}`}
+          className={`object-contain flex justify-center ${
+            logoClass ? logoClass : 'h-6'
+          }`}
         />
       ) : (
         <Logo />

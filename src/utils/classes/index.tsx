@@ -22,7 +22,7 @@ export const camelize = (str: string): string => {
 };
 
 interface ParseClassProps<T> {
-  tw:TW;
+  tw: TW;
   /**
    * Classes passed by user
    */
@@ -38,9 +38,9 @@ interface ParseClassProps<T> {
   tag: string;
 }
 
-const defaultStyler = <T extends {}>(defaultClasses:T, s:keyof T) =>{
-  return defaultClasses[s]?defaultClasses[s]:'';
-}
+const defaultStyler = <T extends {}>(defaultClasses: T, s: keyof T) => {
+  return defaultClasses[s] ? defaultClasses[s] : '';
+};
 
 export const hmsUiClassParserGenerator = <T extends {}>({
   tw,
@@ -50,7 +50,7 @@ export const hmsUiClassParserGenerator = <T extends {}>({
   tag,
 }: ParseClassProps<T>) => (s: keyof T) => {
   const finalClasses = resolveClasses(classes || {}, defaultClasses);
-  if(tw){
+  if (tw) {
     return tw(
       `${tag}-${s}`,
       (customClasses && (customClasses[s] as unknown)) as string,
@@ -59,6 +59,6 @@ export const hmsUiClassParserGenerator = <T extends {}>({
   }
   //handle edge case of tw not being present
   else {
-    return defaultStyler(defaultClasses, s)
+    return defaultStyler(defaultClasses, s);
   }
 };
