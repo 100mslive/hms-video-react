@@ -6,6 +6,8 @@ import { ButtonDisplayType } from '../../../types';
 import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
 import { Button } from '../../Button';
 import { Settings, SettingsFormProps } from '../../Settings/Settings';
+import { useHMSStore } from '../../../hooks/HMSRoomProvider';
+import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
 
 interface PreviewControlsClasses {
   root?: string;
@@ -58,6 +60,10 @@ export const PreviewControls = ({
       }),
     [],
   );
+  const { audioInputDeviceId, videoInputDeviceId } = useHMSStore(
+    selectLocalMediaSettings,
+  );
+
   return (
     <div className={`${styler('root')}`}>
       <div className={`${styler('controls')}`}>
@@ -81,7 +87,9 @@ export const PreviewControls = ({
         </Button>
       </div>
       <div className={`${styler('rightControls')}`}>
-        <Settings onChange={onChange} key={0} previewMode={true} />
+        {audioInputDeviceId && videoInputDeviceId && (
+          <Settings onChange={onChange} key={0} previewMode={true} />
+        )}
       </div>
     </div>
   );

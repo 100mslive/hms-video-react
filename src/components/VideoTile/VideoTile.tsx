@@ -1,19 +1,27 @@
 import React, { useMemo } from 'react';
-import './index.css';
+import {
+  HMSPeer,
+  selectCameraStreamByPeerID,
+  selectIsPeerAudioEnabled,
+  selectIsAudioLocallyMuted,
+  selectIsPeerVideoEnabled,
+  selectScreenShareByPeerID,
+  selectAudioTrackVolume,
+  selectScreenShareAudioByPeerID,
+  selectTrackAudioByID,
+} from '@100mslive/hms-video-store';
+import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../TwAvatar';
+import { VolumeIcon } from '../Icons';
+import { Slider } from '../Slider/Slider';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { HMSPeer } from '@100mslive/hms-video-store';
-import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import {
-  selectCameraStreamByPeerID,
-  selectIsPeerAudioEnabled,
-  selectIsPeerVideoEnabled,
-  selectScreenShareByPeerID,
-} from '@100mslive/hms-video-store';
+import './index.css';
+
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
@@ -125,6 +133,7 @@ export const VideoTile = ({
   compact = false,
 }: VideoTileProps) => {
   const { appBuilder, tw } = useHMSTheme();
+  const hmsActions = useHMSActions();
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<VideoTileClasses>({
@@ -144,9 +153,26 @@ export const VideoTile = ({
   const selectVideoByPeerID = showScreen
     ? selectScreenShareByPeerID
     : selectCameraStreamByPeerID;
+
   const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
+  const screenshareAudioTrack = useHMSStore(
+    selectScreenShareAudioByPeerID(peer.id),
+  );
+  const tileAudioTrack = showScreen
+    ? screenshareAudioTrack?.id
+    : peer.audioTrack;
+  const storeAudioLevel = useHMSStore(selectTrackAudioByID(tileAudioTrack));
+
+  audioLevel = audioLevel || storeAudioLevel;
+
+  const storeAudioTrackVolume = useHMSStore(
+    selectAudioTrackVolume(tileAudioTrack),
+  );
+  const storeIsLocallyMuted = useHMSStore(
+    selectIsAudioLocallyMuted(tileAudioTrack),
+  );
 
   if (showAudioLevel === undefined) {
     showAudioLevel = !showScreen; // don't show audio levels for screenshare
@@ -166,6 +192,7 @@ export const VideoTile = ({
     peer.name,
     peer.isLocal,
     hmsVideoTrack?.source,
+    storeIsLocallyMuted,
   );
 
   try {
@@ -194,6 +221,35 @@ export const VideoTile = ({
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
   return (
     <div className={styler('root')}>
+      {!peer.isLocal && (showScreen ? !!screenshareAudioTrack : true) && (
+        <ContextMenu classes={{ root: 'invisible' }}>
+          <ContextMenuItem
+            label="Volume"
+            icon={<VolumeIcon />}
+            onClick={() => {}}
+          >
+            <Slider
+              value={storeAudioTrackVolume}
+              classes={{
+                root: 'ml-1',
+              }}
+              onChange={(_, newValue) => {
+                if (typeof newValue === 'number') {
+                  hmsActions.setVolume(tileAudioTrack!, newValue);
+                }
+              }}
+              aria-labelledby="continuous-slider"
+              marks={[
+                { value: 0 },
+                { value: 25 },
+                { value: 50 },
+                { value: 75 },
+                { value: 100 },
+              ]}
+            />
+          </ContextMenuItem>
+        </ContextMenu>
+      )}
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
         objectFit === 'contain') && (
         <div

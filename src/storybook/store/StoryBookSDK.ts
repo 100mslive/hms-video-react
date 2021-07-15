@@ -5,11 +5,13 @@ import {
   HMSPeer,
   HMSRoom,
   HMSTrackSource,
+  HMSRoomState,
 } from '@100mslive/hms-video-store';
 import {
   HMSAudioTrackSettings,
   HMSVideoTrackSettings,
 } from '@100mslive/hms-video-store';
+import HMSConfig from '@100mslive/hms-video/dist/interfaces/config';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
@@ -20,10 +22,15 @@ export class StoryBookSDK implements IHMSActions {
   private videoURLs: string[] = [];
   private dummyTrackURLs: Record<string, string> = {};
   private counter: number = 100;
+  private localPeer?: HMSPeer;
 
   constructor(store: IHMSStore) {
     this.store = store;
   }
+  setVolume(trackId: string, value: number): void {
+    throw new Error('Method not implemented.');
+  }
+
   addTrack(track: MediaStreamTrack, type: HMSTrackSource): Promise<void> {
     throw new Error('Method not implemented.');
   }
@@ -50,6 +57,25 @@ export class StoryBookSDK implements IHMSActions {
     });
   }
 
+  preview(config: HMSConfig) {
+    if (!config.authToken) {
+      this.log('invalid params');
+      return;
+    }
+    this.log('User called preview');
+    this.store.setState(store => {
+      store.room.roomState = HMSRoomState.Preview;
+      this.localPeer = {
+        name: config?.userName,
+        isLocal: true,
+        id: String(this.randomNumber()),
+        auxiliaryTracks: [],
+      };
+      store.room.peers.push(this.localPeer.id);
+      store.peers[this.localPeer.id] = this.localPeer;
+    });
+  }
+
   join(...args: any[]): void {
     const joinParams = args[0];
     if (!(joinParams.username && joinParams.role && joinParams.roomId)) {
@@ -60,15 +86,18 @@ export class StoryBookSDK implements IHMSActions {
     this.store.setState(store => {
       store.room.isConnected = true;
       store.room.id = joinParams.roomId;
-      const newPeer: HMSPeer = {
-        name: joinParams?.username,
-        role: joinParams?.role,
-        isLocal: true,
-        id: String(this.randomNumber()),
-        auxiliaryTracks: [],
-      };
-      store.room.peers.push(newPeer.id);
-      store.peers[newPeer.id] = newPeer;
+
+      if (!this.localPeer) {
+        this.localPeer = {
+          name: joinParams?.username,
+          role: joinParams?.role,
+          isLocal: true,
+          id: String(this.randomNumber()),
+          auxiliaryTracks: [],
+        };
+        store.room.peers.push(this.localPeer.id);
+        store.peers[this.localPeer.id] = this.localPeer;
+      }
     });
   }
 
