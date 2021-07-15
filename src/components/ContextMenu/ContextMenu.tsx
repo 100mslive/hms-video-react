@@ -14,6 +14,7 @@ export interface ContextMenuClasses {
   menuTitle?: string;
   menuIcon?: string;
   menuItemChildren?: string;
+  menuItemActive?: string;
 }
 
 export type ContextMenuItemClasses = Omit<
@@ -39,6 +40,7 @@ export interface ContextMenuItemProps extends ContextMenuDataItem {
   classes?: ContextMenuItemClasses;
   onClick: () => void;
   children?: JSX.Element;
+  active?: boolean;
 }
 
 const defaultClasses: ContextMenuClasses = {
@@ -53,6 +55,7 @@ const defaultClasses: ContextMenuClasses = {
   menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
   menuTitle: 'text-gray-100 dark:text-white text-base w-9/12 min-w-0 truncate',
   menuItemChildren: 'w-11/12 ml-1 justify-self-center',
+  menuItemActive: 'bg-gray-600 dark:bg-gray-300',
 };
 
 export const ContextMenuItem = ({
@@ -61,6 +64,7 @@ export const ContextMenuItem = ({
   label,
   children,
   onClick,
+  active,
 }: ContextMenuItemProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -76,7 +80,9 @@ export const ContextMenuItem = ({
 
   return (
     <div
-      className={styler('menuItem')}
+      className={`${styler('menuItem')} ${
+        active ? styler('menuItemActive') : ''
+      }`}
       onClick={onClick}
       style={{ minHeight: 40 }}
     >

@@ -9,6 +9,7 @@ import {
   selectAudioTrackVolume,
   selectScreenShareAudioByPeerID,
   selectTrackAudioByID,
+  selectSimulcastLayerByTrack,
 } from '@100mslive/hms-video-store';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
@@ -172,6 +173,9 @@ export const VideoTile = ({
     ? screenshareAudioTrack?.id
     : peer.audioTrack;
   const storeAudioLevel = useHMSStore(selectTrackAudioByID(tileAudioTrack));
+  const simulcastLayer = useHMSStore(
+    selectSimulcastLayerByTrack(storeHmsVideoTrack?.id),
+  );
 
   audioLevel = audioLevel || storeAudioLevel;
 
@@ -227,6 +231,8 @@ export const VideoTile = ({
 
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
+
+  console.log(simulcastLayer, 'simulcastLayer');
   return (
     <div className={styler('root')}>
       {!peer.isLocal && (showScreen ? !!screenshareAudioTrack : true) && (
@@ -262,6 +268,7 @@ export const VideoTile = ({
           </ContextMenuItem>
           <ContextMenuItem
             label="Low"
+            active={simulcastLayer === HMSSimulcastLayer.LOW}
             onClick={() => {
               hmsActions.setPreferredLayer(
                 peer.videoTrack!,
@@ -272,6 +279,7 @@ export const VideoTile = ({
           />
           <ContextMenuItem
             label="Medium"
+            active={simulcastLayer === HMSSimulcastLayer.MEDIUM}
             onClick={() => {
               hmsActions.setPreferredLayer(
                 peer.videoTrack!,
@@ -282,6 +290,7 @@ export const VideoTile = ({
           />
           <ContextMenuItem
             label="High"
+            active={simulcastLayer === HMSSimulcastLayer.HIGH}
             onClick={() => {
               hmsActions.setPreferredLayer(
                 peer.videoTrack!,
