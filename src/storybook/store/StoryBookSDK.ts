@@ -12,6 +12,7 @@ import {
   HMSVideoTrackSettings,
 } from '@100mslive/hms-video-store';
 import HMSConfig from '@100mslive/hms-video/dist/interfaces/config';
+import { HMSSimulcastLayer } from '../../../../hms-video-store/dist/core/hmsSDKStore/sdkTypes';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
@@ -26,6 +27,9 @@ export class StoryBookSDK implements IHMSActions {
 
   constructor(store: IHMSStore) {
     this.store = store;
+  }
+  setPreferredLayer(trackId: string, layer: HMSSimulcastLayer): void {
+    throw new Error('Method not implemented.');
   }
   setVolume(trackId: string, value: number): void {
     throw new Error('Method not implemented.');
@@ -168,6 +172,8 @@ export class StoryBookSDK implements IHMSActions {
       store.room.peers.push(peer.id);
       store.speakers[peer.id] = {
         audioLevel: this.randomFromArray([0, 10, 20, 50, 70, 80, 100]),
+        peerID: peer.id,
+        trackID: peer.audioTrack!,
       };
       if (peer.audioTrack) {
         store.tracks[audioTrackID] = {
