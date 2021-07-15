@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -141,6 +141,7 @@ export const VideoTile = ({
 }: VideoTileProps) => {
   const { appBuilder, tw } = useHMSTheme();
   const hmsActions = useHMSActions();
+  const [showMenu, setShowMenu] = useState(false);
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<VideoTileClasses>({
@@ -229,7 +230,11 @@ export const VideoTile = ({
   return (
     <div className={styler('root')}>
       {!peer.isLocal && (showScreen ? !!screenshareAudioTrack : true) && (
-        <ContextMenu classes={{ root: 'invisible' }}>
+        <ContextMenu
+          classes={{ root: 'invisible' }}
+          menuOpen={showMenu}
+          onTrigger={value => setShowMenu(value)}
+        >
           <ContextMenuItem
             label="Volume"
             icon={<VolumeIcon />}
@@ -262,6 +267,7 @@ export const VideoTile = ({
                 peer.videoTrack!,
                 HMSSimulcastLayer.LOW,
               );
+              setShowMenu(false);
             }}
           />
           <ContextMenuItem
@@ -271,6 +277,7 @@ export const VideoTile = ({
                 peer.videoTrack!,
                 HMSSimulcastLayer.MEDIUM,
               );
+              setShowMenu(false);
             }}
           />
           <ContextMenuItem
@@ -280,6 +287,7 @@ export const VideoTile = ({
                 peer.videoTrack!,
                 HMSSimulcastLayer.HIGH,
               );
+              setShowMenu(false);
             }}
           />
         </ContextMenu>

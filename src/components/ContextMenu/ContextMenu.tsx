@@ -29,6 +29,7 @@ export interface ContextMenuDataItem {
 export interface ContextMenuProps {
   classes?: ContextMenuClasses;
   menuOpen?: boolean;
+  onTrigger?: (open: boolean) => void;
   children:
     | React.ReactElement<ContextMenuItemProps>
     | React.ReactElement<ContextMenuItemProps>[];
@@ -90,6 +91,7 @@ export const ContextMenu = ({
   classes,
   children,
   menuOpen = false,
+  onTrigger,
 }: ContextMenuProps) => {
   const [open, setOpen] = useState(menuOpen);
   const { tw } = useHMSTheme();
@@ -110,7 +112,13 @@ export const ContextMenu = ({
 
   return (
     <div className={styler('root')}>
-      <div className={styler('trigger')} onClick={() => setOpen(!open)}>
+      <div
+        className={styler('trigger')}
+        onClick={() => {
+          setOpen(!open);
+          onTrigger && onTrigger(!open);
+        }}
+      >
         <DotMenuIcon className={styler('triggerIcon')} />
       </div>
       {open && (
