@@ -107,7 +107,6 @@ export const ControlBar = ({
       iconOnly
       variant="no-fill"
       iconSize="md"
-      classes={{ root: 'mr-2' }}
       shape={buttonDisplay}
       active={isVideoMuted}
       onClick={videoButtonOnClick}
