@@ -2,19 +2,19 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@^0.1.38":
-  version "0.1.38"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.38.tgz#46781c1d670f733ac64bc1c45d90c8e649419b01"
-  integrity sha512-EmXi/tKgAjDPSHiS3kQe0SBSHadvaFCbtRYcHca20ZsHsV8VAvgTk/bncydO8B2FLAysRUX/d2XLT2gXwjgoHQ==
+"@100mslive/hms-video-store@^0.1.43":
+  version "0.1.43"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.1.43.tgz#7294122862ab1d63956f42cbe07e01ce4848cb99"
+  integrity sha512-x1Pb+mO0lbfsVzErG2Tsiup91gupOsqVyv5HvYnNY+bpISFjp9qErJxe5omcxLs5iWXs7VILBVIF/4xQU+sHqg==
   dependencies:
     immer "^9.0.2"
     reselect "^4.0.0"
-    zustand "^3.5.1"
+    zustand "3.5.4"
 
-"@100mslive/hms-video@^0.0.73":
-  version "0.0.73"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.73.tgz#730dc9f6f114d0e871eaa84af6d8359eb497d946"
-  integrity sha512-872MFKmhQj5RRFIH/i9xvlUp22hkc/r9cgKhogVGvGDV9MitK+CL5l1nyb4Xw9MVCzHjaJ48FJY7q57+tHqFIQ==
+"@100mslive/hms-video@^0.0.79":
+  version "0.0.79"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.79.tgz#f23bda9c4712e47f73d8601941f08bfe2c9e93ef"
+  integrity sha512-J5Tnm0UHPZElf9MrzDQIkXPk7hqvHfwGZMVUO+B8sMRUu8jPeZ5mKEh6225jFLkbXaVWRNYxXXh2UIvFCtt6jw==
   dependencies:
     events "^3.3.0"
     sdp-transform "^2.14.1"
@@ -14950,10 +14950,10 @@ yocto-queue@^0.1.0:
   resolved "https://registry.yarnpkg.com/yocto-queue/-/yocto-queue-0.1.0.tgz#0294eb3dee05028d31ee1a5fa2c556a6aaf10a1b"
   integrity sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==
 
-zustand@^3.5.1, zustand@^3.5.5:
-  version "3.5.5"
-  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.5.tgz#628458ad70621ddc2a17dbee49be963e5c0dccb5"
-  integrity sha512-iTiJoxzYFtiD7DhscgwK2P4Kft1JcZEI2U7mG8IxiOFM4KpBAiJZfFop3r/3wbCuyltXI6ph1Fx90e4j/S43XA==
+zustand@3.5.4:
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/zustand/-/zustand-3.5.4.tgz#9050a15042ced663b10588327b9210df91f0e13e"
+  integrity sha512-EtS3D83il8eiydRS+xUcpczffT0MpD9ePIqAT10ns2tfzPvq85nmMmYJl9mOLOJjPLaXAMK8lgk0iCz2h7CxGg==
 
 zwitch@^1.0.0:
   version "1.0.5"

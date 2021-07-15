@@ -9,6 +9,7 @@ import {
   HMSRoomState,
   selectIsLocalAudioEnabled,
   selectIsLocalVideoDisplayEnabled,
+  selectLocalMediaSettings,
   selectLocalPeer,
   selectRoomState,
 } from '@100mslive/hms-video-store';
@@ -46,7 +47,8 @@ const defaultClasses: PreviewClasses = {
     'flex w-screen h-full mls:h-auto bg-white dark:bg-black justify-center items-center',
   containerRoot:
     'flex flex-col justify-center items-center w-37.5 h-full md:h-400 pb-4 box-border bg-gray-700 dark:bg-gray-100 text-gray-100 dark:text-white overflow-hidden md:rounded-2xl',
-  header: 'w-4/5 h-2/5 md:w-22.5 md:h-22.5 mt-1.875 mb-7',
+  header:
+    'w-4/5 h-2/5 md:w-22.5 md:h-22.5 mt-1.875 mb-7 grid place-items-center',
   helloDiv: 'text-2xl font-medium mb-2',
   nameDiv: 'text-lg leading-6 mb-2',
   inputRoot: 'p-2 mb-3',
@@ -89,6 +91,9 @@ export const Preview = ({
   const localPeer = useHMSStore(selectLocalPeer);
   const hmsActions = useHMSActions();
   const roomState = useHMSStore(selectRoomState);
+  const { audioInputDeviceId, videoInputDeviceId } = useHMSStore(
+    selectLocalMediaSettings,
+  );
 
   const styler = useMemo(
     () =>
@@ -116,8 +121,6 @@ export const Preview = ({
   const setAudioEnabled = hmsActions.setLocalAudioEnabled.bind(hmsActions);
   const setVideoEnabled = hmsActions.setLocalVideoEnabled.bind(hmsActions);
 
-  const [selectedAudioInput, setSelectedAudioInput] = useState('default');
-  const [selectedVideoInput, setSelectedVideoInput] = useState('default');
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -133,20 +136,22 @@ export const Preview = ({
     hmsActions.preview(config);
   }, [config.authToken]);
 
-  useEffect(() => {
-    // @ts-ignore
-    hmsActions.setVideoSettings({ deviceId: selectedVideoInput });
-    // @ts-ignore
-    hmsActions.setAudioSettings({ deviceId: selectedAudioInput });
-  }, [selectedAudioInput, selectedVideoInput]);
+  const handleDeviceChange = (values: SettingsFormProps) => {
+    const {
+      selectedVideoInput: newSelectedVideoInput,
+      selectedAudioInput: newSelectedAudioInput,
+    } = values;
+    if (newSelectedAudioInput && audioInputDeviceId !== newSelectedAudioInput) {
+      // @ts-ignore
+      hmsActions.setAudioSettings({ deviceId: newSelectedAudioInput });
+    }
 
-  const handleDeviceChange = useCallback((values: SettingsFormProps) => {
-    values?.selectedAudioInput &&
-      setSelectedAudioInput(values.selectedAudioInput);
-    values?.selectedVideoInput &&
-      setSelectedVideoInput(values.selectedVideoInput);
+    if (newSelectedVideoInput && videoInputDeviceId !== newSelectedVideoInput) {
+      // @ts-ignore
+      hmsActions.setVideoSettings({ deviceId: newSelectedVideoInput });
+    }
     onChange(values);
-  }, []);
+  };
 
   const inputProps = {
     compact: true,
@@ -182,10 +187,10 @@ export const Preview = ({
             }}
           />
           {/* videoTile */}
-          {localPeer && (
+          {localPeer ? (
             <VideoTile
               {...videoTileProps}
-              peer={localPeer}
+              peer={{ ...localPeer, name }}
               objectFit="cover"
               aspectRatio={{
                 width: 1,
@@ -202,7 +207,9 @@ export const Preview = ({
                 />
               }
             />
-          )}
+          ) : !error.title ? (
+            <ProgressIcon width="100" height="100" />
+          ) : null}
         </div>
         {/* helloDiv */}
         <div className={styler('helloDiv')}>Hi There</div>
@@ -226,6 +233,9 @@ export const Preview = ({
           icon={inProgress ? <ProgressIcon /> : undefined}
           disabled={inProgress || roomState === HMSRoomState.Connecting}
           onClick={async () => {
+            if (inProgress) {
+              return;
+            }
             if (!name || !name.replace(/\u200b/g, ' ').trim()) {
               inputRef.current && inputRef.current.focus();
               setShowValidation(true);

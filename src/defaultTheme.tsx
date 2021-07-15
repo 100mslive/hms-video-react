@@ -70,6 +70,7 @@ export const theme: { theme: ThemeConfiguration } = {
         'heading-lg': ['1.5625rem', { lineHeight: '1.75rem' }],
       },
       maxHeight: {
+        15: '15rem',
         100: '37.5rem',
         116: '29rem',
       },
