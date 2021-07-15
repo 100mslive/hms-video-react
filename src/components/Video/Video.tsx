@@ -7,6 +7,7 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions } from '../../hooks/HMSRoomProvider';
 import { HMSTrack } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import HMSVideoTrack from '../../../../hms-video-web/dist/media/tracks/HMSVideoTrack';
 
 export type DisplayShapes = 'circle' | 'rectangle';
 
