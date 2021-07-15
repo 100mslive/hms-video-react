@@ -232,7 +232,6 @@ export const VideoTile = ({
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
 
-  console.log(simulcastLayer, 'simulcastLayer');
   return (
     <div className={styler('root')}>
       {!peer.isLocal && (showScreen ? !!screenshareAudioTrack : true) && (
