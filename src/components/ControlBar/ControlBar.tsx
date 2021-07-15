@@ -8,7 +8,6 @@ import {
   CamOnIcon,
   ShareScreenIcon,
   ChatUnreadIcon,
-  VirtualBackgroundIcon,
 } from '../Icons';
 import { Button } from '../Button';
 import { Settings } from '../Settings/Settings';
@@ -25,13 +24,11 @@ export interface ControlBarClasses {
 export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
-  isBackgroundEnabled?: boolean;
   isChatOpen?: boolean;
   buttonDisplay: ButtonDisplayType;
 
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
-  backgroundButtonOnClick: React.MouseEventHandler;
   leaveButtonOnClick: React.MouseEventHandler;
   chatButtonOnClick: React.MouseEventHandler;
   screenshareButtonOnClick: React.MouseEventHandler;
@@ -54,12 +51,10 @@ const defaultClasses: ControlBarClasses = {
 export const ControlBar = ({
   isAudioMuted = false,
   isVideoMuted = false,
-  isBackgroundEnabled = false,
   isChatOpen = false,
   buttonDisplay = 'rectangle',
   audioButtonOnClick,
   videoButtonOnClick,
-  backgroundButtonOnClick,
   leaveButtonOnClick,
   chatButtonOnClick,
   screenshareButtonOnClick,
@@ -119,16 +114,6 @@ export const ControlBar = ({
       key={1}
     >
       {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
-    </Button>,
-    <Button
-      iconOnly
-      variant="no-fill"
-      shape={buttonDisplay}
-      active={isBackgroundEnabled}
-      onClick={backgroundButtonOnClick}
-      key={2}
-    >
-      <VirtualBackgroundIcon />
     </Button>,
   ],
   rightComponents = [
