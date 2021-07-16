@@ -11,6 +11,7 @@ import {
   selectTrackAudioByID,
   selectSimulcastLayerByTrack,
 } from '@100mslive/hms-video-store';
+import { HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
@@ -22,14 +23,6 @@ import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
-
-export enum HMSSimulcastLayer {
-  NONE = 'none',
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-}
-
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
