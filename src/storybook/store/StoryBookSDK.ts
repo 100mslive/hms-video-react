@@ -12,7 +12,7 @@ import {
   HMSVideoTrackSettings,
 } from '@100mslive/hms-video-store';
 import HMSConfig from '@100mslive/hms-video/dist/interfaces/config';
-import { HMSSimulcastLayer } from '../../../../hms-video-store/dist/core/hmsSDKStore/sdkTypes';
+import { HMSSimulcastLayer } from '../../components/VideoTile/VideoTile';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for

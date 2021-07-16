@@ -23,7 +23,7 @@ import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
 
-enum HMSSimulcastLayer {
+export enum HMSSimulcastLayer {
   NONE = 'none',
   LOW = 'low',
   MEDIUM = 'medium',
