@@ -170,7 +170,7 @@ export class StoryBookSDK implements IHMSActions {
     this.store.setState(store => {
       store.peers[peer.id] = peer;
       store.room.peers.push(peer.id);
-      store.speakers[peer.id] = {
+      store.speakers[audioTrackID] = {
         audioLevel: this.randomFromArray([0, 10, 20, 50, 70, 80, 100]),
         peerID: peer.id,
         trackID: peer.audioTrack!,
