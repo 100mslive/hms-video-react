@@ -6,7 +6,7 @@ name: Publish Alpha
 on:
   push:
     branches:
-      - develop
+      - poc
 
 jobs:
   publish-npm:
@@ -19,6 +19,6 @@ jobs:
           registry-url: https://registry.npmjs.org/
       - run: npm install
       - run: npm test
-      - run: npm publish --tag alpha
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
