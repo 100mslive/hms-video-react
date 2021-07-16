@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
+import { HMSConfig } from '@100mslive/hms-video';
 import {
   HMSRoomState,
   selectIsLocalAudioEnabled,
@@ -24,7 +25,6 @@ import { PreviewControls } from './Controls';
 import { Input } from '../Input';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
-import HMSConfig from '@100mslive/hms-video/dist/interfaces/config';
 
 interface JoinInfo {
   audioMuted?: boolean;

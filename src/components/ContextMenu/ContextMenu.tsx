@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -14,6 +14,7 @@ export interface ContextMenuClasses {
   menuTitle?: string;
   menuIcon?: string;
   menuItemChildren?: string;
+  menuItemActive?: string;
 }
 
 export type ContextMenuItemClasses = Omit<
@@ -28,6 +29,8 @@ export interface ContextMenuDataItem {
 
 export interface ContextMenuProps {
   classes?: ContextMenuClasses;
+  menuOpen?: boolean;
+  onTrigger?: (open: boolean) => void;
   children:
     | React.ReactElement<ContextMenuItemProps>
     | React.ReactElement<ContextMenuItemProps>[];
@@ -37,6 +40,7 @@ export interface ContextMenuItemProps extends ContextMenuDataItem {
   classes?: ContextMenuItemClasses;
   onClick: () => void;
   children?: JSX.Element;
+  active?: boolean;
 }
 
 const defaultClasses: ContextMenuClasses = {
@@ -51,6 +55,7 @@ const defaultClasses: ContextMenuClasses = {
   menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
   menuTitle: 'text-gray-100 dark:text-white text-base w-9/12 min-w-0 truncate',
   menuItemChildren: 'w-11/12 ml-1 justify-self-center',
+  menuItemActive: 'bg-gray-600 dark:bg-gray-300',
 };
 
 export const ContextMenuItem = ({
@@ -59,6 +64,7 @@ export const ContextMenuItem = ({
   label,
   children,
   onClick,
+  active,
 }: ContextMenuItemProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -74,7 +80,9 @@ export const ContextMenuItem = ({
 
   return (
     <div
-      className={styler('menuItem')}
+      className={`${styler('menuItem')} ${
+        active ? styler('menuItemActive') : ''
+      }`}
       onClick={onClick}
       style={{ minHeight: 40 }}
     >
@@ -85,8 +93,13 @@ export const ContextMenuItem = ({
   );
 };
 
-export const ContextMenu = ({ classes, children }: ContextMenuProps) => {
-  const [open, setOpen] = useState(false);
+export const ContextMenu = ({
+  classes,
+  children,
+  menuOpen = false,
+  onTrigger,
+}: ContextMenuProps) => {
+  const [open, setOpen] = useState(menuOpen);
   const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
@@ -99,9 +112,19 @@ export const ContextMenu = ({ classes, children }: ContextMenuProps) => {
     [],
   );
 
+  useEffect(() => {
+    setOpen(menuOpen);
+  }, [menuOpen]);
+
   return (
     <div className={styler('root')}>
-      <div className={styler('trigger')} onClick={() => setOpen(!open)}>
+      <div
+        className={styler('trigger')}
+        onClick={() => {
+          setOpen(!open);
+          onTrigger && onTrigger(!open);
+        }}
+      >
         <DotMenuIcon className={styler('triggerIcon')} />
       </div>
       {open && (
