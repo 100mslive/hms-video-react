@@ -14,13 +14,13 @@ export function ChatLink({ text }: { text: string }) {
             <a
               href={part}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="text-brand-tint"
             >
               {part}{' '}
             </a>
           ) : (
-            part + ' '
+            `${part} `
           ),
         )}
     </>

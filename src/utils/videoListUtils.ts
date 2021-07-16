@@ -12,8 +12,12 @@ export const getVideoTracksFromPeers = (
   }
   const videoTracks: TrackWithPeer[] = [];
   for (let peer of peers) {
-    if(peer.videoTrack === undefined && peer.audioTrack && tracks[peer.audioTrack]) {
-      videoTracks.push({ peer: peer })  
+    if (
+      peer.videoTrack === undefined &&
+      peer.audioTrack &&
+      tracks[peer.audioTrack]
+    ) {
+      videoTracks.push({ peer: peer });
     } else if (peer.videoTrack && tracks[peer.videoTrack]) {
       videoTracks.push({ track: tracks[peer.videoTrack], peer: peer });
     }
