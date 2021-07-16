@@ -245,7 +245,7 @@ export const VideoTile = ({
               }}
               onChange={(_, newValue) => {
                 if (typeof newValue === 'number') {
-                  hmsActions.setVolume(tileAudioTrack!, newValue);
+                  hmsActions.setVolume(newValue, tileAudioTrack);
                 }
               }}
               aria-labelledby="continuous-slider"

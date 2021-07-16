@@ -31,8 +31,17 @@ export class StoryBookSDK implements Partial<IHMSActions> {
   setPreferredLayer(trackId: string, layer: HMSSimulcastLayer): void {
     throw new Error('Method not implemented.');
   }
-  setVolume(trackId: string, value: number): void {
+
+  setVolume(value: number, trackId?: string): void {
     throw new Error('Method not implemented.');
+  }
+
+  setOutputDevice(deviceId: string) {
+    throw new Error('Method not implemented');
+  }
+
+  setOutputVolume(volume: number) {
+    throw new Error('Method not implemented');
   }
 
   addTrack(track: MediaStreamTrack, type: HMSTrackSource): Promise<void> {
