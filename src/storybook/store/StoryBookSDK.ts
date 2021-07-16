@@ -173,7 +173,7 @@ export class StoryBookSDK implements IHMSActions {
       store.speakers[audioTrackID] = {
         audioLevel: this.randomFromArray([0, 10, 20, 50, 70, 80, 100]),
         peerID: peer.id,
-        trackID: peer.audioTrack!,
+        trackID: audioTrackID,
       };
       if (peer.audioTrack) {
         store.tracks[audioTrackID] = {
