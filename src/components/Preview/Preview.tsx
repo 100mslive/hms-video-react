@@ -91,9 +91,11 @@ export const Preview = ({
   const localPeer = useHMSStore(selectLocalPeer);
   const hmsActions = useHMSActions();
   const roomState = useHMSStore(selectRoomState);
-  const { audioInputDeviceId, videoInputDeviceId } = useHMSStore(
-    selectLocalMediaSettings,
-  );
+  const {
+    audioInputDeviceId,
+    videoInputDeviceId,
+    audioOutputDeviceId,
+  } = useHMSStore(selectLocalMediaSettings);
 
   const styler = useMemo(
     () =>
@@ -140,6 +142,7 @@ export const Preview = ({
     const {
       selectedVideoInput: newSelectedVideoInput,
       selectedAudioInput: newSelectedAudioInput,
+      selectedAudioOutput: newSelectedAudioOutput,
     } = values;
     if (newSelectedAudioInput && audioInputDeviceId !== newSelectedAudioInput) {
       // @ts-ignore
@@ -149,6 +152,13 @@ export const Preview = ({
     if (newSelectedVideoInput && videoInputDeviceId !== newSelectedVideoInput) {
       // @ts-ignore
       hmsActions.setVideoSettings({ deviceId: newSelectedVideoInput });
+    }
+
+    if (
+      newSelectedAudioOutput &&
+      audioOutputDeviceId !== newSelectedAudioOutput
+    ) {
+      hmsActions.setAudioOutputDevice(newSelectedAudioOutput);
     }
     onChange(values);
   };
