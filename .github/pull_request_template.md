@@ -1,22 +1,23 @@
-### Details
+## Details
 
-* **What kind of change does this PR introduce?** (Bug fix, feature, docs update, ...)
-
-* **What is the current behavior?**
-
-
-* **What is the new behavior (if this is a feature change)?**
+### Current Behaviour
 
 
 
-* **Does this PR introduce a breaking change?** (What changes might users need to make in their application due to this PR?)
+
+### New Behaviour
 
 
 
-* **Other information (screenshots, how was it tested? any open issues or future ideas?)**:
+
+### Screenshots
 
 
 
-### Checklist:
-- [ ] The change requires a change to the documentation.
+
+### Choose one of these(put a 'x' in the bracket):
+- [ ] The change doesn't require a change to the documentation.
 - [ ] The documentation is updated accordingly.
+
+
+### Implementation note, gotchas and Future TODOs
