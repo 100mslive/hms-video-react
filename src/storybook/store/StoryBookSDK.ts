@@ -18,7 +18,7 @@ import { HMSSimulcastLayer } from '../../../../hms-video-store/dist/core/hmsSDKS
 This is a dummy bridge with no connected backend. It can be used for
 storybook or writing functional tests.
  */
-export class StoryBookSDK implements IHMSActions {
+export class StoryBookSDK implements Partial<IHMSActions> {
   private readonly store: IHMSStore;
   private videoURLs: string[] = [];
   private dummyTrackURLs: Record<string, string> = {};
