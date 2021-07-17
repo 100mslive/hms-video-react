@@ -3,6 +3,8 @@ import { Button } from '../Button';
 import { VolumeIcon } from '../Icons';
 import { Text } from '../Text';
 
+const TEST_AUDIO_URL = 'https://100ms.live/test-audio.wav';
+
 const TestAudio = ({ outputDeviceId }: { outputDeviceId?: string }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -25,7 +27,7 @@ const TestAudio = ({ outputDeviceId }: { outputDeviceId?: string }) => {
     <>
       <audio
         ref={audioRef}
-        src="/test-audio.wav"
+        src={TEST_AUDIO_URL}
         onEnded={() => setPlaying(false)}
         onPlay={() => setPlaying(true)}
       ></audio>
