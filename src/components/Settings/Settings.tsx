@@ -1,4 +1,10 @@
-import React, { ChangeEventHandler, useMemo, useEffect, useState } from 'react';
+import React, {
+  ChangeEventHandler,
+  useMemo,
+  useEffect,
+  useState,
+  useRef,
+} from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
@@ -11,6 +17,7 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { closeMediaStream, isMobileDevice } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Slider } from '../Slider/Slider';
+import TestAudio from './TestAudio';
 
 interface SettingsClasses {
   root?: string;
@@ -34,6 +41,7 @@ interface SettingsClasses {
   sliderLabel?: string;
   slider?: string;
   errorContainer?: string;
+  testAudioContainer?: string;
 }
 
 export interface SettingsFormProps {
@@ -72,6 +80,7 @@ const defaultClasses: SettingsClasses = {
   sliderLabel: 'text-right',
   slider: 'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
   errorContainer: 'flex justify-center items-center w-full px-8 py-4',
+  testAudioContainer: 'mx-2',
 };
 
 const customClasses: SettingsClasses = {
@@ -130,20 +139,14 @@ export const Settings = ({
     initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
 
   const deviceValues = {
-    selectedAudioInput: initialValues?.selectedAudioInput
-      ? initialValues?.selectedAudioInput
-      : 'default',
-    selectedVideoInput: initialValues?.selectedVideoInput
-      ? initialValues?.selectedVideoInput
-      : 'default',
-    selectedAudioOutput: initialValues?.selectedAudioOutput
-      ? initialValues?.selectedAudioOutput
-      : 'default',
+    selectedAudioInput: initialValues.selectedAudioInput || 'default',
+    selectedVideoInput: initialValues.selectedVideoInput || 'default',
+    selectedAudioOutput: initialValues.selectedAudioOutput || 'default',
   };
 
   const [values, setValues] = useState<SettingsFormProps>({
     ...deviceValues,
-    maxTileCount: initialValues?.maxTileCount ? initialValues?.maxTileCount : 9,
+    maxTileCount: initialValues.maxTileCount || 9,
   });
 
   async function getDevices() {
@@ -195,20 +198,14 @@ export const Settings = ({
     const newValues = { ...values };
     //TODO make this generic
     if (typeof newValue === 'number') {
-      newValues['maxTileCount'] = newValue;
+      newValues.maxTileCount = newValue;
     }
     setValues(newValues);
   };
 
-  const videoInput = deviceGroups['videoinput']
-    ? deviceGroups['videoinput']
-    : [];
-  const audioInput = deviceGroups['audioinput']
-    ? deviceGroups['audioinput']
-    : [];
-  // const audioOutput = deviceGroups['audiooutput']
-  //   ? deviceGroups['audiooutput']
-  //   : [];
+  const videoInput = deviceGroups['videoinput'] || [];
+  const audioInput = deviceGroups['audioinput'] || [];
+  const audioOutput = deviceGroups['audiooutput'] || [];
   //TODO handle case where selected device is not in list
   // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
   // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
@@ -313,7 +310,7 @@ export const Settings = ({
                   </div>
                 </div>
                 {/** Enabled this when the output is handled properly */}
-                {/* <div className={`${styler('formInner')}`}>
+                <div className={`${styler('formInner')}`}>
                   <div className={`${styler('selectLabel')}`}>
                     <Text variant="heading" size="sm">
                       Audio Output:
@@ -339,7 +336,17 @@ export const Settings = ({
                       </select>
                     )}
                   </div>
-                </div> */}
+                </div>
+                <div className={`${styler('formInner')}`}>
+                  <div className={`${styler('selectLabel')}`}>
+                    <Text variant="heading" size="sm">
+                      Test Audio Level:
+                    </Text>
+                  </div>
+                  <div className={`${styler('testAudioContainer')}`}>
+                    <TestAudio outputDeviceId={values.selectedAudioOutput} />
+                  </div>
+                </div>
               </>
             ) : (
               <div className={styler('errorContainer')}>
@@ -347,104 +354,6 @@ export const Settings = ({
                 devices plugged in?
               </div>
             )}
-            {/* <div className="w-full my-1.5">
-              <div className="w-full flex  ">
-                <div className="w-1/3 flex justify-end items-center ">
-                  <span>On Entering Room:</span>
-                </div>
-                <div className="rounded-lg w-1/2  p-2 mx-2 flex flex-wrap items-center ">
-                  <input
-                    type="checkbox"
-                    id="vehicle1"
-                    name="vehicle1"
-                    value="Bike"
-                    className="checked:bg-white checked:text-white "
-                  />
-                  <span className="mx-2 ">Keep my microphone off</span>
-                </div>
-              </div>
-              <div className="w-full flex">
-                <div className="w-1/3 flex justify-end items-center "></div>
-                <div className="rounded-lg w-1/2  px-2 mx-2 flex flex-wrap items-center ">
-                  <input
-                    type="checkbox"
-                    id="vehicle1"
-                    name="vehicle1"
-                    value="Bike"
-                    className="checked:bg-white checked:text-white "
-                  />
-                  <span className="mx-2">Keep my video off</span>
-                </div>
-              </div>
-            </div> */}
-            {/* <div className="bg-gray-200 h-px w-full my-4"></div>
-            <div className="w-full my-1.5"> */}
-            {/* <div className="w-full flex  ">
-                <div className="w-1/3 flex justify-end items-center ">
-                  <span>Virtual Background:</span>
-                </div>
-                <div className="rounded-lg w-1/2  p-2 mx-2 flex flex-wrap items-center ">
-                  <input
-                    type="radio"
-                    id="vehicle1"
-                    name="vehicle1"
-                    value="Bike"
-                    className="checked:bg-white checked:text-white "
-                  />
-                  <span className="mx-2 ">On</span>
-                </div>
-              </div> */}
-            {/* <div className="w-full flex">
-                <div className="w-1/3 flex justify-end items-center "></div>
-                <div className="rounded-lg w-1/2  px-2 mx-2 flex flex-wrap items-center ">
-                  <input
-                    type="radio"
-                    id="vehicle1"
-                    name="vehicle1"
-                    value="Bike"
-                    className="checked:bg-white checked:text-white "
-                  />
-                  <span className="mx-2">Off</span>
-                </div>
-              </div> */}
-            {/* <div className="w-full flex">
-            <div className="w-1/3 flex justify-end items-center "></div>
-            <div className="rounded-lg w-52  h-52 px-2 mx-2 flex flex-wrap items-center ">
-              <VideoTile {...props} />
-            </div>
-          </div> */}
-            {/* </div> */}
-            {/* <div className="bg-gray-200 h-px w-full my-4"></div>
-            <div className="w-full my-1.5">
-              <div className="w-full flex  ">
-                <div className="w-1/3 flex justify-end items-center ">
-                  <span>Mute all Button should:</span>
-                </div>
-                <div className="rounded-lg w-1/2  p-2 mx-2 flex flex-wrap items-center ">
-                  <input
-                    type="radio"
-                    id="vehicle1"
-                    name="vehicle1"
-                    value="Bike"
-                    className="checked:bg-white checked:text-white "
-                  />
-                  <span className="mx-2 ">Mute Everyone expect me.</span>
-                </div>
-              </div>
-              <div className="w-full flex">
-                <div className="w-1/3 flex justify-end items-center "></div>
-                <div className="rounded-lg w-1/2  px-2 mx-2 flex flex-wrap items-center ">
-                  <input
-                    type="radio"
-                    id="vehicle1"
-                    name="vehicle1"
-                    value="Bike"
-                    className="checked:bg-white checked:text-white "
-                  />
-                  <span className="mx-2">Mute Everyone in the room.</span>
-                </div>
-              </div>
-            </div> */}
             {/** Hide participants view for mobile */}
             {!isMobileDevice() && (
               <>
@@ -479,56 +388,6 @@ export const Settings = ({
                       />
                     </div>
                   </div>
-                  {/* <div className="w-full flex">
-                <div className="w-1/3 flex justify-end items-center "></div>
-                <div className="rounded-lg w-1/2  px-2 mx-2 flex my-1 items-center ">
-                  <input
-                    type="radio"
-                    id="vehicle1"
-                    name="vehicle1"
-                    value="Bike"
-                    className="checked:bg-white checked:text-white "
-                  />
-                  <span className="mx-2">Always stay in small view.</span>
-                </div>
-              </div> */}
-                  {/* <div className="w-full flex ">
-                <div className="w-1/3 flex justify-end items-center "></div>
-                <div className="rounded-lg w-1/2  px-2 mx-2 flex my-1 items-center ">
-                  <Slider
-                    defaultValue={8}
-                    aria-labelledby="discrete-slider"
-                    valueLabelDisplay="auto"
-                    step={1}
-                    marks
-                    min={1}
-                    max={30}
-                  />
-                </div>
-              </div> */}
-                  {/* <div className="w-full flex m-1">
-                <div className="w-1/3 flex justify-end items-center "></div>
-                <div className="rounded-lg w-1/4 bg-gray-200 p-1 mx-5">
-                  <select
-                    name="role"
-                    className="rounded-lg w-full h-full bg-gray-200 focus:outline-none"
-                    // value={role}
-                    // onChange={event => {
-                    //   setRole(event.target.value);
-                    // }}
-                  >
-                    <option value="Teacher" className="p-4">
-                      1
-                    </option>
-                    <option value="Teacher" className="p-4">
-                      2
-                    </option>
-                    <option value="Teacher" className="p-4">
-                      3
-                    </option>
-                  </select>
-                </div>
-              </div> */}
                 </div>
               </>
             )}

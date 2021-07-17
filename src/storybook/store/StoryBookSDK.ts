@@ -10,14 +10,15 @@ import {
 import {
   HMSAudioTrackSettings,
   HMSVideoTrackSettings,
-} from '@100mslive/hms-video-store';
-import HMSConfig from '@100mslive/hms-video/dist/interfaces/config';
+  HMSConfig,
+  HMSSimulcastLayer,
+} from '@100mslive/hms-video';
 
 /*
 This is a dummy bridge with no connected backend. It can be used for
 storybook or writing functional tests.
  */
-export class StoryBookSDK implements IHMSActions {
+export class StoryBookSDK implements Partial<IHMSActions> {
   private readonly store: IHMSStore;
   private videoURLs: string[] = [];
   private dummyTrackURLs: Record<string, string> = {};
@@ -27,8 +28,20 @@ export class StoryBookSDK implements IHMSActions {
   constructor(store: IHMSStore) {
     this.store = store;
   }
-  setVolume(trackId: string, value: number): void {
+  setPreferredLayer(trackId: string, layer: HMSSimulcastLayer): void {
     throw new Error('Method not implemented.');
+  }
+
+  setVolume(value: number, trackId?: string): void {
+    throw new Error('Method not implemented.');
+  }
+
+  setOutputDevice(deviceId: string) {
+    throw new Error('Method not implemented');
+  }
+
+  setOutputVolume(volume: number) {
+    throw new Error('Method not implemented');
   }
 
   addTrack(track: MediaStreamTrack, type: HMSTrackSource): Promise<void> {
@@ -166,8 +179,10 @@ export class StoryBookSDK implements IHMSActions {
     this.store.setState(store => {
       store.peers[peer.id] = peer;
       store.room.peers.push(peer.id);
-      store.speakers[peer.id] = {
+      store.speakers[audioTrackID] = {
         audioLevel: this.randomFromArray([0, 10, 20, 50, 70, 80, 100]),
+        peerID: peer.id,
+        trackID: audioTrackID,
       };
       if (peer.audioTrack) {
         store.tracks[audioTrackID] = {

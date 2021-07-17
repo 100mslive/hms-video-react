@@ -5,6 +5,7 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
+import { HMSConfig } from '@100mslive/hms-video';
 import {
   HMSRoomState,
   selectIsLocalAudioEnabled,
@@ -24,7 +25,6 @@ import { PreviewControls } from './Controls';
 import { Input } from '../Input';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
-import HMSConfig from '@100mslive/hms-video/dist/interfaces/config';
 
 interface JoinInfo {
   audioMuted?: boolean;
@@ -91,9 +91,11 @@ export const Preview = ({
   const localPeer = useHMSStore(selectLocalPeer);
   const hmsActions = useHMSActions();
   const roomState = useHMSStore(selectRoomState);
-  const { audioInputDeviceId, videoInputDeviceId } = useHMSStore(
-    selectLocalMediaSettings,
-  );
+  const {
+    audioInputDeviceId,
+    videoInputDeviceId,
+    audioOutputDeviceId,
+  } = useHMSStore(selectLocalMediaSettings);
 
   const styler = useMemo(
     () =>
@@ -140,6 +142,7 @@ export const Preview = ({
     const {
       selectedVideoInput: newSelectedVideoInput,
       selectedAudioInput: newSelectedAudioInput,
+      selectedAudioOutput: newSelectedAudioOutput,
     } = values;
     if (newSelectedAudioInput && audioInputDeviceId !== newSelectedAudioInput) {
       // @ts-ignore
@@ -149,6 +152,13 @@ export const Preview = ({
     if (newSelectedVideoInput && videoInputDeviceId !== newSelectedVideoInput) {
       // @ts-ignore
       hmsActions.setVideoSettings({ deviceId: newSelectedVideoInput });
+    }
+
+    if (
+      newSelectedAudioOutput &&
+      audioOutputDeviceId !== newSelectedAudioOutput
+    ) {
+      hmsActions.setAudioOutputDevice(newSelectedAudioOutput);
     }
     onChange(values);
   };

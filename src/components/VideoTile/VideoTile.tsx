@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -9,7 +9,9 @@ import {
   selectAudioTrackVolume,
   selectScreenShareAudioByPeerID,
   selectTrackAudioByID,
+  selectSimulcastLayerByTrack,
 } from '@100mslive/hms-video-store';
+import { HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
@@ -21,7 +23,6 @@ import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
-
 export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
   /**
    * HMS Peer object for which the tile is shown.
@@ -134,6 +135,7 @@ export const VideoTile = ({
 }: VideoTileProps) => {
   const { appBuilder, tw } = useHMSTheme();
   const hmsActions = useHMSActions();
+  const [showMenu, setShowMenu] = useState(false);
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<VideoTileClasses>({
@@ -164,6 +166,9 @@ export const VideoTile = ({
     ? screenshareAudioTrack?.id
     : peer.audioTrack;
   const storeAudioLevel = useHMSStore(selectTrackAudioByID(tileAudioTrack));
+  const simulcastLayer = useHMSStore(
+    selectSimulcastLayerByTrack(storeHmsVideoTrack?.id),
+  );
 
   audioLevel = audioLevel || storeAudioLevel;
 
@@ -219,10 +224,15 @@ export const VideoTile = ({
 
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
+
   return (
     <div className={styler('root')}>
       {!peer.isLocal && (showScreen ? !!screenshareAudioTrack : true) && (
-        <ContextMenu classes={{ root: 'invisible' }}>
+        <ContextMenu
+          classes={{ root: 'invisible' }}
+          menuOpen={showMenu}
+          onTrigger={value => setShowMenu(value)}
+        >
           <ContextMenuItem
             label="Volume"
             icon={<VolumeIcon />}
@@ -235,7 +245,7 @@ export const VideoTile = ({
               }}
               onChange={(_, newValue) => {
                 if (typeof newValue === 'number') {
-                  hmsActions.setVolume(tileAudioTrack!, newValue);
+                  hmsActions.setVolume(newValue, tileAudioTrack);
                 }
               }}
               aria-labelledby="continuous-slider"
@@ -248,6 +258,39 @@ export const VideoTile = ({
               ]}
             />
           </ContextMenuItem>
+          <ContextMenuItem
+            label="Low"
+            active={simulcastLayer === HMSSimulcastLayer.LOW}
+            onClick={() => {
+              hmsActions.setPreferredLayer(
+                peer.videoTrack!,
+                HMSSimulcastLayer.LOW,
+              );
+              setShowMenu(false);
+            }}
+          />
+          <ContextMenuItem
+            label="Medium"
+            active={simulcastLayer === HMSSimulcastLayer.MEDIUM}
+            onClick={() => {
+              hmsActions.setPreferredLayer(
+                peer.videoTrack!,
+                HMSSimulcastLayer.MEDIUM,
+              );
+              setShowMenu(false);
+            }}
+          />
+          <ContextMenuItem
+            label="High"
+            active={simulcastLayer === HMSSimulcastLayer.HIGH}
+            onClick={() => {
+              hmsActions.setPreferredLayer(
+                peer.videoTrack!,
+                HMSSimulcastLayer.HIGH,
+              );
+              setShowMenu(false);
+            }}
+          />
         </ContextMenu>
       )}
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
