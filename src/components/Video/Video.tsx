@@ -158,6 +158,7 @@ export const Video = ({
     videoTrack,
     hmsVideoTrack?.id,
     hmsVideoTrack?.enabled,
+    hmsVideoTrack?.deviceID,
     hmsVideoTrack?.plugins
   ]);
 
