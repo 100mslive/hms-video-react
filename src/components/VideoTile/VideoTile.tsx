@@ -195,7 +195,7 @@ export const VideoTile = ({
   }
 
   if (!showScreen && (isVideoMuted === undefined || isVideoMuted === null)) {
-    isVideoMuted = storeIsVideoMuted;
+    isVideoMuted = storeIsVideoMuted || Boolean(hmsVideoTrack?.degraded);
   }
 
   const label = getVideoTileLabel(
@@ -203,6 +203,7 @@ export const VideoTile = ({
     peer.isLocal,
     hmsVideoTrack?.source,
     storeIsLocallyMuted,
+    hmsVideoTrack?.degraded,
   );
 
   try {
