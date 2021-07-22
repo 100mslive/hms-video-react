@@ -27,7 +27,10 @@ const getVideoTileLabel = (
 
   let label = labelMap.get([isLocal, videoSource].toString());
   label = `${label}${degraded ? '(Degraded)' : ''}`;
-  if (isLocallyMuted === undefined || isLocallyMuted === null) {
+  if (
+    (isLocallyMuted === undefined || isLocallyMuted === null) &&
+    videoSource === 'regular'
+  ) {
     return label;
   }
   return `${label}${isLocallyMuted ? ' (Muted for you)' : ''}`;

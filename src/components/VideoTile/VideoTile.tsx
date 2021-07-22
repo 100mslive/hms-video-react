@@ -206,6 +206,8 @@ export const VideoTile = ({
     hmsVideoTrack?.degraded,
   );
 
+  const layerDefinitions = hmsVideoTrack?.layerDefinitions || [];
+
   try {
     if (aspectRatio === undefined) {
       aspectRatio = appBuilder.videoTileAspectRatio;
@@ -268,21 +270,19 @@ export const VideoTile = ({
           ) : (
             <Fragment />
           )}
-          <ContextMenuItem
-            label="Low"
-            active={simulcastLayer === HMSSimulcastLayer.LOW}
-            onClick={() => updateSimulcastLayer(HMSSimulcastLayer.LOW)}
-          />
-          <ContextMenuItem
-            label="Medium"
-            active={simulcastLayer === HMSSimulcastLayer.MEDIUM}
-            onClick={() => updateSimulcastLayer(HMSSimulcastLayer.MEDIUM)}
-          />
-          <ContextMenuItem
-            label="High"
-            active={simulcastLayer === HMSSimulcastLayer.HIGH}
-            onClick={() => updateSimulcastLayer(HMSSimulcastLayer.HIGH)}
-          />
+          <Fragment>
+            {layerDefinitions.map(({ layer, resolution }) => {
+              return (
+                <ContextMenuItem
+                  label={`${layer.toUpperCase()} (${resolution.width}x${
+                    resolution.height
+                  })`}
+                  active={simulcastLayer === layer}
+                  onClick={() => updateSimulcastLayer(layer)}
+                />
+              );
+            })}
+          </Fragment>
         </ContextMenu>
       )}
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
