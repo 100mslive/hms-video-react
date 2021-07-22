@@ -50,6 +50,7 @@ export const ParticipantList = ({
   participantList,
   classes,
   onToggle,
+  onRoleChangeClick,
 }: ParticipantListProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -70,7 +71,7 @@ export const ParticipantList = ({
   const handleClose = useCallback(() => setListOpen(false), []);
   const rolesMap = groupBy(
     participantList,
-    participant => participant.peer.role,
+    participant => participant.peer.role?.name,
   );
   const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
 
@@ -126,6 +127,12 @@ export const ParticipantList = ({
                           styler={styler}
                           isAudioEnabled={participant.isAudioEnabled}
                           name={participant.peer.name}
+                          isLocal={participant.peer.isLocal}
+                          onRoleChangeClick={() => {
+                            if (typeof onRoleChangeClick === 'function') {
+                              onRoleChangeClick(participant.peer);
+                            }
+                          }}
                         />
                       ))}
                   </div>

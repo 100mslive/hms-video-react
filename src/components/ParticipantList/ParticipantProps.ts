@@ -1,4 +1,5 @@
 import { HMSPeerWithMuteStatus } from '@100mslive/hms-video-store';
+import { HMSPeer } from '@100mslive/hms-video-store';
 
 export interface ParticipantListClasses {
   root?: string;
@@ -21,4 +22,5 @@ export interface ParticipantListProps {
   participantList?: HMSPeerWithMuteStatus[];
   classes?: ParticipantListClasses;
   onToggle?: (open: boolean) => void;
+  onRoleChangeClick?: (peer: HMSPeer) => void;
 }
