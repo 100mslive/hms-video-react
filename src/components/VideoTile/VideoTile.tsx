@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from 'react';
+import React, { Fragment, useMemo, useState, useCallback } from 'react';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -230,6 +230,53 @@ export const VideoTile = ({
     height = trackSettings.height || width;
   }
 
+  const getMenuItems = useCallback(() => {
+    const children = [];
+    if (!showScreen || !!screenshareAudioTrack) {
+      children.push(
+        <ContextMenuItem
+          label="Volume"
+          icon={<VolumeIcon />}
+          onClick={() => {}}
+        >
+          <Slider
+            value={storeAudioTrackVolume}
+            classes={{
+              root: 'ml-1',
+            }}
+            onChange={(_, newValue) => {
+              if (typeof newValue === 'number') {
+                hmsActions.setVolume(newValue, tileAudioTrack);
+              }
+            }}
+            aria-labelledby="continuous-slider"
+            marks={[
+              { value: 0 },
+              { value: 25 },
+              { value: 50 },
+              { value: 75 },
+              { value: 100 },
+            ]}
+          />
+        </ContextMenuItem>,
+      );
+    }
+    children.push(
+      ...layerDefinitions.map(({ layer, resolution }) => {
+        return (
+          <ContextMenuItem
+            label={`${layer.toUpperCase()} (${resolution.width}x${
+              resolution.height
+            })`}
+            active={simulcastLayer === layer}
+            onClick={() => updateSimulcastLayer(layer)}
+          />
+        );
+      }),
+    );
+    return children;
+  }, [layerDefinitions, showScreen, screenshareAudioTrack, tileAudioTrack]);
+
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
 
@@ -241,48 +288,7 @@ export const VideoTile = ({
           menuOpen={showMenu}
           onTrigger={value => setShowMenu(value)}
         >
-          {!showScreen || !!screenshareAudioTrack ? (
-            <ContextMenuItem
-              label="Volume"
-              icon={<VolumeIcon />}
-              onClick={() => {}}
-            >
-              <Slider
-                value={storeAudioTrackVolume}
-                classes={{
-                  root: 'ml-1',
-                }}
-                onChange={(_, newValue) => {
-                  if (typeof newValue === 'number') {
-                    hmsActions.setVolume(newValue, tileAudioTrack);
-                  }
-                }}
-                aria-labelledby="continuous-slider"
-                marks={[
-                  { value: 0 },
-                  { value: 25 },
-                  { value: 50 },
-                  { value: 75 },
-                  { value: 100 },
-                ]}
-              />
-            </ContextMenuItem>
-          ) : (
-            <Fragment />
-          )}
-          <Fragment>
-            {layerDefinitions.map(({ layer, resolution }) => {
-              return (
-                <ContextMenuItem
-                  label={`${layer.toUpperCase()} (${resolution.width}x${
-                    resolution.height
-                  })`}
-                  active={simulcastLayer === layer}
-                  onClick={() => updateSimulcastLayer(layer)}
-                />
-              );
-            })}
-          </Fragment>
+          {getMenuItems()}
         </ContextMenu>
       )}
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||
