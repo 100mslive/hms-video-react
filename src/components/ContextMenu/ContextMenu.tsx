@@ -87,7 +87,9 @@ export const ContextMenuItem = ({
       style={{ minHeight: 40 }}
     >
       {icon && <span className={styler('menuIcon')}>{icon}</span>}
-      <span className={styler('menuTitle')}>{label}</span>
+      <span className={styler('menuTitle')} title={label}>
+        {label}
+      </span>
       {children && <div className={styler('menuItemChildren')}>{children}</div>}
     </div>
   );
@@ -115,6 +117,11 @@ export const ContextMenu = ({
   useEffect(() => {
     setOpen(menuOpen);
   }, [menuOpen]);
+
+  // Don't render context menu when no children are present
+  if (!children || (Array.isArray(children) && children.length === 0)) {
+    return null;
+  }
 
   return (
     <div className={styler('root')}>
