@@ -1,7 +1,7 @@
 import React from 'react';
 import { Avatar } from '../TwAvatar';
 import { Button } from '../Button';
-import { MicOffIcon, MicOnIcon } from '../Icons';
+import { MicOffIcon, MicOnIcon, SettingsIcon } from '../Icons';
 import { Text } from '../Text';
 import { ParticipantListClasses } from './ParticipantProps';
 import { StylerType } from '../../types';
@@ -33,7 +33,15 @@ export const ParticipantInList = ({
       <div className={styler('menuIconContainer')}>
         {!isLocal && (
           <div>
-            <Button onClick={onRoleChangeClick}>Change role</Button>
+            <Button
+              iconOnly
+              variant={'no-fill'}
+              shape={'circle'}
+              size={'sm'}
+              onClick={onRoleChangeClick}
+            >
+              <SettingsIcon />
+            </Button>
           </div>
         )}
         {isAudioEnabled ? (

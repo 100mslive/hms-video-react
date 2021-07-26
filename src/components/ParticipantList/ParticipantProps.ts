@@ -16,11 +16,19 @@ export interface ParticipantListClasses {
   menuIconContainer?: string;
   offIcon?: string;
   onIcon?: string;
+  dialogHeader?: string;
+  dialogContainer?: string;
+  expanded?: string;
+  textGray?: string;
+  divider?: string;
+  formContainer?: string;
+  selectContainer?: string;
+  select?: string;
+  dialogFooter?: string;
 }
 
 export interface ParticipantListProps {
   participantList?: HMSPeerWithMuteStatus[];
   classes?: ParticipantListClasses;
   onToggle?: (open: boolean) => void;
-  onRoleChangeClick?: (peer: HMSPeer) => void;
 }
