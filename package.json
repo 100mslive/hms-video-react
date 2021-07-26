@@ -25,7 +25,7 @@
   },
   "peerDependencies": {
     "react": ">=16",
-    "@100mslive/hms-video": "^0.0.101"
+    "@100mslive/hms-video": "^0.0.103"
   },
   "husky": {
     "hooks": {
@@ -52,7 +52,7 @@
     }
   ],
   "devDependencies": {
-    "@100mslive/hms-video": "^0.0.101",
+    "@100mslive/hms-video": "^0.0.103",
     "@babel/core": "^7.13.14",
     "@rollup/plugin-image": "^2.0.6",
     "@size-limit/preset-small-lib": "^4.10.2",
