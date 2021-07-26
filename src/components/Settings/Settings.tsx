@@ -237,11 +237,11 @@ export const Settings = ({
                         onChange={handleInputChange}
                         value={values.selectedVideoInput}
                       >
-                        {videoInput.map((device, index) => (
+                        {videoInput.map((device: InputDeviceInfo) => (
                           <option
                             value={device.deviceId}
                             className={`${styler('selectInner')}`}
-                            key={index}
+                            key={device.deviceId}
                           >
                             {device.label} {device.deviceId}
                           </option>
@@ -265,11 +265,11 @@ export const Settings = ({
                         onChange={handleInputChange}
                         value={values.selectedAudioInput}
                       >
-                        {audioInput.map((device, index) => (
+                        {audioInput.map((device: InputDeviceInfo) => (
                           <option
                             value={device.deviceId}
                             className={`${styler('selectInner')}`}
-                            key={index}
+                            key={device.deviceId}
                           >
                             {device.label}
                           </option>
@@ -293,11 +293,11 @@ export const Settings = ({
                         onChange={handleInputChange}
                         value={values.selectedAudioOutput}
                       >
-                        {audioOutput.map((device, index) => (
+                        {audioOutput.map((device: MediaDeviceInfo) => (
                           <option
                             value={device.deviceId}
                             className={`${styler('select')}`}
-                            key={index}
+                            key={device.deviceId}
                           >
                             {device.label}
                           </option>
