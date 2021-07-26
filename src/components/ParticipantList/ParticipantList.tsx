@@ -102,11 +102,11 @@ export const ParticipantList = ({
   participantList = participantList || participantsFromStore;
   const handleClick = useCallback(() => setListOpen(open => !open), []);
   const handleClose = useCallback(() => setListOpen(false), []);
-  const rolesMap = groupBy(
+  const rolesMap: Record<string, HMSPeerWithMuteStatus[]> = groupBy(
     participantList,
-    participant => participant.peer.role,
+    participant => participant.peer.roleName,
   );
-  const roles = (Object.keys(rolesMap) as unknown) as keyof RoleMap[];
+  const roles = Object.keys(rolesMap);
   const [selectedPeer, setSelectedPeer] = useState<HMSPeer | null>(null);
   const roleNames = useHMSStore(selectAvailableRoleNames);
   const hmsActions = useHMSActions();
@@ -235,7 +235,6 @@ export const ParticipantList = ({
               tabIndex={-1}
             >
               {roles &&
-                //@ts-expect-error
                 roles.map(role => (
                   <div key={role}>
                     <span
@@ -255,7 +254,7 @@ export const ParticipantList = ({
                             isAudioEnabled={participant.isAudioEnabled}
                             name={participant.peer.name}
                             isLocal={participant.peer.isLocal}
-                            onRoleChangeClick={() => {
+                            onUserSettingsClick={() => {
                               setSelectedPeer(participant.peer);
                               setSelectedRole(participant.peer.roleName || '');
                             }}

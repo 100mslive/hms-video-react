@@ -11,7 +11,7 @@ interface PropsType {
   styler?: StylerType<ParticipantListClasses>;
   name: string;
   isAudioEnabled?: boolean;
-  onRoleChangeClick?: () => void;
+  onUserSettingsClick?: () => void;
   isLocal: boolean;
 }
 
@@ -19,7 +19,7 @@ export const ParticipantInList = ({
   styler = () => '',
   name,
   isAudioEnabled,
-  onRoleChangeClick,
+  onUserSettingsClick,
   isLocal,
 }: PropsType) => {
   return (
@@ -35,10 +35,10 @@ export const ParticipantInList = ({
           <div>
             <Button
               iconOnly
-              variant={'no-fill'}
-              shape={'circle'}
-              size={'sm'}
-              onClick={onRoleChangeClick}
+              variant="no-fill"
+              shape="circle"
+              size="sm"
+              onClick={onUserSettingsClick}
             >
               <SettingsIcon />
             </Button>
