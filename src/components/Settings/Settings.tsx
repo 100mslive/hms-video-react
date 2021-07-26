@@ -1,20 +1,16 @@
-import React, {
-  ChangeEventHandler,
-  useMemo,
-  useEffect,
-  useState,
-  useRef,
-} from 'react';
+import React, { ChangeEventHandler, useMemo, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
-import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
-import { getLocalDevices, getLocalStream } from '@100mslive/hms-video';
+import {
+  selectLocalMediaSettings,
+  selectDevices,
+} from '@100mslive/hms-video-store';
 import { Button as TwButton } from '../Button';
 import { Text } from '../Text';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { closeMediaStream, isMobileDevice } from '../../utils';
+import { isMobileDevice } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Slider } from '../Slider/Slider';
 import TestAudio from './TestAudio';
@@ -115,17 +111,9 @@ export const Settings = ({
   );
 
   const storeInitialValues = useHMSStore(selectLocalMediaSettings);
+  const devices = useHMSStore(selectDevices);
 
   const [open, setOpen] = useState(false);
-  const [deviceGroups, setDeviceGroups] = useState<{
-    audioinput: MediaDeviceInfo[];
-    audiooutput: MediaDeviceInfo[];
-    videoinput: MediaDeviceInfo[];
-  }>({
-    audioinput: [],
-    audiooutput: [],
-    videoinput: [],
-  });
   const [error, setError] = useState('');
 
   if (!initialValues) {
@@ -149,31 +137,6 @@ export const Settings = ({
     maxTileCount: initialValues.maxTileCount || 9,
   });
 
-  async function getDevices() {
-    try {
-      let deviceGroups = await getLocalDevices();
-      if (
-        Object.values(deviceGroups)
-          .flat()
-          .every(val => !val.deviceId || !val.label) // deviceid is always present in firefox
-      ) {
-        // No permissions get permissions now
-        const stream = await getLocalStream({ video: true, audio: true });
-        closeMediaStream(stream);
-        deviceGroups = await getLocalDevices();
-      }
-      setDeviceGroups(deviceGroups);
-    } catch (err) {
-      setError(err.message);
-    }
-  }
-
-  useEffect(() => {
-    if (open) {
-      getDevices();
-    }
-  }, [open]);
-
   const handleClickOpen = () => {
     setOpen(true);
     if (!previewMode) {
@@ -184,7 +147,6 @@ export const Settings = ({
 
   const handleClose = () => {
     setOpen(false);
-    onChange && onChange(values);
   };
 
   const handleInputChange: ChangeEventHandler<any> = event => {
@@ -192,6 +154,7 @@ export const Settings = ({
     newValues[event.currentTarget.name as keyof SettingsFormProps] =
       event.currentTarget.value;
     setValues(newValues);
+    onChange && onChange(values);
   };
 
   const handleSliderChange = (event: any, newValue: number | number[]) => {
@@ -203,9 +166,9 @@ export const Settings = ({
     setValues(newValues);
   };
 
-  const videoInput = deviceGroups['videoinput'] || [];
-  const audioInput = deviceGroups['audioinput'] || [];
-  const audioOutput = deviceGroups['audiooutput'] || [];
+  const videoInput = devices['videoInput'] || [];
+  const audioInput = devices['audioInput'] || [];
+  const audioOutput = devices['audioOutput'] || [];
   //TODO handle case where selected device is not in list
   // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
   // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
@@ -268,11 +231,11 @@ export const Settings = ({
                         onChange={handleInputChange}
                         value={values.selectedVideoInput}
                       >
-                        {videoInput.map((device, index) => (
+                        {videoInput.map((device: InputDeviceInfo) => (
                           <option
                             value={device.deviceId}
                             className={`${styler('selectInner')}`}
-                            key={index}
+                            key={device.deviceId}
                           >
                             {device.label} {device.deviceId}
                           </option>
@@ -296,11 +259,11 @@ export const Settings = ({
                         onChange={handleInputChange}
                         value={values.selectedAudioInput}
                       >
-                        {audioInput.map((device, index) => (
+                        {audioInput.map((device: InputDeviceInfo) => (
                           <option
                             value={device.deviceId}
                             className={`${styler('selectInner')}`}
-                            key={index}
+                            key={device.deviceId}
                           >
                             {device.label}
                           </option>
@@ -324,11 +287,11 @@ export const Settings = ({
                         onChange={handleInputChange}
                         value={values.selectedAudioOutput}
                       >
-                        {audioOutput.map((device, index) => (
+                        {audioOutput.map((device: MediaDeviceInfo) => (
                           <option
                             value={device.deviceId}
                             className={`${styler('select')}`}
-                            key={index}
+                            key={device.deviceId}
                           >
                             {device.label}
                           </option>

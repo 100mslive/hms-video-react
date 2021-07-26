@@ -236,6 +236,7 @@ export const VideoTile = ({
       children.push(
         <ContextMenuItem
           label="Volume"
+          key="volume"
           icon={<VolumeIcon />}
           onClick={() => {}}
         >
@@ -268,6 +269,7 @@ export const VideoTile = ({
             label={`${layer.toUpperCase()} (${resolution.width}x${
               resolution.height
             })`}
+            key={layer}
             active={simulcastLayer === layer}
             onClick={() => updateSimulcastLayer(layer)}
           />
