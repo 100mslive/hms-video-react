@@ -70,7 +70,7 @@ export class StoryBookSDK implements Partial<IHMSActions> {
     });
   }
 
-  preview(config: HMSConfig) {
+  async preview(config: HMSConfig) {
     if (!config.authToken) {
       this.log('invalid params');
       return;
