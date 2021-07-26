@@ -164,7 +164,7 @@ export const Settings = ({
       newValues.maxTileCount = newValue;
     }
     setValues(newValues);
-    onChange && onChange(values);
+    onChange && onChange(newValues);
   };
 
   const videoInput = devices['videoInput'] || [];
