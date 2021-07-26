@@ -1,4 +1,5 @@
 import { HMSPeerWithMuteStatus } from '@100mslive/hms-video-store';
+import { HMSPeer } from '@100mslive/hms-video-store';
 
 export interface ParticipantListClasses {
   root?: string;
@@ -15,6 +16,15 @@ export interface ParticipantListClasses {
   menuIconContainer?: string;
   offIcon?: string;
   onIcon?: string;
+  dialogHeader?: string;
+  dialogContainer?: string;
+  expanded?: string;
+  textGray?: string;
+  divider?: string;
+  formContainer?: string;
+  selectContainer?: string;
+  select?: string;
+  dialogFooter?: string;
 }
 
 export interface ParticipantListProps {

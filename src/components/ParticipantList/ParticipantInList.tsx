@@ -1,21 +1,26 @@
 import React from 'react';
 import { Avatar } from '../TwAvatar';
 import { Button } from '../Button';
-import { MicOffIcon, MicOnIcon } from '../Icons';
+import { MicOffIcon, MicOnIcon, SettingsIcon } from '../Icons';
 import { Text } from '../Text';
 import { ParticipantListClasses } from './ParticipantProps';
 import { StylerType } from '../../types';
+import { HMSPeer } from '@100mslive/hms-video-store';
 
 interface PropsType {
   styler?: StylerType<ParticipantListClasses>;
   name: string;
   isAudioEnabled?: boolean;
+  onUserSettingsClick?: () => void;
+  isLocal: boolean;
 }
 
 export const ParticipantInList = ({
   styler = () => '',
   name,
   isAudioEnabled,
+  onUserSettingsClick,
+  isLocal,
 }: PropsType) => {
   return (
     <span className={styler('menuItem')} role="menuitem">
@@ -26,6 +31,19 @@ export const ParticipantInList = ({
         </Text>
       </div>
       <div className={styler('menuIconContainer')}>
+        {!isLocal && (
+          <div>
+            <Button
+              iconOnly
+              variant="no-fill"
+              shape="circle"
+              size="sm"
+              onClick={onUserSettingsClick}
+            >
+              <SettingsIcon />
+            </Button>
+          </div>
+        )}
         {isAudioEnabled ? (
           <div className={styler('onIcon')}>
             <Button iconOnly shape={'circle'} size={'sm'}>
