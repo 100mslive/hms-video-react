@@ -25,10 +25,7 @@ import {
 } from './ParticipantProps';
 import { Dialog, withStyles } from '@material-ui/core';
 import { Text } from '../Text';
-import {
-  selectAvailableRoleNames,
-  selectAvailableRoles,
-} from '@100mslive/hms-video-store';
+import { selectAvailableRoleNames } from '@100mslive/hms-video-store';
 import { Button } from '../Button';
 
 const defaultClasses: ParticipantListClasses = {
