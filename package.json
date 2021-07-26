@@ -1,5 +1,5 @@
 {
-  "version": "0.2.69",
+  "version": "0.2.71",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -96,7 +96,6 @@
     "react-intersection-observer": "^8.31.1",
     "react-markdown": "^6.0.0",
     "react-resize-detector": "^6.6.5",
-    "react-toastify": "^7.0.4",
     "remark-gfm": "^1.0.0",
     "tailwind-percentage-heights-plugin": "^0.1.4",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
