@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   selectLocalMediaSettings,
   selectDevices,
+  selectLocalPeerRole,
 } from '@100mslive/hms-video-store';
 import { Button as TwButton } from '../Button';
 import { Text } from '../Text';
@@ -112,6 +113,7 @@ export const Settings = ({
 
   const storeInitialValues = useHMSStore(selectLocalMediaSettings);
   const devices = useHMSStore(selectDevices);
+  const role = useHMSStore(selectLocalPeerRole);
 
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
@@ -170,6 +172,12 @@ export const Settings = ({
   const videoInput = devices['videoInput'] || [];
   const audioInput = devices['audioInput'] || [];
   const audioOutput = devices['audioOutput'] || [];
+  let showVideo = false;
+  let showAudio = false;
+  if (role?.publishParams?.allowed) {
+    showVideo = role.publishParams.allowed.includes('video');
+    showAudio = role.publishParams.allowed.includes('audio');
+  }
   //TODO handle case where selected device is not in list
   // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
   // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
@@ -218,61 +226,65 @@ export const Settings = ({
           <div className={`${styler('formContainer')}`}>
             {error === '' ? (
               <>
-                <div className={`${styler('formInner')}`}>
-                  <div className={`${styler('selectLabel')}`}>
-                    <Text variant="heading" size="sm">
-                      Camera:
-                    </Text>
+                {showVideo && (
+                  <div className={`${styler('formInner')}`}>
+                    <div className={`${styler('selectLabel')}`}>
+                      <Text variant="heading" size="sm">
+                        Camera:
+                      </Text>
+                    </div>
+                    <div className={`${styler('selectContainer')}`}>
+                      {videoInput.length > 0 && (
+                        <select
+                          name="selectedVideoInput"
+                          className={`${styler('select')}`}
+                          onChange={handleInputChange}
+                          value={values.selectedVideoInput}
+                        >
+                          {videoInput.map((device: InputDeviceInfo) => (
+                            <option
+                              value={device.deviceId}
+                              className={`${styler('selectInner')}`}
+                              key={device.deviceId}
+                            >
+                              {device.label} {device.deviceId}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
                   </div>
-                  <div className={`${styler('selectContainer')}`}>
-                    {videoInput.length > 0 && (
-                      <select
-                        name="selectedVideoInput"
-                        className={`${styler('select')}`}
-                        onChange={handleInputChange}
-                        value={values.selectedVideoInput}
-                      >
-                        {videoInput.map((device: InputDeviceInfo) => (
-                          <option
-                            value={device.deviceId}
-                            className={`${styler('selectInner')}`}
-                            key={device.deviceId}
-                          >
-                            {device.label} {device.deviceId}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-                </div>
-                <div className={`${styler('formInner')}`}>
-                  <div className={`${styler('selectLabel')}`}>
-                    <Text variant="heading" size="sm">
-                      Microphone:
-                    </Text>
-                  </div>
+                )}
+                {showAudio && (
+                  <div className={`${styler('formInner')}`}>
+                    <div className={`${styler('selectLabel')}`}>
+                      <Text variant="heading" size="sm">
+                        Microphone:
+                      </Text>
+                    </div>
 
-                  <div className={`${styler('selectContainer')}`}>
-                    {audioInput.length > 0 && (
-                      <select
-                        name="selectedAudioInput"
-                        className={`${styler('select')}`}
-                        onChange={handleInputChange}
-                        value={values.selectedAudioInput}
-                      >
-                        {audioInput.map((device: InputDeviceInfo) => (
-                          <option
-                            value={device.deviceId}
-                            className={`${styler('selectInner')}`}
-                            key={device.deviceId}
-                          >
-                            {device.label}
-                          </option>
-                        ))}
-                      </select>
-                    )}
+                    <div className={`${styler('selectContainer')}`}>
+                      {audioInput.length > 0 && (
+                        <select
+                          name="selectedAudioInput"
+                          className={`${styler('select')}`}
+                          onChange={handleInputChange}
+                          value={values.selectedAudioInput}
+                        >
+                          {audioInput.map((device: InputDeviceInfo) => (
+                            <option
+                              value={device.deviceId}
+                              className={`${styler('selectInner')}`}
+                              key={device.deviceId}
+                            >
+                              {device.label}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
                 {/** Enabled this when the output is handled properly */}
                 <div className={`${styler('formInner')}`}>
                   <div className={`${styler('selectLabel')}`}>
