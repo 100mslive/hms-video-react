@@ -290,7 +290,7 @@ export const Settings = ({
                   </div>
                 )}
                 {/** Enabled this when the output is handled properly */}
-                {isSubscribing && (
+                {isSubscribing && audioOutput.length > 0 && (
                   <>
                     <div className={`${styler('formInner')}`}>
                       <div className={`${styler('selectLabel')}`}>
