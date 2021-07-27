@@ -4,9 +4,8 @@ import { withStyles } from '@material-ui/core/styles';
 import {
   selectLocalMediaSettings,
   selectDevices,
-  selectLocalPeerRole,
   selectIsAllowedToPublish,
-  selectIsAllowedToSubscribe
+  selectIsAllowedToSubscribe,
 } from '@100mslive/hms-video-store';
 import { Button as TwButton } from '../Button';
 import { Text } from '../Text';
@@ -115,11 +114,10 @@ export const Settings = ({
 
   const storeInitialValues = useHMSStore(selectLocalMediaSettings);
   const devices = useHMSStore(selectDevices);
-  const {video: showVideo, audio: showAudio } = useHMSStore(selectIsAllowedToPublish);
+  const { video: showVideo, audio: showAudio } = useHMSStore(
+    selectIsAllowedToPublish,
+  );
   const isSubscribing = useHMSStore(selectIsAllowedToSubscribe);
-
-  const role = useHMSStore(selectLocalPeerRole);
-  
 
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
