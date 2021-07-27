@@ -154,7 +154,7 @@ export const Settings = ({
     newValues[event.currentTarget.name as keyof SettingsFormProps] =
       event.currentTarget.value;
     setValues(newValues);
-    onChange && onChange(values);
+    onChange && onChange(newValues);
   };
 
   const handleSliderChange = (event: any, newValue: number | number[]) => {
