@@ -25,6 +25,8 @@ export interface ParticipantListClasses {
   selectContainer?: string;
   select?: string;
   dialogFooter?: string;
+  formRow?: string;
+  checkBoxLabel?: string;
 }
 
 export interface ParticipantListProps {

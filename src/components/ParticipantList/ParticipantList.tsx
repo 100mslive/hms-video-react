@@ -55,11 +55,13 @@ const defaultClasses: ParticipantListClasses = {
   expanded: 'flex-grow',
   textGray: 'text-gray-400',
   divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
-  formContainer: 'flex space-x-2 items-center justify-center px-4 py-2',
+  formContainer: 'px-4 py-2 space-y-2',
+  formRow: 'flex space-x-2 items-center justify-center',
   selectContainer: 'rounded-lg bg-gray-600 dark:bg-gray-200 p-2 mx-2',
   select:
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   dialogFooter: 'flex justify-end',
+  checkBoxLabel: 'text-sm space-x-1 flex items-center',
 };
 
 const customClasses: ParticipantListClasses = {
@@ -109,6 +111,7 @@ export const ParticipantList = ({
   const hmsActions = useHMSActions();
   const localPeerRole = useHMSStore(selectLocalPeerRole);
   const [selectedRole, setSelectedRole] = useState<string>('');
+  const [forceChange, setForceChange] = useState(false);
 
   useEffect(() => {
     if (onToggle) {
@@ -118,6 +121,7 @@ export const ParticipantList = ({
 
   const handleRoleChangeClose = () => {
     setSelectedPeer(null);
+    setForceChange(false);
   };
 
   const handleInputChange: ChangeEventHandler<any> = event => {
@@ -128,17 +132,17 @@ export const ParticipantList = ({
     if (
       !selectedPeer ||
       !selectedRole ||
-      !localPeerRole ||
-      !localPeerRole.permissions.changeRole
+      !localPeerRole?.permissions?.changeRole
     ) {
       return;
     }
 
     if (selectedPeer.roleName !== selectedRole) {
-      hmsActions.changeRole(selectedPeer.id, selectedRole);
+      hmsActions.changeRole(selectedPeer.id, selectedRole, forceChange);
     }
 
     setSelectedPeer(null);
+    setForceChange(false);
   };
 
   return (
@@ -154,7 +158,9 @@ export const ParticipantList = ({
           <div className={styler('dialogHeader')}>
             <SettingsIcon className="h-7 w-7" />
             <div className={styler('expanded')}>
-              <Text variant="heading">User Settings</Text>
+              <Text variant="heading">
+                User Settings ({selectedPeer?.name})
+              </Text>
             </div>
             <Button
               iconOnly
@@ -169,30 +175,43 @@ export const ParticipantList = ({
           <div className={styler('divider')}></div>
 
           <div className={styler('formContainer')}>
-            <label htmlFor="role-change-select-menu">
-              <Text variant="heading" size="sm">
-                Role:
-              </Text>
-            </label>
-            <div className={styler('selectContainer')}>
-              <select
-                id="role-change-select-menu"
-                value={selectedRole}
-                onChange={handleInputChange}
-                className={styler('select')}
-                disabled={
-                  !localPeerRole || !localPeerRole.permissions.changeRole
-                }
-              >
-                <option value="" className="p-4">
-                  Select a new role
-                </option>
-                {roleNames.map(roleName => (
-                  <option value={roleName} key={roleName}>
-                    {roleName}
-                  </option>
-                ))}
-              </select>
+            <div className={styler('formRow')}>
+              <label htmlFor="role-change-select-menu">
+                <Text variant="heading" size="sm">
+                  Change role to:
+                </Text>
+              </label>
+              <div className={styler('selectContainer')}>
+                <select
+                  id="role-change-select-menu"
+                  value={selectedRole}
+                  onChange={handleInputChange}
+                  className={styler('select')}
+                  disabled={!localPeerRole?.permissions?.changeRole}
+                >
+                  <option value="">Select a new role</option>
+                  {roleNames.map(roleName => (
+                    <option value={roleName} key={roleName}>
+                      {roleName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <div className={styler('formRow')}>
+              <label className={styler('checkBoxLabel')}>
+                <input
+                  type="checkbox"
+                  onChange={() => setForceChange(prev => !prev)}
+                  checked={forceChange}
+                  disabled={
+                    !selectedPeer ||
+                    !selectedRole ||
+                    selectedRole === selectedPeer.roleName
+                  }
+                />
+                <span>Don't ask for their permission</span>
+              </label>
             </div>
           </div>
 
