@@ -32,7 +32,7 @@ const TestAudio = ({ outputDeviceId }: { outputDeviceId?: string }) => {
         onPlay={() => setPlaying(true)}
       ></audio>
 
-      <Button onClick={() => audioRef.current?.play()} disabled={playing}>
+      <Button onClick={() => audioRef.current?.play().catch(console.error)} disabled={playing}>
         {playing ? (
           <>
             <Text>Playing</Text>

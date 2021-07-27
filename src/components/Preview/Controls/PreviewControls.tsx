@@ -1,13 +1,11 @@
 import React, { useMemo } from 'react';
-import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
-import { hmsUiClassParserGenerator } from '../../../utils/classes';
-import '../index.css';
-import { ButtonDisplayType } from '../../../types';
 import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
 import { Button } from '../../Button';
 import { Settings, SettingsFormProps } from '../../Settings/Settings';
-import { useHMSStore } from '../../../hooks/HMSRoomProvider';
-import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
+import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
+import { ButtonDisplayType } from '../../../types';
+import { hmsUiClassParserGenerator } from '../../../utils/classes';
+import '../index.css';
 
 interface PreviewControlsClasses {
   root?: string;
@@ -60,9 +58,6 @@ export const PreviewControls = ({
       }),
     [],
   );
-  const { audioInputDeviceId, videoInputDeviceId } = useHMSStore(
-    selectLocalMediaSettings,
-  );
 
   return (
     <div className={`${styler('root')}`}>
@@ -87,9 +82,7 @@ export const PreviewControls = ({
         </Button>
       </div>
       <div className={`${styler('rightControls')}`}>
-        {audioInputDeviceId && videoInputDeviceId && (
-          <Settings onChange={onChange} key={0} previewMode={true} />
-        )}
+        <Settings onChange={onChange} key={0} previewMode={true} />
       </div>
     </div>
   );
