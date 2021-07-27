@@ -132,8 +132,7 @@ export const ParticipantList = ({
     if (
       !selectedPeer ||
       !selectedRole ||
-      !localPeerRole ||
-      !localPeerRole.permissions.changeRole
+      !localPeerRole?.permissions?.changeRole
     ) {
       return;
     }
@@ -188,9 +187,7 @@ export const ParticipantList = ({
                   value={selectedRole}
                   onChange={handleInputChange}
                   className={styler('select')}
-                  disabled={
-                    !localPeerRole || !localPeerRole.permissions.changeRole
-                  }
+                  disabled={!localPeerRole?.permissions?.changeRole}
                 >
                   <option value="">Select a new role</option>
                   {roleNames.map(roleName => (
