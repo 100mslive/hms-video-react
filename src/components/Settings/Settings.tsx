@@ -299,24 +299,22 @@ export const Settings = ({
                         </Text>
                       </div>
                       <div className={`${styler('selectContainer')}`}>
-                        {audioOutput.length > 0 && (
-                          <select
-                            name="selectedAudioOutput"
-                            className={`${styler('select')}`}
-                            onChange={handleInputChange}
-                            value={values.selectedAudioOutput}
-                          >
-                            {audioOutput.map((device: MediaDeviceInfo) => (
-                              <option
-                                value={device.deviceId}
-                                className={`${styler('select')}`}
-                                key={device.deviceId}
-                              >
-                                {device.label}
-                              </option>
-                            ))}
-                          </select>
-                        )}
+                        <select
+                          name="selectedAudioOutput"
+                          className={`${styler('select')}`}
+                          onChange={handleInputChange}
+                          value={values.selectedAudioOutput}
+                        >
+                          {audioOutput.map((device: MediaDeviceInfo) => (
+                            <option
+                              value={device.deviceId}
+                              className={`${styler('select')}`}
+                              key={device.deviceId}
+                            >
+                              {device.label}
+                            </option>
+                          ))}
+                        </select>
                       </div>
                     </div>
                     <div className={`${styler('formInner')}`}>
