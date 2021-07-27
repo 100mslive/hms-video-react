@@ -109,6 +109,7 @@ export const ParticipantList = ({
   const hmsActions = useHMSActions();
   const localPeerRole = useHMSStore(selectLocalPeerRole);
   const [selectedRole, setSelectedRole] = useState<string>('');
+  const [forceChange, setForceChange] = useState(false);
 
   useEffect(() => {
     if (onToggle) {
@@ -118,6 +119,7 @@ export const ParticipantList = ({
 
   const handleRoleChangeClose = () => {
     setSelectedPeer(null);
+    setForceChange(false);
   };
 
   const handleInputChange: ChangeEventHandler<any> = event => {
@@ -135,10 +137,11 @@ export const ParticipantList = ({
     }
 
     if (selectedPeer.roleName !== selectedRole) {
-      hmsActions.changeRole(selectedPeer.id, selectedRole);
+      hmsActions.changeRole(selectedPeer.id, selectedRole, forceChange);
     }
 
     setSelectedPeer(null);
+    setForceChange(false);
   };
 
   return (
@@ -154,7 +157,9 @@ export const ParticipantList = ({
           <div className={styler('dialogHeader')}>
             <SettingsIcon className="h-7 w-7" />
             <div className={styler('expanded')}>
-              <Text variant="heading">User Settings</Text>
+              <Text variant="heading">
+                User Settings ({selectedPeer?.name})
+              </Text>
             </div>
             <Button
               iconOnly
@@ -171,7 +176,7 @@ export const ParticipantList = ({
           <div className={styler('formContainer')}>
             <label htmlFor="role-change-select-menu">
               <Text variant="heading" size="sm">
-                Role:
+                Change role to:
               </Text>
             </label>
             <div className={styler('selectContainer')}>
@@ -184,9 +189,7 @@ export const ParticipantList = ({
                   !localPeerRole || !localPeerRole.permissions.changeRole
                 }
               >
-                <option value="" className="p-4">
-                  Select a new role
-                </option>
+                <option value="">Select a new role</option>
                 {roleNames.map(roleName => (
                   <option value={roleName} key={roleName}>
                     {roleName}
@@ -194,6 +197,21 @@ export const ParticipantList = ({
                 ))}
               </select>
             </div>
+          </div>
+          <div className="flex justify-center">
+            <label className="text-sm space-x-1 flex items-center">
+              <input
+                type="checkbox"
+                onChange={() => setForceChange(prev => !prev)}
+                checked={forceChange}
+                disabled={
+                  !selectedPeer ||
+                  !selectedRole ||
+                  selectedRole === selectedPeer.roleName
+                }
+              />
+              <span>Don't ask for permission</span>
+            </label>
           </div>
 
           <div className={styler('divider')}></div>
