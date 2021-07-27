@@ -5,6 +5,8 @@ import {
   selectLocalMediaSettings,
   selectDevices,
   selectLocalPeerRole,
+  selectIsAllowedToPublish,
+  selectIsAllowedToSubscribe
 } from '@100mslive/hms-video-store';
 import { Button as TwButton } from '../Button';
 import { Text } from '../Text';
@@ -113,7 +115,11 @@ export const Settings = ({
 
   const storeInitialValues = useHMSStore(selectLocalMediaSettings);
   const devices = useHMSStore(selectDevices);
+  const {video: showVideo, audio: showAudio } = useHMSStore(selectIsAllowedToPublish);
+  const isSubscribing = useHMSStore(selectIsAllowedToSubscribe);
+
   const role = useHMSStore(selectLocalPeerRole);
+  
 
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
@@ -172,16 +178,6 @@ export const Settings = ({
   const videoInput = devices['videoInput'] || [];
   const audioInput = devices['audioInput'] || [];
   const audioOutput = devices['audioOutput'] || [];
-  let showVideo = false;
-  let showAudio = false;
-  let isSubscribing = false;
-  if (role?.publishParams?.allowed) {
-    showVideo = role.publishParams.allowed.includes('video');
-    showAudio = role.publishParams.allowed.includes('audio');
-  }
-  if (role?.subscribeParams?.subscribeToRoles) {
-    isSubscribing = role.subscribeParams.subscribeToRoles.length > 0;
-  }
   const showSettings = [showVideo, showAudio, isSubscribing].some(val => !!val);
   if (!showSettings) {
     return null;
