@@ -55,11 +55,13 @@ const defaultClasses: ParticipantListClasses = {
   expanded: 'flex-grow',
   textGray: 'text-gray-400',
   divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
-  formContainer: 'flex space-x-2 items-center justify-center px-4 py-2',
+  formContainer: 'px-4 py-2 space-y-2',
+  formRow: 'flex space-x-2 items-center justify-center',
   selectContainer: 'rounded-lg bg-gray-600 dark:bg-gray-200 p-2 mx-2',
   select:
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   dialogFooter: 'flex justify-end',
+  checkBoxLabel: 'text-sm space-x-1 flex items-center',
 };
 
 const customClasses: ParticipantListClasses = {
@@ -174,44 +176,46 @@ export const ParticipantList = ({
           <div className={styler('divider')}></div>
 
           <div className={styler('formContainer')}>
-            <label htmlFor="role-change-select-menu">
-              <Text variant="heading" size="sm">
-                Change role to:
-              </Text>
-            </label>
-            <div className={styler('selectContainer')}>
-              <select
-                id="role-change-select-menu"
-                value={selectedRole}
-                onChange={handleInputChange}
-                className={styler('select')}
-                disabled={
-                  !localPeerRole || !localPeerRole.permissions.changeRole
-                }
-              >
-                <option value="">Select a new role</option>
-                {roleNames.map(roleName => (
-                  <option value={roleName} key={roleName}>
-                    {roleName}
-                  </option>
-                ))}
-              </select>
+            <div className={styler('formRow')}>
+              <label htmlFor="role-change-select-menu">
+                <Text variant="heading" size="sm">
+                  Change role to:
+                </Text>
+              </label>
+              <div className={styler('selectContainer')}>
+                <select
+                  id="role-change-select-menu"
+                  value={selectedRole}
+                  onChange={handleInputChange}
+                  className={styler('select')}
+                  disabled={
+                    !localPeerRole || !localPeerRole.permissions.changeRole
+                  }
+                >
+                  <option value="">Select a new role</option>
+                  {roleNames.map(roleName => (
+                    <option value={roleName} key={roleName}>
+                      {roleName}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
-          <div className="flex justify-center">
-            <label className="text-sm space-x-1 flex items-center">
-              <input
-                type="checkbox"
-                onChange={() => setForceChange(prev => !prev)}
-                checked={forceChange}
-                disabled={
-                  !selectedPeer ||
-                  !selectedRole ||
-                  selectedRole === selectedPeer.roleName
-                }
-              />
-              <span>Don't ask for permission</span>
-            </label>
+            <div className={styler('formRow')}>
+              <label className={styler('checkBoxLabel')}>
+                <input
+                  type="checkbox"
+                  onChange={() => setForceChange(prev => !prev)}
+                  checked={forceChange}
+                  disabled={
+                    !selectedPeer ||
+                    !selectedRole ||
+                    selectedRole === selectedPeer.roleName
+                  }
+                />
+                <span>Don't ask for their permission</span>
+              </label>
+            </div>
           </div>
 
           <div className={styler('divider')}></div>
