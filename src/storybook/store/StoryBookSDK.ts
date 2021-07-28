@@ -103,7 +103,7 @@ export class StoryBookSDK implements Partial<IHMSActions> {
       if (!this.localPeer) {
         this.localPeer = {
           name: joinParams?.username,
-          role: joinParams?.role,
+          roleName: joinParams?.roleName,
           isLocal: true,
           id: String(this.randomNumber()),
           auxiliaryTracks: [],
