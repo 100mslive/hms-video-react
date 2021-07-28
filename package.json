@@ -52,7 +52,7 @@
     }
   ],
   "devDependencies": {
-    "@100mslive/hms-video": "^0.0.107",
+    "@100mslive/hms-video": "^0.0.108",
     "@babel/core": "^7.13.14",
     "@rollup/plugin-image": "^2.0.6",
     "@size-limit/preset-small-lib": "^4.10.2",
