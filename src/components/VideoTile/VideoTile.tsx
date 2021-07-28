@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -170,6 +170,11 @@ export const VideoTile = ({
     selectSimulcastLayerByTrack(storeHmsVideoTrack?.id),
   );
 
+  const updateSimulcastLayer = (layer: HMSSimulcastLayer) => {
+    hmsActions.setPreferredLayer(storeHmsVideoTrack?.id!, layer);
+    setShowMenu(false);
+  };
+
   audioLevel = audioLevel || storeAudioLevel;
 
   const storeAudioTrackVolume = useHMSStore(
@@ -190,7 +195,7 @@ export const VideoTile = ({
   }
 
   if (!showScreen && (isVideoMuted === undefined || isVideoMuted === null)) {
-    isVideoMuted = storeIsVideoMuted;
+    isVideoMuted = storeIsVideoMuted || Boolean(hmsVideoTrack?.degraded);
   }
 
   const label = getVideoTileLabel(
@@ -198,7 +203,10 @@ export const VideoTile = ({
     peer.isLocal,
     hmsVideoTrack?.source,
     storeIsLocallyMuted,
+    hmsVideoTrack?.degraded,
   );
+
+  const layerDefinitions = hmsVideoTrack?.layerDefinitions || [];
 
   try {
     if (aspectRatio === undefined) {
@@ -222,75 +230,67 @@ export const VideoTile = ({
     height = trackSettings.height || width;
   }
 
+  const getMenuItems = useCallback(() => {
+    const children = [];
+    if (!showScreen || !!screenshareAudioTrack) {
+      children.push(
+        <ContextMenuItem
+          label="Volume"
+          key="volume"
+          icon={<VolumeIcon />}
+          onClick={() => {}}
+        >
+          <Slider
+            value={storeAudioTrackVolume}
+            classes={{
+              root: 'ml-1',
+            }}
+            onChange={(_, newValue) => {
+              if (typeof newValue === 'number') {
+                hmsActions.setVolume(newValue, tileAudioTrack);
+              }
+            }}
+            aria-labelledby="continuous-slider"
+            marks={[
+              { value: 0 },
+              { value: 25 },
+              { value: 50 },
+              { value: 75 },
+              { value: 100 },
+            ]}
+          />
+        </ContextMenuItem>,
+      );
+    }
+    children.push(
+      ...layerDefinitions.map(({ layer, resolution }) => {
+        return (
+          <ContextMenuItem
+            label={`${layer.toUpperCase()} (${resolution.width}x${
+              resolution.height
+            })`}
+            key={layer}
+            active={simulcastLayer === layer}
+            onClick={() => updateSimulcastLayer(layer)}
+          />
+        );
+      }),
+    );
+    return children;
+  }, [layerDefinitions, showScreen, screenshareAudioTrack, tileAudioTrack]);
+
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
 
   return (
     <div className={styler('root')}>
-      {!peer.isLocal && (showScreen ? !!screenshareAudioTrack : true) && (
+      {!peer.isLocal && (
         <ContextMenu
           classes={{ root: 'invisible' }}
           menuOpen={showMenu}
           onTrigger={value => setShowMenu(value)}
         >
-          <ContextMenuItem
-            label="Volume"
-            icon={<VolumeIcon />}
-            onClick={() => {}}
-          >
-            <Slider
-              value={storeAudioTrackVolume}
-              classes={{
-                root: 'ml-1',
-              }}
-              onChange={(_, newValue) => {
-                if (typeof newValue === 'number') {
-                  hmsActions.setVolume(newValue, tileAudioTrack);
-                }
-              }}
-              aria-labelledby="continuous-slider"
-              marks={[
-                { value: 0 },
-                { value: 25 },
-                { value: 50 },
-                { value: 75 },
-                { value: 100 },
-              ]}
-            />
-          </ContextMenuItem>
-          <ContextMenuItem
-            label="Low"
-            active={simulcastLayer === HMSSimulcastLayer.LOW}
-            onClick={() => {
-              hmsActions.setPreferredLayer(
-                peer.videoTrack!,
-                HMSSimulcastLayer.LOW,
-              );
-              setShowMenu(false);
-            }}
-          />
-          <ContextMenuItem
-            label="Medium"
-            active={simulcastLayer === HMSSimulcastLayer.MEDIUM}
-            onClick={() => {
-              hmsActions.setPreferredLayer(
-                peer.videoTrack!,
-                HMSSimulcastLayer.MEDIUM,
-              );
-              setShowMenu(false);
-            }}
-          />
-          <ContextMenuItem
-            label="High"
-            active={simulcastLayer === HMSSimulcastLayer.HIGH}
-            onClick={() => {
-              hmsActions.setPreferredLayer(
-                peer.videoTrack!,
-                HMSSimulcastLayer.HIGH,
-              );
-              setShowMenu(false);
-            }}
-          />
+          {getMenuItems()}
         </ContextMenu>
       )}
       {((impliedAspectRatio.width && impliedAspectRatio.height) ||

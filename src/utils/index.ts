@@ -13,7 +13,8 @@ const getVideoTileLabel = (
   peerName: string,
   isLocal: boolean,
   videoSource: HMSTrackSource = 'regular',
-  isLocallyMuted?: boolean | undefined,
+  isLocallyMuted?: boolean,
+  degraded?: boolean,
 ) => {
   // Map [isLocal, videoSource] to the label to be displayed.
   const labelMap = new Map<string, string>([
@@ -25,7 +26,11 @@ const getVideoTileLabel = (
   ]);
 
   let label = labelMap.get([isLocal, videoSource].toString());
-  if (isLocallyMuted === undefined || isLocallyMuted === null) {
+  label = `${label}${degraded ? '(Degraded)' : ''}`;
+  if (
+    (isLocallyMuted === undefined || isLocallyMuted === null) &&
+    videoSource === 'regular'
+  ) {
     return label;
   }
   return `${label}${isLocallyMuted ? ' (Muted for you)' : ''}`;

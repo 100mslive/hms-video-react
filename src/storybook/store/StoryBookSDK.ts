@@ -70,7 +70,7 @@ export class StoryBookSDK implements Partial<IHMSActions> {
     });
   }
 
-  preview(config: HMSConfig) {
+  async preview(config: HMSConfig) {
     if (!config.authToken) {
       this.log('invalid params');
       return;
@@ -103,7 +103,7 @@ export class StoryBookSDK implements Partial<IHMSActions> {
       if (!this.localPeer) {
         this.localPeer = {
           name: joinParams?.username,
-          role: joinParams?.role,
+          roleName: joinParams?.roleName,
           isLocal: true,
           id: String(this.randomNumber()),
           auxiliaryTracks: [],
