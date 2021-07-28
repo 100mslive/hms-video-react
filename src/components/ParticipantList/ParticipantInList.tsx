@@ -5,7 +5,8 @@ import { MicOffIcon, MicOnIcon, SettingsIcon } from '../Icons';
 import { Text } from '../Text';
 import { ParticipantListClasses } from './ParticipantProps';
 import { StylerType } from '../../types';
-import { HMSPeer } from '@100mslive/hms-video-store';
+import { HMSPeer, selectLocalPeerRole } from '@100mslive/hms-video-store';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
 
 interface PropsType {
   styler?: StylerType<ParticipantListClasses>;
@@ -22,6 +23,8 @@ export const ParticipantInList = ({
   onUserSettingsClick,
   isLocal,
 }: PropsType) => {
+  const localPeerRole = useHMSStore(selectLocalPeerRole);
+
   return (
     <span className={styler('menuItem')} role="menuitem">
       <div className={styler('menuText')}>
@@ -31,7 +34,7 @@ export const ParticipantInList = ({
         </Text>
       </div>
       <div className={styler('menuIconContainer')}>
-        {!isLocal && (
+        {!isLocal && localPeerRole?.permissions.changeRole && (
           <div>
             <Button
               iconOnly
