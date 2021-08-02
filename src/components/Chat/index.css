@@ -1,9 +1,0 @@
-.MuiPopover-paper {
-  background: local !important;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.MuiPopover-paper::-webkit-scrollbar {
-  display: none;
-}

@@ -132,10 +132,11 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  window.onunload = () => hmsActions.leave();
-
   useEffect(() => {
     hmsActions.preview(config);
+    if (window) {
+      window.onunload = () => hmsActions.leave();
+    }
   }, [config.authToken]);
 
   const handleDeviceChange = (values: SettingsFormProps) => {
