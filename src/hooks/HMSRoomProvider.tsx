@@ -43,9 +43,18 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       }
     } else {
       const hmsReactiveStore = new HMSReactiveStore();
+      // adding a dummy function for setstate and destroy because zustan'd create expects them
+      // to be present but we don't expose them from the store.
+      const errFn = () => {
+        throw new Error('modifying store is not allowed');
+      };
       providerProps = {
         actions: hmsReactiveStore.getHMSActions(),
-        store: create<HMSStore>(hmsReactiveStore.getStore()), // convert vanilla store in react hook
+        store: create<HMSStore>({
+          ...hmsReactiveStore.getStore(),
+          setState: errFn,
+          destroy: errFn,
+        }), // convert vanilla store in react hook
         notifications: hmsReactiveStore.getNotifications(),
       };
     }
