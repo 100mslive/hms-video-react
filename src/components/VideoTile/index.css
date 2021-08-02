@@ -3,7 +3,3 @@
   visibility: visible;
   max-height: 60px;
 }
-
-.hmsui-videoTile-showControlsOnHoverParent:hover .hmsui-contextmenu-root {
-  visibility: visible;
-}
