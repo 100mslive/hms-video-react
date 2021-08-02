@@ -4,10 +4,11 @@ import { StoryBookSDK } from './StoryBookSDK';
 import { HMSReactiveStore, HMSStore } from '@100mslive/hms-video-store';
 import create from 'zustand';
 
+const store = HMSReactiveStore.createNewHMSStore();
 export const storyBookStore = create<HMSStore>(
   HMSReactiveStore.createNewHMSStore(),
 );
-export const storyBookSDK = new StoryBookSDK(storyBookStore);
+export const storyBookSDK = new StoryBookSDK(store);
 
 const videoURLS = [
   'https://res.cloudinary.com/dlzh3j8em/video/upload/v1618618376/Screen_Recording_2021-04-17_at_5.36.24_AM_if70nz_wl31nt.mp4',
