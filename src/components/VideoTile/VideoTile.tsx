@@ -279,7 +279,13 @@ export const VideoTile = ({
       }),
     );
     return children;
-  }, [layerDefinitions, showScreen, screenshareAudioTrack, tileAudioTrack]);
+  }, [
+    layerDefinitions,
+    showScreen,
+    screenshareAudioTrack,
+    tileAudioTrack,
+    simulcastLayer,
+  ]);
 
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
