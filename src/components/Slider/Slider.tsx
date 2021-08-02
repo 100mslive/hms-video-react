@@ -1,8 +1,8 @@
-import React from 'react';
 import MaterialSlider from '@material-ui/core/Slider';
 import { withStyles } from '@material-ui/core/styles';
+import { isBrowser } from '../../utils/is-browser';
 
-const darkMode = document
+const darkMode = isBrowser
   ? document.documentElement.classList.contains('dark')
   : true;
 
