@@ -5,9 +5,7 @@ import { HMSReactiveStore, HMSStore } from '@100mslive/hms-video-store';
 import create from 'zustand';
 
 const store = HMSReactiveStore.createNewHMSStore();
-export const storyBookStore = create<HMSStore>(
-  HMSReactiveStore.createNewHMSStore(),
-);
+export const storyBookStore = create<HMSStore>(store);
 export const storyBookSDK = new StoryBookSDK(store);
 
 const videoURLS = [
