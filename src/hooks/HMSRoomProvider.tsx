@@ -59,9 +59,13 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       };
     }
   }
-  window.onunload = () => {
-    providerProps.actions.leave();
-  };
+  useEffect(() => {
+    if (window) {
+      window.onunload = () => {
+        providerProps.actions.leave();
+      };
+    }
+  }, []);
 
   return React.createElement(
     HMSContext.Provider,
