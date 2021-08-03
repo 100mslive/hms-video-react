@@ -7,6 +7,7 @@ import merge from 'lodash/merge';
 import { theme as defaultTailwindConfig } from '../defaultTheme';
 // @ts-ignore
 import { create } from 'twind';
+import { isBrowser } from '../utils/is-browser';
 
 const HMSThemeContext = createContext<HMSThemeProps | null>(null);
 
@@ -19,7 +20,7 @@ export const HMSThemeProvider = ({
   config: any;
   appBuilder: appBuilder;
 }) => {
-  if (document) {
+  if (isBrowser) {
     if (appBuilder.theme === 'dark') {
       document.documentElement.classList.add('dark');
     }

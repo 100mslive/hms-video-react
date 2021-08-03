@@ -9,6 +9,7 @@ import {
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
+import { isBrowser } from '../utils/is-browser';
 
 export interface IHMSReactStore extends IHMSStoreReadOnly {
   <U>(selector: StateSelector<HMSStore, U>, equalityFn?: EqualityChecker<U>): U;
@@ -60,7 +61,7 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
     }
   }
   useEffect(() => {
-    if (window) {
+    if (isBrowser) {
       window.onunload = () => {
         providerProps.actions.leave();
       };

@@ -25,6 +25,7 @@ import { PreviewControls } from './Controls';
 import { Input } from '../Input';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import { isBrowser } from '../../utils/is-browser';
 
 interface JoinInfo {
   audioMuted?: boolean;
@@ -134,7 +135,7 @@ export const Preview = ({
 
   useEffect(() => {
     hmsActions.preview(config);
-    if (window) {
+    if (isBrowser) {
       window.onunload = () => hmsActions.leave();
     }
   }, [config.authToken]);
