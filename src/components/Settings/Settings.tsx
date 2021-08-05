@@ -6,11 +6,12 @@ import {
   selectDevices,
   selectIsAllowedToPublish,
   selectIsAllowedToSubscribe,
+  HMSMediaSettings,
 } from '@100mslive/hms-video-store';
 import { Button as TwButton } from '../Button';
 import { Text } from '../Text';
 import { SettingsIcon, CloseIcon } from '../Icons';
-import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { isMobileDevice } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -40,18 +41,13 @@ interface SettingsClasses {
   slider?: string;
   errorContainer?: string;
   testAudioContainer?: string;
+  gap?: string;
 }
 
-export interface SettingsFormProps {
-  selectedVideoInput?: string;
-  selectedAudioInput?: string;
-  selectedAudioOutput?: string;
-  maxTileCount?: number;
-}
 export interface SettingsProps {
-  initialValues?: SettingsFormProps;
-  onChange?: (values: SettingsFormProps) => void;
   classes?: SettingsClasses;
+  onTileCountChange: (count: number) => void;
+  maxTileCount: number;
   previewMode?: boolean;
 }
 
@@ -72,6 +68,7 @@ const defaultClasses: SettingsClasses = {
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   selectInner: 'p-4',
   divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
+  gap: 'w-full pt-4',
   sliderContainer: 'w-full my-1.5',
   sliderInner: 'w-full flex',
   sliderLabelContainer: 'w-1/3 flex justify-end items-center ',
@@ -94,9 +91,9 @@ const HMSDialog = withStyles({
 //TODO split button and settings dialog
 
 export const Settings = ({
-  onChange,
-  initialValues,
   classes,
+  onTileCountChange = () => {},
+  maxTileCount = 9,
   previewMode = false,
 }: SettingsProps) => {
   const { tw } = useHMSTheme();
@@ -112,92 +109,49 @@ export const Settings = ({
     [],
   );
 
-  const storeInitialValues = useHMSStore(selectLocalMediaSettings);
+  const hmsActions = useHMSActions();
   const devices = useHMSStore(selectDevices);
+  const selectedDevices = useHMSStore(selectLocalMediaSettings);
   const { video: showVideo, audio: showAudio } = useHMSStore(
     selectIsAllowedToPublish,
   );
   const isSubscribing = useHMSStore(selectIsAllowedToSubscribe);
-
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
 
-  if (!initialValues) {
-    initialValues = {};
-  }
-  initialValues.selectedVideoInput =
-    initialValues.selectedVideoInput || storeInitialValues.videoInputDeviceId;
-  initialValues.selectedAudioInput =
-    initialValues.selectedAudioInput || storeInitialValues.audioInputDeviceId;
-  initialValues.selectedAudioOutput =
-    initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
-
-  const deviceValues = {
-    selectedAudioInput: initialValues.selectedAudioInput || 'default',
-    selectedVideoInput: initialValues.selectedVideoInput || 'default',
-    selectedAudioOutput: initialValues.selectedAudioOutput || 'default',
-  };
-
-  const [values, setValues] = useState<SettingsFormProps>({
-    ...deviceValues,
-    maxTileCount: initialValues.maxTileCount || 9,
-  });
-
   const handleClickOpen = () => {
     setOpen(true);
-    if (!previewMode) {
-      // sync with store on open
-      setValues({ ...values, ...deviceValues });
-    }
   };
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  useEffect(() => {
-    if (values.selectedAudioInput !== initialValues?.selectedAudioInput) {
-      setValues({
-        ...values,
-        selectedAudioInput: initialValues?.selectedAudioInput,
-      });
-    }
-  }, [initialValues.selectedAudioInput, values.selectedAudioInput]);
-
-  useEffect(() => {
-    if (values.selectedAudioOutput !== initialValues?.selectedAudioOutput) {
-      setValues({
-        ...values,
-        selectedAudioOutput: initialValues?.selectedAudioOutput,
-      });
-    }
-  }, [initialValues.selectedAudioOutput, values.selectedAudioOutput]);
-
-  useEffect(() => {
-    if (values.selectedVideoInput !== initialValues?.selectedVideoInput) {
-      setValues({
-        ...values,
-        selectedVideoInput: initialValues?.selectedVideoInput,
-      });
-    }
-  }, [initialValues.selectedVideoInput, values.selectedVideoInput]);
-
   const handleInputChange: ChangeEventHandler<any> = event => {
-    const newValues = { ...values };
-    newValues[event.currentTarget.name as keyof SettingsFormProps] =
-      event.currentTarget.value;
-    setValues(newValues);
-    onChange && onChange(newValues);
+    const selectedDevice = event.currentTarget.value;
+    const name = event.currentTarget.name;
+    if (selectedDevice !== selectedDevices[name as keyof HMSMediaSettings]) {
+      switch (name) {
+        case 'audioInputDeviceId':
+          hmsActions.setAudioSettings({ deviceId: selectedDevice });
+          break;
+        case 'videoInputDeviceId':
+          hmsActions.setVideoSettings({ deviceId: selectedDevice });
+          break;
+        case 'audioOutputDeviceId':
+          hmsActions.setAudioOutputDevice(selectedDevice);
+          break;
+        default:
+          break;
+      }
+    }
   };
 
   const handleSliderChange = (event: any, newValue: number | number[]) => {
-    const newValues = { ...values };
     //TODO make this generic
     if (typeof newValue === 'number') {
-      newValues.maxTileCount = newValue;
+      onTileCountChange(newValue);
     }
-    setValues(newValues);
-    onChange && onChange(newValues);
   };
 
   const videoInput = devices['videoInput'] || [];
@@ -261,10 +215,10 @@ export const Settings = ({
                     <div className={`${styler('selectContainer')}`}>
                       {videoInput.length > 0 && (
                         <select
-                          name="selectedVideoInput"
+                          name="videoInputDeviceId"
                           className={`${styler('select')}`}
                           onChange={handleInputChange}
-                          value={values.selectedVideoInput}
+                          value={selectedDevices.videoInputDeviceId}
                         >
                           {videoInput.map((device: InputDeviceInfo) => (
                             <option
@@ -291,10 +245,10 @@ export const Settings = ({
                     <div className={`${styler('selectContainer')}`}>
                       {audioInput.length > 0 && (
                         <select
-                          name="selectedAudioInput"
+                          name="audioInputDeviceId"
                           className={`${styler('select')}`}
                           onChange={handleInputChange}
-                          value={values.selectedAudioInput}
+                          value={selectedDevices.audioInputDeviceId}
                         >
                           {audioInput.map((device: InputDeviceInfo) => (
                             <option
@@ -321,10 +275,10 @@ export const Settings = ({
                       </div>
                       <div className={`${styler('selectContainer')}`}>
                         <select
-                          name="selectedAudioOutput"
+                          name="audioOutputDeviceId"
                           className={`${styler('select')}`}
                           onChange={handleInputChange}
-                          value={values.selectedAudioOutput}
+                          value={selectedDevices.audioOutputDeviceId}
                         >
                           {audioOutput.map((device: MediaDeviceInfo) => (
                             <option
@@ -346,7 +300,7 @@ export const Settings = ({
                       </div>
                       <div className={`${styler('testAudioContainer')}`}>
                         <TestAudio
-                          outputDeviceId={values.selectedAudioOutput}
+                          outputDeviceId={selectedDevices.audioOutputDeviceId}
                         />
                       </div>
                     </div>
@@ -359,8 +313,9 @@ export const Settings = ({
                 devices plugged in?
               </div>
             )}
+            <div className={styler('gap')} />
             {/** Hide participants view for mobile */}
-            {!isMobileDevice() && isSubscribing && (
+            {!isMobileDevice() && isSubscribing && !previewMode && (
               <>
                 <div className={styler('divider')}></div>
                 <div className={styler('sliderContainer')}>
@@ -374,7 +329,7 @@ export const Settings = ({
                       <Slider
                         name="maxTileCount"
                         defaultValue={9}
-                        value={values.maxTileCount}
+                        value={maxTileCount}
                         onChange={handleSliderChange}
                         aria-labelledby="continuous-slider"
                         valueLabelDisplay="auto"
