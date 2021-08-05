@@ -46,8 +46,8 @@ interface SettingsClasses {
 
 export interface SettingsProps {
   classes?: SettingsClasses;
-  onTileCountChange: (count: number) => void;
-  maxTileCount: number;
+  onTileCountChange?: (count: number) => void;
+  maxTileCount?: number;
   previewMode?: boolean;
 }
 
