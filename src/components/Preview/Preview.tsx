@@ -39,6 +39,7 @@ export interface PreviewClasses {
   inputRoot?: string;
   joinButton?: string;
   goBackButton?: string;
+  errorImage?: string;
 }
 const defaultClasses: PreviewClasses = {
   root:
@@ -50,6 +51,7 @@ const defaultClasses: PreviewClasses = {
   helloDiv: 'text-2xl font-medium mb-2',
   nameDiv: 'text-lg leading-6 mb-2',
   inputRoot: 'p-2 mb-3',
+  errorImage: 'mt-3',
 };
 export interface PreviewProps {
   config: HMSConfig;
@@ -154,7 +156,7 @@ export const Preview = ({
       notification.data?.action === 'TRACK'
     ) {
       setError({
-        title: notification.data?.description,
+        title: notification.data?.name,
         message: notification.data?.message,
       });
     }
@@ -188,7 +190,7 @@ export const Preview = ({
   const gifSrc =
     error.title === permissionPromptError.title
       ? '/permission-prompt.gif'
-      : error.title.toLowerCase().includes('permission')
+      : notification?.data?.code === 3001
       ? '/permission-denied.gif'
       : undefined;
 
@@ -205,7 +207,13 @@ export const Preview = ({
             body={
               <>
                 <p>{error.message}</p>
-                {gifSrc && <img src={gifSrc} alt={gifSrc} />}
+                {gifSrc && (
+                  <img
+                    className={styler('errorImage')}
+                    src={gifSrc}
+                    alt={gifSrc}
+                  />
+                )}
               </>
             }
             onClose={() => {
