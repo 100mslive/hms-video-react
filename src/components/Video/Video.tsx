@@ -142,20 +142,24 @@ export const Video = ({
   useEffect(() => {
     (async () => {
       if (videoRef.current && hmsVideoTrack) {
-        HMSLogger.d('Video InView', videoTrack, inView);
-        if (hmsVideoTrack.enabled) {
-          if (inView) {
+        HMSLogger.d('Video InView', hmsVideoTrack, inView);
+        if (inView) {
+          if (hmsVideoTrack.enabled) {
+            // attach when in view and enabled
             await hmsActions.attachVideo(hmsVideoTrack.id, videoRef.current);
           } else {
+            // detach when in view but not enabled
             await hmsActions.detachVideo(hmsVideoTrack.id, videoRef.current);
           }
+        } else {
+          // detach when not in view
+          await hmsActions.detachVideo(hmsVideoTrack.id, videoRef.current);
         }
       }
     })();
   }, [
     inView,
     videoRef,
-    videoTrack,
     hmsVideoTrack?.id,
     hmsVideoTrack?.enabled,
     hmsVideoTrack?.deviceID,
