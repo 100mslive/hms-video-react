@@ -209,6 +209,7 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
   return (
     <button
       type="button"
+      disabled={disabled}
       className={`${className} icon-size-${size}`}
       {...props}
     >

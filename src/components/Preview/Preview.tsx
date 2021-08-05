@@ -1,16 +1,10 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { HMSConfig } from '@100mslive/hms-video';
 import {
+  HMSNotificationTypes,
   HMSRoomState,
   selectIsLocalAudioEnabled,
   selectIsLocalVideoDisplayEnabled,
-  selectLocalMediaSettings,
   selectLocalPeer,
   selectRoomState,
 } from '@100mslive/hms-video-store';
@@ -23,7 +17,11 @@ import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { PreviewControls } from './Controls';
 import { Input } from '../Input';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import {
+  useHMSActions,
+  useHMSNotifications,
+  useHMSStore,
+} from '../../hooks/HMSRoomProvider';
 import { isBrowser } from '../../utils/is-browser';
 
 interface JoinInfo {
@@ -41,6 +39,7 @@ export interface PreviewClasses {
   inputRoot?: string;
   joinButton?: string;
   goBackButton?: string;
+  errorImage?: string;
 }
 const defaultClasses: PreviewClasses = {
   root:
@@ -52,6 +51,7 @@ const defaultClasses: PreviewClasses = {
   helloDiv: 'text-2xl font-medium mb-2',
   nameDiv: 'text-lg leading-6 mb-2',
   inputRoot: 'p-2 mb-3',
+  errorImage: 'mt-3',
 };
 export interface PreviewProps {
   config: HMSConfig;
@@ -77,10 +77,6 @@ export const Preview = ({
   config,
   joinOnClick,
   errorOnClick,
-  allowWithError = {
-    capture: true,
-    unsupported: true,
-  },
   videoTileProps,
   classes,
   videoTileClasses,
@@ -88,12 +84,8 @@ export const Preview = ({
   const { tw } = useHMSTheme();
   const localPeer = useHMSStore(selectLocalPeer);
   const hmsActions = useHMSActions();
+  const notification = useHMSNotifications();
   const roomState = useHMSStore(selectRoomState);
-  const {
-    audioInputDeviceId,
-    videoInputDeviceId,
-    audioOutputDeviceId,
-  } = useHMSStore(selectLocalMediaSettings);
 
   const styler = useMemo(
     () =>
@@ -110,7 +102,6 @@ export const Preview = ({
   const [showValidation, setShowValidation] = useState(false);
   const [inProgress, setInProgress] = useState(false);
   const [error, setError] = useState({
-    allowJoin: false,
     title: '',
     message: '',
   });
@@ -124,11 +115,56 @@ export const Preview = ({
   const [name, setName] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [showModal, setShowModal] = useState(false);
+  const clearError = () => {
+    setError({ title: '', message: '' });
+  };
+
+  const permissionPromptError = {
+    title: 'Grant Cam/Mic Permission',
+    message:
+      'Please click in the prompt you see on the top right corner below the address bar',
+  };
 
   useEffect(() => {
-    setShowModal(Boolean(error.title));
-  }, [error.title]);
+    let timeoutId: number | undefined;
+    if (roomState === HMSRoomState.Connecting && isBrowser) {
+      /**
+       * Assumed: If room state stays connecting for 1.5 seconds,
+       * permission is not given
+       */
+      timeoutId = window.setTimeout(() => {
+        if (roomState === HMSRoomState.Connecting) {
+          setError(permissionPromptError);
+        }
+      }, 1500);
+    } else {
+      if (error.title === permissionPromptError.title) {
+        clearError();
+      }
+    }
+
+    return () => {
+      if (isBrowser) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [roomState]);
+
+  useEffect(() => {
+    if (
+      notification?.type === HMSNotificationTypes.ERROR &&
+      notification.data?.action === 'TRACK'
+    ) {
+      setError({
+        title: notification.data?.name,
+        message: notification.data?.message,
+      });
+    }
+
+    return () => {
+      if (error.title) hmsActions.leave();
+    };
+  }, [hmsActions, notification]);
 
   useEffect(() => {
     hmsActions.preview(config);
@@ -151,6 +187,13 @@ export const Preview = ({
     required: true,
   };
 
+  const gifSrc =
+    error.title === permissionPromptError.title
+      ? '/permission-prompt.gif'
+      : notification?.data?.code === 3001
+      ? '/permission-denied.gif'
+      : undefined;
+
   return (
     // root
     <div className={styler('root')}>
@@ -159,14 +202,21 @@ export const Preview = ({
         <div className={styler('header')}>
           {/* messageModal */}
           <MessageModal
-            show={showModal}
+            show={Boolean(error.title)}
             title={error.title}
-            body={error.message}
+            body={
+              <>
+                <p>{error.message}</p>
+                {gifSrc && (
+                  <img
+                    className={styler('errorImage')}
+                    src={gifSrc}
+                    alt={gifSrc}
+                  />
+                )}
+              </>
+            }
             onClose={() => {
-              if (error.allowJoin) {
-                setShowModal(false);
-                return;
-              }
               errorOnClick();
             }}
           />
