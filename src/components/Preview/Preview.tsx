@@ -16,7 +16,6 @@ import {
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
-import { SettingsFormProps } from '../Settings/Settings';
 import { Button } from '../Button';
 import { ProgressIcon } from '../Icons';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -57,7 +56,6 @@ const defaultClasses: PreviewClasses = {
 export interface PreviewProps {
   config: HMSConfig;
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
-  onChange: (values: SettingsFormProps) => void;
   /**
    * Click handler for error modal close.
    * Ignored when either of the allowWithError properties is true.
@@ -79,7 +77,6 @@ export const Preview = ({
   config,
   joinOnClick,
   errorOnClick,
-  onChange,
   allowWithError = {
     capture: true,
     unsupported: true,
@@ -140,31 +137,6 @@ export const Preview = ({
     }
   }, [config.authToken]);
 
-  const handleDeviceChange = (values: SettingsFormProps) => {
-    const {
-      selectedVideoInput: newSelectedVideoInput,
-      selectedAudioInput: newSelectedAudioInput,
-      selectedAudioOutput: newSelectedAudioOutput,
-    } = values;
-    if (newSelectedAudioInput && audioInputDeviceId !== newSelectedAudioInput) {
-      // @ts-ignore
-      hmsActions.setAudioSettings({ deviceId: newSelectedAudioInput });
-    }
-
-    if (newSelectedVideoInput && videoInputDeviceId !== newSelectedVideoInput) {
-      // @ts-ignore
-      hmsActions.setVideoSettings({ deviceId: newSelectedVideoInput });
-    }
-
-    if (
-      newSelectedAudioOutput &&
-      audioOutputDeviceId !== newSelectedAudioOutput
-    ) {
-      hmsActions.setAudioOutputDevice(newSelectedAudioOutput);
-    }
-    onChange(values);
-  };
-
   const inputProps = {
     compact: true,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -215,7 +187,6 @@ export const Preview = ({
                   videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
                   isAudioMuted={!audioEnabled}
                   isVideoMuted={!videoEnabled}
-                  onChange={handleDeviceChange}
                 />
               }
             />
