@@ -16,7 +16,6 @@ import {
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
-import { SettingsFormProps } from '../Settings/Settings';
 import { Button } from '../Button';
 import { ProgressIcon } from '../Icons';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -25,6 +24,7 @@ import { PreviewControls } from './Controls';
 import { Input } from '../Input';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import { isBrowser } from '../../utils/is-browser';
 
 interface JoinInfo {
   audioMuted?: boolean;
@@ -56,7 +56,6 @@ const defaultClasses: PreviewClasses = {
 export interface PreviewProps {
   config: HMSConfig;
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
-  onChange: (values: SettingsFormProps) => void;
   /**
    * Click handler for error modal close.
    * Ignored when either of the allowWithError properties is true.
@@ -78,7 +77,6 @@ export const Preview = ({
   config,
   joinOnClick,
   errorOnClick,
-  onChange,
   allowWithError = {
     capture: true,
     unsupported: true,
@@ -132,36 +130,12 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  window.onunload = () => hmsActions.leave();
-
   useEffect(() => {
     hmsActions.preview(config);
+    if (isBrowser) {
+      window.onunload = () => hmsActions.leave();
+    }
   }, [config.authToken]);
-
-  const handleDeviceChange = (values: SettingsFormProps) => {
-    const {
-      selectedVideoInput: newSelectedVideoInput,
-      selectedAudioInput: newSelectedAudioInput,
-      selectedAudioOutput: newSelectedAudioOutput,
-    } = values;
-    if (newSelectedAudioInput && audioInputDeviceId !== newSelectedAudioInput) {
-      // @ts-ignore
-      hmsActions.setAudioSettings({ deviceId: newSelectedAudioInput });
-    }
-
-    if (newSelectedVideoInput && videoInputDeviceId !== newSelectedVideoInput) {
-      // @ts-ignore
-      hmsActions.setVideoSettings({ deviceId: newSelectedVideoInput });
-    }
-
-    if (
-      newSelectedAudioOutput &&
-      audioOutputDeviceId !== newSelectedAudioOutput
-    ) {
-      hmsActions.setAudioOutputDevice(newSelectedAudioOutput);
-    }
-    onChange(values);
-  };
 
   const inputProps = {
     compact: true,
@@ -213,7 +187,6 @@ export const Preview = ({
                   videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
                   isAudioMuted={!audioEnabled}
                   isVideoMuted={!videoEnabled}
-                  onChange={handleDeviceChange}
                 />
               }
             />

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
 import { Button } from '../../Button';
-import { Settings, SettingsFormProps } from '../../Settings/Settings';
+import { Settings } from '../../Settings/Settings';
 import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
 import { ButtonDisplayType } from '../../../types';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
@@ -16,7 +16,6 @@ export interface PreviewControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   showGradient?: boolean;
-  onChange: (values: SettingsFormProps) => void;
   classes?: PreviewControlsClasses;
   audioButtonOnClick: () => void;
   videoButtonOnClick: React.MouseEventHandler;
@@ -44,7 +43,6 @@ export const PreviewControls = ({
   buttonDisplay = 'rectangle',
   audioButtonOnClick,
   videoButtonOnClick,
-  onChange,
   classes,
 }: PreviewControlsProps) => {
   const { tw } = useHMSTheme();
@@ -82,7 +80,7 @@ export const PreviewControls = ({
         </Button>
       </div>
       <div className={`${styler('rightControls')}`}>
-        <Settings onChange={onChange} key={0} previewMode={true} />
+        <Settings key={0} previewMode={true} />
       </div>
     </div>
   );
