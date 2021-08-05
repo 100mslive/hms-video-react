@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useMemo, useState } from 'react';
+import React, { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -154,6 +154,33 @@ export const Settings = ({
   const handleClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    if (values.selectedAudioInput !== initialValues?.selectedAudioInput) {
+      setValues({
+        ...values,
+        selectedAudioInput: initialValues?.selectedAudioInput,
+      });
+    }
+  }, [initialValues.selectedAudioInput, values.selectedAudioInput]);
+
+  useEffect(() => {
+    if (values.selectedAudioOutput !== initialValues?.selectedAudioOutput) {
+      setValues({
+        ...values,
+        selectedAudioOutput: initialValues?.selectedAudioOutput,
+      });
+    }
+  }, [initialValues.selectedAudioOutput, values.selectedAudioOutput]);
+
+  useEffect(() => {
+    if (values.selectedVideoInput !== initialValues?.selectedVideoInput) {
+      setValues({
+        ...values,
+        selectedVideoInput: initialValues?.selectedVideoInput,
+      });
+    }
+  }, [initialValues.selectedVideoInput, values.selectedVideoInput]);
 
   const handleInputChange: ChangeEventHandler<any> = event => {
     const newValues = { ...values };
