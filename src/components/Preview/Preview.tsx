@@ -216,7 +216,7 @@ export const Preview = ({
           icon={inProgress ? <ProgressIcon /> : undefined}
           disabled={inProgress || roomState === HMSRoomState.Connecting}
           onClick={async () => {
-            if (inProgress) {
+            if (inProgress || roomState === HMSRoomState.Connecting) {
               return;
             }
             if (!name || !name.replace(/\u200b/g, ' ').trim()) {
