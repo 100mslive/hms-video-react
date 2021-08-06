@@ -1,4 +1,5 @@
-import React, { Fragment, useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
+import ClickAwayListener from 'react-click-away-listener';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -136,6 +137,7 @@ export const VideoTile = ({
   const { appBuilder, tw } = useHMSTheme();
   const hmsActions = useHMSActions();
   const [showMenu, setShowMenu] = useState(false);
+  const [showTrigger, setShowTrigger] = useState(false);
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<VideoTileClasses>({
@@ -195,7 +197,7 @@ export const VideoTile = ({
   }
 
   if (!showScreen && (isVideoMuted === undefined || isVideoMuted === null)) {
-    isVideoMuted = storeIsVideoMuted;
+    isVideoMuted = storeIsVideoMuted || Boolean(hmsVideoTrack?.degraded);
   }
 
   const label = getVideoTileLabel(
@@ -203,7 +205,10 @@ export const VideoTile = ({
     peer.isLocal,
     hmsVideoTrack?.source,
     storeIsLocallyMuted,
+    hmsVideoTrack?.degraded,
   );
+
+  const layerDefinitions = hmsVideoTrack?.layerDefinitions || [];
 
   try {
     if (aspectRatio === undefined) {
@@ -227,127 +232,151 @@ export const VideoTile = ({
     height = trackSettings.height || width;
   }
 
+  const getMenuItems = useCallback(() => {
+    const children = [];
+    if (!showScreen || !!screenshareAudioTrack) {
+      children.push(
+        <ContextMenuItem
+          label="Volume"
+          key="volume"
+          icon={<VolumeIcon />}
+          onClick={() => {}}
+        >
+          <Slider
+            value={storeAudioTrackVolume}
+            classes={{
+              root: 'ml-1',
+            }}
+            onChange={(_, newValue) => {
+              if (typeof newValue === 'number') {
+                hmsActions.setVolume(newValue, tileAudioTrack);
+              }
+            }}
+            aria-labelledby="continuous-slider"
+            marks={[
+              { value: 0 },
+              { value: 25 },
+              { value: 50 },
+              { value: 75 },
+              { value: 100 },
+            ]}
+          />
+        </ContextMenuItem>,
+      );
+    }
+    children.push(
+      ...layerDefinitions.map(({ layer, resolution }) => {
+        return (
+          <ContextMenuItem
+            label={`${layer.toUpperCase()} (${resolution.width}x${
+              resolution.height
+            })`}
+            key={layer}
+            active={simulcastLayer === layer}
+            onClick={() => updateSimulcastLayer(layer)}
+          />
+        );
+      }),
+    );
+    return children;
+  }, [
+    layerDefinitions,
+    showScreen,
+    screenshareAudioTrack,
+    tileAudioTrack,
+    simulcastLayer,
+  ]);
+
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
 
   return (
-    <div className={styler('root')}>
-      {!peer.isLocal && (
-        <ContextMenu
-          classes={{ root: 'invisible' }}
-          menuOpen={showMenu}
-          onTrigger={value => setShowMenu(value)}
-        >
-          {!showScreen || !!screenshareAudioTrack ? (
-            <ContextMenuItem
-              label="Volume"
-              icon={<VolumeIcon />}
-              onClick={() => {}}
-            >
-              <Slider
-                value={storeAudioTrackVolume}
-                classes={{
-                  root: 'ml-1',
-                }}
-                onChange={(_, newValue) => {
-                  if (typeof newValue === 'number') {
-                    hmsActions.setVolume(newValue, tileAudioTrack);
+    <ClickAwayListener onClickAway={() => setShowTrigger(false)}>
+      <div
+        className={styler('root')}
+        onMouseEnter={() => setShowTrigger(true)}
+        onMouseLeave={() => {
+          setShowTrigger(false);
+        }}
+      >
+        {!peer.isLocal && (
+          <ContextMenu
+            classes={{
+              root: showMenu || showTrigger ? 'visible' : 'invisible',
+            }}
+            menuOpen={showMenu}
+            onTrigger={value => setShowMenu(value)}
+          >
+            {getMenuItems()}
+          </ContextMenu>
+        )}
+        {((impliedAspectRatio.width && impliedAspectRatio.height) ||
+          objectFit === 'contain') && (
+          <div
+            className={`${styler('videoContainer')} ${
+              displayShape === 'circle' ? styler('videoContainerCircle') : ''
+            } `}
+            style={
+              objectFit !== 'contain'
+                ? {
+                    aspectRatio: `${
+                      displayShape === 'rectangle'
+                        ? impliedAspectRatio.width / impliedAspectRatio.height
+                        : 1
+                    }`,
                   }
-                }}
-                aria-labelledby="continuous-slider"
-                marks={[
-                  { value: 0 },
-                  { value: 25 },
-                  { value: 50 },
-                  { value: 75 },
-                  { value: 100 },
-                ]}
-              />
-            </ContextMenuItem>
-          ) : (
-            <Fragment />
-          )}
-          <ContextMenuItem
-            label="Low"
-            active={simulcastLayer === HMSSimulcastLayer.LOW}
-            onClick={() => updateSimulcastLayer(HMSSimulcastLayer.LOW)}
-          />
-          <ContextMenuItem
-            label="Medium"
-            active={simulcastLayer === HMSSimulcastLayer.MEDIUM}
-            onClick={() => updateSimulcastLayer(HMSSimulcastLayer.MEDIUM)}
-          />
-          <ContextMenuItem
-            label="High"
-            active={simulcastLayer === HMSSimulcastLayer.HIGH}
-            onClick={() => updateSimulcastLayer(HMSSimulcastLayer.HIGH)}
-          />
-        </ContextMenu>
-      )}
-      {((impliedAspectRatio.width && impliedAspectRatio.height) ||
-        objectFit === 'contain') && (
-        <div
-          className={`${styler('videoContainer')} ${
-            displayShape === 'circle' ? styler('videoContainerCircle') : ''
-          } `}
-          style={
-            objectFit !== 'contain'
-              ? {
-                  aspectRatio: `${
-                    displayShape === 'rectangle'
-                      ? impliedAspectRatio.width / impliedAspectRatio.height
-                      : 1
-                  }`,
-                }
-              : { objectFit: 'contain', width: '100%', height: '100%' }
-          }
-        >
-          {/* TODO this doesn't work in Safari and looks ugly with contain*/}
-          <Video
-            peerId={peer.id}
-            hmsVideoTrack={hmsVideoTrack}
-            videoTrack={videoTrack}
-            objectFit={objectFit}
-            isLocal={peer.isLocal}
-            showAudioLevel={showAudioLevel}
-            audioLevel={audioLevel}
-            audioLevelDisplayType={audioLevelDisplayType}
-            audioLevelDisplayColor={audioLevelDisplayColor}
-            displayShape={displayShape}
-          />
-          {isVideoMuted && (
-            <div
-              className={`${styler('avatarContainer')} ${
-                displayShape === 'circle' ? styler('avatarContainerCircle') : ''
-              }`}
-            >
-              <Avatar
-                label={peer.name}
-                size={compact ? 'sm' : 'xl'}
-                avatarType={avatarType}
-              />
-            </div>
-          )}
-          {controlsComponent ? (
-            controlsComponent
-          ) : (
-            // TODO circle controls are broken now
-            <VideoTileControls
+                : { objectFit: 'contain', width: '100%', height: '100%' }
+            }
+          >
+            {/* TODO this doesn't work in Safari and looks ugly with contain*/}
+            <Video
+              peerId={peer.id}
+              hmsVideoTrack={hmsVideoTrack}
+              videoTrack={videoTrack}
+              objectFit={objectFit}
               isLocal={peer.isLocal}
-              label={label}
-              isAudioMuted={isAudioMuted}
-              showAudioMuteStatus={showAudioMuteStatus}
-              showGradient={displayShape === 'circle'}
-              allowRemoteMute={allowRemoteMute}
-              showAudioLevel={
-                showAudioLevel && audioLevelDisplayType !== 'border'
-              }
-              audioLevelDisplayType={audioLevelDisplayType}
+              showAudioLevel={showAudioLevel}
               audioLevel={audioLevel}
+              audioLevelDisplayType={audioLevelDisplayType}
+              audioLevelDisplayColor={audioLevelDisplayColor}
+              displayShape={displayShape}
             />
-          )}
-        </div>
-      )}
-    </div>
+            {isVideoMuted && (
+              <div
+                className={`${styler('avatarContainer')} ${
+                  displayShape === 'circle'
+                    ? styler('avatarContainerCircle')
+                    : ''
+                }`}
+              >
+                <Avatar
+                  label={peer.name}
+                  size={compact ? 'sm' : 'xl'}
+                  avatarType={avatarType}
+                />
+              </div>
+            )}
+            {controlsComponent ? (
+              controlsComponent
+            ) : (
+              // TODO circle controls are broken now
+              <VideoTileControls
+                isLocal={peer.isLocal}
+                label={label}
+                isAudioMuted={isAudioMuted}
+                showAudioMuteStatus={showAudioMuteStatus}
+                showGradient={displayShape === 'circle'}
+                allowRemoteMute={allowRemoteMute}
+                showAudioLevel={
+                  showAudioLevel && audioLevelDisplayType !== 'border'
+                }
+                audioLevelDisplayType={audioLevelDisplayType}
+                audioLevel={audioLevel}
+              />
+            )}
+          </div>
+        )}
+      </div>
+    </ClickAwayListener>
   );
 };

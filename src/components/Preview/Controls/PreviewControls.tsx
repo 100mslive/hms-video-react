@@ -1,14 +1,16 @@
 import React, { useMemo } from 'react';
-import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
-import { hmsUiClassParserGenerator } from '../../../utils/classes';
-import '../index.css';
-import { ButtonDisplayType } from '../../../types';
 import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
 import { Button } from '../../Button';
-import { Settings, SettingsFormProps } from '../../Settings/Settings';
+import { Settings } from '../../Settings/Settings';
+import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
+import { ButtonDisplayType } from '../../../types';
+import { hmsUiClassParserGenerator } from '../../../utils/classes';
+import '../index.css';
 import { useHMSStore } from '../../../hooks/HMSRoomProvider';
-import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
+import { selectLocalPeer } from '@100mslive/hms-video-store';
 
+let amIStudent = false;
+let videoButton;
 
 interface PreviewControlsClasses {
   root?: string;
@@ -19,7 +21,6 @@ export interface PreviewControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   showGradient?: boolean;
-  onChange: (values: SettingsFormProps) => void;
   classes?: PreviewControlsClasses;
   audioButtonOnClick: () => void;
   videoButtonOnClick: React.MouseEventHandler;
@@ -47,10 +48,14 @@ export const PreviewControls = ({
   buttonDisplay = 'rectangle',
   audioButtonOnClick,
   videoButtonOnClick,
-  onChange,
   classes,
 }: PreviewControlsProps) => {
   const { tw } = useHMSTheme();
+  const localPeer = useHMSStore(selectLocalPeer);
+  if (localPeer) {
+    amIStudent = localPeer.roleName === 'student' ? true : false;
+  }
+
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<PreviewControlsClasses>({
@@ -60,9 +65,6 @@ export const PreviewControls = ({
         tag: 'hmsui-preview',
       }),
     [],
-  );
-  const { audioInputDeviceId, videoInputDeviceId } = useHMSStore(
-    selectLocalMediaSettings,
   );
 
   return (
@@ -77,20 +79,26 @@ export const PreviewControls = ({
         >
           {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
         </Button>
-        <Button
-          iconOnly
-          variant="no-fill"
-          active={isVideoMuted}
-          shape={buttonDisplay}
-          onClick={videoButtonOnClick}
-        >
-          {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
-        </Button>
+        {(() => {
+          if (!amIStudent) {
+            return (
+              <Button
+                iconOnly
+                variant="no-fill"
+                active={isVideoMuted}
+                shape={buttonDisplay}
+                onClick={videoButtonOnClick}
+              >
+                {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+              </Button>
+            );
+          } else {
+            return null;
+          }
+        })()}
       </div>
       <div className={`${styler('rightControls')}`}>
-        {audioInputDeviceId && videoInputDeviceId && (
-          <Settings onChange={onChange} key={0} previewMode={true} />
-        )}
+        <Settings key={0} previewMode={true} />
       </div>
     </div>
   );

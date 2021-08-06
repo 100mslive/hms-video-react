@@ -20,9 +20,10 @@ const Template: Story<SettingsProps> = (args: SettingsProps) => {
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
       <div className="w-full flex justify-center">
         <Settings
-          onChange={props => {
-            alert(JSON.stringify(props));
+          onTileCountChange={count => {
+            setMaxTileCount(count);
           }}
+          maxTileCount={maxTileCount}
         />
       </div>
     </HMSThemeProvider>
@@ -37,9 +38,10 @@ const LightThemeTemplate: Story<SettingsProps> = (args: SettingsProps) => {
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
       <div className="w-full h-screen flex justify-center bg-white pt-5">
         <Settings
-          onChange={props => {
-            alert(JSON.stringify(props));
+          onTileCountChange={count => {
+            setMaxTileCount(count);
           }}
+          maxTileCount={maxTileCount}
         />
       </div>
     </HMSThemeProvider>

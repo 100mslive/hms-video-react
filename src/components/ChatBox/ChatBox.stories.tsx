@@ -6,7 +6,7 @@ import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 const gfm = require('remark-gfm');
 
 const meta: Meta = {
-  title: 'Chat/ ChatBox',
+  title: 'ChatBox',
   component: ChatBox,
 };
 

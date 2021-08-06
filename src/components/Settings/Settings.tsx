@@ -1,20 +1,19 @@
-import React, {
-  ChangeEventHandler,
-  useMemo,
-  useEffect,
-  useState,
-  useRef,
-} from 'react';
+import React, { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
-import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
-import { getLocalDevices, getLocalStream } from '@100mslive/hms-video';
+import {
+  selectLocalMediaSettings,
+  selectDevices,
+  selectIsAllowedToPublish,
+  selectIsAllowedToSubscribe,
+  HMSMediaSettings,
+} from '@100mslive/hms-video-store';
 import { Button as TwButton } from '../Button';
 import { Text } from '../Text';
 import { SettingsIcon, CloseIcon } from '../Icons';
-import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { closeMediaStream, isMobileDevice } from '../../utils';
+import { isMobileDevice } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Slider } from '../Slider/Slider';
 import TestAudio from './TestAudio';
@@ -42,18 +41,13 @@ interface SettingsClasses {
   slider?: string;
   errorContainer?: string;
   testAudioContainer?: string;
+  gap?: string;
 }
 
-export interface SettingsFormProps {
-  selectedVideoInput?: string;
-  selectedAudioInput?: string;
-  selectedAudioOutput?: string;
-  maxTileCount?: number;
-}
 export interface SettingsProps {
-  initialValues?: SettingsFormProps;
-  onChange?: (values: SettingsFormProps) => void;
   classes?: SettingsClasses;
+  onTileCountChange?: (count: number) => void;
+  maxTileCount?: number;
   previewMode?: boolean;
 }
 
@@ -74,6 +68,7 @@ const defaultClasses: SettingsClasses = {
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   selectInner: 'p-4',
   divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
+  gap: 'w-full pt-4',
   sliderContainer: 'w-full my-1.5',
   sliderInner: 'w-full flex',
   sliderLabelContainer: 'w-1/3 flex justify-end items-center ',
@@ -96,9 +91,9 @@ const HMSDialog = withStyles({
 //TODO split button and settings dialog
 
 export const Settings = ({
-  onChange,
-  initialValues,
   classes,
+  onTileCountChange = () => {},
+  maxTileCount = 9,
   previewMode = false,
 }: SettingsProps) => {
   const { tw } = useHMSTheme();
@@ -114,102 +109,58 @@ export const Settings = ({
     [],
   );
 
-  const storeInitialValues = useHMSStore(selectLocalMediaSettings);
-
+  const hmsActions = useHMSActions();
+  const devices = useHMSStore(selectDevices);
+  const selectedDevices = useHMSStore(selectLocalMediaSettings);
+  const { video: showVideo, audio: showAudio } = useHMSStore(
+    selectIsAllowedToPublish,
+  );
+  const isSubscribing = useHMSStore(selectIsAllowedToSubscribe);
   const [open, setOpen] = useState(false);
-  const [deviceGroups, setDeviceGroups] = useState<{
-    audioinput: MediaDeviceInfo[];
-    audiooutput: MediaDeviceInfo[];
-    videoinput: MediaDeviceInfo[];
-  }>({
-    audioinput: [],
-    audiooutput: [],
-    videoinput: [],
-  });
   const [error, setError] = useState('');
-
-  if (!initialValues) {
-    initialValues = {};
-  }
-  initialValues.selectedVideoInput =
-    initialValues.selectedVideoInput || storeInitialValues.videoInputDeviceId;
-  initialValues.selectedAudioInput =
-    initialValues.selectedAudioInput || storeInitialValues.audioInputDeviceId;
-  initialValues.selectedAudioOutput =
-    initialValues.selectedAudioOutput || storeInitialValues.audioOutputDeviceId;
-
-  const deviceValues = {
-    selectedAudioInput: initialValues.selectedAudioInput || 'default',
-    selectedVideoInput: initialValues.selectedVideoInput || 'default',
-    selectedAudioOutput: initialValues.selectedAudioOutput || 'default',
-  };
-
-  const [values, setValues] = useState<SettingsFormProps>({
-    ...deviceValues,
-    maxTileCount: initialValues.maxTileCount || 9,
-  });
-
-  async function getDevices() {
-    try {
-      let deviceGroups = await getLocalDevices();
-      if (
-        Object.values(deviceGroups)
-          .flat()
-          .every(val => !val.deviceId || !val.label) // deviceid is always present in firefox
-      ) {
-        // No permissions get permissions now
-        const stream = await getLocalStream({ video: true, audio: true });
-        closeMediaStream(stream);
-        deviceGroups = await getLocalDevices();
-      }
-      setDeviceGroups(deviceGroups);
-    } catch (err) {
-      setError(err.message);
-    }
-  }
-
-  useEffect(() => {
-    if (open) {
-      getDevices();
-    }
-  }, [open]);
 
   const handleClickOpen = () => {
     setOpen(true);
-    if (!previewMode) {
-      // sync with store on open
-      setValues({ ...values, ...deviceValues });
-    }
   };
 
   const handleClose = () => {
     setOpen(false);
-    onChange && onChange(values);
   };
 
   const handleInputChange: ChangeEventHandler<any> = event => {
-    const newValues = { ...values };
-    newValues[event.currentTarget.name as keyof SettingsFormProps] =
-      event.currentTarget.value;
-    setValues(newValues);
+    const selectedDevice = event.currentTarget.value;
+    const name = event.currentTarget.name;
+    if (selectedDevice !== selectedDevices[name as keyof HMSMediaSettings]) {
+      switch (name) {
+        case 'audioInputDeviceId':
+          hmsActions.setAudioSettings({ deviceId: selectedDevice });
+          break;
+        case 'videoInputDeviceId':
+          hmsActions.setVideoSettings({ deviceId: selectedDevice });
+          break;
+        case 'audioOutputDeviceId':
+          hmsActions.setAudioOutputDevice(selectedDevice);
+          break;
+        default:
+          break;
+      }
+    }
   };
 
   const handleSliderChange = (event: any, newValue: number | number[]) => {
-    const newValues = { ...values };
     //TODO make this generic
     if (typeof newValue === 'number') {
-      newValues.maxTileCount = newValue;
+      onTileCountChange(newValue);
     }
-    setValues(newValues);
   };
 
-  const videoInput = deviceGroups['videoinput'] || [];
-  const audioInput = deviceGroups['audioinput'] || [];
-  const audioOutput = deviceGroups['audiooutput'] || [];
-  //TODO handle case where selected device is not in list
-  // audioOutput.length > 0 && audioOutput.findIndex(device => device.deviceId===values?.selectedAudioOutput)===-1 && setValues({selectedAudioOutput:videoInput[0].deviceId});
-  // audioInput.length > 0 && audioInput.findIndex(device => device.deviceId===values?.selectedAudioInput)===-1 && setValues({selectedAudioInput:videoInput[0].deviceId});
-  // videoInput.length > 0 && videoInput.findIndex(device => device.deviceId===values?.selectedVideoInput)===-1 && setValues({selectedVideoInput:videoInput[0].deviceId});
+  const videoInput = devices['videoInput'] || [];
+  const audioInput = devices['audioInput'] || [];
+  const audioOutput = devices['audioOutput'] || [];
+  const showSettings = [showVideo, showAudio, isSubscribing].some(val => !!val);
+  if (!showSettings) {
+    return null;
+  }
 
   return (
     <>
@@ -254,99 +205,107 @@ export const Settings = ({
           <div className={`${styler('formContainer')}`}>
             {error === '' ? (
               <>
-                <div className={`${styler('formInner')}`}>
-                  <div className={`${styler('selectLabel')}`}>
-                    <Text variant="heading" size="sm">
-                      Camera:
-                    </Text>
+                {showVideo && (
+                  <div className={`${styler('formInner')}`}>
+                    <div className={`${styler('selectLabel')}`}>
+                      <Text variant="heading" size="sm">
+                        Camera:
+                      </Text>
+                    </div>
+                    <div className={`${styler('selectContainer')}`}>
+                      {videoInput.length > 0 && (
+                        <select
+                          name="videoInputDeviceId"
+                          className={`${styler('select')}`}
+                          onChange={handleInputChange}
+                          value={selectedDevices.videoInputDeviceId}
+                        >
+                          {videoInput.map((device: InputDeviceInfo) => (
+                            <option
+                              value={device.deviceId}
+                              className={`${styler('selectInner')}`}
+                              key={device.deviceId}
+                            >
+                              {device.label} {device.deviceId}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
                   </div>
-                  <div className={`${styler('selectContainer')}`}>
-                    {videoInput.length > 0 && (
-                      <select
-                        name="selectedVideoInput"
-                        className={`${styler('select')}`}
-                        onChange={handleInputChange}
-                        value={values.selectedVideoInput}
-                      >
-                        {videoInput.map((device, index) => (
-                          <option
-                            value={device.deviceId}
-                            className={`${styler('selectInner')}`}
-                            key={index}
-                          >
-                            {device.label} {device.deviceId}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-                </div>
-                <div className={`${styler('formInner')}`}>
-                  <div className={`${styler('selectLabel')}`}>
-                    <Text variant="heading" size="sm">
-                      Microphone:
-                    </Text>
-                  </div>
+                )}
+                {showAudio && (
+                  <div className={`${styler('formInner')}`}>
+                    <div className={`${styler('selectLabel')}`}>
+                      <Text variant="heading" size="sm">
+                        Microphone:
+                      </Text>
+                    </div>
 
-                  <div className={`${styler('selectContainer')}`}>
-                    {audioInput.length > 0 && (
-                      <select
-                        name="selectedAudioInput"
-                        className={`${styler('select')}`}
-                        onChange={handleInputChange}
-                        value={values.selectedAudioInput}
-                      >
-                        {audioInput.map((device, index) => (
-                          <option
-                            value={device.deviceId}
-                            className={`${styler('selectInner')}`}
-                            key={index}
-                          >
-                            {device.label}
-                          </option>
-                        ))}
-                      </select>
-                    )}
+                    <div className={`${styler('selectContainer')}`}>
+                      {audioInput.length > 0 && (
+                        <select
+                          name="audioInputDeviceId"
+                          className={`${styler('select')}`}
+                          onChange={handleInputChange}
+                          value={selectedDevices.audioInputDeviceId}
+                        >
+                          {audioInput.map((device: InputDeviceInfo) => (
+                            <option
+                              value={device.deviceId}
+                              className={`${styler('selectInner')}`}
+                              key={device.deviceId}
+                            >
+                              {device.label}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
                 {/** Enabled this when the output is handled properly */}
-                <div className={`${styler('formInner')}`}>
-                  <div className={`${styler('selectLabel')}`}>
-                    <Text variant="heading" size="sm">
-                      Audio Output:
-                    </Text>
-                  </div>
-                  <div className={`${styler('selectContainer')}`}>
-                    {audioOutput.length > 0 && (
-                      <select
-                        name="selectedAudioOutput"
-                        className={`${styler('select')}`}
-                        onChange={handleInputChange}
-                        value={values.selectedAudioOutput}
-                      >
-                        {audioOutput.map((device, index) => (
-                          <option
-                            value={device.deviceId}
-                            className={`${styler('select')}`}
-                            key={index}
-                          >
-                            {device.label}
-                          </option>
-                        ))}
-                      </select>
-                    )}
-                  </div>
-                </div>
-                <div className={`${styler('formInner')}`}>
-                  <div className={`${styler('selectLabel')}`}>
-                    <Text variant="heading" size="sm">
-                      Test Audio Level:
-                    </Text>
-                  </div>
-                  <div className={`${styler('testAudioContainer')}`}>
-                    <TestAudio outputDeviceId={values.selectedAudioOutput} />
-                  </div>
-                </div>
+                {isSubscribing && audioOutput.length > 0 && (
+                  <>
+                    <div className={`${styler('formInner')}`}>
+                      <div className={`${styler('selectLabel')}`}>
+                        <Text variant="heading" size="sm">
+                          Audio Output:
+                        </Text>
+                      </div>
+                      <div className={`${styler('selectContainer')}`}>
+                        <select
+                          name="audioOutputDeviceId"
+                          className={`${styler('select')}`}
+                          onChange={handleInputChange}
+                          value={selectedDevices.audioOutputDeviceId}
+                        >
+                          {audioOutput.map((device: MediaDeviceInfo) => (
+                            <option
+                              value={device.deviceId}
+                              className={`${styler('select')}`}
+                              key={device.deviceId}
+                            >
+                              {device.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                    <div className={`${styler('formInner')}`}>
+                      <div className={`${styler('selectLabel')}`}>
+                        <Text variant="heading" size="sm">
+                          Test Audio Level:
+                        </Text>
+                      </div>
+                      <div className={`${styler('testAudioContainer')}`}>
+                        <TestAudio
+                          outputDeviceId={selectedDevices.audioOutputDeviceId}
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
               </>
             ) : (
               <div className={styler('errorContainer')}>
@@ -354,8 +313,9 @@ export const Settings = ({
                 devices plugged in?
               </div>
             )}
+            <div className={styler('gap')} />
             {/** Hide participants view for mobile */}
-            {!isMobileDevice() && (
+            {!isMobileDevice() && isSubscribing && !previewMode && (
               <>
                 <div className={styler('divider')}></div>
                 <div className={styler('sliderContainer')}>
@@ -369,7 +329,7 @@ export const Settings = ({
                       <Slider
                         name="maxTileCount"
                         defaultValue={9}
-                        value={values.maxTileCount}
+                        value={maxTileCount}
                         onChange={handleSliderChange}
                         aria-labelledby="continuous-slider"
                         valueLabelDisplay="auto"
