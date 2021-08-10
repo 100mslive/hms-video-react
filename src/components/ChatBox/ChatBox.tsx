@@ -94,7 +94,7 @@ export interface ChatProps {
   onClose?: () => void; // when the chat box is closed
   autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
-  messageFormatter?: (message: string) => React.ReactNode;
+  messageFormatter?: (message: string, receiver?: string) => React.ReactNode;
   /**
    * extra classes added  by user
    */
