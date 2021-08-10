@@ -164,7 +164,7 @@ export const ChatBox = ({
     roles.forEach(role => {
       children.push(
         <ContextMenuItem
-          label={role}
+          label={`${role}(role)`}
           onClick={() => {
             sendMessage(messageDraft, role);
             setMessageDraft('');
