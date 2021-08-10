@@ -1,12 +1,24 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+} from 'react';
 import { useInView } from 'react-intersection-observer';
-import { HMSMessage } from '@100mslive/hms-video-store';
+import { HMSMessage, selectRemotePeers } from '@100mslive/hms-video-store';
 import {
   selectHMSMessages,
   selectUnreadHMSMessagesCount,
+  selectAvailableRoleNames,
 } from '@100mslive/hms-video-store';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import { Button } from '../Button';
+import {
+  ContextMenu,
+  ContextMenuItem,
+  ContextMenuItemProps,
+} from '../ContextMenu';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -124,12 +136,55 @@ export const ChatBox = ({
   );
   const storeMessages = useHMSStore(selectHMSMessages);
   const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
+  const roles = useHMSStore(selectAvailableRoleNames);
+  const peers = useHMSStore(selectRemotePeers);
   const hmsActions = useHMSActions();
 
   messages = messages || storeMessages;
-  const sendMessage = (msg: string) =>
-    onSend ? onSend(msg) : hmsActions.sendMessage(msg);
+  const sendMessage = (msg: string, receiver?: string) =>
+    onSend
+      ? onSend(msg)
+      : hmsActions.sendMessage({
+          message: msg,
+          type: 'chat',
+          receiver,
+        });
   const [messageDraft, setMessageDraft] = useState('');
+  const menuItems = useCallback(() => {
+    const children: React.ReactElement<ContextMenuItemProps>[] = [];
+    children.push(
+      <ContextMenuItem
+        label="Broadcast"
+        onClick={() => {
+          sendMessage(messageDraft);
+          setMessageDraft('');
+        }}
+      />,
+    );
+    roles.forEach(role => {
+      children.push(
+        <ContextMenuItem
+          label={role}
+          onClick={() => {
+            sendMessage(messageDraft, role);
+            setMessageDraft('');
+          }}
+        />,
+      );
+    });
+    peers.forEach(peer => {
+      children.push(
+        <ContextMenuItem
+          label={peer.name}
+          onClick={() => {
+            sendMessage(messageDraft, peer.id);
+            setMessageDraft('');
+          }}
+        />,
+      );
+    });
+    return children;
+  }, [roles, peers, messageDraft]);
   // a dummy element with messagesEndRef is created and put in the end
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
   const messageListRef = useRef<HTMLDivElement>(null);
@@ -298,7 +353,7 @@ export const ChatBox = ({
             }}
           />
           {/* sendButton */}
-          <Button
+          {/* <Button
             iconOnly
             variant={'no-fill'}
             iconSize={'sm'}
@@ -309,7 +364,23 @@ export const ChatBox = ({
             }}
           >
             <SendIcon />
-          </Button>
+          </Button> */}
+          <ContextMenu
+            classes={{ trigger: 'bg-transparent w-6 h-6' }}
+            trigger={<DownCaratIcon width={16} height={16} />}
+            menuProps={{
+              anchorOrigin: {
+                vertical: 'top',
+                horizontal: 'right',
+              },
+              transformOrigin: {
+                vertical: 'bottom',
+                horizontal: 'right',
+              },
+            }}
+          >
+            {menuItems()}
+          </ContextMenu>
         </div>
       </div>
     </React.Fragment>
