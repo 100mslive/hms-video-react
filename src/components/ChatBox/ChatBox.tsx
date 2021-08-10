@@ -11,6 +11,7 @@ import {
   selectHMSMessages,
   selectUnreadHMSMessagesCount,
   selectAvailableRoleNames,
+  HMSMessageInput,
 } from '@100mslive/hms-video-store';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import { Button } from '../Button';
@@ -90,7 +91,7 @@ export interface Message extends HMSMessage {
 }
 export interface ChatProps {
   messages?: Message[];
-  onSend?: (message: string) => void;
+  onSend?: (message: HMSMessageInput) => void;
   onClose?: () => void; // when the chat box is closed
   autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
@@ -141,14 +142,8 @@ export const ChatBox = ({
   const hmsActions = useHMSActions();
 
   messages = messages || storeMessages;
-  const sendMessage = (msg: string, receiver?: string) =>
-    onSend
-      ? onSend(msg)
-      : hmsActions.sendMessage({
-          message: msg,
-          type: 'chat',
-          receiver,
-        });
+  const sendMessage = (message: HMSMessageInput) =>
+    onSend ? onSend(message) : hmsActions.sendMessage(message);
   const [messageDraft, setMessageDraft] = useState('');
   const menuItems = useCallback(() => {
     const children: React.ReactElement<ContextMenuItemProps>[] = [];
@@ -156,7 +151,7 @@ export const ChatBox = ({
       <ContextMenuItem
         label="Broadcast"
         onClick={() => {
-          sendMessage(messageDraft);
+          sendMessage({ message: messageDraft });
           setMessageDraft('');
         }}
       />,
@@ -166,7 +161,7 @@ export const ChatBox = ({
         <ContextMenuItem
           label={`${role}(role)`}
           onClick={() => {
-            sendMessage(messageDraft, role);
+            sendMessage({ message: messageDraft, recipientRoles: [role] });
             setMessageDraft('');
           }}
         />,
@@ -177,7 +172,7 @@ export const ChatBox = ({
         <ContextMenuItem
           label={peer.name}
           onClick={() => {
-            sendMessage(messageDraft, peer.id);
+            sendMessage({ message: messageDraft, recipientPeers: [peer.id] });
             setMessageDraft('');
           }}
         />,
@@ -342,7 +337,7 @@ export const ChatBox = ({
                 if (!event.shiftKey) {
                   event.preventDefault();
                   if (messageDraft.trim() !== '') {
-                    sendMessage(messageDraft);
+                    sendMessage({ message: messageDraft });
                     setMessageDraft('');
                   }
                 }
