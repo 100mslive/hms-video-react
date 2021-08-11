@@ -1,12 +1,19 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { HMSMessage } from '@100mslive/hms-video-store';
+import {
+  HMSMessage,
+  selectHMSMessagesByPeerID,
+  selectHMSMessagesByRole,
+  selectPeerNameByID,
+} from '@100mslive/hms-video-store';
 import {
   selectHMSMessages,
   selectUnreadHMSMessagesCount,
+  HMSMessageInput,
 } from '@100mslive/hms-video-store';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import { Button } from '../Button';
+import { ChatSelector } from './ChatSelector';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -41,13 +48,13 @@ interface ChatBoxClasses {
 
 const defaultClasses: ChatBoxClasses = {
   root: 'w-full h-full  rounded-2xl flex flex-col shadow-2',
-  header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500`,
+  header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500 cursor-pointer`,
   headerLine: 'w-8 h-1 rounded bg-white dark:bg-gray-400 m-2',
   headerRoot: 'flex w-full justify-between',
   headerText: 'text-gray-300 dark:text-gray-500 flex items-center',
   headerCloseButton: 'focus:outline-none',
   messageBox:
-    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-grow',
+    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-grow relative',
   messageRoot: 'py-3',
   messageInfo: 'flex justify-between',
   messageTime: 'text-xs',
@@ -78,11 +85,11 @@ export interface Message extends HMSMessage {
 }
 export interface ChatProps {
   messages?: Message[];
-  onSend?: (message: string) => void;
+  onSend?: (message: string | HMSMessageInput) => void;
   onClose?: () => void; // when the chat box is closed
   autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
-  messageFormatter?: (message: string) => React.ReactNode;
+  messageFormatter?: (message: string, receiver?: string) => React.ReactNode;
   /**
    * extra classes added  by user
    */
@@ -125,10 +132,31 @@ export const ChatBox = ({
   const storeMessages = useHMSStore(selectHMSMessages);
   const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
   const hmsActions = useHMSActions();
+  const [selection, setSelection] = useState({ role: '', peerId: '' });
+  const [showChatSelection, setShowChatSelection] = useState(false);
+  const selectedPeerName = useHMSStore(selectPeerNameByID(selection.peerId));
+  const selectedPeerMessages = useHMSStore(
+    selectHMSMessagesByPeerID(selection.peerId),
+  );
+  const selectedRoleMessages = useHMSStore(
+    selectHMSMessagesByRole(selection.role),
+  );
 
   messages = messages || storeMessages;
-  const sendMessage = (msg: string) =>
-    onSend ? onSend(msg) : hmsActions.sendMessage(msg);
+  if (selection.peerId) {
+    messages = selectedPeerMessages || [];
+  } else if (selection.role) {
+    messages = selectedRoleMessages || [];
+  }
+
+  const sendMessage = (message: string) => {
+    const messageInput = {
+      recipientPeers: selection.peerId ? [selection.peerId] : [],
+      recipientRoles: selection.role ? [selection.role] : [],
+      message,
+    };
+    onSend ? onSend(messageInput) : hmsActions.sendMessage(messageInput);
+  };
   const [messageDraft, setMessageDraft] = useState('');
   // a dummy element with messagesEndRef is created and put in the end
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
@@ -166,29 +194,27 @@ export const ChatBox = ({
           {/* header-root */}
           <div className={styler('headerRoot')}>
             {/* header-text */}
-            <div className={styler('headerText')}>
+            <div
+              className={styler('headerText')}
+              onClick={() => setShowChatSelection(value => !value)}
+            >
+              <PeopleIcon />
               <span>
-                <PeopleIcon />
+                {selectedPeerName || selection.role || 'Everyone'}&nbsp;
               </span>
-              <span> Everyone</span>
+              <DownCaratIcon width={12} height={12} />
             </div>
             <div>
-              {/* headerCloseButton */}
-              {/* <Button
-                variant={'icon-only'}
-                size={'sm'}
-                onClick={() => {
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-              ></Button> */}
               <Button
                 iconOnly
-                variant={'no-fill'}
-                iconSize={'sm'}
+                variant="no-fill"
+                iconSize="sm"
                 size="sm"
                 onClick={() => {
+                  if (showChatSelection) {
+                    setShowChatSelection(false);
+                    return;
+                  }
                   if (onClose) {
                     onClose();
                   }
@@ -196,16 +222,6 @@ export const ChatBox = ({
               >
                 <CloseIcon />
               </Button>
-              {/* <button
-                onClick={() => {
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-                className={styler('headerCloseButton}
-              >
-                <CloseIcon />
-              </button> */}
             </div>
           </div>
         </div>
@@ -259,6 +275,15 @@ export const ChatBox = ({
             </div>
           )}
           <div ref={messagesEndRef}></div>
+          <ChatSelector
+            selectedRole={selection.role}
+            selectedPeerID={selection.peerId}
+            show={showChatSelection}
+            onChange={({ peer, role }) => {
+              setSelection({ role: role, peerId: peer });
+              setShowChatSelection(false);
+            }}
+          />
         </div>
         {/* footer */}
         <div className={styler('footer')}>
