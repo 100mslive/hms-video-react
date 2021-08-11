@@ -31,10 +31,9 @@ export interface ChatSelectorProps {
 
 const defaultClasses: ChatSelectorClasses = {
   root:
-    'absolute w-full h-4/5 top-0 left-0 bg-white dark:bg-gray-200 flex flex-col',
+    'absolute w-full h-full top-0 left-0 bg-white dark:bg-gray-200 flex flex-col',
   divider: 'bg-gray-400 dark:bg-white h-px w-full my-2',
-  itemList:
-    'flex-1 overflow-y-auto text-gray-100 dark:text-white text-base',
+  itemList: 'flex-1 overflow-y-auto text-gray-100 dark:text-white text-base',
   item: 'w-full h-10 flex flex-row items-center pl-5 pr-3',
   itemHover: 'hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   itemTitle: 'flex-1 w-9/12 min-w-0 truncate',
