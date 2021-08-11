@@ -11,13 +11,21 @@ import {
   selectScreenShareAudioByPeerID,
   selectTrackAudioByID,
   selectSimulcastLayerByTrack,
+  HMSTrack,
+  selectTrackByID,
 } from '@100mslive/hms-video-store';
 import { HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../TwAvatar';
-import { VolumeIcon } from '../Icons';
+import {
+  CamOffIcon,
+  CamOnIcon,
+  MicOffIcon,
+  MicOnIcon,
+  VolumeIcon,
+} from '../Icons';
 import { Slider } from '../Slider/Slider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
@@ -167,6 +175,7 @@ export const VideoTile = ({
   const tileAudioTrack = showScreen
     ? screenshareAudioTrack?.id
     : peer.audioTrack;
+  const storeHmsAudioTrack = useHMSStore(selectTrackByID(tileAudioTrack));
   const storeAudioLevel = useHMSStore(selectTrackAudioByID(tileAudioTrack));
   const simulcastLayer = useHMSStore(
     selectSimulcastLayerByTrack(storeHmsVideoTrack?.id),
@@ -175,6 +184,12 @@ export const VideoTile = ({
   const updateSimulcastLayer = (layer: HMSSimulcastLayer) => {
     hmsActions.setPreferredLayer(storeHmsVideoTrack?.id!, layer);
     setShowMenu(false);
+  };
+
+  const toggleTrackEnabled = (track?: HMSTrack | null) => {
+    if (track) {
+      hmsActions.setRemoteTrackEnabled(track.id, !track.enabled);
+    }
   };
 
   audioLevel = audioLevel || storeAudioLevel;
@@ -233,7 +248,26 @@ export const VideoTile = ({
   }
 
   const getMenuItems = useCallback(() => {
-    const children = [];
+    const children: JSX.Element[] = [];
+
+    children.push(
+      <ContextMenuItem
+        icon={storeHmsVideoTrack?.enabled ? <CamOnIcon /> : <CamOffIcon />}
+        label={`${storeHmsVideoTrack?.enabled ? 'Mute' : 'Unmute'} Video`}
+        key={100}
+        onClick={() => toggleTrackEnabled(storeHmsVideoTrack)}
+      />,
+    );
+
+    children.push(
+      <ContextMenuItem
+        icon={storeHmsAudioTrack?.enabled ? <MicOnIcon /> : <MicOffIcon />}
+        label={`${storeHmsAudioTrack?.enabled ? 'Mute' : 'Unmute'} Audio`}
+        key={101}
+        onClick={() => toggleTrackEnabled(storeHmsAudioTrack)}
+      />,
+    );
+
     if (!showScreen || !!screenshareAudioTrack) {
       children.push(
         <ContextMenuItem
