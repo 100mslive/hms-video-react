@@ -91,7 +91,7 @@ export interface Message extends HMSMessage {
 }
 export interface ChatProps {
   messages?: Message[];
-  onSend?: (message: HMSMessageInput) => void;
+  onSend?: (message: string | HMSMessageInput) => void;
   onClose?: () => void; // when the chat box is closed
   autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
@@ -142,7 +142,7 @@ export const ChatBox = ({
   const hmsActions = useHMSActions();
 
   messages = messages || storeMessages;
-  const sendMessage = (message: HMSMessageInput) =>
+  const sendMessage = (message: string | HMSMessageInput) =>
     onSend ? onSend(message) : hmsActions.sendMessage(message);
   const [messageDraft, setMessageDraft] = useState('');
   const menuItems = useCallback(() => {
