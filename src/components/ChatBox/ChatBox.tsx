@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { HMSMessage } from '@100mslive/hms-video-store';
+import { HMSMessage, selectPeerNameByID } from '@100mslive/hms-video-store';
 import {
   selectHMSMessages,
   selectUnreadHMSMessagesCount,
@@ -127,12 +127,19 @@ export const ChatBox = ({
   const storeMessages = useHMSStore(selectHMSMessages);
   const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
   const hmsActions = useHMSActions();
-  const [selection, setSelection] = useState('');
+  const [selection, setSelection] = useState({ role: '', peerId: '' });
   const [showChatSelection, setShowChatSelection] = useState(false);
+  const selectedPeerName = useHMSStore(selectPeerNameByID(selection.peerId));
 
   messages = messages || storeMessages;
-  const sendMessage = (message: string | HMSMessageInput) =>
-    onSend ? onSend(message) : hmsActions.sendMessage(message);
+  const sendMessage = (message: string) => {
+    const messageInput = {
+      recipientPeers: selection.peerId ? [selection.peerId] : [],
+      recipientRoles: selection.role ? [selection.role] : [],
+      message,
+    };
+    onSend ? onSend(messageInput) : hmsActions.sendMessage(messageInput);
+  };
   const [messageDraft, setMessageDraft] = useState('');
   // a dummy element with messagesEndRef is created and put in the end
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
@@ -175,7 +182,9 @@ export const ChatBox = ({
               onClick={() => setShowChatSelection(value => !value)}
             >
               <PeopleIcon />
-              <span>Everyone&nbsp;</span>
+              <span>
+                {selectedPeerName || selection.role || 'Everyone'}&nbsp;
+              </span>
               <DownCaratIcon width={12} height={12} />
             </div>
             <div>
@@ -185,6 +194,10 @@ export const ChatBox = ({
                 iconSize="sm"
                 size="sm"
                 onClick={() => {
+                  if (showChatSelection) {
+                    setShowChatSelection(false);
+                    return;
+                  }
                   if (onClose) {
                     onClose();
                   }
@@ -245,7 +258,15 @@ export const ChatBox = ({
             </div>
           )}
           <div ref={messagesEndRef}></div>
-          <ChatSelector selection={selection} show={showChatSelection} />
+          <ChatSelector
+            selectedRole={selection.role}
+            selectedPeerID={selection.peerId}
+            show={showChatSelection}
+            onChange={({ peer, role }) => {
+              setSelection({ role: role, peerId: peer });
+              setShowChatSelection(false);
+            }}
+          />
         </div>
         {/* footer */}
         <div className={styler('footer')}>
@@ -274,7 +295,7 @@ export const ChatBox = ({
                 if (!event.shiftKey) {
                   event.preventDefault();
                   if (messageDraft.trim() !== '') {
-                    sendMessage({ message: messageDraft });
+                    sendMessage(messageDraft);
                     setMessageDraft('');
                   }
                 }

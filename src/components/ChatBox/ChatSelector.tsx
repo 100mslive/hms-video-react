@@ -6,39 +6,49 @@ import {
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { Input } from '../Input';
+import { Avatar } from '../TwAvatar';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 export interface ChatSelectorClasses {
   root?: string;
   divider?: string;
+  itemList?: string;
   item?: string;
   dot?: string;
   itemTitle?: string;
   search?: string;
   searchBox?: string;
+  itemHover?: string;
 }
 
 export interface ChatSelectorProps {
   show?: boolean;
-  selection?: string;
+  selectedRole?: string;
+  selectedPeerID?: string;
   classes?: ChatSelectorClasses;
+  onChange: (change: { peer: string; role: string }) => void;
 }
 
 const defaultClasses: ChatSelectorClasses = {
-  root: 'absolute w-full h-4/5 top-0 left-0 bg-white dark:bg-gray-200',
-  divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
-  item:
-    'w-full h-8 flex flex-row items-center px-3 my-1 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
-  itemTitle: 'text-gray-100 dark:text-white text-base w-9/12 min-w-0 truncate',
-  dot: 'bg-brand-main w-4 h-4 rounded-full',
+  root:
+    'absolute w-full h-4/5 top-0 left-0 bg-white dark:bg-gray-200 flex flex-col',
+  divider: 'bg-gray-400 dark:bg-white h-px w-full my-2',
+  itemList:
+    'flex-1 overflow-y-auto text-gray-100 dark:text-white text-base',
+  item: 'w-full h-10 flex flex-row items-center pl-5 pr-3',
+  itemHover: 'hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
+  itemTitle: 'flex-1 w-9/12 min-w-0 truncate',
+  dot: 'bg-brand-main w-3 h-3 rounded-full',
   searchBox: 'p-3',
   search: 'h-8 bg-gray-600 dark:bg-gray-300',
 };
 
 export const ChatSelector = ({
   show = false,
-  selection,
+  selectedPeerID,
+  selectedRole,
   classes,
+  onChange,
 }: ChatSelectorProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -54,6 +64,12 @@ export const ChatSelector = ({
   const roles = useHMSStore(selectAvailableRoleNames);
   const peers = useHMSStore(selectRemotePeers);
   const [search, setSearch] = useState('');
+  const filteredPeers = peers.filter(peer => {
+    if (!search) {
+      return true;
+    }
+    return peer.name.includes(search);
+  });
 
   if (!show) {
     return null;
@@ -73,27 +89,53 @@ export const ChatSelector = ({
           }}
         />
       </div>
-      <div className={styler('item')}>
-        <span className={styler('itemTitle')}>Everyone</span>
-        {!selection && <span className={styler('dot')} />}
+      <div className={styler('itemList')}>
+        <div
+          className={`${styler('item')} ${styler('itemHover')}`}
+          onClick={() => onChange({ role: '', peer: '' })}
+        >
+          <span className={styler('itemTitle')}>Everyone</span>
+          {!selectedRole && !selectedPeerID && (
+            <span className={styler('dot')} />
+          )}
+        </div>
+        {roles.map(role => {
+          return (
+            <div
+              className={`${styler('item')} ${styler('itemHover')}`}
+              key={role}
+              onClick={() => onChange({ role, peer: '' })}
+            >
+              <span className={styler('itemTitle')}>{role}</span>
+              {selectedRole === role && <span className={styler('dot')} />}
+            </div>
+          );
+        })}
+        {(filteredPeers.length > 0 || !search) && (
+          <div className={styler('divider')}></div>
+        )}
+        {search && filteredPeers.length === 0 && (
+          <div className={styler('item')}>No Participants found</div>
+        )}
+        {filteredPeers.map(peer => {
+          return (
+            <div
+              className={`${styler('item')} ${styler('itemHover')}`}
+              key={peer.id}
+              onClick={() => onChange({ peer: peer.id, role: '' })}
+            >
+              <Avatar
+                label={peer.name}
+                shape="square"
+                size="sm"
+                classes={{ root: 'mr-2' }}
+              />
+              <span className={styler('itemTitle')}>{peer.name}</span>
+              {selectedPeerID === peer.id && <span className={styler('dot')} />}
+            </div>
+          );
+        })}
       </div>
-      {roles.map(role => {
-        return (
-          <div className={styler('item')}>
-            <span className={styler('itemTitle')}>{role}</span>
-            {selection === 'role' && <span className={styler('dot')} />}
-          </div>
-        );
-      })}
-      <div className={styler('divider')}></div>
-      {peers.map(peer => {
-        return (
-          <div className={styler('item')}>
-            <span className={styler('itemTitle')}>{peer}</span>
-            {selection === 'peer' && <span className={styler('dot')} />}
-          </div>
-        );
-      })}
     </div>
   );
 };
