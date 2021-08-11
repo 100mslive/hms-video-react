@@ -47,14 +47,14 @@ interface ChatBoxClasses {
 }
 
 const defaultClasses: ChatBoxClasses = {
-  root: 'w-full h-full  rounded-2xl flex flex-col shadow-2',
+  root: 'w-full h-full  rounded-2xl flex flex-col shadow-2 relative',
   header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500 cursor-pointer`,
   headerLine: 'w-8 h-1 rounded bg-white dark:bg-gray-400 m-2',
   headerRoot: 'flex w-full justify-between',
   headerText: 'text-gray-300 dark:text-gray-500 flex items-center',
   headerCloseButton: 'focus:outline-none',
   messageBox:
-    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-grow relative',
+    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-1',
   messageRoot: 'py-3',
   messageInfo: 'flex justify-between',
   messageTime: 'text-xs',
@@ -225,6 +225,15 @@ export const ChatBox = ({
             </div>
           </div>
         </div>
+        <ChatSelector
+          selectedRole={selection.role}
+          selectedPeerID={selection.peerId}
+          show={showChatSelection}
+          onChange={({ peer, role }) => {
+            setSelection({ role: role, peerId: peer });
+            setShowChatSelection(false);
+          }}
+        />
         {/* messageBox */}
         {/* TODO: move no scroll bar css logic to tailwind */}
         <div className={`${styler('messageBox')}`} ref={messageListRef}>
@@ -275,15 +284,6 @@ export const ChatBox = ({
             </div>
           )}
           <div ref={messagesEndRef}></div>
-          <ChatSelector
-            selectedRole={selection.role}
-            selectedPeerID={selection.peerId}
-            show={showChatSelection}
-            onChange={({ peer, role }) => {
-              setSelection({ role: role, peerId: peer });
-              setShowChatSelection(false);
-            }}
-          />
         </div>
         {/* footer */}
         <div className={styler('footer')}>
