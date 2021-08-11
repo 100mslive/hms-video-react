@@ -1,18 +1,18 @@
 import { EqualityChecker, StateSelector } from 'zustand';
 import React, { useContext } from 'react';
-import HMSLogger from '../utils/ui-logger';
 import shallow from 'zustand/shallow';
 import { IHMSReactStore } from './HMSRoomProvider';
 import {
-  IHMSActions,
+  HMSActions,
   HMSStore,
-  IHMSNotifications,
+  HMSNotifications,
 } from '@100mslive/hms-video-store';
+import HMSLogger from '../utils/ui-logger';
 
 export interface HMSContextProviderProps {
-  actions: IHMSActions; // for actions which may also mutate store
+  actions: HMSActions; // for actions which may also mutate store
   store: IHMSReactStore; // readonly store, don't mutate this
-  notifications?: IHMSNotifications;
+  notifications?: HMSNotifications;
 }
 
 export function makeHMSStoreHook(
