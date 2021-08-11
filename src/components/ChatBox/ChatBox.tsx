@@ -1,25 +1,14 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  useMemo,
-  useCallback,
-} from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { HMSMessage, selectRemotePeers } from '@100mslive/hms-video-store';
+import { HMSMessage } from '@100mslive/hms-video-store';
 import {
   selectHMSMessages,
   selectUnreadHMSMessagesCount,
-  selectAvailableRoleNames,
   HMSMessageInput,
 } from '@100mslive/hms-video-store';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import { Button } from '../Button';
-import {
-  ContextMenu,
-  ContextMenuItem,
-  ContextMenuItemProps,
-} from '../ContextMenu';
+import { ChatSelector } from './ChatSelector';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -54,13 +43,13 @@ interface ChatBoxClasses {
 
 const defaultClasses: ChatBoxClasses = {
   root: 'w-full h-full  rounded-2xl flex flex-col shadow-2',
-  header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500`,
+  header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500 cursor-pointer`,
   headerLine: 'w-8 h-1 rounded bg-white dark:bg-gray-400 m-2',
   headerRoot: 'flex w-full justify-between',
   headerText: 'text-gray-300 dark:text-gray-500 flex items-center',
   headerCloseButton: 'focus:outline-none',
   messageBox:
-    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-grow',
+    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-grow relative',
   messageRoot: 'py-3',
   messageInfo: 'flex justify-between',
   messageTime: 'text-xs',
@@ -137,49 +126,14 @@ export const ChatBox = ({
   );
   const storeMessages = useHMSStore(selectHMSMessages);
   const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
-  const roles = useHMSStore(selectAvailableRoleNames);
-  const peers = useHMSStore(selectRemotePeers);
   const hmsActions = useHMSActions();
+  const [selection, setSelection] = useState('');
+  const [showChatSelection, setShowChatSelection] = useState(false);
 
   messages = messages || storeMessages;
   const sendMessage = (message: string | HMSMessageInput) =>
     onSend ? onSend(message) : hmsActions.sendMessage(message);
   const [messageDraft, setMessageDraft] = useState('');
-  const menuItems = useCallback(() => {
-    const children: React.ReactElement<ContextMenuItemProps>[] = [];
-    children.push(
-      <ContextMenuItem
-        label="Broadcast"
-        onClick={() => {
-          sendMessage({ message: messageDraft });
-          setMessageDraft('');
-        }}
-      />,
-    );
-    roles.forEach(role => {
-      children.push(
-        <ContextMenuItem
-          label={`${role}(role)`}
-          onClick={() => {
-            sendMessage({ message: messageDraft, recipientRoles: [role] });
-            setMessageDraft('');
-          }}
-        />,
-      );
-    });
-    peers.forEach(peer => {
-      children.push(
-        <ContextMenuItem
-          label={peer.name}
-          onClick={() => {
-            sendMessage({ message: messageDraft, recipientPeers: [peer.id] });
-            setMessageDraft('');
-          }}
-        />,
-      );
-    });
-    return children;
-  }, [roles, peers, messageDraft]);
   // a dummy element with messagesEndRef is created and put in the end
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
   const messageListRef = useRef<HTMLDivElement>(null);
@@ -216,27 +170,19 @@ export const ChatBox = ({
           {/* header-root */}
           <div className={styler('headerRoot')}>
             {/* header-text */}
-            <div className={styler('headerText')}>
-              <span>
-                <PeopleIcon />
-              </span>
-              <span> Everyone</span>
+            <div
+              className={styler('headerText')}
+              onClick={() => setShowChatSelection(value => !value)}
+            >
+              <PeopleIcon />
+              <span>Everyone&nbsp;</span>
+              <DownCaratIcon width={12} height={12} />
             </div>
             <div>
-              {/* headerCloseButton */}
-              {/* <Button
-                variant={'icon-only'}
-                size={'sm'}
-                onClick={() => {
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-              ></Button> */}
               <Button
                 iconOnly
-                variant={'no-fill'}
-                iconSize={'sm'}
+                variant="no-fill"
+                iconSize="sm"
                 size="sm"
                 onClick={() => {
                   if (onClose) {
@@ -246,16 +192,6 @@ export const ChatBox = ({
               >
                 <CloseIcon />
               </Button>
-              {/* <button
-                onClick={() => {
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-                className={styler('headerCloseButton}
-              >
-                <CloseIcon />
-              </button> */}
             </div>
           </div>
         </div>
@@ -309,6 +245,7 @@ export const ChatBox = ({
             </div>
           )}
           <div ref={messagesEndRef}></div>
+          <ChatSelector selection={selection} show={showChatSelection} />
         </div>
         {/* footer */}
         <div className={styler('footer')}>
@@ -348,7 +285,7 @@ export const ChatBox = ({
             }}
           />
           {/* sendButton */}
-          {/* <Button
+          <Button
             iconOnly
             variant={'no-fill'}
             iconSize={'sm'}
@@ -359,23 +296,7 @@ export const ChatBox = ({
             }}
           >
             <SendIcon />
-          </Button> */}
-          <ContextMenu
-            classes={{ trigger: 'bg-transparent w-6 h-6' }}
-            trigger={<DownCaratIcon width={16} height={16} />}
-            menuProps={{
-              anchorOrigin: {
-                vertical: 'top',
-                horizontal: 'right',
-              },
-              transformOrigin: {
-                vertical: 'bottom',
-                horizontal: 'right',
-              },
-            }}
-          >
-            {menuItems()}
-          </ContextMenu>
+          </Button>
         </div>
       </div>
     </React.Fragment>
