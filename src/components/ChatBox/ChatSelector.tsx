@@ -31,9 +31,10 @@ export interface ChatSelectorProps {
 
 const defaultClasses: ChatSelectorClasses = {
   root:
-    'absolute w-full h-full top-0 left-0 bg-white dark:bg-gray-200 flex flex-col',
+    'absolute w-full top-14 left-0 bottom-16 bg-white dark:bg-gray-200 flex flex-col',
   divider: 'bg-gray-400 dark:bg-white h-px w-full my-2',
-  itemList: 'flex-1 overflow-y-auto text-gray-100 dark:text-white text-base',
+  itemList:
+    'flex-1 pb-2 overflow-y-auto text-gray-100 dark:text-white text-base',
   item: 'w-full h-10 flex flex-row items-center pl-5 pr-3',
   itemHover: 'hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   itemTitle: 'flex-1 w-9/12 min-w-0 truncate',
@@ -64,10 +65,10 @@ export const ChatSelector = ({
   const peers = useHMSStore(selectRemotePeers);
   const [search, setSearch] = useState('');
   const filteredPeers = peers.filter(peer => {
-    if (!search) {
+    if (!search.replace(/\u200b/g, ' ')) {
       return true;
     }
-    return peer.name.includes(search);
+    return peer.name.toLowerCase().includes(search.toLowerCase());
   });
 
   if (!show) {
