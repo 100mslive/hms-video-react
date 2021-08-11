@@ -110,7 +110,7 @@ export const ChatSelector = ({
             </div>
           );
         })}
-        {(filteredPeers.length > 0 || !search) && (
+        {(filteredPeers.length > 0 || search) && (
           <div className={styler('divider')}></div>
         )}
         {search && filteredPeers.length === 0 && (
