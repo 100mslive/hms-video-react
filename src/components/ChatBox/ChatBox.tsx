@@ -1,6 +1,11 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { HMSMessage, selectPeerNameByID } from '@100mslive/hms-video-store';
+import {
+  HMSMessage,
+  selectHMSMessagesByPeerID,
+  selectHMSMessagesByRole,
+  selectPeerNameByID,
+} from '@100mslive/hms-video-store';
 import {
   selectHMSMessages,
   selectUnreadHMSMessagesCount,
@@ -130,8 +135,20 @@ export const ChatBox = ({
   const [selection, setSelection] = useState({ role: '', peerId: '' });
   const [showChatSelection, setShowChatSelection] = useState(false);
   const selectedPeerName = useHMSStore(selectPeerNameByID(selection.peerId));
+  const selectedPeerMessages = useHMSStore(
+    selectHMSMessagesByPeerID(selection.peerId),
+  );
+  const selectedRoleMessages = useHMSStore(
+    selectHMSMessagesByRole(selection.role),
+  );
 
   messages = messages || storeMessages;
+  if (selection.peerId) {
+    messages = selectedPeerMessages || [];
+  } else if (selection.role) {
+    messages = selectedRoleMessages || [];
+  }
+
   const sendMessage = (message: string) => {
     const messageInput = {
       recipientPeers: selection.peerId ? [selection.peerId] : [],
