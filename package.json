@@ -1,5 +1,5 @@
 {
-  "version": "0.3.26",
+  "version": "0.3.27",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -48,11 +48,11 @@
     }
   ],
   "peerDependencies": {
-    "@100mslive/hms-video": "^0.0.135",
+    "@100mslive/hms-video": "^0.0.138",
     "react": ">=16"
   },
   "devDependencies": {
-    "@100mslive/hms-video": "^0.0.135",
+    "@100mslive/hms-video": "^0.0.138",
     "@babel/core": "^7.13.14",
     "@rollup/plugin-image": "^2.0.6",
     "@size-limit/preset-small-lib": "^4.10.2",
@@ -84,7 +84,7 @@
     "typescript": "4.2.4"
   },
   "dependencies": {
-    "@100mslive/hms-video-store": "^0.2.13",
+    "@100mslive/hms-video-store": "^0.2.14",
     "@material-ui/core": "^4.11.3",
     "@twind/aspect-ratio": "^0.1.4",
     "autoprefixer": "^9.8.6",
