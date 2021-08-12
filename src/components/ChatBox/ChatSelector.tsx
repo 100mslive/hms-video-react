@@ -82,7 +82,7 @@ const ChatSelectorPeer = ({
   styler,
   onChange,
 }: ChatSelectorPeerProps) => {
-  const unreadCount: number = useHMSStore(
+  const unreadCount = useHMSStore(
     selectHMSMessagesUnreadCountByPeerID(peer.id),
   );
   return (

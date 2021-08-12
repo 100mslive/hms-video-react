@@ -7,7 +7,10 @@ import {
   selectPeerNameByID,
   selectHMSBroadcastMessages,
   selectUnreadHMSMessagesCount,
+  selectHMSBroadcastMessagesUnreadCount,
   HMSMessageInput,
+  selectHMSMessagesUnreadCountByRole,
+  selectHMSMessagesUnreadCountByPeerID,
 } from '@100mslive/hms-video-store';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import { Button } from '../Button';
@@ -128,7 +131,9 @@ export const ChatBox = ({
     [],
   );
   const storeMessages = useHMSStore(selectHMSBroadcastMessages);
-  const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
+  const unreadMessagesCount = useHMSStore(
+    selectHMSBroadcastMessagesUnreadCount,
+  );
   const hmsActions = useHMSActions();
   const [selection, setSelection] = useState({ role: '', peerId: '' });
   const [showChatSelection, setShowChatSelection] = useState(false);
@@ -139,12 +144,21 @@ export const ChatBox = ({
   const selectedRoleMessages = useHMSStore(
     selectHMSMessagesByRole(selection.role),
   );
+  const unreadCountByRole = useHMSStore(
+    selectHMSMessagesUnreadCountByRole(selection.role),
+  );
+  const unreadCountByPeerID = useHMSStore(
+    selectHMSMessagesUnreadCountByPeerID(selection.peerId),
+  );
 
   messages = messages || storeMessages;
+  let unreadCount = unreadMessagesCount;
   if (selection.peerId) {
     messages = selectedPeerMessages || [];
+    unreadCount = unreadCountByPeerID;
   } else if (selection.role) {
     messages = selectedRoleMessages || [];
+    unreadCount = unreadCountByRole;
   }
 
   const sendMessage = (message: string) => {
@@ -290,7 +304,7 @@ export const ChatBox = ({
         </div>
         {/* footer */}
         <div className={styler('footer')}>
-          {unreadMessagesCount !== 0 && (
+          {unreadCount !== 0 && (
             <div className={styler('unreadMessagesContainer')}>
               <div
                 className={styler('unreadMessagesInner')}
@@ -298,7 +312,7 @@ export const ChatBox = ({
                   scrollToBottom(messageListRef, scrollAnimation);
                 }}
               >
-                {`New message${unreadMessagesCount > 1 ? 's' : ''}`}
+                {`New message${unreadCount > 1 ? 's' : ''}`}
                 <DownCaratIcon className={styler('unreadIcon')} />
               </div>
             </div>
