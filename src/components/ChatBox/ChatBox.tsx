@@ -2,14 +2,14 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import {
   HMSMessage,
-  selectHMSMessagesByPeerID,
-  selectHMSMessagesByRole,
+  selectMessagesByPeerID,
+  selectMessagesByRole,
   selectPeerNameByID,
-} from '@100mslive/hms-video-store';
-import {
-  selectHMSMessages,
-  selectUnreadHMSMessagesCount,
+  selectBroadcastMessages,
+  selectBroadcastMessagesUnreadCount,
   HMSMessageInput,
+  selectMessagesUnreadCountByRole,
+  selectMessagesUnreadCountByPeerID,
 } from '@100mslive/hms-video-store';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import { Button } from '../Button';
@@ -129,25 +129,25 @@ export const ChatBox = ({
       }),
     [],
   );
-  const storeMessages = useHMSStore(selectHMSMessages);
-  const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
   const hmsActions = useHMSActions();
   const [selection, setSelection] = useState({ role: '', peerId: '' });
   const [showChatSelection, setShowChatSelection] = useState(false);
   const selectedPeerName = useHMSStore(selectPeerNameByID(selection.peerId));
-  const selectedPeerMessages = useHMSStore(
-    selectHMSMessagesByPeerID(selection.peerId),
-  );
-  const selectedRoleMessages = useHMSStore(
-    selectHMSMessagesByRole(selection.role),
-  );
+  const storeMessageSelector = selection.role
+    ? selectMessagesByRole(selection.role)
+    : selection.peerId
+    ? selectMessagesByPeerID(selection.peerId)
+    : selectBroadcastMessages;
+  const storeUnreadMessageCountSelector = selection.role
+    ? selectMessagesUnreadCountByRole(selection.role)
+    : selection.peerId
+    ? selectMessagesUnreadCountByPeerID(selection.peerId)
+    : selectBroadcastMessagesUnreadCount;
+
+  const storeMessages = useHMSStore(storeMessageSelector) || [];
+  const unreadCount = useHMSStore(storeUnreadMessageCountSelector);
 
   messages = messages || storeMessages;
-  if (selection.peerId) {
-    messages = selectedPeerMessages || [];
-  } else if (selection.role) {
-    messages = selectedRoleMessages || [];
-  }
 
   const sendMessage = (message: string) => {
     const messageInput = {
@@ -179,9 +179,14 @@ export const ChatBox = ({
     }
   }, [messages]);
 
-  if (messagesEndInView && unreadMessagesCount != 0) {
-    hmsActions.setMessageRead(true);
-  }
+  useEffect(() => {
+    if (messagesEndInView) {
+      // Mark only crrent view messages as read
+      messages?.forEach(message => {
+        hmsActions.setMessageRead(true, message.id);
+      });
+    }
+  }, [selection.role, selection.peerId, messages, messagesEndInView]);
 
   return (
     <React.Fragment>
@@ -287,7 +292,7 @@ export const ChatBox = ({
         </div>
         {/* footer */}
         <div className={styler('footer')}>
-          {unreadMessagesCount !== 0 && (
+          {unreadCount !== 0 && (
             <div className={styler('unreadMessagesContainer')}>
               <div
                 className={styler('unreadMessagesInner')}
@@ -295,7 +300,7 @@ export const ChatBox = ({
                   scrollToBottom(messageListRef, scrollAnimation);
                 }}
               >
-                {`New message${unreadMessagesCount > 1 ? 's' : ''}`}
+                {`New message${unreadCount > 1 ? 's' : ''}`}
                 <DownCaratIcon className={styler('unreadIcon')} />
               </div>
             </div>
