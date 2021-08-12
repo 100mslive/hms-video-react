@@ -5,7 +5,7 @@ import {
   selectMessagesByPeerID,
   selectMessagesByRole,
   selectPeerNameByID,
-  selectHMSBroadcastMessages,
+  selectBroadcastMessages,
   selectBroadcastMessagesUnreadCount,
   HMSMessageInput,
   selectMessagesUnreadCountByRole,
@@ -129,7 +129,7 @@ export const ChatBox = ({
       }),
     [],
   );
-  const storeMessages = useHMSStore(selectHMSBroadcastMessages);
+  const storeMessages = useHMSStore(selectBroadcastMessages);
   const unreadMessagesCount = useHMSStore(selectBroadcastMessagesUnreadCount);
   const hmsActions = useHMSActions();
   const [selection, setSelection] = useState({ role: '', peerId: '' });
