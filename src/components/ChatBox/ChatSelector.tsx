@@ -156,7 +156,7 @@ export const ChatSelector = ({
         </div>
         {roles.map(role => {
           return (
-            <ChatSelectorRole role={role} onChange={onChange} styler={styler} />
+            <ChatSelectorRole key={role} role={role} onChange={onChange} styler={styler} />
           );
         })}
         {(filteredPeers.length > 0 || search) && (
@@ -167,7 +167,7 @@ export const ChatSelector = ({
         )}
         {filteredPeers.map(peer => {
           return (
-            <ChatSelectorPeer peer={peer} onChange={onChange} styler={styler} />
+            <ChatSelectorPeer key={peer.id} peer={peer} onChange={onChange} styler={styler} />
           );
         })}
       </div>

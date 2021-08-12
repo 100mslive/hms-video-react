@@ -129,34 +129,25 @@ export const ChatBox = ({
       }),
     [],
   );
-  const storeMessages = useHMSStore(selectBroadcastMessages);
-  const unreadMessagesCount = useHMSStore(selectBroadcastMessagesUnreadCount);
   const hmsActions = useHMSActions();
   const [selection, setSelection] = useState({ role: '', peerId: '' });
   const [showChatSelection, setShowChatSelection] = useState(false);
   const selectedPeerName = useHMSStore(selectPeerNameByID(selection.peerId));
-  const selectedPeerMessages = useHMSStore(
-    selectMessagesByPeerID(selection.peerId),
-  );
-  const selectedRoleMessages = useHMSStore(
-    selectMessagesByRole(selection.role),
-  );
-  const unreadCountByRole = useHMSStore(
-    selectMessagesUnreadCountByRole(selection.role),
-  );
-  const unreadCountByPeerID = useHMSStore(
-    selectMessagesUnreadCountByPeerID(selection.peerId),
-  );
+  const storeMessageSelector = selection.role
+    ? selectMessagesByRole(selection.role)
+    : selection.peerId
+    ? selectMessagesByPeerID(selection.peerId)
+    : selectBroadcastMessages;
+  const storeUnreadMessageCountSelector = selection.role
+    ? selectMessagesUnreadCountByRole(selection.role)
+    : selection.peerId
+    ? selectMessagesUnreadCountByPeerID(selection.peerId)
+    : selectBroadcastMessagesUnreadCount;
+
+  const storeMessages = useHMSStore(storeMessageSelector) || [];
+  const unreadCount = useHMSStore(storeUnreadMessageCountSelector);
 
   messages = messages || storeMessages;
-  let unreadCount = unreadMessagesCount;
-  if (selection.peerId) {
-    messages = selectedPeerMessages || [];
-    unreadCount = unreadCountByPeerID;
-  } else if (selection.role) {
-    messages = selectedRoleMessages || [];
-    unreadCount = unreadCountByRole;
-  }
 
   const sendMessage = (message: string) => {
     const messageInput = {
