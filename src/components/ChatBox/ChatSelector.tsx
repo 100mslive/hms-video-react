@@ -3,9 +3,9 @@ import {
   selectAvailableRoleNames,
   selectRemotePeers,
   HMSPeer,
-  selectHMSMessagesUnreadCountByRole,
-  selectHMSMessagesUnreadCountByPeerID,
-  selectHMSBroadcastMessagesUnreadCount,
+  selectMessagesUnreadCountByRole,
+  selectMessagesUnreadCountByPeerID,
+  selectBroadcastMessagesUnreadCount,
 } from '@100mslive/hms-video-store';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
@@ -64,7 +64,7 @@ const ChatSelectorRole = ({
   styler,
   onChange,
 }: ChatSelectorRoleProps) => {
-  const unreadCount = useHMSStore(selectHMSMessagesUnreadCountByRole(role));
+  const unreadCount = useHMSStore(selectMessagesUnreadCountByRole(role));
   return (
     <div
       className={`${styler('item')} ${styler('itemHover')}`}
@@ -82,9 +82,7 @@ const ChatSelectorPeer = ({
   styler,
   onChange,
 }: ChatSelectorPeerProps) => {
-  const unreadCount = useHMSStore(
-    selectHMSMessagesUnreadCountByPeerID(peer.id),
-  );
+  const unreadCount = useHMSStore(selectMessagesUnreadCountByPeerID(peer.id));
   return (
     <div
       className={`${styler('item')} ${styler('itemHover')}`}
@@ -105,8 +103,6 @@ const ChatSelectorPeer = ({
 
 export const ChatSelector = ({
   show = false,
-  selectedPeerID,
-  selectedRole,
   classes,
   onChange,
 }: ChatSelectorProps) => {
@@ -123,7 +119,7 @@ export const ChatSelector = ({
   );
   const roles = useHMSStore(selectAvailableRoleNames);
   const peers = useHMSStore(selectRemotePeers);
-  const unreadCount = useHMSStore(selectHMSBroadcastMessagesUnreadCount);
+  const unreadCount = useHMSStore(selectBroadcastMessagesUnreadCount);
   const [search, setSearch] = useState('');
   const filteredPeers = peers.filter(peer => {
     if (!search.replace(/\u200b/g, ' ')) {

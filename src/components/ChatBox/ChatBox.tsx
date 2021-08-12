@@ -2,15 +2,14 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import {
   HMSMessage,
-  selectHMSMessagesByPeerID,
-  selectHMSMessagesByRole,
+  selectMessagesByPeerID,
+  selectMessagesByRole,
   selectPeerNameByID,
   selectHMSBroadcastMessages,
-  selectUnreadHMSMessagesCount,
-  selectHMSBroadcastMessagesUnreadCount,
+  selectBroadcastMessagesUnreadCount,
   HMSMessageInput,
-  selectHMSMessagesUnreadCountByRole,
-  selectHMSMessagesUnreadCountByPeerID,
+  selectMessagesUnreadCountByRole,
+  selectMessagesUnreadCountByPeerID,
 } from '@100mslive/hms-video-store';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import { Button } from '../Button';
@@ -131,24 +130,22 @@ export const ChatBox = ({
     [],
   );
   const storeMessages = useHMSStore(selectHMSBroadcastMessages);
-  const unreadMessagesCount = useHMSStore(
-    selectHMSBroadcastMessagesUnreadCount,
-  );
+  const unreadMessagesCount = useHMSStore(selectBroadcastMessagesUnreadCount);
   const hmsActions = useHMSActions();
   const [selection, setSelection] = useState({ role: '', peerId: '' });
   const [showChatSelection, setShowChatSelection] = useState(false);
   const selectedPeerName = useHMSStore(selectPeerNameByID(selection.peerId));
   const selectedPeerMessages = useHMSStore(
-    selectHMSMessagesByPeerID(selection.peerId),
+    selectMessagesByPeerID(selection.peerId),
   );
   const selectedRoleMessages = useHMSStore(
-    selectHMSMessagesByRole(selection.role),
+    selectMessagesByRole(selection.role),
   );
   const unreadCountByRole = useHMSStore(
-    selectHMSMessagesUnreadCountByRole(selection.role),
+    selectMessagesUnreadCountByRole(selection.role),
   );
   const unreadCountByPeerID = useHMSStore(
-    selectHMSMessagesUnreadCountByPeerID(selection.peerId),
+    selectMessagesUnreadCountByPeerID(selection.peerId),
   );
 
   messages = messages || storeMessages;
