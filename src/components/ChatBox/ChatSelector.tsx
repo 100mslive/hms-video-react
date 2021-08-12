@@ -2,6 +2,10 @@ import React, { useMemo, useState } from 'react';
 import {
   selectAvailableRoleNames,
   selectRemotePeers,
+  HMSPeer,
+  selectHMSMessagesUnreadCountByRole,
+  selectHMSMessagesUnreadCountByPeerID,
+  selectHMSBroadcastMessagesUnreadCount,
 } from '@100mslive/hms-video-store';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
@@ -43,6 +47,62 @@ const defaultClasses: ChatSelectorClasses = {
   search: 'h-8 bg-gray-600 dark:bg-gray-300',
 };
 
+interface ChatSelectorRoleProps {
+  role: string;
+  onChange: (change: { peer: string; role: string }) => void;
+  styler: (s: keyof ChatSelectorClasses) => string | undefined;
+}
+
+interface ChatSelectorPeerProps {
+  peer: HMSPeer;
+  onChange: (change: { peer: string; role: string }) => void;
+  styler: (s: keyof ChatSelectorClasses) => string | undefined;
+}
+
+const ChatSelectorRole = ({
+  role,
+  styler,
+  onChange,
+}: ChatSelectorRoleProps) => {
+  const unreadCount = useHMSStore(selectHMSMessagesUnreadCountByRole(role));
+  return (
+    <div
+      className={`${styler('item')} ${styler('itemHover')}`}
+      key={role}
+      onClick={() => onChange({ role, peer: '' })}
+    >
+      <span className={styler('itemTitle')}>{role}</span>
+      {unreadCount > 0 && <span className={styler('dot')} />}
+    </div>
+  );
+};
+
+const ChatSelectorPeer = ({
+  peer,
+  styler,
+  onChange,
+}: ChatSelectorPeerProps) => {
+  const unreadCount: number = useHMSStore(
+    selectHMSMessagesUnreadCountByPeerID(peer.id),
+  );
+  return (
+    <div
+      className={`${styler('item')} ${styler('itemHover')}`}
+      key={peer.id}
+      onClick={() => onChange({ peer: peer.id, role: '' })}
+    >
+      <Avatar
+        label={peer.name}
+        shape="square"
+        size="sm"
+        classes={{ root: 'mr-2' }}
+      />
+      <span className={styler('itemTitle')}>{peer.name}</span>
+      {unreadCount > 0 && <span className={styler('dot')} />}
+    </div>
+  );
+};
+
 export const ChatSelector = ({
   show = false,
   selectedPeerID,
@@ -63,6 +123,7 @@ export const ChatSelector = ({
   );
   const roles = useHMSStore(selectAvailableRoleNames);
   const peers = useHMSStore(selectRemotePeers);
+  const unreadCount = useHMSStore(selectHMSBroadcastMessagesUnreadCount);
   const [search, setSearch] = useState('');
   const filteredPeers = peers.filter(peer => {
     if (!search.replace(/\u200b/g, ' ')) {
@@ -95,20 +156,11 @@ export const ChatSelector = ({
           onClick={() => onChange({ role: '', peer: '' })}
         >
           <span className={styler('itemTitle')}>Everyone</span>
-          {!selectedRole && !selectedPeerID && (
-            <span className={styler('dot')} />
-          )}
+          {unreadCount > 0 && <span className={styler('dot')} />}
         </div>
         {roles.map(role => {
           return (
-            <div
-              className={`${styler('item')} ${styler('itemHover')}`}
-              key={role}
-              onClick={() => onChange({ role, peer: '' })}
-            >
-              <span className={styler('itemTitle')}>{role}</span>
-              {selectedRole === role && <span className={styler('dot')} />}
-            </div>
+            <ChatSelectorRole role={role} onChange={onChange} styler={styler} />
           );
         })}
         {(filteredPeers.length > 0 || search) && (
@@ -119,20 +171,7 @@ export const ChatSelector = ({
         )}
         {filteredPeers.map(peer => {
           return (
-            <div
-              className={`${styler('item')} ${styler('itemHover')}`}
-              key={peer.id}
-              onClick={() => onChange({ peer: peer.id, role: '' })}
-            >
-              <Avatar
-                label={peer.name}
-                shape="square"
-                size="sm"
-                classes={{ root: 'mr-2' }}
-              />
-              <span className={styler('itemTitle')}>{peer.name}</span>
-              {selectedPeerID === peer.id && <span className={styler('dot')} />}
-            </div>
+            <ChatSelectorPeer peer={peer} onChange={onChange} styler={styler} />
           );
         })}
       </div>

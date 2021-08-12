@@ -5,9 +5,7 @@ import {
   selectHMSMessagesByPeerID,
   selectHMSMessagesByRole,
   selectPeerNameByID,
-} from '@100mslive/hms-video-store';
-import {
-  selectHMSMessages,
+  selectHMSBroadcastMessages,
   selectUnreadHMSMessagesCount,
   HMSMessageInput,
 } from '@100mslive/hms-video-store';
@@ -129,7 +127,7 @@ export const ChatBox = ({
       }),
     [],
   );
-  const storeMessages = useHMSStore(selectHMSMessages);
+  const storeMessages = useHMSStore(selectHMSBroadcastMessages);
   const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
   const hmsActions = useHMSActions();
   const [selection, setSelection] = useState({ role: '', peerId: '' });
@@ -179,9 +177,14 @@ export const ChatBox = ({
     }
   }, [messages]);
 
-  if (messagesEndInView && unreadMessagesCount != 0) {
-    hmsActions.setMessageRead(true);
-  }
+  useEffect(() => {
+    if (messagesEndInView) {
+      // Mark only crrent view messages as read
+      messages?.forEach(message => {
+        hmsActions.setMessageRead(true, message.id);
+      });
+    }
+  }, [selection.role, selection.peerId, messages, messagesEndInView]);
 
   return (
     <React.Fragment>
