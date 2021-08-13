@@ -261,7 +261,7 @@ export const VideoTile = ({
       );
     }
 
-    if (showScreen && !!screenshareAudioTrack) {
+    if (storeHmsAudioTrack) {
       children.push(
         <ContextMenuItem
           icon={storeHmsAudioTrack?.enabled ? <MicOnIcon /> : <MicOffIcon />}
