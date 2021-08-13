@@ -56,7 +56,7 @@ const defaultClasses: ContextMenuClasses = {
   menuItem:
     'w-full flex flex-row flex-wrap items-center px-2 my-1 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
-  menuTitle: 'text-gray-100 dark:text-white text-base w-9/12 min-w-0 truncate',
+  menuTitle: 'text-gray-100 dark:text-white text-base min-w-0 truncate',
   menuItemChildren: 'w-11/12 ml-1 justify-self-center',
   menuItemActive: 'bg-gray-600 dark:bg-gray-300',
 };

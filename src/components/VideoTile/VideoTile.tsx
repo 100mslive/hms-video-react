@@ -250,23 +250,27 @@ export const VideoTile = ({
   const getMenuItems = useCallback(() => {
     const children: JSX.Element[] = [];
 
-    children.push(
-      <ContextMenuItem
-        icon={storeHmsVideoTrack?.enabled ? <CamOnIcon /> : <CamOffIcon />}
-        label={`${storeHmsVideoTrack?.enabled ? 'Mute' : 'Unmute'} Video`}
-        key={100}
-        onClick={() => toggleTrackEnabled(storeHmsVideoTrack)}
-      />,
-    );
+    if (!showScreen) {
+      children.push(
+        <ContextMenuItem
+          icon={storeHmsVideoTrack?.enabled ? <CamOnIcon /> : <CamOffIcon />}
+          label={`${storeHmsVideoTrack?.enabled ? 'Mute' : 'Unmute'} Video`}
+          key={storeHmsVideoTrack?.id}
+          onClick={() => toggleTrackEnabled(storeHmsVideoTrack)}
+        />,
+      );
+    }
 
-    children.push(
-      <ContextMenuItem
-        icon={storeHmsAudioTrack?.enabled ? <MicOnIcon /> : <MicOffIcon />}
-        label={`${storeHmsAudioTrack?.enabled ? 'Mute' : 'Unmute'} Audio`}
-        key={101}
-        onClick={() => toggleTrackEnabled(storeHmsAudioTrack)}
-      />,
-    );
+    if (showScreen && !!screenshareAudioTrack) {
+      children.push(
+        <ContextMenuItem
+          icon={storeHmsAudioTrack?.enabled ? <MicOnIcon /> : <MicOffIcon />}
+          label={`${storeHmsAudioTrack?.enabled ? 'Mute' : 'Unmute'} Audio`}
+          key={storeHmsAudioTrack?.id}
+          onClick={() => toggleTrackEnabled(storeHmsAudioTrack)}
+        />,
+      );
+    }
 
     if (!showScreen || !!screenshareAudioTrack) {
       children.push(
@@ -298,6 +302,17 @@ export const VideoTile = ({
         </ContextMenuItem>,
       );
     }
+
+    if (!showScreen) {
+      children.push(
+        <ContextMenuItem
+          label="Remove from room"
+          key={peer.id}
+          onClick={() => hmsActions.removePeer(peer.id, '')}
+        />,
+      );
+    }
+
     children.push(
       ...layerDefinitions.map(({ layer, resolution }) => {
         return (
