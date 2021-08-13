@@ -91,7 +91,7 @@
     "clsx": "^1.1.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "postcss": "^7.0.35",
+    "postcss": "8.0.0",
     "react-click-away-listener": "^2.0.3",
     "react-intersection-observer": "^8.31.1",
     "react-markdown": "^6.0.0",
