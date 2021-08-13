@@ -85,7 +85,7 @@ export interface Message extends HMSMessage {
 }
 export interface ChatProps {
   messages?: Message[];
-  onSend?: (message: string | HMSMessageInput) => void;
+  onSend?: (message: string) => void;
   onClose?: () => void; // when the chat box is closed
   autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
@@ -150,12 +150,17 @@ export const ChatBox = ({
   messages = messages || storeMessages;
 
   const sendMessage = (message: string) => {
-    const messageInput = {
-      recipientPeers: selection.peerId ? [selection.peerId] : [],
-      recipientRoles: selection.role ? [selection.role] : [],
-      message,
-    };
-    onSend ? onSend(messageInput) : hmsActions.sendMessage(messageInput);
+    if (onSend) {
+      onSend(message);
+      return;
+    }
+    if (selection.role) {
+      hmsActions.sendGroupMessage(message, [selection.role]);
+    } else if (selection.peerId) {
+      hmsActions.sendDirectMessage(message, selection.peerId);
+    } else {
+      hmsActions.sendBroadcastMessage(message);
+    }
   };
   const [messageDraft, setMessageDraft] = useState('');
   // a dummy element with messagesEndRef is created and put in the end
@@ -180,13 +185,19 @@ export const ChatBox = ({
   }, [messages]);
 
   useEffect(() => {
-    if (messagesEndInView) {
+    if (messagesEndInView && unreadCount > 0) {
       // Mark only crrent view messages as read
       messages?.forEach(message => {
         hmsActions.setMessageRead(true, message.id);
       });
     }
-  }, [selection.role, selection.peerId, messages, messagesEndInView]);
+  }, [
+    selection.role,
+    selection.peerId,
+    messages,
+    messagesEndInView,
+    unreadCount,
+  ]);
 
   return (
     <React.Fragment>
