@@ -13,7 +13,7 @@ import {
   selectLocalMediaSettings,
   selectLocalPeer,
   selectRoomState,
-  selectLocalPeerRole,
+  selectIsAllowedToPublish,
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
@@ -118,11 +118,7 @@ export const Preview = ({
 
   const audioEnabled = useHMSStore(selectIsLocalAudioEnabled);
   const videoEnabled = useHMSStore(selectIsLocalVideoDisplayEnabled);
-  const localPeerRole = useHMSStore(selectLocalPeerRole);
-  const audioAllowed =
-    localPeerRole?.publishParams?.allowed?.includes('audio') || false;
-  const videoAllowed =
-    localPeerRole?.publishParams?.allowed?.includes('video') || false;
+  const isAllowedToPublish = useHMSStore(selectIsAllowedToPublish);
 
   const setAudioEnabled = hmsActions.setLocalAudioEnabled.bind(hmsActions);
   const setVideoEnabled = hmsActions.setLocalVideoEnabled.bind(hmsActions);
@@ -137,7 +133,13 @@ export const Preview = ({
   }, [error.title]);
 
   useEffect(() => {
-    hmsActions.preview(config);
+    try {
+      hmsActions.preview(config).catch((e: any) => {
+        console.error('e', e);
+      });
+    } catch (error) {
+      console.error('caught', error);
+    }
     if (isBrowser) {
       window.onunload = () => hmsActions.leave();
     }
@@ -193,8 +195,8 @@ export const Preview = ({
                   videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
                   isAudioMuted={!audioEnabled}
                   isVideoMuted={!videoEnabled}
-                  isAudioAllowed={audioAllowed}
-                  isVideoAllowed={videoAllowed}
+                  isAudioAllowed={isAllowedToPublish.audio}
+                  isVideoAllowed={isAllowedToPublish.video}
                 />
               }
             />
