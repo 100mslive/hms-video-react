@@ -2,22 +2,22 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   HMSReactiveStore,
   HMSStore,
-  IHMSActions,
+  HMSActions,
   HMSNotification,
-  IHMSNotifications,
-  IHMSStoreReadOnly,
+  HMSNotifications,
+  HMSStoreWrapper,
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
 import { isBrowser } from '../utils/is-browser';
 
-export interface IHMSReactStore extends IHMSStoreReadOnly {
+export interface IHMSReactStore extends HMSStoreWrapper {
   <U>(selector: StateSelector<HMSStore, U>, equalityFn?: EqualityChecker<U>): U;
 }
 export interface HMSRoomProviderProps {
-  actions?: IHMSActions;
+  actions?: HMSActions;
   store?: IHMSReactStore;
-  notifications?: IHMSNotifications;
+  notifications?: HMSNotifications;
 }
 
 /**

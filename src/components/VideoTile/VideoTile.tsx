@@ -11,13 +11,22 @@ import {
   selectScreenShareAudioByPeerID,
   selectTrackAudioByID,
   selectSimulcastLayerByTrack,
+  HMSTrack,
+  selectTrackByID,
+  selectPermissions,
 } from '@100mslive/hms-video-store';
 import { HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
 import { Avatar } from '../TwAvatar';
-import { VolumeIcon } from '../Icons';
+import {
+  CamOffIcon,
+  CamOnIcon,
+  MicOffIcon,
+  MicOnIcon,
+  VolumeIcon,
+} from '../Icons';
 import { Slider } from '../Slider/Slider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
@@ -167,6 +176,7 @@ export const VideoTile = ({
   const tileAudioTrack = showScreen
     ? screenshareAudioTrack?.id
     : peer.audioTrack;
+  const storeHmsAudioTrack = useHMSStore(selectTrackByID(tileAudioTrack));
   const storeAudioLevel = useHMSStore(selectTrackAudioByID(tileAudioTrack));
   const simulcastLayer = useHMSStore(
     selectSimulcastLayerByTrack(storeHmsVideoTrack?.id),
@@ -177,6 +187,12 @@ export const VideoTile = ({
     setShowMenu(false);
   };
 
+  const toggleTrackEnabled = (track?: HMSTrack | null) => {
+    if (track) {
+      hmsActions.setRemoteTrackEnabled(track.id, !track.enabled);
+    }
+  };
+
   audioLevel = audioLevel || storeAudioLevel;
 
   const storeAudioTrackVolume = useHMSStore(
@@ -185,6 +201,7 @@ export const VideoTile = ({
   const storeIsLocallyMuted = useHMSStore(
     selectIsAudioLocallyMuted(tileAudioTrack),
   );
+  const permissions = useHMSStore(selectPermissions);
 
   if (showAudioLevel === undefined) {
     showAudioLevel = !showScreen; // don't show audio levels for screenshare
@@ -233,7 +250,36 @@ export const VideoTile = ({
   }
 
   const getMenuItems = useCallback(() => {
-    const children = [];
+    const children: JSX.Element[] = [];
+
+    if (
+      !showScreen &&
+      (storeHmsVideoTrack?.enabled ? permissions?.mute : permissions?.unmute)
+    ) {
+      children.push(
+        <ContextMenuItem
+          icon={storeHmsVideoTrack?.enabled ? <CamOnIcon /> : <CamOffIcon />}
+          label={`${storeHmsVideoTrack?.enabled ? 'Mute' : 'Unmute'} Video`}
+          key={storeHmsVideoTrack?.id}
+          onClick={() => toggleTrackEnabled(storeHmsVideoTrack)}
+        />,
+      );
+    }
+
+    if (
+      storeHmsAudioTrack &&
+      (storeHmsAudioTrack?.enabled ? permissions?.mute : permissions?.unmute)
+    ) {
+      children.push(
+        <ContextMenuItem
+          icon={storeHmsAudioTrack?.enabled ? <MicOnIcon /> : <MicOffIcon />}
+          label={`${storeHmsAudioTrack?.enabled ? 'Mute' : 'Unmute'} Audio`}
+          key={storeHmsAudioTrack?.id}
+          onClick={() => toggleTrackEnabled(storeHmsAudioTrack)}
+        />,
+      );
+    }
+
     if (!showScreen || !!screenshareAudioTrack) {
       children.push(
         <ContextMenuItem
@@ -264,6 +310,17 @@ export const VideoTile = ({
         </ContextMenuItem>,
       );
     }
+
+    if (permissions?.removeOthers && !showScreen) {
+      children.push(
+        <ContextMenuItem
+          label="Remove from room"
+          key={peer.id}
+          onClick={() => hmsActions.removePeer(peer.id, '')}
+        />,
+      );
+    }
+
     children.push(
       ...layerDefinitions.map(({ layer, resolution }) => {
         return (
@@ -282,6 +339,9 @@ export const VideoTile = ({
   }, [
     layerDefinitions,
     showScreen,
+    storeHmsVideoTrack,
+    storeHmsAudioTrack,
+    permissions,
     screenshareAudioTrack,
     tileAudioTrack,
     simulcastLayer,

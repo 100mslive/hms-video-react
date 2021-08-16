@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import Menu from '@material-ui/core/Menu';
+import Menu, { MenuProps } from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -31,10 +31,12 @@ export interface ContextMenuDataItem {
 export interface ContextMenuProps {
   classes?: ContextMenuClasses;
   menuOpen?: boolean;
+  trigger?: JSX.Element;
   onTrigger?: (open: boolean) => void;
   children:
     | React.ReactElement<ContextMenuItemProps>
     | React.ReactElement<ContextMenuItemProps>[];
+  menuProps?: Partial<MenuProps>;
 }
 
 export interface ContextMenuItemProps extends ContextMenuDataItem {
@@ -54,7 +56,7 @@ const defaultClasses: ContextMenuClasses = {
   menuItem:
     'w-full flex flex-row flex-wrap items-center px-2 my-1 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
-  menuTitle: 'text-gray-100 dark:text-white text-base w-9/12 min-w-0 truncate',
+  menuTitle: 'text-gray-100 dark:text-white text-base min-w-0 truncate',
   menuItemChildren: 'w-11/12 ml-1 justify-self-center',
   menuItemActive: 'bg-gray-600 dark:bg-gray-300',
 };
@@ -92,7 +94,9 @@ export const ContextMenu = ({
   classes,
   children,
   menuOpen = false,
+  trigger,
   onTrigger,
+  menuProps,
 }: ContextMenuProps) => {
   const { tw } = useHMSTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -126,18 +130,20 @@ export const ContextMenu = ({
   return (
     <div className={styler('root')}>
       <div className={styler('trigger')} onClick={handleClick}>
-        <DotMenuIcon
-          className={styler('triggerIcon')}
-          aria-label="more"
-          aria-controls="context-menu"
-          aria-haspopup="true"
-        />
+        {trigger || (
+          <DotMenuIcon
+            className={styler('triggerIcon')}
+            aria-label="more"
+            aria-controls="context-menu"
+            aria-haspopup="true"
+          />
+        )}
       </div>
       <Menu
         id="context-menu"
         anchorEl={anchorEl}
-        open={open}
         autoFocus={false}
+        open={open}
         getContentAnchorEl={null}
         onClose={() => {
           setOpen(false);
@@ -152,6 +158,7 @@ export const ContextMenu = ({
           horizontal: 'right',
         }}
         classes={{ paper: styler('menu') }}
+        {...menuProps}
       >
         {React.Children.map(children, child => {
           return (
@@ -165,7 +172,10 @@ export const ContextMenu = ({
               style={{
                 minHeight: 40,
               }}
-              onClick={child.props.onClick}
+              onClick={() => {
+                child.props.onClick();
+                setOpen(false);
+              }}
             >
               {child}
             </MenuItem>

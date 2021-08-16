@@ -1,12 +1,19 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useInView } from 'react-intersection-observer';
-import { HMSMessage } from '@100mslive/hms-video-store';
 import {
-  selectHMSMessages,
-  selectUnreadHMSMessagesCount,
+  HMSMessage,
+  selectMessagesByPeerID,
+  selectMessagesByRole,
+  selectPeerNameByID,
+  selectBroadcastMessages,
+  selectBroadcastMessagesUnreadCount,
+  HMSMessageInput,
+  selectMessagesUnreadCountByRole,
+  selectMessagesUnreadCountByPeerID,
 } from '@100mslive/hms-video-store';
 import { CloseIcon, DownCaratIcon, PeopleIcon, SendIcon } from '../Icons';
 import { Button } from '../Button';
+import { ChatSelector } from './ChatSelector';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -40,14 +47,14 @@ interface ChatBoxClasses {
 }
 
 const defaultClasses: ChatBoxClasses = {
-  root: 'w-full h-full  rounded-2xl flex flex-col shadow-2',
-  header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500`,
+  root: 'w-full h-full  rounded-2xl flex flex-col shadow-2 relative',
+  header: `bg-white dark:bg-gray-200 rounded-t-2xl p-3 text-gray-300 dark:text-gray-500 flex flex-col justify-center items-center shadow border-b-1 border-gray-500 cursor-pointer`,
   headerLine: 'w-8 h-1 rounded bg-white dark:bg-gray-400 m-2',
   headerRoot: 'flex w-full justify-between',
   headerText: 'text-gray-300 dark:text-gray-500 flex items-center',
   headerCloseButton: 'focus:outline-none',
   messageBox:
-    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-grow',
+    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-1',
   messageRoot: 'py-3',
   messageInfo: 'flex justify-between',
   messageTime: 'text-xs',
@@ -82,7 +89,7 @@ export interface ChatProps {
   onClose?: () => void; // when the chat box is closed
   autoScrollToBottom?: boolean;
   scrollAnimation?: ScrollBehavior;
-  messageFormatter?: (message: string) => React.ReactNode;
+  messageFormatter?: (message: string, receiver?: string) => React.ReactNode;
   /**
    * extra classes added  by user
    */
@@ -122,13 +129,39 @@ export const ChatBox = ({
       }),
     [],
   );
-  const storeMessages = useHMSStore(selectHMSMessages);
-  const unreadMessagesCount = useHMSStore(selectUnreadHMSMessagesCount);
   const hmsActions = useHMSActions();
+  const [selection, setSelection] = useState({ role: '', peerId: '' });
+  const [showChatSelection, setShowChatSelection] = useState(false);
+  const selectedPeerName = useHMSStore(selectPeerNameByID(selection.peerId));
+  const storeMessageSelector = selection.role
+    ? selectMessagesByRole(selection.role)
+    : selection.peerId
+    ? selectMessagesByPeerID(selection.peerId)
+    : selectBroadcastMessages;
+  const storeUnreadMessageCountSelector = selection.role
+    ? selectMessagesUnreadCountByRole(selection.role)
+    : selection.peerId
+    ? selectMessagesUnreadCountByPeerID(selection.peerId)
+    : selectBroadcastMessagesUnreadCount;
+
+  const storeMessages = useHMSStore(storeMessageSelector) || [];
+  const unreadCount = useHMSStore(storeUnreadMessageCountSelector);
 
   messages = messages || storeMessages;
-  const sendMessage = (msg: string) =>
-    onSend ? onSend(msg) : hmsActions.sendMessage(msg);
+
+  const sendMessage = (message: string) => {
+    if (onSend) {
+      onSend(message);
+      return;
+    }
+    if (selection.role) {
+      hmsActions.sendGroupMessage(message, [selection.role]);
+    } else if (selection.peerId) {
+      hmsActions.sendDirectMessage(message, selection.peerId);
+    } else {
+      hmsActions.sendBroadcastMessage(message);
+    }
+  };
   const [messageDraft, setMessageDraft] = useState('');
   // a dummy element with messagesEndRef is created and put in the end
   const { ref: messagesEndRef, inView: messagesEndInView } = useInView();
@@ -151,9 +184,20 @@ export const ChatBox = ({
     }
   }, [messages]);
 
-  if (messagesEndInView && unreadMessagesCount != 0) {
-    hmsActions.setMessageRead(true);
-  }
+  useEffect(() => {
+    if (messagesEndInView && unreadCount > 0) {
+      // Mark only crrent view messages as read
+      messages?.forEach(message => {
+        hmsActions.setMessageRead(true, message.id);
+      });
+    }
+  }, [
+    selection.role,
+    selection.peerId,
+    messages,
+    messagesEndInView,
+    unreadCount,
+  ]);
 
   return (
     <React.Fragment>
@@ -166,29 +210,27 @@ export const ChatBox = ({
           {/* header-root */}
           <div className={styler('headerRoot')}>
             {/* header-text */}
-            <div className={styler('headerText')}>
+            <div
+              className={styler('headerText')}
+              onClick={() => setShowChatSelection(value => !value)}
+            >
+              <PeopleIcon />
               <span>
-                <PeopleIcon />
+                {selectedPeerName || selection.role || 'Everyone'}&nbsp;
               </span>
-              <span> Everyone</span>
+              <DownCaratIcon width={12} height={12} />
             </div>
             <div>
-              {/* headerCloseButton */}
-              {/* <Button
-                variant={'icon-only'}
-                size={'sm'}
-                onClick={() => {
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-              ></Button> */}
               <Button
                 iconOnly
-                variant={'no-fill'}
-                iconSize={'sm'}
+                variant="no-fill"
+                iconSize="sm"
                 size="sm"
                 onClick={() => {
+                  if (showChatSelection) {
+                    setShowChatSelection(false);
+                    return;
+                  }
                   if (onClose) {
                     onClose();
                   }
@@ -196,19 +238,18 @@ export const ChatBox = ({
               >
                 <CloseIcon />
               </Button>
-              {/* <button
-                onClick={() => {
-                  if (onClose) {
-                    onClose();
-                  }
-                }}
-                className={styler('headerCloseButton}
-              >
-                <CloseIcon />
-              </button> */}
             </div>
           </div>
         </div>
+        <ChatSelector
+          selectedRole={selection.role}
+          selectedPeerID={selection.peerId}
+          show={showChatSelection}
+          onChange={({ peer, role }) => {
+            setSelection({ role: role, peerId: peer });
+            setShowChatSelection(false);
+          }}
+        />
         {/* messageBox */}
         {/* TODO: move no scroll bar css logic to tailwind */}
         <div className={`${styler('messageBox')}`} ref={messageListRef}>
@@ -262,7 +303,7 @@ export const ChatBox = ({
         </div>
         {/* footer */}
         <div className={styler('footer')}>
-          {unreadMessagesCount !== 0 && (
+          {unreadCount !== 0 && (
             <div className={styler('unreadMessagesContainer')}>
               <div
                 className={styler('unreadMessagesInner')}
@@ -270,7 +311,7 @@ export const ChatBox = ({
                   scrollToBottom(messageListRef, scrollAnimation);
                 }}
               >
-                {`New message${unreadMessagesCount > 1 ? 's' : ''}`}
+                {`New message${unreadCount > 1 ? 's' : ''}`}
                 <DownCaratIcon className={styler('unreadIcon')} />
               </div>
             </div>
