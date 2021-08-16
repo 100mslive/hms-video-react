@@ -13,6 +13,7 @@ import {
   selectSimulcastLayerByTrack,
   HMSTrack,
   selectTrackByID,
+  selectPermissions,
 } from '@100mslive/hms-video-store';
 import { HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
@@ -200,6 +201,7 @@ export const VideoTile = ({
   const storeIsLocallyMuted = useHMSStore(
     selectIsAudioLocallyMuted(tileAudioTrack),
   );
+  const permissions = useHMSStore(selectPermissions);
 
   if (showAudioLevel === undefined) {
     showAudioLevel = !showScreen; // don't show audio levels for screenshare
@@ -250,7 +252,10 @@ export const VideoTile = ({
   const getMenuItems = useCallback(() => {
     const children: JSX.Element[] = [];
 
-    if (!showScreen) {
+    if (
+      !showScreen &&
+      (storeHmsVideoTrack?.enabled ? permissions?.mute : permissions?.unmute)
+    ) {
       children.push(
         <ContextMenuItem
           icon={storeHmsVideoTrack?.enabled ? <CamOnIcon /> : <CamOffIcon />}
@@ -261,7 +266,10 @@ export const VideoTile = ({
       );
     }
 
-    if (storeHmsAudioTrack) {
+    if (
+      storeHmsAudioTrack &&
+      (storeHmsAudioTrack?.enabled ? permissions?.mute : permissions?.unmute)
+    ) {
       children.push(
         <ContextMenuItem
           icon={storeHmsAudioTrack?.enabled ? <MicOnIcon /> : <MicOffIcon />}
@@ -303,7 +311,7 @@ export const VideoTile = ({
       );
     }
 
-    if (!showScreen) {
+    if (permissions?.removeOthers && !showScreen) {
       children.push(
         <ContextMenuItem
           label="Remove from room"
@@ -330,6 +338,9 @@ export const VideoTile = ({
     return children;
   }, [
     layerDefinitions,
+    storeHmsVideoTrack,
+    storeHmsAudioTrack,
+    permissions,
     showScreen,
     screenshareAudioTrack,
     tileAudioTrack,
