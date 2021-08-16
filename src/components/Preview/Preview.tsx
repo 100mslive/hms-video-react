@@ -133,13 +133,7 @@ export const Preview = ({
   }, [error.title]);
 
   useEffect(() => {
-    try {
-      hmsActions.preview(config).catch((e: any) => {
-        console.error('e', e);
-      });
-    } catch (error) {
-      console.error('caught', error);
-    }
+    hmsActions.preview(config);
     if (isBrowser) {
       window.onunload = () => hmsActions.leave();
     }
