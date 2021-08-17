@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@^0.2.21":
-  version "0.2.21"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.21.tgz#10eed8654ef7f12040332bda5683047f31b21cdc"
-  integrity sha512-msxq4v6cyOmJpWIhGwPPi/PkAVAFmjPpXgszHtNriumNbJHyDNjVvZI1cwVV/xpAZKMdc9xE0k952VqieBgHgg==
+"@100mslive/hms-video-store@0.2.23":
+  version "0.2.23"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.23.tgz#a4b03aba4a7e35b8594271fb05892c85cb8a552c"
+  integrity sha512-T4yom+CZD9ZWUf0ku/ZhZAZcV9aqWGtOUzLl/oqyDaapBae09zELUcdh9qhs/kcZ1496F2S90AsOqvy88KtQLQ==
   dependencies:
     immer "^9.0.5"
     reselect "^4.0.0"
@@ -6359,9 +6359,6 @@ evp_bytestokey@^1.0.0, evp_bytestokey@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/evp_bytestokey/-/evp_bytestokey-1.0.3.tgz#7fcbdb198dc71959432efe13842684e0525acb02"
   integrity sha512-/f2Go4TognH/KvCISP7OUsHn85hT9nUkxxA9BEWxFn+Oj9o8ZNLm/40hdlgSLyuOimsrTKLUMEorQexp/aPQeA==
-  dependencies:
-    md5.js "^1.3.4"
-    safe-buffer "^5.1.1"
 
 exec-sh@^0.3.2:
   version "0.3.6"
