@@ -13,6 +13,7 @@ import {
   selectLocalMediaSettings,
   selectLocalPeer,
   selectRoomState,
+  selectIsAllowedToPublish,
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
@@ -117,11 +118,12 @@ export const Preview = ({
 
   const audioEnabled = useHMSStore(selectIsLocalAudioEnabled);
   const videoEnabled = useHMSStore(selectIsLocalVideoDisplayEnabled);
+  const isAllowedToPublish = useHMSStore(selectIsAllowedToPublish);
 
   const setAudioEnabled = hmsActions.setLocalAudioEnabled.bind(hmsActions);
   const setVideoEnabled = hmsActions.setLocalVideoEnabled.bind(hmsActions);
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState(config.userName || '');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [showModal, setShowModal] = useState(false);
@@ -187,6 +189,8 @@ export const Preview = ({
                   videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
                   isAudioMuted={!audioEnabled}
                   isVideoMuted={!videoEnabled}
+                  isAudioAllowed={isAllowedToPublish.audio}
+                  isVideoAllowed={isAllowedToPublish.video}
                 />
               }
             />

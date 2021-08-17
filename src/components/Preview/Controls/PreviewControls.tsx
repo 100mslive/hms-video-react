@@ -20,6 +20,8 @@ export interface PreviewControlsProps {
   audioButtonOnClick: () => void;
   videoButtonOnClick: React.MouseEventHandler;
   buttonDisplay?: ButtonDisplayType;
+  isAudioAllowed?: boolean;
+  isVideoAllowed?: boolean;
 }
 
 interface PreviewControlsClasses {
@@ -44,6 +46,8 @@ export const PreviewControls = ({
   audioButtonOnClick,
   videoButtonOnClick,
   classes,
+  isAudioAllowed = true,
+  isVideoAllowed = true,
 }: PreviewControlsProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -60,24 +64,28 @@ export const PreviewControls = ({
   return (
     <div className={`${styler('root')}`}>
       <div className={`${styler('controls')}`}>
-        <Button
-          iconOnly
-          variant="no-fill"
-          active={isAudioMuted}
-          shape={buttonDisplay}
-          onClick={audioButtonOnClick}
-        >
-          {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
-        </Button>
-        <Button
-          iconOnly
-          variant="no-fill"
-          active={isVideoMuted}
-          shape={buttonDisplay}
-          onClick={videoButtonOnClick}
-        >
-          {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
-        </Button>
+        {isAudioAllowed && (
+          <Button
+            iconOnly
+            variant="no-fill"
+            active={isAudioMuted}
+            shape={buttonDisplay}
+            onClick={audioButtonOnClick}
+          >
+            {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+          </Button>
+        )}
+        {isVideoAllowed && (
+          <Button
+            iconOnly
+            variant="no-fill"
+            active={isVideoMuted}
+            shape={buttonDisplay}
+            onClick={videoButtonOnClick}
+          >
+            {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+          </Button>
+        )}
       </div>
       <div className={`${styler('rightControls')}`}>
         <Settings key={0} previewMode={true} />
