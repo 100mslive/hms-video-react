@@ -142,8 +142,8 @@ export const ContextMenu = ({
       <Menu
         id="context-menu"
         anchorEl={anchorEl}
-        open={open}
         autoFocus={false}
+        open={open}
         getContentAnchorEl={null}
         onClose={() => {
           setOpen(false);

@@ -338,10 +338,10 @@ export const VideoTile = ({
     return children;
   }, [
     layerDefinitions,
+    showScreen,
     storeHmsVideoTrack,
     storeHmsAudioTrack,
     permissions,
-    showScreen,
     screenshareAudioTrack,
     tileAudioTrack,
     simulcastLayer,
