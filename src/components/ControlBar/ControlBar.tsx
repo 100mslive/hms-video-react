@@ -42,9 +42,10 @@ export interface ControlBarProps {
 // Note: Column Gap is not supported in safari
 const defaultClasses: ControlBarClasses = {
   root:
-    'flex bg-white dark:bg-black h-full items-center p-3 mr-2 ml-2 justify-center md:justify-between ',
+    'flex bg-white dark:bg-black h-full items-center p-3 mr-2 ml-2 justify-center md:justify-between relative',
   leftRoot: 'flex justify-center z-10 space-x-2 md:space-x-3',
-  centerRoot: 'flex md:flex-1 mr-4 md:mr-0 justify-center',
+  centerRoot:
+    'flex md:flex-1 mr-4 ml-2 md:ml-0 md:mr-0 justify-center md:absolute md:left-0 md:right-0',
   rightRoot: '',
 };
 
