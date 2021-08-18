@@ -25,6 +25,7 @@ import {
   CamOnIcon,
   MicOffIcon,
   MicOnIcon,
+  RemovePeerIcon,
   VolumeIcon,
 } from '../Icons';
 import { Slider } from '../Slider/Slider';
@@ -316,6 +317,7 @@ export const VideoTile = ({
         <ContextMenuItem
           label="Remove from room"
           key={peer.id}
+          icon={<RemovePeerIcon />}
           onClick={() => hmsActions.removePeer(peer.id, '')}
         />,
       );
