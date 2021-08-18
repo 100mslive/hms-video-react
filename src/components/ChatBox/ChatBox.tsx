@@ -54,7 +54,7 @@ const defaultClasses: ChatBoxClasses = {
   headerText: 'text-gray-300 dark:text-gray-500 flex items-center',
   headerCloseButton: 'focus:outline-none',
   messageBox:
-    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-1',
+    'bg-white dark:bg-gray-100 w-full h-0 p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-auto',
   messageRoot: 'py-3',
   messageInfo: 'flex justify-between',
   messageTime: 'text-xs',
