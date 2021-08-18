@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useEffect, useState, useMemo, useRef, Fragment } from 'react';
 import { HMSConfig } from '@100mslive/hms-video';
 import {
   HMSRoomState,
@@ -154,92 +148,94 @@ export const Preview = ({
   };
 
   return (
-    // root
-    <div className={styler('root')}>
-      <div className={styler('containerRoot')}>
-        {/* header */}
-        <div className={styler('header')}>
-          {/* messageModal */}
-          <MessageModal
-            show={showModal}
-            title={error.title}
-            body={error.message}
-            onClose={() => {
-              if (error.allowJoin) {
-                setShowModal(false);
+    <Fragment>
+      {/* root */}
+      <div className={styler('root')}>
+        <div className={styler('containerRoot')}>
+          {/* header */}
+          <div className={styler('header')}>
+            {/* videoTile */}
+            {localPeer ? (
+              <VideoTile
+                {...videoTileProps}
+                peer={{ ...localPeer, name }}
+                objectFit="cover"
+                aspectRatio={{
+                  width: 1,
+                  height: 1,
+                }}
+                classes={videoTileClasses}
+                controlsComponent={
+                  <PreviewControls
+                    audioButtonOnClick={() => setAudioEnabled(!audioEnabled)}
+                    videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
+                    isAudioMuted={!audioEnabled}
+                    isVideoMuted={!videoEnabled}
+                    isAudioAllowed={isAllowedToPublish.audio}
+                    isVideoAllowed={isAllowedToPublish.video}
+                  />
+                }
+              />
+            ) : !error.title ? (
+              <ProgressIcon width="100" height="100" />
+            ) : null}
+          </div>
+          {/* helloDiv */}
+          <div className={styler('helloDiv')}>Hi There</div>
+          {/* nameDiv */}
+          <div className={styler('nameDiv')}>What's your name?</div>
+          {/* inputFieldRoot */}
+          <div className={styler('inputRoot')}>
+            <Input
+              ref={inputRef}
+              {...inputProps}
+              autoCorrect="off"
+              autoComplete="name"
+            />
+          </div>
+
+          {/* joinButton */}
+          <Button
+            variant="emphasized"
+            size="lg"
+            iconRight={inProgress || roomState === HMSRoomState.Connecting}
+            icon={inProgress ? <ProgressIcon /> : undefined}
+            disabled={inProgress || roomState === HMSRoomState.Connecting}
+            onClick={async () => {
+              if (inProgress || roomState === HMSRoomState.Connecting) {
                 return;
               }
-              errorOnClick();
-            }}
-          />
-          {/* videoTile */}
-          {localPeer ? (
-            <VideoTile
-              {...videoTileProps}
-              peer={{ ...localPeer, name }}
-              objectFit="cover"
-              aspectRatio={{
-                width: 1,
-                height: 1,
-              }}
-              classes={videoTileClasses}
-              controlsComponent={
-                <PreviewControls
-                  audioButtonOnClick={() => setAudioEnabled(!audioEnabled)}
-                  videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
-                  isAudioMuted={!audioEnabled}
-                  isVideoMuted={!videoEnabled}
-                  isAudioAllowed={isAllowedToPublish.audio}
-                  isVideoAllowed={isAllowedToPublish.video}
-                />
+              if (!name || !name.replace(/\u200b/g, ' ').trim()) {
+                inputRef.current && inputRef.current.focus();
+                setShowValidation(true);
+                return;
               }
-            />
-          ) : !error.title ? (
-            <ProgressIcon width="100" height="100" />
-          ) : null}
+              setInProgress(true);
+              await joinOnClick({
+                audioMuted: !audioEnabled,
+                videoMuted: !videoEnabled,
+                name,
+              });
+              setInProgress(false);
+            }}
+          >
+            Join
+          </Button>
         </div>
-        {/* helloDiv */}
-        <div className={styler('helloDiv')}>Hi There</div>
-        {/* nameDiv */}
-        <div className={styler('nameDiv')}>What's your name?</div>
-        {/* inputFieldRoot */}
-        <div className={styler('inputRoot')}>
-          <Input
-            ref={inputRef}
-            {...inputProps}
-            autoCorrect="off"
-            autoComplete="name"
-          />
-        </div>
-
-        {/* joinButton */}
-        <Button
-          variant="emphasized"
-          size="lg"
-          iconRight={inProgress || roomState === HMSRoomState.Connecting}
-          icon={inProgress ? <ProgressIcon /> : undefined}
-          disabled={inProgress || roomState === HMSRoomState.Connecting}
-          onClick={async () => {
-            if (inProgress || roomState === HMSRoomState.Connecting) {
-              return;
-            }
-            if (!name || !name.replace(/\u200b/g, ' ').trim()) {
-              inputRef.current && inputRef.current.focus();
-              setShowValidation(true);
-              return;
-            }
-            setInProgress(true);
-            await joinOnClick({
-              audioMuted: !audioEnabled,
-              videoMuted: !videoEnabled,
-              name,
-            });
-            setInProgress(false);
-          }}
-        >
-          Join
-        </Button>
       </div>
-    </div>
+      {/* messageModal */}
+      <MessageModal
+        show={showModal}
+        title={error.title}
+        body={error.message}
+        onClose={() => {
+          if (error.allowJoin) {
+            setShowModal(false);
+            return;
+          }
+          errorOnClick();
+        }}
+      />
+    </Fragment>
   );
 };
