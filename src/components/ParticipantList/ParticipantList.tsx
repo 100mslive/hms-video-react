@@ -45,7 +45,7 @@ const defaultClasses: ParticipantListClasses = {
     'text-gray-200 dark:text-gray-500 group flex items-center px-3 pt-3 pb-2 text-base',
   menuItem:
     'text-gray-100 dark:text-white group flex items-center flex-nowrap px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
-  menuText: 'flex-1 flex items-center',
+  menuText: 'flex-1 flex items-center min-w-0',
   menuIconContainer: 'w-16 flex flex-shrink-0 justify-self-end justify-end',
   onIcon: '',
   offIcon: '',
