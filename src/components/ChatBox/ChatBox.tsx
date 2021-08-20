@@ -117,7 +117,7 @@ export const ChatBox = ({
     return `${date.getHours()}:${minString}`;
   },
 }: ChatProps) => {
-  const { tw } = useHMSTheme();
+  const { tw, toast } = useHMSTheme();
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<ChatBoxClasses>({
@@ -154,12 +154,16 @@ export const ChatBox = ({
       onSend(message);
       return;
     }
-    if (selection.role) {
-      await hmsActions.sendGroupMessage(message, [selection.role]);
-    } else if (selection.peerId) {
-      await hmsActions.sendDirectMessage(message, selection.peerId);
-    } else {
-      await hmsActions.sendBroadcastMessage(message);
+    try {
+      if (selection.role) {
+        await hmsActions.sendGroupMessage(message, [selection.role]);
+      } else if (selection.peerId) {
+        await hmsActions.sendDirectMessage(message, selection.peerId);
+      } else {
+        await hmsActions.sendBroadcastMessage(message);
+      }
+    } catch (error) {
+      toast(error.message);
     }
   };
   const [messageDraft, setMessageDraft] = useState('');
