@@ -20,7 +20,7 @@ export const HMSThemeProvider = ({
   children: React.ReactNode;
   config: any;
   appBuilder: appBuilder;
-  toast?: (message: any, options: any) => any;
+  toast?: (message: any, options?: any) => any;
 }) => {
   if (isBrowser) {
     if (appBuilder.theme === 'dark') {

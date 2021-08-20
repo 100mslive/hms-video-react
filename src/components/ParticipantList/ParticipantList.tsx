@@ -141,7 +141,7 @@ export const ParticipantList = ({
       try {
         await hmsActions.changeRole(selectedPeer.id, selectedRole, forceChange);
       } catch (error) {
-        toast(error.message, {});
+        toast(error.message);
       }
     }
 

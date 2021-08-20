@@ -17,5 +17,5 @@ export default interface HMSThemeProps {
   tw: TW;
   tailwindConfig: any;
   appBuilder: appBuilder;
-  toast: (message: any, options: any) => any;
+  toast: (message: any, options?: any) => any;
 }

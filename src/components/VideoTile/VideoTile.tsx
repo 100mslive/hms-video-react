@@ -193,7 +193,7 @@ export const VideoTile = ({
       try {
         await hmsActions.setRemoteTrackEnabled(track.id, !track.enabled);
       } catch (error) {
-        toast(error.message, {});
+        toast(error.message);
       }
     }
   };
@@ -330,7 +330,7 @@ export const VideoTile = ({
             try {
               await hmsActions.removePeer(peer.id, '');
             } catch (error) {
-              toast(error.message, {});
+              toast(error.message);
             }
           }}
         />,
