@@ -45,14 +45,14 @@ const defaultClasses: ParticipantListClasses = {
     'text-gray-200 dark:text-gray-500 group flex items-center px-3 pt-3 pb-2 text-base',
   menuItem:
     'text-gray-100 dark:text-white group flex items-center flex-nowrap px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
-  menuText: 'flex-1 flex items-center',
+  menuText: 'flex-1 flex items-center min-w-0',
   menuIconContainer: 'w-16 flex flex-shrink-0 justify-self-end justify-end',
   onIcon: '',
   offIcon: '',
   dialogContainer:
     'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-4 rounded-xl',
   dialogHeader: 'flex items-center space-x-2',
-  expanded: 'flex-grow',
+  expanded: 'flex-1 min-w-0 truncate',
   textGray: 'text-gray-400',
   divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
   formContainer: 'px-4 py-2 space-y-2',
@@ -161,11 +161,13 @@ export const ParticipantList = ({
         <div className={styler('dialogContainer')}>
           <div className={styler('dialogHeader')}>
             <SettingsIcon className="h-7 w-7" />
-            <div className={styler('expanded')}>
-              <Text variant="heading">
-                User Settings ({selectedPeer?.name})
-              </Text>
-            </div>
+            <Text
+              variant="heading"
+              className={styler('expanded')}
+              title={selectedPeer?.name}
+            >
+              User Settings ({selectedPeer?.name})
+            </Text>
             <Button
               iconOnly
               variant="no-fill"

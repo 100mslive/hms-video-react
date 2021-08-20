@@ -16,6 +16,7 @@ export interface ContextMenuClasses {
   menuIcon?: string;
   menuItemChildren?: string;
   menuItemActive?: string;
+  menuTitleContainer?: string;
 }
 
 export type ContextMenuItemClasses = Omit<
@@ -59,6 +60,7 @@ const defaultClasses: ContextMenuClasses = {
   menuTitle: 'text-gray-100 dark:text-white text-base min-w-0 truncate',
   menuItemChildren: 'w-11/12 ml-1 justify-self-center',
   menuItemActive: 'bg-gray-600 dark:bg-gray-300',
+  menuTitleContainer: 'w-full flex items-center',
 };
 
 export const ContextMenuItem = ({
@@ -81,10 +83,12 @@ export const ContextMenuItem = ({
 
   return (
     <>
-      {icon && <span className={styler('menuIcon')}>{icon}</span>}
-      <span className={styler('menuTitle')} title={label}>
-        {label}
-      </span>
+      <div className={styler('menuTitleContainer')}>
+        {icon && <span className={styler('menuIcon')}>{icon}</span>}
+        <span className={styler('menuTitle')} title={label}>
+          {label}
+        </span>
+      </div>
       {children && <div className={styler('menuItemChildren')}>{children}</div>}
     </>
   );

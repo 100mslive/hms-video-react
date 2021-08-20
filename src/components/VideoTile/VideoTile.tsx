@@ -319,7 +319,11 @@ export const VideoTile = ({
     if (permissions?.removeOthers && !showScreen) {
       children.push(
         <ContextMenuItem
-          label="Remove from room"
+          label="Remove Participant"
+          classes={{
+            menuTitle: 'text-red-500 dark:text-red-500',
+            menuIcon: 'text-red-500 dark:text-red-500',
+          }}
           key={peer.id}
           icon={<RemovePeerIcon />}
           onClick={async () => {
