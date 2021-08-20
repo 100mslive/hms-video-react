@@ -84,7 +84,7 @@ export const ParticipantList = ({
   classes,
   onToggle,
 }: ParticipantListProps) => {
-  const { tw } = useHMSTheme();
+  const { tw, toast } = useHMSTheme();
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<ParticipantListClasses>({
@@ -128,7 +128,7 @@ export const ParticipantList = ({
     setSelectedRole(event.currentTarget.value);
   };
 
-  const handleSaveSettings = () => {
+  const handleSaveSettings = async () => {
     if (
       !selectedPeer ||
       !selectedRole ||
@@ -138,7 +138,11 @@ export const ParticipantList = ({
     }
 
     if (selectedPeer.roleName !== selectedRole) {
-      hmsActions.changeRole(selectedPeer.id, selectedRole, forceChange);
+      try {
+        await hmsActions.changeRole(selectedPeer.id, selectedRole, forceChange);
+      } catch (error) {
+        toast(error.message);
+      }
     }
 
     setSelectedPeer(null);

@@ -144,7 +144,7 @@ export const VideoTile = ({
   avatarType,
   compact = false,
 }: VideoTileProps) => {
-  const { appBuilder, tw } = useHMSTheme();
+  const { appBuilder, tw, toast } = useHMSTheme();
   const hmsActions = useHMSActions();
   const [showMenu, setShowMenu] = useState(false);
   const [showTrigger, setShowTrigger] = useState(false);
@@ -188,9 +188,13 @@ export const VideoTile = ({
     setShowMenu(false);
   };
 
-  const toggleTrackEnabled = (track?: HMSTrack | null) => {
+  const toggleTrackEnabled = async (track?: HMSTrack | null) => {
     if (track) {
-      hmsActions.setRemoteTrackEnabled(track.id, !track.enabled);
+      try {
+        await hmsActions.setRemoteTrackEnabled(track.id, !track.enabled);
+      } catch (error) {
+        toast(error.message);
+      }
     }
   };
 
@@ -322,7 +326,13 @@ export const VideoTile = ({
           }}
           key={peer.id}
           icon={<RemovePeerIcon />}
-          onClick={() => hmsActions.removePeer(peer.id, '')}
+          onClick={async () => {
+            try {
+              await hmsActions.removePeer(peer.id, '');
+            } catch (error) {
+              toast(error.message);
+            }
+          }}
         />,
       );
     }
