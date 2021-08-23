@@ -226,7 +226,7 @@ export const Settings = ({
                               className={`${styler('selectInner')}`}
                               key={device.deviceId}
                             >
-                              {device.label} {device.deviceId}
+                              {device.label}
                             </option>
                           ))}
                         </select>
