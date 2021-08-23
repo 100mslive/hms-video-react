@@ -1,10 +1,4 @@
-import React, {
-  useEffect,
-  useState,
-  useCallback,
-  useMemo,
-  useRef,
-} from 'react';
+import React, { useEffect, useState, useMemo, useRef, Fragment } from 'react';
 import { HMSConfig } from '@100mslive/hms-video';
 import {
   HMSRoomState,
@@ -13,10 +7,10 @@ import {
   selectLocalMediaSettings,
   selectLocalPeer,
   selectRoomState,
+  selectIsAllowedToPublish,
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { MessageModal } from '../MessageModal';
-import { SettingsFormProps } from '../Settings/Settings';
 import { Button } from '../Button';
 import { ProgressIcon } from '../Icons';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -25,6 +19,7 @@ import { PreviewControls } from './Controls';
 import { Input } from '../Input';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import { isBrowser } from '../../utils/is-browser';
 
 interface JoinInfo {
   audioMuted?: boolean;
@@ -56,7 +51,6 @@ const defaultClasses: PreviewClasses = {
 export interface PreviewProps {
   config: HMSConfig;
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
-  onChange: (values: SettingsFormProps) => void;
   /**
    * Click handler for error modal close.
    * Ignored when either of the allowWithError properties is true.
@@ -78,7 +72,6 @@ export const Preview = ({
   config,
   joinOnClick,
   errorOnClick,
-  onChange,
   allowWithError = {
     capture: true,
     unsupported: true,
@@ -119,11 +112,12 @@ export const Preview = ({
 
   const audioEnabled = useHMSStore(selectIsLocalAudioEnabled);
   const videoEnabled = useHMSStore(selectIsLocalVideoDisplayEnabled);
+  const isAllowedToPublish = useHMSStore(selectIsAllowedToPublish);
 
   const setAudioEnabled = hmsActions.setLocalAudioEnabled.bind(hmsActions);
   const setVideoEnabled = hmsActions.setLocalVideoEnabled.bind(hmsActions);
 
-  const [name, setName] = useState('');
+  const [name, setName] = useState(config.userName || '');
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [showModal, setShowModal] = useState(false);
@@ -132,36 +126,12 @@ export const Preview = ({
     setShowModal(Boolean(error.title));
   }, [error.title]);
 
-  window.onunload = () => hmsActions.leave();
-
   useEffect(() => {
     hmsActions.preview(config);
+    if (isBrowser) {
+      window.onunload = () => hmsActions.leave();
+    }
   }, [config.authToken]);
-
-  const handleDeviceChange = (values: SettingsFormProps) => {
-    const {
-      selectedVideoInput: newSelectedVideoInput,
-      selectedAudioInput: newSelectedAudioInput,
-      selectedAudioOutput: newSelectedAudioOutput,
-    } = values;
-    if (newSelectedAudioInput && audioInputDeviceId !== newSelectedAudioInput) {
-      // @ts-ignore
-      hmsActions.setAudioSettings({ deviceId: newSelectedAudioInput });
-    }
-
-    if (newSelectedVideoInput && videoInputDeviceId !== newSelectedVideoInput) {
-      // @ts-ignore
-      hmsActions.setVideoSettings({ deviceId: newSelectedVideoInput });
-    }
-
-    if (
-      newSelectedAudioOutput &&
-      audioOutputDeviceId !== newSelectedAudioOutput
-    ) {
-      hmsActions.setAudioOutputDevice(newSelectedAudioOutput);
-    }
-    onChange(values);
-  };
 
   const inputProps = {
     compact: true,
@@ -178,91 +148,94 @@ export const Preview = ({
   };
 
   return (
-    // root
-    <div className={styler('root')}>
-      <div className={styler('containerRoot')}>
-        {/* header */}
-        <div className={styler('header')}>
-          {/* messageModal */}
-          <MessageModal
-            show={showModal}
-            title={error.title}
-            body={error.message}
-            onClose={() => {
-              if (error.allowJoin) {
-                setShowModal(false);
+    <Fragment>
+      {/* root */}
+      <div className={styler('root')}>
+        <div className={styler('containerRoot')}>
+          {/* header */}
+          <div className={styler('header')}>
+            {/* videoTile */}
+            {localPeer ? (
+              <VideoTile
+                {...videoTileProps}
+                peer={{ ...localPeer, name }}
+                objectFit="cover"
+                aspectRatio={{
+                  width: 1,
+                  height: 1,
+                }}
+                classes={videoTileClasses}
+                controlsComponent={
+                  <PreviewControls
+                    audioButtonOnClick={() => setAudioEnabled(!audioEnabled)}
+                    videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
+                    isAudioMuted={!audioEnabled}
+                    isVideoMuted={!videoEnabled}
+                    isAudioAllowed={isAllowedToPublish.audio}
+                    isVideoAllowed={isAllowedToPublish.video}
+                  />
+                }
+              />
+            ) : !error.title ? (
+              <ProgressIcon width="100" height="100" />
+            ) : null}
+          </div>
+          {/* helloDiv */}
+          <div className={styler('helloDiv')}>Hi There</div>
+          {/* nameDiv */}
+          <div className={styler('nameDiv')}>What's your name?</div>
+          {/* inputFieldRoot */}
+          <div className={styler('inputRoot')}>
+            <Input
+              ref={inputRef}
+              {...inputProps}
+              autoCorrect="off"
+              autoComplete="name"
+            />
+          </div>
+
+          {/* joinButton */}
+          <Button
+            variant="emphasized"
+            size="lg"
+            iconRight={inProgress || roomState === HMSRoomState.Connecting}
+            icon={inProgress ? <ProgressIcon /> : undefined}
+            disabled={inProgress || roomState === HMSRoomState.Connecting}
+            onClick={async () => {
+              if (inProgress || roomState === HMSRoomState.Connecting) {
                 return;
               }
-              errorOnClick();
-            }}
-          />
-          {/* videoTile */}
-          {localPeer ? (
-            <VideoTile
-              {...videoTileProps}
-              peer={{ ...localPeer, name }}
-              objectFit="cover"
-              aspectRatio={{
-                width: 1,
-                height: 1,
-              }}
-              classes={videoTileClasses}
-              controlsComponent={
-                <PreviewControls
-                  audioButtonOnClick={() => setAudioEnabled(!audioEnabled)}
-                  videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
-                  isAudioMuted={!audioEnabled}
-                  isVideoMuted={!videoEnabled}
-                  onChange={handleDeviceChange}
-                />
+              if (!name || !name.replace(/\u200b/g, ' ').trim()) {
+                inputRef.current && inputRef.current.focus();
+                setShowValidation(true);
+                return;
               }
-            />
-          ) : !error.title ? (
-            <ProgressIcon width="100" height="100" />
-          ) : null}
+              setInProgress(true);
+              await joinOnClick({
+                audioMuted: !audioEnabled,
+                videoMuted: !videoEnabled,
+                name,
+              });
+              setInProgress(false);
+            }}
+          >
+            Join
+          </Button>
         </div>
-        {/* helloDiv */}
-        <div className={styler('helloDiv')}>Hi There</div>
-        {/* nameDiv */}
-        <div className={styler('nameDiv')}>What's your name?</div>
-        {/* inputFieldRoot */}
-        <div className={styler('inputRoot')}>
-          <Input
-            ref={inputRef}
-            {...inputProps}
-            autoCorrect="off"
-            autoComplete="name"
-          />
-        </div>
-
-        {/* joinButton */}
-        <Button
-          variant="emphasized"
-          size="lg"
-          iconRight={inProgress || roomState === HMSRoomState.Connecting}
-          icon={inProgress ? <ProgressIcon /> : undefined}
-          disabled={inProgress || roomState === HMSRoomState.Connecting}
-          onClick={async () => {
-            if (inProgress) {
-              return;
-            }
-            if (!name || !name.replace(/\u200b/g, ' ').trim()) {
-              inputRef.current && inputRef.current.focus();
-              setShowValidation(true);
-              return;
-            }
-            setInProgress(true);
-            await joinOnClick({
-              audioMuted: !audioEnabled,
-              videoMuted: !videoEnabled,
-              name,
-            });
-            setInProgress(false);
-          }}
-        >
-          Join
-        </Button>
       </div>
-    </div>
+      {/* messageModal */}
+      <MessageModal
+        show={showModal}
+        title={error.title}
+        body={error.message}
+        onClose={() => {
+          if (error.allowJoin) {
+            setShowModal(false);
+            return;
+          }
+          errorOnClick();
+        }}
+      />
+    </Fragment>
   );
 };

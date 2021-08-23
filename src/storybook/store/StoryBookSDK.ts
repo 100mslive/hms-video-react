@@ -1,11 +1,12 @@
 import { makeFakeMessage } from '../fixtures/chatFixtures';
 import {
-  IHMSActions,
+  HMSActions,
   IHMSStore,
   HMSPeer,
   HMSRoom,
   HMSTrackSource,
   HMSRoomState,
+  HMSMessageInput,
 } from '@100mslive/hms-video-store';
 import {
   HMSAudioTrackSettings,
@@ -18,7 +19,7 @@ import {
 This is a dummy bridge with no connected backend. It can be used for
 storybook or writing functional tests.
  */
-export class StoryBookSDK implements Partial<IHMSActions> {
+export class StoryBookSDK implements Partial<HMSActions> {
   private readonly store: IHMSStore;
   private videoURLs: string[] = [];
   private dummyTrackURLs: Record<string, string> = {};
@@ -70,7 +71,7 @@ export class StoryBookSDK implements Partial<IHMSActions> {
     });
   }
 
-  preview(config: HMSConfig) {
+  async preview(config: HMSConfig) {
     if (!config.authToken) {
       this.log('invalid params');
       return;
@@ -103,7 +104,7 @@ export class StoryBookSDK implements Partial<IHMSActions> {
       if (!this.localPeer) {
         this.localPeer = {
           name: joinParams?.username,
-          role: joinParams?.role,
+          roleName: joinParams?.roleName,
           isLocal: true,
           id: String(this.randomNumber()),
           auxiliaryTracks: [],
@@ -139,10 +140,13 @@ export class StoryBookSDK implements Partial<IHMSActions> {
     this.log('video removed');
   }
 
-  sendMessage(message: string, randomUser?: boolean): void {
+  sendMessage(message: string | HMSMessageInput): void {
     this.store.setState(store => {
-      const user = randomUser ? this.randomUser() : 'You';
-      const newMsg = makeFakeMessage(message, user);
+      const user = 'You';
+      const newMsg = makeFakeMessage(
+        typeof message === 'string' ? message : message.message,
+        user,
+      );
       store.messages.byID[newMsg.id] = newMsg;
       store.messages.allIDs.push(newMsg.id);
     });

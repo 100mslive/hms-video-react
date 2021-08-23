@@ -2,21 +2,22 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 import {
   HMSReactiveStore,
   HMSStore,
-  IHMSActions,
+  HMSActions,
   HMSNotification,
-  IHMSNotifications,
-  IHMSStoreReadOnly,
+  HMSNotifications,
+  HMSStoreWrapper,
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
+import { isBrowser } from '../utils/is-browser';
 
-export interface IHMSReactStore extends IHMSStoreReadOnly {
+export interface IHMSReactStore extends HMSStoreWrapper {
   <U>(selector: StateSelector<HMSStore, U>, equalityFn?: EqualityChecker<U>): U;
 }
 export interface HMSRoomProviderProps {
-  actions?: IHMSActions;
+  actions?: HMSActions;
   store?: IHMSReactStore;
-  notifications?: IHMSNotifications;
+  notifications?: HMSNotifications;
 }
 
 /**
@@ -43,16 +44,29 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       }
     } else {
       const hmsReactiveStore = new HMSReactiveStore();
+      // adding a dummy function for setstate and destroy because zustan'd create expects them
+      // to be present but we don't expose them from the store.
+      const errFn = () => {
+        throw new Error('modifying store is not allowed');
+      };
       providerProps = {
         actions: hmsReactiveStore.getHMSActions(),
-        store: create<HMSStore>(hmsReactiveStore.getStore()), // convert vanilla store in react hook
+        store: create<HMSStore>({
+          ...hmsReactiveStore.getStore(),
+          setState: errFn,
+          destroy: errFn,
+        }), // convert vanilla store in react hook
         notifications: hmsReactiveStore.getNotifications(),
       };
     }
   }
-  window.onunload = () => {
-    providerProps.actions.leave();
-  };
+  useEffect(() => {
+    if (isBrowser) {
+      window.onunload = () => {
+        providerProps.actions.leave();
+      };
+    }
+  }, []);
 
   return React.createElement(
     HMSContext.Provider,

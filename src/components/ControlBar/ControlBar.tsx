@@ -42,10 +42,11 @@ export interface ControlBarProps {
 // Note: Column Gap is not supported in safari
 const defaultClasses: ControlBarClasses = {
   root:
-    'flex bg-white dark:bg-black h-full items-center p-3 mr-2 ml-2 justify-center md:justify-between ',
-  leftRoot: 'flex justify-center justify-between w-10 md:w-44 z-10',
-  centerRoot: 'flex md:flex-1 mr-4 md:mr-0 justify-center md:-translate-x-5',
-  rightRoot: '',
+    'flex bg-white dark:bg-black h-full items-center p-3 mr-2 ml-2 justify-center md:justify-between relative',
+  leftRoot: 'flex justify-center z-10 space-x-2 md:space-x-3',
+  centerRoot:
+    'flex md:flex-1 mr-4 ml-2 md:ml-0 md:mr-0 justify-center md:absolute md:left-0 md:right-0',
+  rightRoot: 'z-10',
 };
 
 export const ControlBar = ({
@@ -59,12 +60,7 @@ export const ControlBar = ({
   chatButtonOnClick,
   screenshareButtonOnClick,
   leftComponents = [
-    <Settings
-      onChange={props => {
-        console.debug('Settings on change called ', props);
-      }}
-      key={0}
-    />,
+    <Settings key={0} />,
     <VerticalDivider key={1} />,
     <Button
       iconOnly

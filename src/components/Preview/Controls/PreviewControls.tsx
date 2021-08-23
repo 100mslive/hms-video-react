@@ -1,13 +1,11 @@
 import React, { useMemo } from 'react';
-import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
-import { hmsUiClassParserGenerator } from '../../../utils/classes';
-import '../index.css';
-import { ButtonDisplayType } from '../../../types';
 import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
 import { Button } from '../../Button';
-import { Settings, SettingsFormProps } from '../../Settings/Settings';
-import { useHMSStore } from '../../../hooks/HMSRoomProvider';
-import { selectLocalMediaSettings } from '@100mslive/hms-video-store';
+import { Settings } from '../../Settings/Settings';
+import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
+import { ButtonDisplayType } from '../../../types';
+import { hmsUiClassParserGenerator } from '../../../utils/classes';
+import '../index.css';
 
 
 interface PreviewControlsClasses {
@@ -19,11 +17,12 @@ export interface PreviewControlsProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   showGradient?: boolean;
-  onChange: (values: SettingsFormProps) => void;
   classes?: PreviewControlsClasses;
   audioButtonOnClick: () => void;
   videoButtonOnClick: React.MouseEventHandler;
   buttonDisplay?: ButtonDisplayType;
+  isAudioAllowed?: boolean;
+  isVideoAllowed?: boolean;
 }
 
 interface PreviewControlsClasses {
@@ -47,8 +46,9 @@ export const PreviewControls = ({
   buttonDisplay = 'rectangle',
   audioButtonOnClick,
   videoButtonOnClick,
-  onChange,
   classes,
+  isAudioAllowed = true,
+  isVideoAllowed = true,
 }: PreviewControlsProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -61,36 +61,35 @@ export const PreviewControls = ({
       }),
     [],
   );
-  const { audioInputDeviceId, videoInputDeviceId } = useHMSStore(
-    selectLocalMediaSettings,
-  );
 
   return (
     <div className={`${styler('root')}`}>
       <div className={`${styler('controls')}`}>
-        <Button
-          iconOnly
-          variant="no-fill"
-          active={isAudioMuted}
-          shape={buttonDisplay}
-          onClick={audioButtonOnClick}
-        >
-          {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
-        </Button>
-        <Button
-          iconOnly
-          variant="no-fill"
-          active={isVideoMuted}
-          shape={buttonDisplay}
-          onClick={videoButtonOnClick}
-        >
-          {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
-        </Button>
+        {isAudioAllowed && (
+          <Button
+            iconOnly
+            variant="no-fill"
+            active={isAudioMuted}
+            shape={buttonDisplay}
+            onClick={audioButtonOnClick}
+          >
+            {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
+          </Button>
+        )}
+        {isVideoAllowed && (
+          <Button
+            iconOnly
+            variant="no-fill"
+            active={isVideoMuted}
+            shape={buttonDisplay}
+            onClick={videoButtonOnClick}
+          >
+            {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
+          </Button>
+        )}
       </div>
       <div className={`${styler('rightControls')}`}>
-        {audioInputDeviceId && videoInputDeviceId && (
-          <Settings onChange={onChange} key={0} previewMode={true} />
-        )}
+        <Settings key={0} previewMode={true} />
       </div>
     </div>
   );
