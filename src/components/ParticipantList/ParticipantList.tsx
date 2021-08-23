@@ -50,7 +50,7 @@ const defaultClasses: ParticipantListClasses = {
   onIcon: '',
   offIcon: '',
   dialogContainer:
-    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-4 rounded-xl',
+    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full md:w-96 p-4 rounded-xl',
   dialogHeader: 'flex items-center space-x-2',
   expanded: 'flex-1 min-w-0 truncate',
   textGray: 'text-gray-400',
@@ -75,7 +75,6 @@ const HMSDialog = withStyles({
   paper: {
     borderRadius: '12px',
     backgroundColor: 'inherit',
-    minWidth: '400px',
   },
 })(Dialog);
 
