@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEventHandler, useMemo, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -60,10 +60,11 @@ const defaultClasses: SettingsClasses = {
   titleContainer: 'flex items-center',
   titleIcon: 'pr-4',
   titleText: 'text-2xl leading-7',
-  formContainer: 'flex flex-wrap text-base mb-2 md:mb-0',
-  formInner: 'w-full flex my-1.5',
-  selectLabel: 'w-1/3 flex justify-end items-center',
-  selectContainer: 'rounded-lg w-1/2 bg-gray-600 dark:bg-gray-200 p-2 mx-2',
+  formContainer: 'flex flex-wrap p-3 md:p-0 text-base mb-2 md:mb-0',
+  formInner: 'w-full flex flex-col md:flex-row my-1.5',
+  selectLabel: 'w-full md:w-1/3 flex justify-start md:justify-end items-center',
+  selectContainer:
+    'rounded-lg w-full md:w-1/2 bg-gray-600 dark:bg-gray-200 p-2 mx-0 my-2 md:my-0 md:mx-2',
   select:
     'rounded-lg w-full h-full bg-gray-600 dark:bg-gray-200 focus:outline-none',
   selectInner: 'p-4',
@@ -75,7 +76,7 @@ const defaultClasses: SettingsClasses = {
   sliderLabel: 'text-right',
   slider: 'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
   errorContainer: 'flex justify-center items-center w-full px-8 py-4',
-  testAudioContainer: 'mx-2',
+  testAudioContainer: 'mx-0 my-2 md:my-0 md:mx-2',
 };
 
 const customClasses: SettingsClasses = {
