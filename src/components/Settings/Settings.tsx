@@ -56,11 +56,11 @@ const defaultClasses: SettingsClasses = {
   dialogRoot: 'rounded-xl ',
   dialogContainer:
     'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-2 overflow-y-auto rounded-xl',
-  dialogInner: 'text-2xl mb-3 p-2 flex justify-between',
+  dialogInner: 'text-2xl p-2 flex justify-between',
   titleContainer: 'flex items-center',
   titleIcon: 'pr-4',
   titleText: 'text-2xl leading-7',
-  formContainer: 'flex flex-wrap p-3 md:p-0 text-base mb-2 md:mb-0',
+  formContainer: 'flex flex-wrap p-3 pt-0 md:p-0 text-base md:mb-0',
   formInner: 'w-full flex flex-col md:flex-row my-1.5',
   selectLabel: 'w-full md:w-1/3 flex justify-start md:justify-end items-center',
   selectContainer:
