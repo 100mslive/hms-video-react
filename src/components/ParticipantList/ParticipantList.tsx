@@ -50,7 +50,7 @@ const defaultClasses: ParticipantListClasses = {
   onIcon: '',
   offIcon: '',
   dialogContainer:
-    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-4 rounded-xl',
+    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full md:w-96 p-4 rounded-xl',
   dialogHeader: 'flex items-center space-x-2',
   expanded: 'flex-1 min-w-0 truncate',
   textGray: 'text-gray-400',
@@ -69,13 +69,10 @@ const customClasses: ParticipantListClasses = {
   onIcon: 'hmsui-participantList-show-on-group-hover',
 };
 
-type RoleMap = Map<string, HMSPeerWithMuteStatus[]>;
-
 const HMSDialog = withStyles({
   paper: {
     borderRadius: '12px',
     backgroundColor: 'inherit',
-    minWidth: '400px',
   },
 })(Dialog);
 
@@ -263,9 +260,8 @@ export const ParticipantList = ({
                       className={`${styler('menuSection')}`}
                       role="menuitem"
                     >
-                      {role === 'undefined' ? 'Unknown' : role}
-                      {rolesMap[role].length > 1 ? 's' : ''}{' '}
-                      {rolesMap[role].length}
+                      {role === 'undefined' ? 'Unknown' : role}(
+                      {rolesMap[role].length})
                     </span>
                     <div>
                       {rolesMap[role] &&
