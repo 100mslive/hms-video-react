@@ -6,7 +6,13 @@ name: Publish Alpha
 on:
   push:
     branches:
-      - develop
+      - main
+    paths-ignore:
+      - 'CODEOWNERS'
+      - 'README.MD'
+      - '.gitignore'
+      - 'package.json'
+      - 'yarn.lock'
 
 jobs:
   publish-npm:
