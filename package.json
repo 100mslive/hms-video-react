@@ -48,11 +48,11 @@
     }
   ],
   "peerDependencies": {
-    "@100mslive/hms-video": "^0.0.157",
+    "@100mslive/hms-video": "^0.0.168",
     "react": ">=16"
   },
   "devDependencies": {
-    "@100mslive/hms-video": "^0.0.157",
+    "@100mslive/hms-video": "^0.0.168",
     "@babel/core": "^7.13.14",
     "@rollup/plugin-image": "^2.0.6",
     "@size-limit/preset-small-lib": "^4.10.2",
