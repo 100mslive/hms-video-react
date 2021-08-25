@@ -34,7 +34,7 @@ export const ParticipantInList = ({
         </Text>
       </div>
       <div className={styler('menuIconContainer')}>
-        {!isLocal && localPeerRole?.permissions.changeRole && (
+        {localPeerRole?.permissions.changeRole && (
           <div>
             <Button
               iconOnly
