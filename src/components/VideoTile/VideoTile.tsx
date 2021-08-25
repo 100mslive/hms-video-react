@@ -112,7 +112,8 @@ export interface VideoTileClasses extends VideoClasses {
 }
 
 const defaultClasses: VideoTileClasses = {
-  root: 'group w-full h-full flex relative justify-center rounded-lg ',
+  root:
+    'group w-full h-full flex relative justify-center rounded-lg overflow-hidden',
   videoContainer: 'relative rounded-lg object-cover relative w-full max-h-full',
   avatarContainer:
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
