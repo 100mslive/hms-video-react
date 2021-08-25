@@ -139,7 +139,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     classList.push(`${styler('rootDivWrapper')}`);
   }
 
-  if (shape !== 'circle') {
+  if (shape === 'square') {
     if (size === 'sm') {
       classList.push(`${styler('rootSizeSm')}`);
     } else if (size === 'md') {
