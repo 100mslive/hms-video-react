@@ -271,7 +271,6 @@ export const ParticipantList = ({
                             styler={styler}
                             isAudioEnabled={participant.isAudioEnabled}
                             name={participant.peer.name}
-                            isLocal={participant.peer.isLocal}
                             onUserSettingsClick={() => {
                               setSelectedPeer(participant.peer);
                               setSelectedRole(participant.peer.roleName || '');
