@@ -129,7 +129,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
       }),
     [],
   );
-  const { width = 0, height = 0, ref } = useResizeDetector();
+  const { width = 0, ref } = useResizeDetector();
 
   const classList = [`${styler('root')}`];
   shape === 'circle'
@@ -137,7 +137,9 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     : classList.push(`${styler('rootShapeSquare')}`);
   if (!image) {
     classList.push(`${styler('rootDivWrapper')}`);
-  } else {
+  }
+
+  if (shape === 'square') {
     if (size === 'sm') {
       classList.push(`${styler('rootSizeSm')}`);
     } else if (size === 'md') {
