@@ -6,6 +6,15 @@ name: Manual Publish Latest Package
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'CODEOWNERS'
+      - 'README.MD'
+      - '.gitignore'
+      - 'package.json'
+      - 'yarn.lock'
 
 jobs:
   publish-npm:
