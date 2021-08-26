@@ -4,13 +4,11 @@ import {
   HMSRoomState,
   selectIsLocalAudioEnabled,
   selectIsLocalVideoDisplayEnabled,
-  selectLocalMediaSettings,
   selectLocalPeer,
   selectRoomState,
   selectIsAllowedToPublish,
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { MessageModal } from '../MessageModal';
 import { Button } from '../Button';
 import { ProgressIcon } from '../Icons';
 import { VideoTile, VideoTileProps } from '../VideoTile';
