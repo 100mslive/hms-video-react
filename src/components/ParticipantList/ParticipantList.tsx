@@ -45,14 +45,14 @@ const defaultClasses: ParticipantListClasses = {
     'text-gray-200 dark:text-gray-500 group flex items-center px-3 pt-3 pb-2 text-base',
   menuItem:
     'text-gray-100 dark:text-white group flex items-center flex-nowrap px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
-  menuText: 'flex-1 flex items-center',
-  menuIconContainer: 'flex flex-shrink-0 justify-self-end justify-end',
+  menuText: 'flex-1 flex items-center min-w-0',
+  menuIconContainer: 'w-16 flex flex-shrink-0 justify-self-end justify-end',
   onIcon: '',
   offIcon: '',
   dialogContainer:
-    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full p-4 rounded-xl',
+    'bg-white text-gray-100 dark:bg-gray-100 dark:text-white w-full md:w-96 p-4 rounded-xl',
   dialogHeader: 'flex items-center space-x-2',
-  expanded: 'flex-grow',
+  expanded: 'flex-1 min-w-0 truncate',
   textGray: 'text-gray-400',
   divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
   formContainer: 'px-4 py-2 space-y-2',
@@ -69,13 +69,10 @@ const customClasses: ParticipantListClasses = {
   onIcon: 'hmsui-participantList-show-on-group-hover',
 };
 
-type RoleMap = Map<string, HMSPeerWithMuteStatus[]>;
-
 const HMSDialog = withStyles({
   paper: {
     borderRadius: '12px',
     backgroundColor: 'inherit',
-    minWidth: '400px',
   },
 })(Dialog);
 
@@ -84,7 +81,7 @@ export const ParticipantList = ({
   classes,
   onToggle,
 }: ParticipantListProps) => {
-  const { tw } = useHMSTheme();
+  const { tw, toast } = useHMSTheme();
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<ParticipantListClasses>({
@@ -128,7 +125,7 @@ export const ParticipantList = ({
     setSelectedRole(event.currentTarget.value);
   };
 
-  const handleSaveSettings = () => {
+  const handleSaveSettings = async () => {
     if (
       !selectedPeer ||
       !selectedRole ||
@@ -138,7 +135,11 @@ export const ParticipantList = ({
     }
 
     if (selectedPeer.roleName !== selectedRole) {
-      hmsActions.changeRole(selectedPeer.id, selectedRole, forceChange);
+      try {
+        await hmsActions.changeRole(selectedPeer.id, selectedRole, forceChange);
+      } catch (error) {
+        toast(error.message);
+      }
     }
 
     setSelectedPeer(null);
@@ -157,11 +158,13 @@ export const ParticipantList = ({
         <div className={styler('dialogContainer')}>
           <div className={styler('dialogHeader')}>
             <SettingsIcon className="h-7 w-7" />
-            <div className={styler('expanded')}>
-              <Text variant="heading">
-                User Settings ({selectedPeer?.name})
-              </Text>
-            </div>
+            <Text
+              variant="heading"
+              className={styler('expanded')}
+              title={selectedPeer?.name}
+            >
+              User Settings ({selectedPeer?.name})
+            </Text>
             <Button
               iconOnly
               variant="no-fill"
@@ -257,9 +260,8 @@ export const ParticipantList = ({
                       className={`${styler('menuSection')}`}
                       role="menuitem"
                     >
-                      {role === 'undefined' ? 'Unknown' : role}
-                      {rolesMap[role].length > 1 ? 's' : ''}{' '}
-                      {rolesMap[role].length}
+                      {role === 'undefined' ? 'Unknown' : role}(
+                      {rolesMap[role].length})
                     </span>
                     <div>
                       {rolesMap[role] &&
@@ -269,7 +271,6 @@ export const ParticipantList = ({
                             styler={styler}
                             isAudioEnabled={participant.isAudioEnabled}
                             name={participant.peer.name}
-                            isLocal={participant.peer.isLocal}
                             onUserSettingsClick={() => {
                               setSelectedPeer(participant.peer);
                               setSelectedRole(participant.peer.roleName || '');

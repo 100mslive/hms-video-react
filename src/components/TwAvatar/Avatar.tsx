@@ -1,7 +1,9 @@
 import React, { useMemo, PropsWithChildren } from 'react';
+import { useResizeDetector } from 'react-resize-detector';
+import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { getInitialsFromName } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { useHMSTheme } from '../../hooks/HMSThemeProvider';
+import './index.css';
 
 interface AvatarPropsWithoutNativeAttrs {
   /**
@@ -127,6 +129,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
       }),
     [],
   );
+  const { width = 0, ref } = useResizeDetector();
 
   const classList = [`${styler('root')}`];
   shape === 'circle'
@@ -135,16 +138,20 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   if (!image) {
     classList.push(`${styler('rootDivWrapper')}`);
   }
-  if (size === 'sm') {
-    classList.push(`${styler('rootSizeSm')}`);
-  } else if (size === 'md') {
-    classList.push(`${styler('rootSizeMd')}`);
-  } else if (size === 'lg') {
-    classList.push(`${styler('rootSizeLg')}`);
-  } else if (size === 'xl') {
-    classList.push(`${styler('rootSizeXl')}`);
+
+  if (shape === 'square') {
+    if (size === 'sm') {
+      classList.push(`${styler('rootSizeSm')}`);
+    } else if (size === 'md') {
+      classList.push(`${styler('rootSizeMd')}`);
+    } else if (size === 'lg') {
+      classList.push(`${styler('rootSizeLg')}`);
+    } else if (size === 'xl') {
+      classList.push(`${styler('rootSizeXl')}`);
+    }
   }
 
+  const fontSize = Math.max(width * 0.33, 14);
   const indexFactor = 20;
   const colorIndex = useMemo(
     () => ((label?.codePointAt(0) || 0) % indexFactor) + 1,
@@ -154,9 +161,11 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     initial: (
       <div
         {...props}
+        ref={ref}
         className={classList.join(' ')}
         style={{
           backgroundColor: `${colorsArr[colorIndex - 1]}`,
+          fontSize: fontSize,
         }}
       >
         {getInitialsFromName(label)}
@@ -165,6 +174,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     gradient: (
       <div
         {...props}
+        ref={ref}
         className={classList.join(' ')}
         style={{
           background: `linear-gradient(180deg, ${
@@ -178,6 +188,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     icon: (
       <div
         {...props}
+        ref={ref}
         className={classList.join(' ')}
         style={{
           backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(
@@ -191,6 +202,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     image: (
       <img
         {...props}
+        ref={ref}
         className={classList.join(' ')}
         src={image}
         alt="Profile image"

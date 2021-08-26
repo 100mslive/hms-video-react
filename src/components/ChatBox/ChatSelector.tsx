@@ -11,6 +11,7 @@ import { useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { Input } from '../Input';
 import { Avatar } from '../TwAvatar';
+import { CloseIcon } from '../Icons';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 export interface ChatSelectorClasses {
@@ -22,6 +23,7 @@ export interface ChatSelectorClasses {
   itemTitle?: string;
   search?: string;
   searchBox?: string;
+  clearSearch?: string;
   itemHover?: string;
 }
 
@@ -43,8 +45,10 @@ const defaultClasses: ChatSelectorClasses = {
   itemHover: 'hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   itemTitle: 'flex-1 w-9/12 min-w-0 truncate',
   dot: 'bg-brand-main w-3 h-3 rounded-full',
-  searchBox: 'p-3',
-  search: 'h-8 bg-gray-600 dark:bg-gray-300',
+  searchBox: 'p-3 relative',
+  search: 'h-8 bg-gray-600 dark:bg-gray-300 pr-7',
+  clearSearch:
+    'absolute right-5 top-5 w-4 h-4 fill-current text-white z-10 cursor-pointer',
 };
 
 interface ChatSelectorRoleProps {
@@ -139,11 +143,16 @@ export const ChatSelector = ({
           autoCorrect="off"
           autoComplete="name"
           compact
+          value={search}
           placeholder="Search Participants"
           classes={{ rootCompact: styler('search') }}
           onChange={e => {
             setSearch(e.target.value);
           }}
+        />
+        <CloseIcon
+          className={styler('clearSearch')}
+          onClick={() => setSearch('')}
         />
       </div>
       <div className={styler('itemList')}>
@@ -156,7 +165,12 @@ export const ChatSelector = ({
         </div>
         {roles.map(role => {
           return (
-            <ChatSelectorRole key={role} role={role} onChange={onChange} styler={styler} />
+            <ChatSelectorRole
+              key={role}
+              role={role}
+              onChange={onChange}
+              styler={styler}
+            />
           );
         })}
         {(filteredPeers.length > 0 || search) && (
@@ -167,7 +181,12 @@ export const ChatSelector = ({
         )}
         {filteredPeers.map(peer => {
           return (
-            <ChatSelectorPeer key={peer.id} peer={peer} onChange={onChange} styler={styler} />
+            <ChatSelectorPeer
+              key={peer.id}
+              peer={peer}
+              onChange={onChange}
+              styler={styler}
+            />
           );
         })}
       </div>

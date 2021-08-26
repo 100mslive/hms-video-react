@@ -25,6 +25,7 @@ import {
   CamOnIcon,
   MicOffIcon,
   MicOnIcon,
+  RemovePeerIcon,
   VolumeIcon,
 } from '../Icons';
 import { Slider } from '../Slider/Slider';
@@ -111,7 +112,7 @@ export interface VideoTileClasses extends VideoClasses {
 }
 
 const defaultClasses: VideoTileClasses = {
-  root: 'group w-full h-full flex relative justify-center rounded-lg ',
+  root: 'group w-full h-full flex relative justify-center rounded-lg min-h-0',
   videoContainer: 'relative rounded-lg object-cover relative w-full max-h-full',
   avatarContainer:
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
@@ -143,7 +144,7 @@ export const VideoTile = ({
   avatarType,
   compact = false,
 }: VideoTileProps) => {
-  const { appBuilder, tw } = useHMSTheme();
+  const { appBuilder, tw, toast } = useHMSTheme();
   const hmsActions = useHMSActions();
   const [showMenu, setShowMenu] = useState(false);
   const [showTrigger, setShowTrigger] = useState(false);
@@ -187,9 +188,13 @@ export const VideoTile = ({
     setShowMenu(false);
   };
 
-  const toggleTrackEnabled = (track?: HMSTrack | null) => {
+  const toggleTrackEnabled = async (track?: HMSTrack | null) => {
     if (track) {
-      hmsActions.setRemoteTrackEnabled(track.id, !track.enabled);
+      try {
+        await hmsActions.setRemoteTrackEnabled(track.id, !track.enabled);
+      } catch (error) {
+        toast(error.message);
+      }
     }
   };
 
@@ -314,9 +319,20 @@ export const VideoTile = ({
     if (permissions?.removeOthers && !showScreen) {
       children.push(
         <ContextMenuItem
-          label="Remove from room"
+          label="Remove Participant"
+          classes={{
+            menuTitle: 'text-red-500 dark:text-red-500',
+            menuIcon: 'text-red-500 dark:text-red-500',
+          }}
           key={peer.id}
-          onClick={() => hmsActions.removePeer(peer.id, '')}
+          icon={<RemovePeerIcon />}
+          onClick={async () => {
+            try {
+              await hmsActions.removePeer(peer.id, '');
+            } catch (error) {
+              toast(error.message);
+            }
+          }}
         />,
       );
     }

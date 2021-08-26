@@ -15,10 +15,12 @@ export const HMSThemeProvider = ({
   config,
   children,
   appBuilder,
+  toast,
 }: {
   children: React.ReactNode;
   config: any;
   appBuilder: appBuilder;
+  toast?: (message: any, options?: any) => any;
 }) => {
   if (isBrowser) {
     if (appBuilder.theme === 'dark') {
@@ -38,6 +40,7 @@ export const HMSThemeProvider = ({
         tw,
         tailwindConfig: twConfig,
         appBuilder,
+        toast: toast || console.log,
       }}
     >
       {children}

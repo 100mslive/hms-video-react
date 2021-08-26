@@ -54,7 +54,7 @@ const defaultClasses: ChatBoxClasses = {
   headerText: 'text-gray-300 dark:text-gray-500 flex items-center',
   headerCloseButton: 'focus:outline-none',
   messageBox:
-    'bg-white dark:bg-gray-100 w-full h-full p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-1',
+    'bg-white dark:bg-gray-100 w-full h-0 p-3 text-gray-300 dark:text-gray-500 overflow-y-auto no-scrollbar flex-auto',
   messageRoot: 'py-3',
   messageInfo: 'flex justify-between',
   messageTime: 'text-xs',
@@ -117,7 +117,7 @@ export const ChatBox = ({
     return `${date.getHours()}:${minString}`;
   },
 }: ChatProps) => {
-  const { tw } = useHMSTheme();
+  const { tw, toast } = useHMSTheme();
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<ChatBoxClasses>({
@@ -149,17 +149,21 @@ export const ChatBox = ({
 
   messages = messages || storeMessages;
 
-  const sendMessage = (message: string) => {
+  const sendMessage = async (message: string) => {
     if (onSend) {
       onSend(message);
       return;
     }
-    if (selection.role) {
-      hmsActions.sendGroupMessage(message, [selection.role]);
-    } else if (selection.peerId) {
-      hmsActions.sendDirectMessage(message, selection.peerId);
-    } else {
-      hmsActions.sendBroadcastMessage(message);
+    try {
+      if (selection.role) {
+        await hmsActions.sendGroupMessage(message, [selection.role]);
+      } else if (selection.peerId) {
+        await hmsActions.sendDirectMessage(message, selection.peerId);
+      } else {
+        await hmsActions.sendBroadcastMessage(message);
+      }
+    } catch (error) {
+      toast(error.message);
     }
   };
   const [messageDraft, setMessageDraft] = useState('');
@@ -323,12 +327,12 @@ export const ChatBox = ({
             className={`${styler('chatInput')}`}
             placeholder="Write something here"
             value={messageDraft}
-            onKeyPress={event => {
+            onKeyPress={async event => {
               if (event.key === 'Enter') {
                 if (!event.shiftKey) {
                   event.preventDefault();
                   if (messageDraft.trim() !== '') {
-                    sendMessage(messageDraft);
+                    await sendMessage(messageDraft);
                     setMessageDraft('');
                   }
                 }
@@ -344,8 +348,8 @@ export const ChatBox = ({
             variant={'no-fill'}
             iconSize={'sm'}
             size="sm"
-            onClick={() => {
-              sendMessage(messageDraft);
+            onClick={async () => {
+              await sendMessage(messageDraft);
               setMessageDraft('');
             }}
           >

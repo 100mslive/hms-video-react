@@ -5,7 +5,7 @@ import { MicOffIcon, MicOnIcon, SettingsIcon } from '../Icons';
 import { Text } from '../Text';
 import { ParticipantListClasses } from './ParticipantProps';
 import { StylerType } from '../../types';
-import { HMSPeer, selectLocalPeerRole } from '@100mslive/hms-video-store';
+import { selectLocalPeerRole } from '@100mslive/hms-video-store';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 
 interface PropsType {
@@ -13,7 +13,6 @@ interface PropsType {
   name: string;
   isAudioEnabled?: boolean;
   onUserSettingsClick?: () => void;
-  isLocal: boolean;
 }
 
 export const ParticipantInList = ({
@@ -21,7 +20,6 @@ export const ParticipantInList = ({
   name,
   isAudioEnabled,
   onUserSettingsClick,
-  isLocal,
 }: PropsType) => {
   const localPeerRole = useHMSStore(selectLocalPeerRole);
 
@@ -29,12 +27,12 @@ export const ParticipantInList = ({
     <span className={styler('menuItem')} role="menuitem">
       <div className={styler('menuText')}>
         <Avatar label={name} shape="square" classes={{ root: 'mr-2' }} />
-        <Text variant="body" classes={{ root: 'flex-1 truncate' }} title={name}>
+        <Text variant="body" className={styler('expanded')} title={name}>
           {name}
         </Text>
       </div>
       <div className={styler('menuIconContainer')}>
-        {!isLocal && localPeerRole?.permissions.changeRole && (
+        {localPeerRole?.permissions.changeRole && (
           <div>
             <Button
               iconOnly
