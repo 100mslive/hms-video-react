@@ -3,3 +3,7 @@
   visibility: visible;
   max-height: 60px;
 }
+
+.hmsui-videoTileControls-root {
+  min-height: 3rem;
+}

@@ -34,7 +34,6 @@ export const Default = DarkTemplate.bind({});
 Default.args = {
   joinOnClick: values =>
     alert(`Join Clicked, Submitted Values: ${JSON.stringify(values, null, 1)}`),
-  errorOnClick: () => alert('Error Modal close!'),
   config: {
     authToken: 'token',
     userName: 'username',
@@ -45,7 +44,6 @@ export const Light = LightTemplate.bind({});
 Light.args = {
   joinOnClick: values =>
     alert(`Join Clicked, Submitted Values: ${JSON.stringify(values, null, 1)}`),
-  errorOnClick: () => alert('Error Modal close!'),
   config: {
     authToken: 'token',
     userName: 'username',
