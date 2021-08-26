@@ -50,7 +50,7 @@ export interface PreviewProps {
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
   videoTileProps?: Partial<VideoTileProps>;
   videoTileClasses?: VideoTileClasses;
-  onNameChange: (name: string) => void;
+  onNameChange?: (name: string) => void;
   /**
    * extra classes added  by user
    */
@@ -106,7 +106,7 @@ export const Preview = ({
     compact: true,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
       setName(e.target.value);
-      onNameChange(e.target.value);
+      onNameChange?.(e.target.value);
       setShowValidation(true);
     },
     value: name,
