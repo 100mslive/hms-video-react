@@ -1,10 +1,11 @@
 import React, { useMemo } from 'react';
+import { useResizeDetector } from 'react-resize-detector';
 import { AudioLevelDisplayType } from '../../../types';
 import { Button } from '../../Button';
 import { MicOffIcon } from '../../Icons';
-import '../index.css';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
 import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
+import '../index.css';
 
 export interface VideoTileControlsClasses {
   root?: string;
@@ -31,7 +32,7 @@ export interface VideoTileControlsProps {
 
 //TODO group hover is not working
 const defaultClasses: VideoTileControlsClasses = {
-  root: 'absolute bottom-0 w-full z-10 rounded-none h-24 overflow-hidden',
+  root: 'absolute bottom-0 w-full z-10 h-1/3 rounded-none overflow-hidden',
   // TODO solve for smaller tiles
   controlsInner:
     'absolute bottom-0 w-full h-full z-10 pb-2 text-white px-2 text-center flex flex-col justify-end items-center',
@@ -68,8 +69,14 @@ export const VideoTileControls = ({
       }),
     [],
   );
+  const { height = 0, ref } = useResizeDetector();
+  let iconSize: 'sm' | 'md' = 'md';
+  if (height < 50) {
+    iconSize = 'sm';
+  }
+
   return (
-    <div className={`${styler('root')}`}>
+    <div className={`${styler('root')}`} ref={ref}>
       <div className={`${showGradient ? styler('gradient') : ''}`} />
       <div className={`${styler('controlsInner')}`}>
         <div className={`${styler('controlsWrapper')}`}>
@@ -77,7 +84,8 @@ export const VideoTileControls = ({
             <Button
               iconOnly
               active
-              size={'md'}
+              size={iconSize}
+              iconSize={iconSize}
               shape="circle"
               variant="danger"
               classes={{ root: 'dark' }}

@@ -47,6 +47,7 @@ export interface AvatarClasses {
   rootShapeSquare?: string;
   rootDivWrapper?: string;
   text?: string;
+  alignTop?: string;
 }
 
 const defaultClasses: AvatarClasses = {
@@ -55,6 +56,7 @@ const defaultClasses: AvatarClasses = {
   rootShapeCircle: 'rounded-full',
   rootShapeSquare: 'rounded-lg',
   rootDivWrapper: 'flex text-center items-center justify-center',
+  alignTop: '-mt-6',
   text: 'absolute',
 };
 
@@ -134,6 +136,10 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
 
   if (size === 'sm') {
     classList.push(`${styler('rootSizeSm')}`);
+  }
+  // move slightly above when the tile is too small
+  if (width < 50) {
+    classList.push(`${styler('alignTop')}`);
   }
 
   const fontSize = Math.max(width * 0.33, 14);
