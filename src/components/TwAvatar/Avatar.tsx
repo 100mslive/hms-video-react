@@ -50,6 +50,7 @@ export interface AvatarClasses {
   rootShapeSquare?: string;
   rootDivWrapper?: string;
   text?: string;
+  alignTop?: string;
 }
 
 const defaultClasses: AvatarClasses = {
@@ -62,6 +63,7 @@ const defaultClasses: AvatarClasses = {
   rootShapeSquare: 'rounded-lg',
   rootDivWrapper: 'flex text-center items-center justify-center',
   text: 'absolute',
+  alignTop: '-mt-6',
 };
 
 const colorsArr = [
@@ -138,15 +140,20 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     ? classList.push(`${styler('rootShapeCircle')}`)
     : classList.push(`${styler('rootShapeSquare')}`);
 
-    if (size === 'sm') {
-      classList.push(`${styler('rootSizeSm')}`);
-    } else if (size === 'md') {
-      classList.push(`${styler('rootSizeMd')}`);
-    } else if (size === 'lg') {
-      classList.push(`${styler('rootSizeLg')}`);
-    } else if (size === 'xl') {
-      classList.push(`${styler('rootSizeXl')}`);
-    }
+  if (size === 'sm') {
+    classList.push(`${styler('rootSizeSm')}`);
+  } else if (size === 'md') {
+    classList.push(`${styler('rootSizeMd')}`);
+  } else if (size === 'lg') {
+    classList.push(`${styler('rootSizeLg')}`);
+  } else if (size === 'xl') {
+    classList.push(`${styler('rootSizeXl')}`);
+  }
+
+  // move slightly above when the tile is too small
+  if (!size && width < 50) {
+    classList.push(`${styler('alignTop')}`);
+  }
 
   const fontSize = size ? undefined : Math.max(width * 0.33, 14);
   const indexFactor = 20;
