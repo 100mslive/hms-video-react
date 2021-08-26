@@ -23,6 +23,7 @@ export * from './components/ScreenShareDisplay';
 export * from './components/PostLeaveDisplay';
 export * from './components/Button';
 export * from './components/Text';
+export * from './components/ContextMenu';
 export {
   HMSRoomProvider,
   useHMSStore,

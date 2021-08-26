@@ -89,13 +89,13 @@ export const VideoTileControls = ({
         <div className={`${styler('label')}`} title={label}>
           {label}
         </div>
-        <div className={`${styler('controls')}`}>
+        {/* <div className={`${styler('controls')}`}>
           {!isLocal && showAudioMuteStatus && !isAudioMuted && allowRemoteMute && (
             <Button iconOnly size={'md'} classes={{ root: 'dark' }}>
               <MicOffIcon />
             </Button>
           )}
-        </div>
+        </div> */}
       </div>
     </div>
   );

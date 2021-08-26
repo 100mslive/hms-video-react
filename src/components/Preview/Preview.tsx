@@ -4,13 +4,11 @@ import {
   HMSRoomState,
   selectIsLocalAudioEnabled,
   selectIsLocalVideoDisplayEnabled,
-  selectLocalMediaSettings,
   selectLocalPeer,
   selectRoomState,
   selectIsAllowedToPublish,
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { MessageModal } from '../MessageModal';
 import { Button } from '../Button';
 import { ProgressIcon } from '../Icons';
 import { VideoTile, VideoTileProps } from '../VideoTile';
@@ -35,7 +33,6 @@ export interface PreviewClasses {
   nameDiv?: string;
   inputRoot?: string;
   joinButton?: string;
-  goBackButton?: string;
 }
 const defaultClasses: PreviewClasses = {
   root:
@@ -51,17 +48,9 @@ const defaultClasses: PreviewClasses = {
 export interface PreviewProps {
   config: HMSConfig;
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
-  /**
-   * Click handler for error modal close.
-   * Ignored when either of the allowWithError properties is true.
-   */
-  errorOnClick: () => void;
-  allowWithError?: {
-    capture: boolean;
-    unsupported: boolean;
-  };
   videoTileProps?: Partial<VideoTileProps>;
   videoTileClasses?: VideoTileClasses;
+  onNameChange: (name: string) => void;
   /**
    * extra classes added  by user
    */
@@ -71,24 +60,15 @@ export interface PreviewProps {
 export const Preview = ({
   config,
   joinOnClick,
-  errorOnClick,
-  allowWithError = {
-    capture: true,
-    unsupported: true,
-  },
   videoTileProps,
   classes,
   videoTileClasses,
+  onNameChange,
 }: PreviewProps) => {
   const { tw } = useHMSTheme();
   const localPeer = useHMSStore(selectLocalPeer);
   const hmsActions = useHMSActions();
   const roomState = useHMSStore(selectRoomState);
-  const {
-    audioInputDeviceId,
-    videoInputDeviceId,
-    audioOutputDeviceId,
-  } = useHMSStore(selectLocalMediaSettings);
 
   const styler = useMemo(
     () =>
@@ -104,11 +84,6 @@ export const Preview = ({
   /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
   const [inProgress, setInProgress] = useState(false);
-  const [error, setError] = useState({
-    allowJoin: false,
-    title: '',
-    message: '',
-  });
 
   const audioEnabled = useHMSStore(selectIsLocalAudioEnabled);
   const videoEnabled = useHMSStore(selectIsLocalVideoDisplayEnabled);
@@ -119,12 +94,6 @@ export const Preview = ({
 
   const [name, setName] = useState(config.userName || '');
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    setShowModal(Boolean(error.title));
-  }, [error.title]);
 
   useEffect(() => {
     hmsActions.preview(config);
@@ -137,6 +106,7 @@ export const Preview = ({
     compact: true,
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
       setName(e.target.value);
+      onNameChange(e.target.value);
       setShowValidation(true);
     },
     value: name,
@@ -176,9 +146,9 @@ export const Preview = ({
                   />
                 }
               />
-            ) : !error.title ? (
+            ) : (
               <ProgressIcon width="100" height="100" />
-            ) : null}
+            )}
           </div>
           {/* helloDiv */}
           <div className={styler('helloDiv')}>Hi There</div>
@@ -218,24 +188,12 @@ export const Preview = ({
               });
               setInProgress(false);
             }}
+            className={styler('joinButton')}
           >
             Join
           </Button>
         </div>
       </div>
-      {/* messageModal */}
-      <MessageModal
-        show={showModal}
-        title={error.title}
-        body={error.message}
-        onClose={() => {
-          if (error.allowJoin) {
-            setShowModal(false);
-            return;
-          }
-          errorOnClick();
-        }}
-      />
     </Fragment>
   );
 };
