@@ -138,9 +138,15 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
     ? classList.push(`${styler('rootShapeCircle')}`)
     : classList.push(`${styler('rootShapeSquare')}`);
 
-  if (size === 'sm') {
-    classList.push(`${styler('rootSizeSm')}`);
-  }
+    if (size === 'sm') {
+      classList.push(`${styler('rootSizeSm')}`);
+    } else if (size === 'md') {
+      classList.push(`${styler('rootSizeMd')}`);
+    } else if (size === 'lg') {
+      classList.push(`${styler('rootSizeLg')}`);
+    } else if (size === 'xl') {
+      classList.push(`${styler('rootSizeXl')}`);
+    }
 
   const fontSize = size ? undefined : Math.max(width * 0.33, 14);
   const indexFactor = 20;
