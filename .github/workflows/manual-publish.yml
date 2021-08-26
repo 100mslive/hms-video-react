@@ -6,9 +6,6 @@ name: Manual Publish Latest Package
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   publish-npm:
