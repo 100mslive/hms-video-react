@@ -43,23 +43,19 @@ export type AvatarProps = AvatarPropsWithoutNativeAttrs &
 export interface AvatarClasses {
   root?: string;
   rootSizeSm?: string;
-  rootSizeMd?: string;
-  rootSizeLg?: string;
-  rootSizeXl?: string;
   rootShapeCircle?: string;
   rootShapeSquare?: string;
   rootDivWrapper?: string;
+  text?: string;
 }
 
 const defaultClasses: AvatarClasses = {
   root: 'object-cover text-white',
-  rootSizeSm: 'w-8 h-8 ',
-  rootSizeMd: 'w-12 h-12',
-  rootSizeLg: 'w-16 h-16 text-xl',
-  rootSizeXl: 'w-28 h-28 text-4xl',
+  rootSizeSm: '',
   rootShapeCircle: 'rounded-full',
   rootShapeSquare: 'rounded-lg',
   rootDivWrapper: 'flex text-center items-center justify-center',
+  text: 'absolute',
 };
 
 const colorsArr = [
@@ -135,20 +131,9 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
   shape === 'circle'
     ? classList.push(`${styler('rootShapeCircle')}`)
     : classList.push(`${styler('rootShapeSquare')}`);
-  if (!image) {
-    classList.push(`${styler('rootDivWrapper')}`);
-  }
 
-  if (shape === 'square') {
-    if (size === 'sm') {
-      classList.push(`${styler('rootSizeSm')}`);
-    } else if (size === 'md') {
-      classList.push(`${styler('rootSizeMd')}`);
-    } else if (size === 'lg') {
-      classList.push(`${styler('rootSizeLg')}`);
-    } else if (size === 'xl') {
-      classList.push(`${styler('rootSizeXl')}`);
-    }
+  if (size === 'sm') {
+    classList.push(`${styler('rootSizeSm')}`);
   }
 
   const fontSize = Math.max(width * 0.33, 14);
@@ -168,7 +153,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
           fontSize: fontSize,
         }}
       >
-        {getInitialsFromName(label)}
+        <span className={styler('text')}>{getInitialsFromName(label)}</span>
       </div>
     ),
     gradient: (
@@ -182,7 +167,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
           } 0%, ${gradArr[colorIndex - 1][1]} 100%)`,
         }}
       >
-        {getInitialsFromName(label)}
+        <span className={styler('text')}>{getInitialsFromName(label)}</span>
       </div>
     ),
     icon: (
