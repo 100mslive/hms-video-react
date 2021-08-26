@@ -1,8 +1,6 @@
 .hmsui-avatar-root {
-  width: 33.33%;
-  padding-top: 33.33%;
-  min-height: 1.5rem;
-  max-height: 7rem;
+  width: 30%;
+  padding-top: 30%;
   position: relative;
 }
 
