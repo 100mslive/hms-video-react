@@ -8,7 +8,10 @@ import {
 } from '../../utils';
 import { Carousel } from '../Carousel';
 import { useResizeDetector } from 'react-resize-detector';
-import { VideoTileClasses } from '../VideoTile/VideoTile';
+import {
+  AdditionalVideoTileProps,
+  VideoTileClasses,
+} from '../VideoTile/VideoTile';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { HMSPeer, HMSTrack, HMSTrackID } from '@100mslive/hms-video-store';
@@ -126,8 +129,18 @@ export interface VideoListProps {
    */
   videoTileClasses?: VideoTileClasses;
 
+  /**
+   * Type of avatar to display when video is muted
+   */
   avatarType?: 'initial';
   compact?: boolean;
+  /**
+   * Props to pass on to each peer's Video Tile
+   */
+  videoTileProps?: (
+    peer: HMSPeer,
+    track?: HMSTrack,
+  ) => AdditionalVideoTileProps;
 }
 
 const defaultClasses: VideoListClasses = {
@@ -160,6 +173,7 @@ export const VideoList = ({
   allowRemoteMute,
   avatarType,
   compact = false,
+  videoTileProps,
 }: VideoListProps) => {
   const { tw, appBuilder, tailwindConfig } = useHMSTheme();
   const styler = useMemo(
@@ -271,6 +285,9 @@ export const VideoList = ({
                   } `}
                 >
                   {tracksPeersOnOnePage.map((trackPeer, index) => {
+                    const additionalProps = videoTileProps
+                      ? videoTileProps(trackPeer.peer, trackPeer.track)
+                      : {};
                     return (
                       <div
                         key={
@@ -301,6 +318,7 @@ export const VideoList = ({
                           }
                           avatarType={avatarType}
                           compact={compact}
+                          {...additionalProps}
                         />
                       </div>
                     );

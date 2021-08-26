@@ -34,7 +34,19 @@ import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
-export interface VideoTileProps extends Omit<VideoProps, 'peerId'> {
+
+export interface AdditionalVideoTileProps {
+  customAvatar?: React.ReactNode;
+
+  /**
+   * Array of <ContextMenuItem /> components
+   */
+  contextMenuItems?: JSX.Element[];
+}
+
+export interface VideoTileProps
+  extends Omit<VideoProps, 'peerId'>,
+    AdditionalVideoTileProps {
   /**
    * HMS Peer object for which the tile is shown.
    */
@@ -143,6 +155,8 @@ export const VideoTile = ({
   classes,
   avatarType,
   compact = false,
+  customAvatar,
+  contextMenuItems,
 }: VideoTileProps) => {
   const { appBuilder, tw, toast } = useHMSTheme();
   const hmsActions = useHMSActions();
@@ -363,6 +377,20 @@ export const VideoTile = ({
     simulcastLayer,
   ]);
 
+  const tileAvatar = useMemo(
+    () =>
+      customAvatar ? (
+        customAvatar
+      ) : (
+        <Avatar
+          label={peer.name}
+          size={compact ? 'sm' : 'xl'}
+          avatarType={avatarType}
+        />
+      ),
+    [peer],
+  );
+
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
 
@@ -383,7 +411,7 @@ export const VideoTile = ({
             menuOpen={showMenu}
             onTrigger={value => setShowMenu(value)}
           >
-            {getMenuItems()}
+            {contextMenuItems || getMenuItems()}
           </ContextMenu>
         )}
         {((impliedAspectRatio.width && impliedAspectRatio.height) ||
@@ -425,11 +453,7 @@ export const VideoTile = ({
                     : ''
                 }`}
               >
-                <Avatar
-                  label={peer.name}
-                  size={compact ? 'sm' : 'xl'}
-                  avatarType={avatarType}
-                />
+                {tileAvatar}
               </div>
             )}
             {controlsComponent ? (
