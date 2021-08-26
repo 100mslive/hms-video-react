@@ -43,6 +43,9 @@ export type AvatarProps = AvatarPropsWithoutNativeAttrs &
 export interface AvatarClasses {
   root?: string;
   rootSizeSm?: string;
+  rootSizeMd?: string;
+  rootSizeLg?: string;
+  rootSizeXl?: string;
   rootShapeCircle?: string;
   rootShapeSquare?: string;
   rootDivWrapper?: string;
@@ -52,12 +55,15 @@ export interface AvatarClasses {
 
 const defaultClasses: AvatarClasses = {
   root: 'object-cover text-white',
-  rootSizeSm: '',
+  rootSizeSm: 'w-8 h-8 pt-0',
+  rootSizeMd: 'w-12 h-12 pt-0',
+  rootSizeLg: 'w-16 h-16 text-xl pt-0',
+  rootSizeXl: 'w-28 h-28 text-4xl pt-0',
   rootShapeCircle: 'rounded-full',
   rootShapeSquare: 'rounded-lg',
   rootDivWrapper: 'flex text-center items-center justify-center',
-  alignTop: '-mt-6',
   text: 'absolute',
+  alignTop: '-mt-6',
 };
 
 const colorsArr = [
@@ -107,7 +113,7 @@ const gradArr = [
 ];
 
 export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
-  size = 'sm',
+  size,
   label,
   icon,
   image,
@@ -136,13 +142,20 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
 
   if (size === 'sm') {
     classList.push(`${styler('rootSizeSm')}`);
+  } else if (size === 'md') {
+    classList.push(`${styler('rootSizeMd')}`);
+  } else if (size === 'lg') {
+    classList.push(`${styler('rootSizeLg')}`);
+  } else if (size === 'xl') {
+    classList.push(`${styler('rootSizeXl')}`);
   }
+
   // move slightly above when the tile is too small
-  if (width < 50) {
+  if (!size && width < 50) {
     classList.push(`${styler('alignTop')}`);
   }
 
-  const fontSize = Math.max(width * 0.33, 14);
+  const fontSize = size ? undefined : Math.max(width * 0.33, 14);
   const indexFactor = 20;
   const colorIndex = useMemo(
     () => ((label?.codePointAt(0) || 0) % indexFactor) + 1,
@@ -171,6 +184,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
           background: `linear-gradient(180deg, ${
             gradArr[colorIndex - 1][0]
           } 0%, ${gradArr[colorIndex - 1][1]} 100%)`,
+          fontSize: fontSize,
         }}
       >
         <span className={styler('text')}>{getInitialsFromName(label)}</span>
@@ -185,6 +199,7 @@ export const Avatar: React.FC<PropsWithChildren<AvatarProps>> = ({
           backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(
             16,
           )}`,
+          fontSize: fontSize,
         }}
       >
         {icon}

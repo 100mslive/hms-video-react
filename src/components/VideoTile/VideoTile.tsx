@@ -382,11 +382,7 @@ export const VideoTile = ({
       customAvatar ? (
         customAvatar
       ) : (
-        <Avatar
-          label={peer.name}
-          size={compact ? 'sm' : 'xl'}
-          avatarType={avatarType}
-        />
+        <Avatar label={peer.name} avatarType={avatarType} />
       ),
     [peer],
   );
