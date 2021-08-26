@@ -26,7 +26,12 @@ export const ParticipantInList = ({
   return (
     <span className={styler('menuItem')} role="menuitem">
       <div className={styler('menuText')}>
-        <Avatar label={name} shape="square" classes={{ root: 'mr-2' }} />
+        <Avatar
+          label={name}
+          shape="square"
+          size="sm"
+          classes={{ root: 'mr-2' }}
+        />
         <Text variant="body" className={styler('expanded')} title={name}>
           {name}
         </Text>

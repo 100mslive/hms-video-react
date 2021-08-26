@@ -1,12 +1,7 @@
 .hmsui-avatar-root {
-  width: 30%;
-  padding-top: 30%;
+  width: min(30%, 112px);
+  padding-top: min(30%, 112px);
   position: relative;
-}
-
-.hmsui-avatar-root.hmsui-avatar-rootSm {
-  width: 20%;
-  padding-top: 20%;
 }
 
 .hmsui-avatar-text {
