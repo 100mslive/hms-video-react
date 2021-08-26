@@ -35,7 +35,6 @@ export interface PreviewClasses {
   nameDiv?: string;
   inputRoot?: string;
   joinButton?: string;
-  goBackButton?: string;
 }
 const defaultClasses: PreviewClasses = {
   root:
@@ -218,6 +217,7 @@ export const Preview = ({
               });
               setInProgress(false);
             }}
+            className={styler('joinButton')}
           >
             Join
           </Button>
