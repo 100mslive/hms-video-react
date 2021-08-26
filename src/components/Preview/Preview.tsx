@@ -50,15 +50,6 @@ const defaultClasses: PreviewClasses = {
 export interface PreviewProps {
   config: HMSConfig;
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
-  /**
-   * Click handler for error modal close.
-   * Ignored when either of the allowWithError properties is true.
-   */
-  errorOnClick: () => void;
-  allowWithError?: {
-    capture: boolean;
-    unsupported: boolean;
-  };
   videoTileProps?: Partial<VideoTileProps>;
   videoTileClasses?: VideoTileClasses;
   /**
@@ -70,11 +61,6 @@ export interface PreviewProps {
 export const Preview = ({
   config,
   joinOnClick,
-  errorOnClick,
-  allowWithError = {
-    capture: true,
-    unsupported: true,
-  },
   videoTileProps,
   classes,
   videoTileClasses,
@@ -83,11 +69,6 @@ export const Preview = ({
   const localPeer = useHMSStore(selectLocalPeer);
   const hmsActions = useHMSActions();
   const roomState = useHMSStore(selectRoomState);
-  const {
-    audioInputDeviceId,
-    videoInputDeviceId,
-    audioOutputDeviceId,
-  } = useHMSStore(selectLocalMediaSettings);
 
   const styler = useMemo(
     () =>
@@ -103,11 +84,6 @@ export const Preview = ({
   /** This is to show error message only when input it touched or button is clicked */
   const [showValidation, setShowValidation] = useState(false);
   const [inProgress, setInProgress] = useState(false);
-  const [error, setError] = useState({
-    allowJoin: false,
-    title: '',
-    message: '',
-  });
 
   const audioEnabled = useHMSStore(selectIsLocalAudioEnabled);
   const videoEnabled = useHMSStore(selectIsLocalVideoDisplayEnabled);
@@ -118,12 +94,6 @@ export const Preview = ({
 
   const [name, setName] = useState(config.userName || '');
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    setShowModal(Boolean(error.title));
-  }, [error.title]);
 
   useEffect(() => {
     hmsActions.preview(config);
@@ -175,9 +145,9 @@ export const Preview = ({
                   />
                 }
               />
-            ) : !error.title ? (
+            ) : (
               <ProgressIcon width="100" height="100" />
-            ) : null}
+            )}
           </div>
           {/* helloDiv */}
           <div className={styler('helloDiv')}>Hi There</div>
@@ -223,19 +193,6 @@ export const Preview = ({
           </Button>
         </div>
       </div>
-      {/* messageModal */}
-      <MessageModal
-        show={showModal}
-        title={error.title}
-        body={error.message}
-        onClose={() => {
-          if (error.allowJoin) {
-            setShowModal(false);
-            return;
-          }
-          errorOnClick();
-        }}
-      />
     </Fragment>
   );
 };
