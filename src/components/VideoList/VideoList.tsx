@@ -137,7 +137,10 @@ export interface VideoListProps {
   /**
    * Props to pass on to each peer's Video Tile
    */
-  videoTileProps?: (peer: HMSPeer) => AdditionalVideoTileProps;
+  videoTileProps?: (
+    peer: HMSPeer,
+    track?: HMSTrack,
+  ) => AdditionalVideoTileProps;
 }
 
 const defaultClasses: VideoListClasses = {
@@ -283,7 +286,7 @@ export const VideoList = ({
                 >
                   {tracksPeersOnOnePage.map((trackPeer, index) => {
                     const additionalProps = videoTileProps
-                      ? videoTileProps(trackPeer.peer)
+                      ? videoTileProps(trackPeer.peer, trackPeer.track)
                       : {};
                     return (
                       <div
