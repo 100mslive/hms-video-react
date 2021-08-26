@@ -188,7 +188,6 @@ export const Preview = ({
               });
               setInProgress(false);
             }}
-            className={styler('joinButton')}
           >
             Join
           </Button>
