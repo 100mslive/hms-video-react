@@ -32,7 +32,7 @@ export interface VideoTileControlsProps {
 
 //TODO group hover is not working
 const defaultClasses: VideoTileControlsClasses = {
-  root: 'absolute bottom-0 w-full z-10 h-1/3 rounded-none overflow-hidden',
+  root: 'absolute bottom-0 w-full z-10 h-20 rounded-none overflow-hidden',
   // TODO solve for smaller tiles
   controlsInner:
     'absolute bottom-0 w-full h-full z-10 pb-2 text-white px-2 text-center flex flex-col justify-end items-center',
@@ -69,15 +69,9 @@ export const VideoTileControls = ({
       }),
     [],
   );
-  const { height = 0, ref } = useResizeDetector();
-  let iconSize: 'sm' | 'md' = 'md';
-  // 64 will fit the whole content with md button
-  if (height <= 64) {
-    iconSize = 'sm';
-  }
 
   return (
-    <div className={`${styler('root')}`} ref={ref}>
+    <div className={`${styler('root')}`}>
       <div className={`${showGradient ? styler('gradient') : ''}`} />
       <div className={`${styler('controlsInner')}`}>
         <div className={`${styler('controlsWrapper')}`}>
@@ -85,8 +79,7 @@ export const VideoTileControls = ({
             <Button
               iconOnly
               active
-              size={iconSize}
-              iconSize={iconSize}
+              size="md"
               shape="circle"
               variant="danger"
               classes={{ root: 'dark' }}
