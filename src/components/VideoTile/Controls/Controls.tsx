@@ -71,7 +71,8 @@ export const VideoTileControls = ({
   );
   const { height = 0, ref } = useResizeDetector();
   let iconSize: 'sm' | 'md' = 'md';
-  if (height < 50) {
+  // 64 will fit the whole content with md button
+  if (height <= 64) {
     iconSize = 'sm';
   }
 
