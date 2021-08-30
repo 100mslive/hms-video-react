@@ -43,10 +43,10 @@ export interface ControlBarProps {
 const defaultClasses: ControlBarClasses = {
   root:
     'flex bg-white dark:bg-black h-full items-center p-3 mr-2 ml-2 justify-center md:justify-between relative',
-  leftRoot: 'flex justify-center z-10 space-x-2 md:space-x-3',
+  leftRoot: 'flex justify-center items-center z-10 space-x-2 md:space-x-3',
   centerRoot:
-    'flex md:flex-1 mr-4 ml-2 md:ml-0 md:mr-0 justify-center md:absolute md:left-0 md:right-0',
-  rightRoot: 'z-10',
+    'flex md:flex-1 mr-4 ml-2 md:ml-0 md:mr-0 justify-center items-center md:absolute md:left-0 md:right-0',
+  rightRoot: 'z-10 items-center flex',
 };
 
 export const ControlBar = ({

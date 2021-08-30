@@ -23,7 +23,11 @@ export const getVideoTracksFromPeers = (
     }
     if (showScreenFn(peer) && peer.auxiliaryTracks.length > 0) {
       const screenShareTrackID = peer.auxiliaryTracks[0];
-      if (tracks[screenShareTrackID]) {
+      // Don't show tile if screenshare only has audio
+      if (
+        tracks[screenShareTrackID] &&
+        tracks[screenShareTrackID].type === 'video'
+      ) {
         videoTracks.push({ track: tracks[screenShareTrackID], peer: peer });
       }
     }

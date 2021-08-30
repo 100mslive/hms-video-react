@@ -8,7 +8,7 @@ import {
   selectIsAllowedToSubscribe,
   HMSMediaSettings,
 } from '@100mslive/hms-video-store';
-import { Button as TwButton } from '../Button';
+import { Button } from '../Button';
 import { Text } from '../Text';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
@@ -165,7 +165,7 @@ export const Settings = ({
 
   return (
     <>
-      <TwButton
+      <Button
         iconOnly
         active={open}
         variant={'no-fill'}
@@ -173,7 +173,7 @@ export const Settings = ({
         onClick={handleClickOpen}
       >
         <SettingsIcon />
-      </TwButton>
+      </Button>
       <HMSDialog
         open={open}
         onClose={handleClose}
@@ -191,14 +191,14 @@ export const Settings = ({
               <Text variant="heading">Settings</Text>
             </span>
 
-            <TwButton
+            <Button
               iconOnly
               variant={'no-fill'}
               iconSize="md"
               onClick={handleClose}
             >
               <CloseIcon className="text-gray-400" />
-            </TwButton>
+            </Button>
           </div>
 
           <div className={styler('divider')}></div>
