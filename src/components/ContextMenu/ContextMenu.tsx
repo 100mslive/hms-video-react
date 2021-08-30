@@ -14,6 +14,7 @@ export interface ContextMenuClasses {
   menuItem?: string;
   menuTitle?: string;
   menuIcon?: string;
+  menuIconRight?: string;
   menuItemChildren?: string;
   menuItemActive?: string;
   menuTitleContainer?: string;
@@ -27,6 +28,7 @@ export type ContextMenuItemClasses = Omit<
 export interface ContextMenuDataItem {
   label: string;
   icon?: JSX.Element;
+  iconRight?: string;
 }
 
 export interface ContextMenuProps {
@@ -42,9 +44,10 @@ export interface ContextMenuProps {
 
 export interface ContextMenuItemProps extends ContextMenuDataItem {
   classes?: ContextMenuItemClasses;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
   children?: JSX.Element;
   active?: boolean;
+  closeMenuOnClick?: boolean;
 }
 
 const defaultClasses: ContextMenuClasses = {
@@ -53,11 +56,13 @@ const defaultClasses: ContextMenuClasses = {
     'w-9 h-9 rounded-full bg-gray-300 cursor-pointer flex items-center justify-center z-20',
   triggerIcon: 'fill-current text-white w-5',
   menu:
-    'bg-white max-w-full dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto max-h-15 py-2 overflow-y-auto text-white z-20',
+    'bg-white max-w-full dark:bg-gray-200 mt-2.5 rounded-lg w-48 h-auto max-h-15 py-2 overflow-y-auto text-white z-20',
   menuItem:
     'w-full flex flex-row flex-wrap items-center px-2 my-1 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
-  menuTitle: 'text-gray-100 dark:text-white text-base min-w-0 truncate',
+  menuIconRight:
+    'w-6 ml-2 fill-current text-gray-100 dark:text-white justify-self-end flex-shrink-0',
+  menuTitle: 'text-gray-100 dark:text-white text-base min-w-0 flex-1 truncate',
   menuItemChildren: 'w-11/12 ml-1 justify-self-center',
   menuItemActive: 'bg-gray-600 dark:bg-gray-300',
   menuTitleContainer: 'w-full flex items-center',
@@ -68,6 +73,7 @@ export const ContextMenuItem = ({
   icon,
   label,
   children,
+  iconRight,
 }: ContextMenuItemProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -88,10 +94,17 @@ export const ContextMenuItem = ({
         <span className={styler('menuTitle')} title={label}>
           {label}
         </span>
+        {iconRight && (
+          <span className={styler('menuIconRight')}>{iconRight}</span>
+        )}
       </div>
       {children && <div className={styler('menuItemChildren')}>{children}</div>}
     </>
   );
+};
+
+ContextMenuItem.defaultProps = {
+  closeMenuOnClick: true,
 };
 
 export const ContextMenu = ({
@@ -122,6 +135,11 @@ export const ContextMenu = ({
     onTrigger && onTrigger(true);
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    onTrigger && onTrigger(false);
+  };
+
   useEffect(() => {
     setOpen(menuOpen);
   }, [menuOpen]);
@@ -149,10 +167,7 @@ export const ContextMenu = ({
         autoFocus={false}
         open={open}
         getContentAnchorEl={null}
-        onClose={() => {
-          setOpen(false);
-          onTrigger && onTrigger(false);
-        }}
+        onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -176,9 +191,11 @@ export const ContextMenu = ({
               style={{
                 minHeight: 40,
               }}
-              onClick={() => {
-                child.props.onClick();
-                setOpen(false);
+              onClick={event => {
+                child.props.onClick && child.props.onClick(event);
+                if (child.props.closeMenuOnClick) {
+                  handleClose();
+                }
               }}
             >
               {child}

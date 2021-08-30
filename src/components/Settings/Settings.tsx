@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler, useMemo, useState } from 'react';
+import React, { ChangeEventHandler, useMemo, useState, useEffect } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import { withStyles } from '@material-ui/core/styles';
 import {
@@ -49,6 +49,9 @@ export interface SettingsProps {
   onTileCountChange?: (count: number) => void;
   maxTileCount?: number;
   previewMode?: boolean;
+  showModal?: boolean;
+  onModalClose?: () => void;
+  className?: string;
 }
 
 const defaultClasses: SettingsClasses = {
@@ -96,6 +99,9 @@ export const Settings = ({
   onTileCountChange = () => {},
   maxTileCount = 9,
   previewMode = false,
+  showModal,
+  onModalClose = () => {},
+  className = '',
 }: SettingsProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -120,12 +126,20 @@ export const Settings = ({
   const [open, setOpen] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    if (showModal === undefined) {
+      return;
+    }
+    setOpen(showModal);
+  }, [showModal]);
+
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    onModalClose();
   };
 
   const handleInputChange: ChangeEventHandler<any> = event => {
@@ -168,9 +182,10 @@ export const Settings = ({
       <Button
         iconOnly
         active={open}
-        variant={'no-fill'}
+        variant="no-fill"
         iconSize="md"
         onClick={handleClickOpen}
+        className={className}
       >
         <SettingsIcon />
       </Button>
