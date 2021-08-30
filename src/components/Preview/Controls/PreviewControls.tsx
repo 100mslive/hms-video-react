@@ -7,7 +7,6 @@ import { ButtonDisplayType } from '../../../types';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
 import '../index.css';
 
-
 interface PreviewControlsClasses {
   root?: string;
   controls?: string;

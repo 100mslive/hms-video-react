@@ -797,7 +797,7 @@ export const VirtualBackgroundIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="25"
-    viewBox="0 0 24 25"
+    viewBox="0 0 30 30"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
@@ -814,7 +814,7 @@ export const NoiseSupressionIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="25"
-    viewBox="0 0 24 25"
+    viewBox="-2.5 -3 24 25"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     {...props}
