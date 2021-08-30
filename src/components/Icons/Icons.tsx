@@ -932,7 +932,7 @@ export const TickIcon = (props: React.SVGProps<SVGSVGElement>) => (
   </svg>
 );
 
-export const ArrowRight = (props: React.SVGProps<SVGSVGElement>) => (
+export const ArrowRightIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg
     width="24"
     height="24"
