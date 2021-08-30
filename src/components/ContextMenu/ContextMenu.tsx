@@ -122,6 +122,11 @@ export const ContextMenu = ({
     onTrigger && onTrigger(true);
   };
 
+  const handleClose = () => {
+    setOpen(false);
+    onTrigger && onTrigger(false);
+  };
+
   useEffect(() => {
     setOpen(menuOpen);
   }, [menuOpen]);
@@ -149,10 +154,7 @@ export const ContextMenu = ({
         autoFocus={false}
         open={open}
         getContentAnchorEl={null}
-        onClose={() => {
-          setOpen(false);
-          onTrigger && onTrigger(false);
-        }}
+        onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -178,7 +180,7 @@ export const ContextMenu = ({
               }}
               onClick={() => {
                 child.props.onClick();
-                setOpen(false);
+                handleClose();
               }}
             >
               {child}
