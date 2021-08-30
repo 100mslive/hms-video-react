@@ -44,7 +44,7 @@ export interface ContextMenuProps {
 
 export interface ContextMenuItemProps extends ContextMenuDataItem {
   classes?: ContextMenuItemClasses;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
   children?: JSX.Element;
   active?: boolean;
   closeMenuOnClick?: boolean;
@@ -191,8 +191,8 @@ export const ContextMenu = ({
               style={{
                 minHeight: 40,
               }}
-              onClick={() => {
-                child.props.onClick && child.props.onClick();
+              onClick={event => {
+                child.props.onClick && child.props.onClick(event);
                 if (child.props.closeMenuOnClick) {
                   handleClose();
                 }
