@@ -10,13 +10,11 @@ import {
 } from '@100mslive/hms-video-store';
 import { Button } from '../Button';
 import { Text } from '../Text';
+import TestAudio from './TestAudio';
 import { SettingsIcon, CloseIcon } from '../Icons';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { isMobileDevice } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { Slider } from '../Slider/Slider';
-import TestAudio from './TestAudio';
 
 interface SettingsClasses {
   root?: string;
@@ -34,11 +32,6 @@ interface SettingsClasses {
   select?: string;
   selectInner?: string;
   divider?: string;
-  sliderContainer?: string;
-  sliderInner?: string;
-  sliderLabelContainer?: string;
-  sliderLabel?: string;
-  slider?: string;
   errorContainer?: string;
   testAudioContainer?: string;
   gap?: string;
@@ -46,8 +39,6 @@ interface SettingsClasses {
 
 export interface SettingsProps {
   classes?: SettingsClasses;
-  onTileCountChange?: (count: number) => void;
-  maxTileCount?: number;
   previewMode?: boolean;
   showModal?: boolean;
   onModalClose?: () => void;
@@ -73,11 +64,6 @@ const defaultClasses: SettingsClasses = {
   selectInner: 'p-4',
   divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
   gap: 'w-full pt-4',
-  sliderContainer: 'w-full my-1.5',
-  sliderInner: 'w-full flex',
-  sliderLabelContainer: 'w-1/3 flex justify-end items-center ',
-  sliderLabel: 'text-right',
-  slider: 'rounded-lg w-1/2  p-2 mx-2 flex my-1 items-center ',
   errorContainer: 'flex justify-center items-center w-full px-8 py-4',
   testAudioContainer: 'mx-0 my-2 md:my-0 md:mx-2',
 };
@@ -96,9 +82,6 @@ const HMSDialog = withStyles({
 
 export const Settings = ({
   classes,
-  onTileCountChange = () => {},
-  maxTileCount = 9,
-  previewMode = false,
   showModal,
   onModalClose = () => {},
   className = '',
@@ -113,7 +96,7 @@ export const Settings = ({
         defaultClasses,
         tag: 'hmsui-settings',
       }),
-    [],
+    [classes],
   );
 
   const hmsActions = useHMSActions();
@@ -159,13 +142,6 @@ export const Settings = ({
         default:
           break;
       }
-    }
-  };
-
-  const handleSliderChange = (event: any, newValue: number | number[]) => {
-    //TODO make this generic
-    if (typeof newValue === 'number') {
-      onTileCountChange(newValue);
     }
   };
 
@@ -330,43 +306,6 @@ export const Settings = ({
               </div>
             )}
             <div className={styler('gap')} />
-            {/** Hide participants view for mobile */}
-            {!isMobileDevice() && isSubscribing && !previewMode && (
-              <>
-                <div className={styler('divider')}></div>
-                <div className={styler('sliderContainer')}>
-                  <div className={styler('sliderInner')}>
-                    <div className={styler('sliderLabelContainer')}>
-                      <Text variant="heading" size="sm">
-                        Participants in view:
-                      </Text>
-                    </div>
-                    <div className={styler('slider')}>
-                      <Slider
-                        name="maxTileCount"
-                        defaultValue={9}
-                        value={maxTileCount}
-                        onChange={handleSliderChange}
-                        aria-labelledby="continuous-slider"
-                        valueLabelDisplay="auto"
-                        min={1}
-                        max={49}
-                        step={null}
-                        marks={[
-                          { value: 1 },
-                          { value: 4 },
-                          { value: 9 },
-                          { value: 16 },
-                          { value: 25 },
-                          { value: 36 },
-                          { value: 49 },
-                        ]}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
           </div>
         </div>
       </HMSDialog>

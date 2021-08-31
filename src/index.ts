@@ -24,6 +24,7 @@ export * from './components/PostLeaveDisplay';
 export * from './components/Button';
 export * from './components/Text';
 export * from './components/ContextMenu';
+export * from './components/ParticipantsInView';
 export {
   HMSRoomProvider,
   useHMSStore,
