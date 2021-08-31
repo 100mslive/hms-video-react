@@ -77,7 +77,6 @@ export const ParticipantsInView = ({
             <div className={styler('slider')}>
               <Slider
                 name="maxTileCount"
-                defaultValue={9}
                 value={maxTileCount}
                 //@ts-ignore
                 onChange={handleSliderChange}
