@@ -180,6 +180,9 @@ export const ContextMenu = ({
         {...menuProps}
       >
         {React.Children.map(children, child => {
+          if (!child) {
+            return null;
+          }
           return (
             <MenuItem
               key={child.key}
