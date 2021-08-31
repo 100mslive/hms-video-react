@@ -353,7 +353,7 @@ export const VideoTile = ({
             menuTitle: 'text-red-500 dark:text-red-500',
             menuIcon: 'text-red-500 dark:text-red-500',
           }}
-          key={peer.id}
+          key="removeParticipant"
           addDivider
           icon={<RemovePeerIcon />}
           onClick={async () => {
