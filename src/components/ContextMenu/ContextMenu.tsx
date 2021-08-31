@@ -103,7 +103,7 @@ export const ContextMenuItem = ({
         defaultClasses,
         tag: 'hmsui-contextmenu',
       }),
-    [],
+    [classes],
   );
 
   return (
