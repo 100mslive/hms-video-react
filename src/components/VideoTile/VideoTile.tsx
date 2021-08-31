@@ -310,7 +310,7 @@ export const VideoTile = ({
           <Slider
             value={storeAudioTrackVolume}
             classes={{
-              root: 'ml-1',
+              root: '-ml-1',
             }}
             onChange={(_, newValue) => {
               if (typeof newValue === 'number') {
@@ -330,27 +330,6 @@ export const VideoTile = ({
       );
     }
 
-    if (permissions?.removeOthers && !showScreen) {
-      children.push(
-        <ContextMenuItem
-          label="Remove Participant"
-          classes={{
-            menuTitle: 'text-red-500 dark:text-red-500',
-            menuIcon: 'text-red-500 dark:text-red-500',
-          }}
-          key={peer.id}
-          icon={<RemovePeerIcon />}
-          onClick={async () => {
-            try {
-              await hmsActions.removePeer(peer.id, '');
-            } catch (error) {
-              toast(error.message);
-            }
-          }}
-        />,
-      );
-    }
-
     children.push(
       ...layerDefinitions.map(({ layer, resolution }) => {
         return (
@@ -365,6 +344,29 @@ export const VideoTile = ({
         );
       }),
     );
+
+    if (permissions?.removeOthers && !showScreen) {
+      children.push(
+        <ContextMenuItem
+          label="Remove Participant"
+          classes={{
+            menuTitle: 'text-red-500 dark:text-red-500',
+            menuIcon: 'text-red-500 dark:text-red-500',
+          }}
+          key={peer.id}
+          addDivider
+          icon={<RemovePeerIcon />}
+          onClick={async () => {
+            try {
+              await hmsActions.removePeer(peer.id, '');
+            } catch (error) {
+              toast(error.message);
+            }
+          }}
+        />,
+      );
+    }
+
     return children;
   }, [
     layerDefinitions,
