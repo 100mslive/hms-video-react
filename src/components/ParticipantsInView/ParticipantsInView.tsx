@@ -79,6 +79,7 @@ export const ParticipantsInView = ({
                 name="maxTileCount"
                 defaultValue={9}
                 value={maxTileCount}
+                //@ts-ignore
                 onChange={handleSliderChange}
                 aria-labelledby="continuous-slider"
                 valueLabelDisplay="auto"

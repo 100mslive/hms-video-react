@@ -67,7 +67,7 @@ const defaultClasses: ContextMenuClasses = {
   menuTitle: 'text-gray-100 dark:text-white text-base min-w-0 flex-1 truncate',
   menuItemChildren: 'w-11/12 ml-1 justify-self-center',
   menuItemActive: 'bg-gray-600 dark:bg-gray-300',
-  menuTitleContainer: 'w-full flex items-center',
+  menuTitleContainer: 'w-full flex items-center py-2',
 };
 
 export const StyledMenu = withStyles({

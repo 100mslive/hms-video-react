@@ -305,19 +305,19 @@ export const VideoTile = ({
           label="Volume"
           key="volume"
           icon={<VolumeIcon />}
+          closeMenuOnClick={false}
           onClick={() => {}}
         >
           <Slider
             value={storeAudioTrackVolume}
-            classes={{
-              root: '-ml-1',
-            }}
+            //@ts-ignore
             onChange={(_, newValue) => {
               if (typeof newValue === 'number') {
                 hmsActions.setVolume(newValue, tileAudioTrack);
               }
             }}
             aria-labelledby="continuous-slider"
+            valueLabelDisplay="auto"
             marks={[
               { value: 0 },
               { value: 25 },
