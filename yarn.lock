@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@0.2.36":
-  version "0.2.36"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.36.tgz#ad2dbbf9ffaf49ce05d86a038e986564f6d5845a"
-  integrity sha512-E3w5WTO63froxWYo7Pg3n/8Lg993Zt3tFfenupLCzgdohhQPkGSxqEutsEb11OOy9TRUnltl6zkPBniBMyXiww==
+"@100mslive/hms-video-store@0.2.37":
+  version "0.2.37"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.37.tgz#c593324ef7c2225e03c3ff3c993a2e390e7dad98"
+  integrity sha512-Usey948dcWy06jq0VkOH5S3epumsMRG3//fm+clxbpaZpqzylsUcimNSGSRtG6D0p98LfKn3WzghceNEgxHdWw==
   dependencies:
     immer "^9.0.5"
     reselect "^4.0.0"
@@ -2674,6 +2674,7 @@
     store2 "^2.12.0"
 
 "@tailwindcss/postcss7-compat@^2.1.0", "tailwindcss@npm:@tailwindcss/postcss7-compat@^2.1.2":
+  name tailwindcss
   version "2.2.9"
   resolved "https://registry.yarnpkg.com/@tailwindcss/postcss7-compat/-/postcss7-compat-2.2.9.tgz#92a1695be2308314a3d7cbd5e1966865b7ecc5b3"
   integrity sha512-cE0ed0whqMPPih/mgo205e/Fdl/N9ZC8Z/0OyUBGWuvgNjNhsrT/avpuoYECI58FDTMT2tm5kKGJsJsl+sqh7A==
