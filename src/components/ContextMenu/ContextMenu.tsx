@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import Menu, { MenuProps } from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import { withStyles, makeStyles } from '@material-ui/core';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { DotMenuIcon } from '../Icons';
@@ -14,6 +15,7 @@ export interface ContextMenuClasses {
   menuItem?: string;
   menuTitle?: string;
   menuIcon?: string;
+  menuIconRight?: string;
   menuItemChildren?: string;
   menuItemActive?: string;
   menuTitleContainer?: string;
@@ -27,6 +29,7 @@ export type ContextMenuItemClasses = Omit<
 export interface ContextMenuDataItem {
   label: string;
   icon?: JSX.Element;
+  iconRight?: string;
 }
 
 export interface ContextMenuProps {
@@ -42,9 +45,11 @@ export interface ContextMenuProps {
 
 export interface ContextMenuItemProps extends ContextMenuDataItem {
   classes?: ContextMenuItemClasses;
-  onClick: () => void;
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
   children?: JSX.Element;
   active?: boolean;
+  closeMenuOnClick?: boolean;
+  addDivider?: boolean;
 }
 
 const defaultClasses: ContextMenuClasses = {
@@ -53,21 +58,41 @@ const defaultClasses: ContextMenuClasses = {
     'w-9 h-9 rounded-full bg-gray-300 cursor-pointer flex items-center justify-center z-20',
   triggerIcon: 'fill-current text-white w-5',
   menu:
-    'bg-white max-w-full dark:bg-gray-200 mt-2.5 rounded-lg w-44 h-auto max-h-15 py-2 overflow-y-auto text-white z-20',
+    'bg-white max-w-full dark:bg-gray-200 mt-2.5 w-48 h-auto max-h-15 overflow-y-auto text-white z-20',
   menuItem:
     'w-full flex flex-row flex-wrap items-center px-2 my-1 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   menuIcon: 'w-6 mr-2 fill-current text-gray-100 dark:text-white',
-  menuTitle: 'text-gray-100 dark:text-white text-base min-w-0 truncate',
+  menuIconRight:
+    'w-6 ml-2 fill-current text-gray-100 dark:text-white justify-self-end flex-shrink-0',
+  menuTitle: 'text-gray-100 dark:text-white text-base min-w-0 flex-1 truncate',
   menuItemChildren: 'w-11/12 ml-1 justify-self-center',
   menuItemActive: 'bg-gray-600 dark:bg-gray-300',
-  menuTitleContainer: 'w-full flex items-center',
+  menuTitleContainer: 'w-full flex items-center py-2',
 };
+
+export const StyledMenu = withStyles({
+  paper: {
+    borderRadius: '12px',
+  },
+})(Menu);
+
+const useStyles = makeStyles({
+  gutters: {
+    padding: '0 12px',
+  },
+  divider: {
+    borderTop: '1px solid #777777',
+    paddingTop: '12px',
+    paddingBottom: '12px',
+  },
+});
 
 export const ContextMenuItem = ({
   classes,
   icon,
   label,
   children,
+  iconRight,
 }: ContextMenuItemProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -78,7 +103,7 @@ export const ContextMenuItem = ({
         defaultClasses,
         tag: 'hmsui-contextmenu',
       }),
-    [],
+    [classes],
   );
 
   return (
@@ -88,10 +113,18 @@ export const ContextMenuItem = ({
         <span className={styler('menuTitle')} title={label}>
           {label}
         </span>
+        {iconRight && (
+          <span className={styler('menuIconRight')}>{iconRight}</span>
+        )}
       </div>
       {children && <div className={styler('menuItemChildren')}>{children}</div>}
     </>
   );
+};
+
+ContextMenuItem.defaultProps = {
+  closeMenuOnClick: true,
+  addDivider: false,
 };
 
 export const ContextMenu = ({
@@ -115,11 +148,17 @@ export const ContextMenu = ({
       }),
     [classes],
   );
+  const menuItemClasses = useStyles();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setOpen(true);
     setAnchorEl(event.currentTarget);
     onTrigger && onTrigger(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    onTrigger && onTrigger(false);
   };
 
   useEffect(() => {
@@ -143,16 +182,13 @@ export const ContextMenu = ({
           />
         )}
       </div>
-      <Menu
+      <StyledMenu
         id="context-menu"
         anchorEl={anchorEl}
         autoFocus={false}
         open={open}
         getContentAnchorEl={null}
-        onClose={() => {
-          setOpen(false);
-          onTrigger && onTrigger(false);
-        }}
+        onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',
@@ -165,27 +201,33 @@ export const ContextMenu = ({
         {...menuProps}
       >
         {React.Children.map(children, child => {
+          if (!child) {
+            return null;
+          }
           return (
             <MenuItem
               key={child.key}
               classes={{
-                root: `${styler('menuItem')}  ${
+                root: `${styler('menuItem')} ${
                   child.props.active ? styler('menuItemActive') : ''
-                }`,
+                } ${child.props.addDivider ? menuItemClasses.divider : ''}`,
+                gutters: menuItemClasses.gutters,
               }}
               style={{
                 minHeight: 40,
               }}
-              onClick={() => {
-                child.props.onClick();
-                setOpen(false);
+              onClick={event => {
+                child.props.onClick && child.props.onClick(event);
+                if (child.props.closeMenuOnClick) {
+                  handleClose();
+                }
               }}
             >
               {child}
             </MenuItem>
           );
         })}
-      </Menu>
+      </StyledMenu>
     </div>
   );
 };

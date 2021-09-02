@@ -305,19 +305,19 @@ export const VideoTile = ({
           label="Volume"
           key="volume"
           icon={<VolumeIcon />}
+          closeMenuOnClick={false}
           onClick={() => {}}
         >
           <Slider
             value={storeAudioTrackVolume}
-            classes={{
-              root: 'ml-1',
-            }}
+            //@ts-ignore
             onChange={(_, newValue) => {
               if (typeof newValue === 'number') {
                 hmsActions.setVolume(newValue, tileAudioTrack);
               }
             }}
             aria-labelledby="continuous-slider"
+            valueLabelDisplay="auto"
             marks={[
               { value: 0 },
               { value: 25 },
@@ -327,27 +327,6 @@ export const VideoTile = ({
             ]}
           />
         </ContextMenuItem>,
-      );
-    }
-
-    if (permissions?.removeOthers && !showScreen) {
-      children.push(
-        <ContextMenuItem
-          label="Remove Participant"
-          classes={{
-            menuTitle: 'text-red-500 dark:text-red-500',
-            menuIcon: 'text-red-500 dark:text-red-500',
-          }}
-          key={peer.id}
-          icon={<RemovePeerIcon />}
-          onClick={async () => {
-            try {
-              await hmsActions.removePeer(peer.id, '');
-            } catch (error) {
-              toast(error.message);
-            }
-          }}
-        />,
       );
     }
 
@@ -365,6 +344,29 @@ export const VideoTile = ({
         );
       }),
     );
+
+    if (permissions?.removeOthers && !showScreen) {
+      children.push(
+        <ContextMenuItem
+          label="Remove Participant"
+          classes={{
+            menuTitle: 'text-red-500 dark:text-red-500',
+            menuIcon: 'text-red-500 dark:text-red-500',
+          }}
+          key="removeParticipant"
+          addDivider
+          icon={<RemovePeerIcon />}
+          onClick={async () => {
+            try {
+              await hmsActions.removePeer(peer.id, '');
+            } catch (error) {
+              toast(error.message);
+            }
+          }}
+        />,
+      );
+    }
+
     return children;
   }, [
     layerDefinitions,

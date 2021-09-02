@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { Settings, SettingsProps } from './Settings';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
@@ -15,16 +15,10 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<SettingsProps> = (args: SettingsProps) => {
-  const [maxTileCount, setMaxTileCount] = useState(8);
   return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'dark' }}>
       <div className="w-full flex justify-center">
-        <Settings
-          onTileCountChange={count => {
-            setMaxTileCount(count);
-          }}
-          maxTileCount={maxTileCount}
-        />
+        <Settings />
       </div>
     </HMSThemeProvider>
   );
@@ -33,16 +27,10 @@ const Template: Story<SettingsProps> = (args: SettingsProps) => {
 export const Default = Template.bind({});
 
 const LightThemeTemplate: Story<SettingsProps> = (args: SettingsProps) => {
-  const [maxTileCount, setMaxTileCount] = useState(8);
   return (
     <HMSThemeProvider config={{}} appBuilder={{ theme: 'light' }}>
       <div className="w-full h-screen flex justify-center bg-white pt-5">
-        <Settings
-          onTileCountChange={count => {
-            setMaxTileCount(count);
-          }}
-          maxTileCount={maxTileCount}
-        />
+        <Settings />
       </div>
     </HMSThemeProvider>
   );

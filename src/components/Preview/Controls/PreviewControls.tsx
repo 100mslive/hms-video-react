@@ -36,7 +36,7 @@ const defaultClasses: PreviewControlsClasses = {
   controls:
     'dark flex flex-1 self-center justify-center hover-hide space-x-1 relative',
   rightControls:
-    'dark flex sm:flex-none md:right-0 md:self-center inline-block md:mx-1 sm:absolute  hover-hide absolute right-3',
+    'dark flex items-center justify-self-end',
 };
 
 export const PreviewControls = ({
@@ -56,7 +56,7 @@ export const PreviewControls = ({
         tw,
         classes,
         defaultClasses,
-        tag: 'hmsui-preview',
+        tag: 'hmsui-preview-controls',
       }),
     [],
   );
