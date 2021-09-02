@@ -76,7 +76,7 @@ export const StyledMessageModal = ({
         defaultClasses,
         tag: 'message-modal',
       }),
-    [],
+    [classes],
   );
   const styles = useStyles();
 
