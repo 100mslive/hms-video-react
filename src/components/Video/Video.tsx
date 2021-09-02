@@ -190,10 +190,10 @@ export const Video = ({
           ${objectFit === 'cover' ? styler('videoCover') : ''}
         `}
       ></video>
-      {showAudioLevel && audioLevelDisplayType === 'border' && (
+      {showAudioLevel && (
         <AudioLevelIndicator
           peerId={peerId}
-          type={'border'}
+          type={audioLevelDisplayType || 'border'}
           level={audioLevel}
           displayShape={displayShape}
           classes={{
