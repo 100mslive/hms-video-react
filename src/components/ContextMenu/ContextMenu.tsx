@@ -45,7 +45,7 @@ export interface ContextMenuProps {
 
 export interface ContextMenuItemProps extends ContextMenuDataItem {
   classes?: ContextMenuItemClasses;
-  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   children?: JSX.Element;
   active?: boolean;
   closeMenuOnClick?: boolean;
@@ -70,7 +70,7 @@ const defaultClasses: ContextMenuClasses = {
   menuTitleContainer: 'w-full flex items-center py-2',
 };
 
-export const StyledMenu = withStyles({
+const StyledMenu = withStyles({
   paper: {
     borderRadius: '12px',
   },
