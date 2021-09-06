@@ -1,18 +1,7 @@
-## Details
+### Details(context, Jira ticket, how was the bug fixed, what does the new feature do)
 
-### Current Behaviour
-
-
-
-
-### New Behaviour
-
-
-
-
-### Screenshots
-
-
+*
+*
 
 
 ### Choose one of these(put a 'x' in the bracket):
@@ -20,4 +9,4 @@
 - [ ] The documentation is updated accordingly.
 
 
-### Implementation note, gotchas and Future TODOs
+### Implementation note, gotchas, related work and Future TODOs (optional)
