@@ -212,7 +212,7 @@ export const Settings = ({
                           onChange={handleInputChange}
                           value={selectedDevices.videoInputDeviceId}
                         >
-                          {videoInput.map((device: InputDeviceInfo) => (
+                          {videoInput.map((device: MediaDeviceInfo) => (
                             <option
                               value={device.deviceId}
                               className={`${styler('selectInner')}`}
@@ -242,7 +242,7 @@ export const Settings = ({
                           onChange={handleInputChange}
                           value={selectedDevices.audioInputDeviceId}
                         >
-                          {audioInput.map((device: InputDeviceInfo) => (
+                          {audioInput.map((device: MediaDeviceInfo) => (
                             <option
                               value={device.deviceId}
                               className={`${styler('selectInner')}`}
