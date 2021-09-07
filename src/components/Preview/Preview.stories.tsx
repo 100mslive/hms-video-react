@@ -38,6 +38,11 @@ Default.args = {
     authToken: 'token',
     userName: 'username',
   },
+  classes: {
+    joinButton: {
+      rootEmphasized: 'bg-yellow-500',
+    },
+  },
 };
 
 export const Light = LightTemplate.bind({});

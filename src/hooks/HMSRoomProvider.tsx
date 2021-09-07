@@ -8,7 +8,11 @@ import {
   HMSStoreWrapper,
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
-import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
+import {
+  HMSContextProviderProps,
+  makeHMSStoreHook,
+  hooksErrorMessage,
+} from './storeHook';
 import { isBrowser } from '../utils/is-browser';
 
 export interface IHMSReactStore extends HMSStoreWrapper {
@@ -75,26 +79,47 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
   );
 };
 
-/*
-UseHMSStore is a read only hook which can be passed a selector to read data.
-The hook can only be used in a component if HMSRoomProvider is present in its ancestors.
+/**
+ * `useHMSStore` is a read only hook which can be passed a selector to read data.
+ * The hook can only be used in a component if HMSRoomProvider is present in its ancestors.
  */
 export const useHMSStore = makeHMSStoreHook(HMSContext);
 
+/**
+ * `useHMSVanillaStore` is a read only hook which returns the vanilla HMSStore.
+ * Usage:
+ * ```
+ * const hmsStore = useHMSVanillaStore();
+ * const dominantSpeaker = hmsStore.getState(selectDominantSpeaker);
+ * ```
+ *
+ * Note: There's no need to use the vanilla hmsStore in React components.
+ * This is used in rare cases where the store needs to be accessed outside a React component.
+ * For almost every case, `useHMSStore` would get the job done.
+ */
+export const useHMSVanillaStore = () => {
+  const HMSContextConsumer = useContext(HMSContext);
+  if (!HMSContextConsumer) {
+    throw new Error(hooksErrorMessage);
+  }
+
+  return HMSContextConsumer.store;
+};
+
 /*
-UseHMSActions is a write ony hook which can be used to dispatch actions.
+ * `useHMSActions` is a write ony hook which can be used to dispatch actions.
  */
 export const useHMSActions = () => {
   const HMSContextConsumer = useContext(HMSContext);
   if (!HMSContextConsumer) {
-    const error =
-      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
-      'to 100ms react docs to check on the required steps for using this hook.';
-    throw new Error(error);
+    throw new Error(hooksErrorMessage);
   }
   return HMSContextConsumer.actions;
 };
 
+/**
+ * `useHMSNotifications` is a read only hook which gives the latest notification(HMSNotification) received.
+ */
 export const useHMSNotifications = () => {
   const HMSContextConsumer = useContext(HMSContext);
   const [notification, setNotification] = useState<HMSNotification | null>(
@@ -102,10 +127,7 @@ export const useHMSNotifications = () => {
   );
 
   if (!HMSContextConsumer) {
-    const error =
-      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
-      'to 100ms react docs to check on the required steps for using this hook.';
-    throw new Error(error);
+    throw new Error(hooksErrorMessage);
   }
 
   useEffect(() => {

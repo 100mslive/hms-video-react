@@ -195,8 +195,6 @@ export const VideoList = ({
   aspectRatio =
     displayShape === 'circle' ? { width: 1, height: 1 } : aspectRatio;
 
-  const audioLevelDisplayColor = tailwindConfig.theme.extend.colors.brand.main;
-
   const tracksWithPeer: TrackWithPeer[] = getVideoTracksFromPeers(
     peers,
     tracksMap,
@@ -307,7 +305,6 @@ export const VideoList = ({
                           objectFit={objectFit}
                           displayShape={displayShape}
                           audioLevelDisplayType={audioLevelDisplayType}
-                          audioLevelDisplayColor={audioLevelDisplayColor}
                           allowRemoteMute={allowRemoteMute}
                           showAudioLevel={showAudioLevel}
                           showAudioMuteStatus={showAudioMuteStatus}
