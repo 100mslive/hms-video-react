@@ -20,6 +20,7 @@ import { Text } from '../Text';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { Button } from '../Button';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
+import { formatDuration } from '../../utils/timerUtils';
 
 export interface AudioPlaylistClasses {
   root?: string;
@@ -103,7 +104,7 @@ const ListItem = ({
         iconRight
       ) : (
         <Text variant="body" size="sm">
-          {item.duration}
+          {formatDuration(item.duration)}
         </Text>
       )}
     </div>
