@@ -35,7 +35,7 @@ interface StyledTextProps {
   /**
    * className string
    */
-  classes?: { [key: string]: string } | TextClasses;
+  classes?: Partial<TextClasses>;
   /**
    * css styles declaration
    */
@@ -80,10 +80,7 @@ export const Text: React.FC<PropsWithChildren<TextProps>> = ({
   styles,
   ...props
 }) => {
-  const finalClasses: TextClasses = resolveClasses(
-    classes || {},
-    defaultClasses,
-  );
+  const finalClasses: TextClasses = resolveClasses(defaultClasses, classes);
   const { tw } = useHMSTheme();
   const TagName = tag || 'span';
   const typography = style({

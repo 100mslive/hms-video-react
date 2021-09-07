@@ -15,7 +15,7 @@ import {
   selectTrackByID,
   selectPermissions,
 } from '@100mslive/hms-video-store';
-import { HMSSimulcastLayer } from '@100mslive/hms-video';
+import { HMSException, HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
@@ -149,7 +149,7 @@ export const VideoTile = ({
   aspectRatio,
   displayShape = 'rectangle',
   audioLevelDisplayType = 'border',
-  audioLevelDisplayColor = '#0F6CFF',
+  audioLevelDisplayColor,
   allowRemoteMute = false,
   controlsComponent,
   classes,
@@ -158,7 +158,7 @@ export const VideoTile = ({
   customAvatar,
   contextMenuItems,
 }: VideoTileProps) => {
-  const { appBuilder, tw, toast } = useHMSTheme();
+  const { appBuilder, tw, tailwindConfig, toast } = useHMSTheme();
   const hmsActions = useHMSActions();
   const [showMenu, setShowMenu] = useState(false);
   const [showTrigger, setShowTrigger] = useState(false);
@@ -173,6 +173,11 @@ export const VideoTile = ({
       }),
     [],
   );
+
+  audioLevelDisplayColor =
+    audioLevelDisplayColor ||
+    tailwindConfig.theme.extend.colors.brand.main ||
+    '#0F6CFF';
 
   if (hmsVideoTrack?.source === 'screen') {
     showScreen = true;
@@ -207,7 +212,7 @@ export const VideoTile = ({
       try {
         await hmsActions.setRemoteTrackEnabled(track.id, !track.enabled);
       } catch (error) {
-        toast(error.message);
+        toast((error as HMSException).message);
       }
     }
   };
@@ -361,7 +366,7 @@ export const VideoTile = ({
             try {
               await hmsActions.removePeer(peer.id, '');
             } catch (error) {
-              toast(error.message);
+              toast((error as HMSException).message);
             }
           }}
         />,

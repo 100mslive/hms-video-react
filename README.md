@@ -9,6 +9,11 @@
 [![Email](https://img.shields.io/badge/Contact-Know%20More-blue)](mailto:founders@100ms.live)
 
 Create beautfiful custom applications using 100ms' React SDK.
+  
+This library currently provides is composed of two pieces - 
+  
+1. hooks which interface with our sdk for easily using with functional components. More details [here](https://docs.100ms.live/javascript/v2/features/integration#installing-our-libraries).
+2. UI components for common use cases - video tile, preview etc. Note that these components are on path of deprecation and we don't recommend their use as a library. We're actively working on a new UI components library which will provide improved flexibility and ease of use.
 
 Install using
 

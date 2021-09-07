@@ -48,7 +48,7 @@ interface StyledButtonProps {
   /**
    * className string
    */
-  classes?: { [key: string]: string } | ButtonClasses;
+  classes?: Partial<ButtonClasses>;
   /**
    * css styles declaration
    */
@@ -143,10 +143,7 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
     )}`,
   };
   const { tw } = useHMSTheme();
-  const finalClasses: ButtonClasses = resolveClasses(
-    classes || {},
-    defaultClasses,
-  );
+  const finalClasses = resolveClasses<ButtonClasses>(defaultClasses, classes);
   const button = style({
     base: `${finalClasses.root}`,
     variants: {

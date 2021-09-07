@@ -18,6 +18,7 @@ import { Input } from '../Input';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { isBrowser } from '../../utils/is-browser';
+import { ButtonClasses } from '../Button/Button';
 
 interface JoinInfo {
   audioMuted?: boolean;
@@ -32,7 +33,8 @@ export interface PreviewClasses {
   helloDiv?: string;
   nameDiv?: string;
   inputRoot?: string;
-  joinButton?: string;
+  joinButton?: Partial<ButtonClasses>;
+  videoTile?: Partial<VideoTileClasses>;
 }
 const defaultClasses: PreviewClasses = {
   root:
@@ -49,12 +51,11 @@ export interface PreviewProps {
   config: HMSConfig;
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
   videoTileProps?: Partial<VideoTileProps>;
-  videoTileClasses?: VideoTileClasses;
   onNameChange?: (name: string) => void;
   /**
    * extra classes added  by user
    */
-  classes?: PreviewClasses;
+  classes?: Partial<PreviewClasses>;
 }
 
 export const Preview = ({
@@ -62,7 +63,6 @@ export const Preview = ({
   joinOnClick,
   videoTileProps,
   classes,
-  videoTileClasses,
   onNameChange,
 }: PreviewProps) => {
   const { tw } = useHMSTheme();
@@ -117,13 +117,15 @@ export const Preview = ({
     required: true,
   };
 
+  const disableJoin = inProgress || roomState !== HMSRoomState.Preview;
+
   return (
     <Fragment>
       {/* root */}
-      <div className={styler('root')}>
-        <div className={styler('containerRoot')}>
+      <div className={styler('root') as string}>
+        <div className={styler('containerRoot') as string}>
           {/* header */}
-          <div className={styler('header')}>
+          <div className={styler('header') as string}>
             {/* videoTile */}
             {localPeer ? (
               <VideoTile
@@ -134,7 +136,7 @@ export const Preview = ({
                   width: 1,
                   height: 1,
                 }}
-                classes={videoTileClasses}
+                classes={classes?.videoTile}
                 controlsComponent={
                   <PreviewControls
                     audioButtonOnClick={() => setAudioEnabled(!audioEnabled)}
@@ -151,11 +153,11 @@ export const Preview = ({
             )}
           </div>
           {/* helloDiv */}
-          <div className={styler('helloDiv')}>Hi There</div>
+          <div className={styler('helloDiv') as string}>Hi There</div>
           {/* nameDiv */}
-          <div className={styler('nameDiv')}>What's your name?</div>
+          <div className={styler('nameDiv') as string}>What's your name?</div>
           {/* inputFieldRoot */}
-          <div className={styler('inputRoot')}>
+          <div className={styler('inputRoot') as string}>
             <Input
               ref={inputRef}
               {...inputProps}
@@ -168,11 +170,12 @@ export const Preview = ({
           <Button
             variant="emphasized"
             size="lg"
-            iconRight={inProgress || roomState === HMSRoomState.Connecting}
+            iconRight={disableJoin}
+            classes={classes?.joinButton}
             icon={inProgress ? <ProgressIcon /> : undefined}
-            disabled={inProgress || roomState === HMSRoomState.Connecting}
+            disabled={disableJoin}
             onClick={async () => {
-              if (inProgress || roomState === HMSRoomState.Connecting) {
+              if (disableJoin) {
                 return;
               }
               if (!name || !name.replace(/\u200b/g, ' ').trim()) {
