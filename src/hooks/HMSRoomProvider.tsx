@@ -56,7 +56,6 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
           setState: errFn,
           destroy: errFn,
         }), // convert vanilla store in react hook
-        vanillaStore: hmsReactiveStore.getStore(),
         notifications: hmsReactiveStore.getNotifications(),
       };
     }
@@ -102,11 +101,7 @@ export const useHMSVanillaStore = () => {
     throw new Error(error);
   }
 
-  if (!HMSContextConsumer.vanillaStore) {
-    throw new Error('Vanilla store not initialized');
-  }
-
-  return HMSContextConsumer.vanillaStore;
+  return HMSContextConsumer.store;
 };
 
 /*

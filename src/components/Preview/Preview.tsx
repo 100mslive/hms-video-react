@@ -117,6 +117,11 @@ export const Preview = ({
     required: true,
   };
 
+  const disableJoin = useMemo(
+    () => inProgress || roomState !== HMSRoomState.Preview,
+    [inProgress, roomState],
+  );
+
   return (
     <Fragment>
       {/* root */}
@@ -168,11 +173,11 @@ export const Preview = ({
           <Button
             variant="emphasized"
             size="lg"
-            iconRight={inProgress || roomState === HMSRoomState.Connecting}
+            iconRight={disableJoin}
             icon={inProgress ? <ProgressIcon /> : undefined}
-            disabled={inProgress || roomState === HMSRoomState.Connecting}
+            disabled={disableJoin}
             onClick={async () => {
-              if (inProgress || roomState === HMSRoomState.Connecting) {
+              if (disableJoin) {
                 return;
               }
               if (!name || !name.replace(/\u200b/g, ' ').trim()) {

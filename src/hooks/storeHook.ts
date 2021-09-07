@@ -6,14 +6,12 @@ import {
   HMSActions,
   HMSStore,
   HMSNotifications,
-  HMSStoreWrapper,
 } from '@100mslive/hms-video-store';
 import HMSLogger from '../utils/ui-logger';
 
 export interface HMSContextProviderProps {
   actions: HMSActions; // for actions which may also mutate store
   store: IHMSReactStore; // readonly store, don't mutate this
-  vanillaStore?: HMSStoreWrapper;
   notifications?: HMSNotifications;
 }
 
