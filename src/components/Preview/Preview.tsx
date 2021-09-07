@@ -33,7 +33,8 @@ export interface PreviewClasses {
   helloDiv?: string;
   nameDiv?: string;
   inputRoot?: string;
-  joinButton?: ButtonClasses;
+  joinButton?: Partial<ButtonClasses>;
+  videoTile?: Partial<VideoTileClasses>;
 }
 const defaultClasses: PreviewClasses = {
   root:
@@ -50,12 +51,11 @@ export interface PreviewProps {
   config: HMSConfig;
   joinOnClick: ({ audioMuted, videoMuted, name }: JoinInfo) => void;
   videoTileProps?: Partial<VideoTileProps>;
-  videoTileClasses?: VideoTileClasses;
   onNameChange?: (name: string) => void;
   /**
    * extra classes added  by user
    */
-  classes?: PreviewClasses;
+  classes?: Partial<PreviewClasses>;
 }
 
 export const Preview = ({
@@ -63,7 +63,6 @@ export const Preview = ({
   joinOnClick,
   videoTileProps,
   classes,
-  videoTileClasses,
   onNameChange,
 }: PreviewProps) => {
   const { tw } = useHMSTheme();
@@ -135,7 +134,7 @@ export const Preview = ({
                   width: 1,
                   height: 1,
                 }}
-                classes={videoTileClasses}
+                classes={classes?.videoTile}
                 controlsComponent={
                   <PreviewControls
                     audioButtonOnClick={() => setAudioEnabled(!audioEnabled)}
@@ -169,7 +168,7 @@ export const Preview = ({
           <Button
             variant="emphasized"
             size="lg"
-            classes={styler('joinButton') as ButtonClasses}
+            classes={classes?.joinButton}
             iconRight={inProgress || roomState === HMSRoomState.Connecting}
             icon={inProgress ? <ProgressIcon /> : undefined}
             disabled={inProgress || roomState === HMSRoomState.Connecting}
