@@ -20,6 +20,7 @@ import { Text } from '../Text';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { Button } from '../Button';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
+import { Slider } from '../Slider/Slider';
 import { formatDuration } from '../../utils/timerUtils';
 
 export interface AudioPlaylistClasses {
@@ -30,6 +31,7 @@ export interface AudioPlaylistClasses {
   collapse?: string;
   controls?: string;
   icon?: string;
+  sliderContainer?: string;
 }
 
 export interface AudioPlaylistItemClasses {
@@ -57,6 +59,7 @@ const defaultClasses = {
   selection: 'text-brand-main',
   controls: 'px-3 flex justify-center items-center',
   icon: 'w-full h-full',
+  sliderContainer: 'px-3',
 };
 export interface AudioPlaylistItemProps {
   item: HMSPlaylistItem;
@@ -134,7 +137,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
       classes={{
         trigger: 'bg-transparent-0 mx-2',
         root: 'static',
-        menu: 'mt-0 py-0 w-52',
+        menu: 'mt-0 py-0 w-60',
         menuItem: 'hover:bg-transparent-0 dark:hover:bg-transparent-0',
       }}
       trigger={
@@ -223,7 +226,8 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                   shape="rectangle"
                   onClick={async () => {
                     await hmsActions.performActionOnPlaylist({
-                      type: HMSPlaylistActionType.SEEK_BACKWARD,
+                      type: HMSPlaylistActionType.SEEK,
+                      seekValue: -10,
                     });
                   }}
                 >
@@ -236,7 +240,6 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                   iconSize="xl"
                   size="xl"
                   shape="rectangle"
-                  classes={{ root: 'mx-2' }}
                   onClick={async () => {
                     await hmsActions.performActionOnPlaylist({
                       url: active.url,
@@ -260,12 +263,22 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                   shape="rectangle"
                   onClick={async () => {
                     await hmsActions.performActionOnPlaylist({
-                      type: HMSPlaylistActionType.SEEK_FORWARD,
+                      type: HMSPlaylistActionType.SEEK,
+                      seekValue: 10,
                     });
                   }}
                 >
                   <ForwardIcon />
                 </Button>
+              </div>
+              <div className={styler('sliderContainer')}>
+                <Slider
+                  value={active.progress || 0}
+                  onChange={() => {}}
+                  min={0}
+                  max={100}
+                  disabled
+                />
               </div>
               <ListItem
                 key={active.url}
