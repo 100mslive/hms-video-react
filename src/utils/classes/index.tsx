@@ -3,7 +3,7 @@ import { apply, TW } from 'twind';
 
 export const resolveClasses = <T extends Record<string, any>>(
   defaults: T,
-  custom?: T,
+  custom?: Partial<T>,
 ): T => {
   if (!custom) {
     return defaults;
@@ -13,9 +13,7 @@ export const resolveClasses = <T extends Record<string, any>>(
 
   for (const k in defaults) {
     if (custom.hasOwnProperty(k)) {
-      Object.assign(hash, { k: `${defaults[k]} ${custom[k]}` });
-    } else {
-      hash[k] = defaults[k];
+      Object.assign(hash, { [k]: `${defaults[k]} ${custom[k]}` });
     }
   }
 
@@ -63,6 +61,7 @@ export const hmsUiClassParserGenerator = <T extends {}>({
     return tw(
       `${tag}-${s}`,
       (customClasses && (customClasses[s] as unknown)) as string,
+      // @ts-ignore
       apply(finalClasses[s]),
     );
   }
