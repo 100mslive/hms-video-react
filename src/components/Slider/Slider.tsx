@@ -1,9 +1,8 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import MaterialSlider, {
   SliderProps as MaterialSliderProps,
 } from '@material-ui/core/Slider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
-import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { makeStyles } from '@material-ui/core';
 export interface SliderClasses {
   valueLabel?: string;
@@ -12,7 +11,7 @@ export interface SliderClasses {
   root?: string;
 }
 export interface SliderProps extends Partial<MaterialSliderProps> {
-  classes: SliderClasses;
+  classes?: SliderClasses;
 }
 
 type ModeProps = { darkMode: boolean };
