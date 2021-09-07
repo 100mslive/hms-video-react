@@ -8,7 +8,11 @@ import {
   HMSStoreWrapper,
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
-import { HMSContextProviderProps, makeHMSStoreHook } from './storeHook';
+import {
+  HMSContextProviderProps,
+  makeHMSStoreHook,
+  hooksErrorMessage,
+} from './storeHook';
 import { isBrowser } from '../utils/is-browser';
 
 export interface IHMSReactStore extends HMSStoreWrapper {
@@ -96,9 +100,7 @@ export const useHMSStore = makeHMSStoreHook(HMSContext);
 export const useHMSVanillaStore = () => {
   const HMSContextConsumer = useContext(HMSContext);
   if (!HMSContextConsumer) {
-    const error =
-      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer to 100ms react docs(https://docs.100ms.live/javascript/v2/features/integration#react-hooks) to check on the required steps for using this hook.';
-    throw new Error(error);
+    throw new Error(hooksErrorMessage);
   }
 
   return HMSContextConsumer.store;
@@ -110,9 +112,7 @@ export const useHMSVanillaStore = () => {
 export const useHMSActions = () => {
   const HMSContextConsumer = useContext(HMSContext);
   if (!HMSContextConsumer) {
-    const error =
-      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer to 100ms react docs(https://docs.100ms.live/javascript/v2/features/integration#react-hooks) to check on the required steps for using this hook.';
-    throw new Error(error);
+    throw new Error(hooksErrorMessage);
   }
   return HMSContextConsumer.actions;
 };
@@ -127,9 +127,7 @@ export const useHMSNotifications = () => {
   );
 
   if (!HMSContextConsumer) {
-    const error =
-      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer to 100ms react docs(https://docs.100ms.live/javascript/v2/features/integration#react-hooks) to check on the required steps for using this hook.';
-    throw new Error(error);
+    throw new Error(hooksErrorMessage);
   }
 
   useEffect(() => {

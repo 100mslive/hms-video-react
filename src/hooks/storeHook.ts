@@ -9,6 +9,9 @@ import {
 } from '@100mslive/hms-video-store';
 import HMSLogger from '../utils/ui-logger';
 
+export const hooksErrorMessage =
+  'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer to 100ms react docs(https://docs.100ms.live/javascript/v2/features/integration#react-hooks) to check on the required steps for using this hook.';
+
 export interface HMSContextProviderProps {
   actions: HMSActions; // for actions which may also mutate store
   store: IHMSReactStore; // readonly store, don't mutate this
@@ -29,9 +32,7 @@ export function makeHMSStoreHook(
     }
     const HMSContextConsumer = useContext(hmsContext);
     if (!HMSContextConsumer) {
-      const error =
-        'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer to 100ms react docs(https://docs.100ms.live/javascript/v2/features/integration#react-hooks) to check on the required steps for using this hook.';
-      throw new Error(error);
+      throw new Error(hooksErrorMessage);
     }
     const useStore = HMSContextConsumer.store;
     return useStore(selector, equalityFn);
