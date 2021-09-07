@@ -117,10 +117,7 @@ export const Preview = ({
     required: true,
   };
 
-  const disableJoin = useMemo(
-    () => inProgress || roomState !== HMSRoomState.Preview,
-    [inProgress, roomState],
-  );
+  const disableJoin = inProgress || roomState !== HMSRoomState.Preview;
 
   return (
     <Fragment>
