@@ -1,10 +1,23 @@
 import React, { useMemo, useState } from 'react';
-import { HMSPlaylistItem } from '@100mslive/hms-video-store';
+import {
+  HMSPlaylistItem,
+  HMSPlaylistActionType,
+  selectPlaylist,
+  selectPlaylistCurrentSelection,
+} from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { AudioPlaylistIcon, CloseIcon, PlaylistIcon } from '../Icons';
+import {
+  AudioPlaylistIcon,
+  CloseIcon,
+  ForwardIcon,
+  PauseIcon,
+  PlayIcon,
+  PlaylistIcon,
+  RewindIcon,
+} from '../Icons';
 import { Text } from '../Text';
-import { useHMSActions } from '../../hooks/HMSRoomProvider';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { Button } from '../Button';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 
@@ -14,12 +27,15 @@ export interface AudioPlaylistClasses {
   body?: string;
   footer?: string;
   collapse?: string;
+  controls?: string;
+  icon?: string;
 }
 
 export interface AudioPlaylistItemClasses {
   listItem?: string;
   titleContainer?: string;
   truncate?: string;
+  selection?: string;
 }
 
 export interface AudioPlaylistProps {
@@ -31,41 +47,22 @@ const defaultClasses = {
   root: 'flex flex-column text-gray-100 dark:text-white',
   header: 'flex justify-between items-center px-3 py-3',
   body: 'flex-1 overflow-y-auto bg-gray-100',
+  collapse: 'h-0',
   footer: 'py-2',
   listItem:
     'flex justify-between w-full px-3 py-3 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   titleContainer: 'flex flex-column flex-1',
   truncate: 'min-w-0 truncate',
+  selection: 'text-brand-main',
+  controls: 'px-3 flex justify-center items-center',
+  icon: 'w-full h-full',
 };
-
-const defaultAudioList = [
-  {
-    name: 'Audio1',
-    url: 'https://storage.googleapis.com/test-86284.appspot.com/audio1.mp3',
-    type: 'audio',
-  } as HMSPlaylistItem,
-  {
-    name: 'Audio2',
-    url: 'https://storage.googleapis.com/test-86284.appspot.com/audio2.mp3',
-    type: 'audio',
-  } as HMSPlaylistItem,
-  {
-    name: 'Audio3',
-    url: 'https://storage.googleapis.com/test-86284.appspot.com/audio3.mp3',
-    type: 'audio',
-  } as HMSPlaylistItem,
-  {
-    name: 'Audio4',
-    url: 'https://storage.googleapis.com/test-86284.appspot.com/audio4.mp3',
-    type: 'audio',
-  } as HMSPlaylistItem,
-];
-
 export interface AudioPlaylistItemProps {
   item: HMSPlaylistItem;
   onClick?: () => void;
   iconRight?: JSX.Element;
   classes?: AudioPlaylistItemClasses;
+  highlightSelection?: boolean;
 }
 
 const ListItem = ({
@@ -73,6 +70,7 @@ const ListItem = ({
   classes,
   onClick,
   iconRight,
+  highlightSelection = true,
 }: AudioPlaylistItemProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -88,7 +86,13 @@ const ListItem = ({
   return (
     <div className={styler('listItem')} onClick={onClick}>
       <div className={styler('titleContainer')}>
-        <Text variant="body" size="md" className={styler('truncate')}>
+        <Text
+          variant="body"
+          size="md"
+          className={`${styler('truncate')} ${
+            item.selected && highlightSelection ? styler('selection') : ''
+          }`}
+        >
           {item.name}
         </Text>
         <Text variant="body" size="sm" className={styler('truncate')}>
@@ -99,7 +103,6 @@ const ListItem = ({
         iconRight
       ) : (
         <Text variant="body" size="sm">
-          {/** @ts-ignore */}
           {item.duration}
         </Text>
       )}
@@ -119,9 +122,11 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
       }),
     [classes],
   );
+  const hmsActions = useHMSActions();
+  const playlist = useHMSStore(selectPlaylist);
+  const active = useHMSStore(selectPlaylistCurrentSelection);
   const [open, setOpen] = useState(false);
-  const [collapse, setCollapse] = useState(true);
-  const [active, setActive] = useState<HMSPlaylistItem>(defaultAudioList[0]);
+  const [collapse, setCollapse] = useState(!!active);
 
   return (
     <ContextMenu
@@ -186,48 +191,106 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
               <CloseIcon />
             </Button>
           </div>
-          {!collapse && (
-            <div
-              className={`${styler('body')} ${
-                collapse ? styler('collapse') : ''
-              }`}
-            >
-              {defaultAudioList.map(item => {
-                return (
-                  <ListItem
-                    key={item.url}
-                    item={item}
-                    onClick={() => {
-                      setActive(item);
-                    }}
-                  />
-                );
-              })}
-            </div>
-          )}
-          <div className={styler('footer')}>
-            <ListItem
-              key={active.url}
-              item={active}
-              classes={{
-                listItem: 'hover:bg-transparent-0 dark:hover:bg-transparent-0',
-              }}
-              iconRight={
+          <div
+            className={`${styler('body')} ${
+              collapse ? styler('collapse') : ''
+            }`}
+          >
+            {playlist.map(item => {
+              return (
+                <ListItem
+                  key={item.url}
+                  item={item}
+                  onClick={async () => {
+                    await hmsActions.performActionOnPlaylist({
+                      url: item.url,
+                      type: HMSPlaylistActionType.PLAY,
+                    });
+                  }}
+                />
+              );
+            })}
+          </div>
+          {active && (
+            <div className={styler('footer')}>
+              <div className={styler('controls')}>
                 <Button
-                  key="audioPlaylist"
+                  key="rewind"
                   iconOnly
                   variant="no-fill"
                   iconSize="md"
                   shape="rectangle"
-                  onClick={() => {
-                    setCollapse(value => !value);
+                  onClick={async () => {
+                    await hmsActions.performActionOnPlaylist({
+                      type: HMSPlaylistActionType.SEEK_BACKWARD,
+                    });
                   }}
                 >
-                  <PlaylistIcon />
+                  <RewindIcon />
                 </Button>
-              }
-            />
-          </div>
+                <Button
+                  key="playpause"
+                  iconOnly
+                  variant="no-fill"
+                  iconSize="xl"
+                  size="xl"
+                  shape="rectangle"
+                  classes={{ root: 'mx-2' }}
+                  onClick={async () => {
+                    await hmsActions.performActionOnPlaylist({
+                      url: active.url,
+                      type: active.playing
+                        ? HMSPlaylistActionType.PAUSE
+                        : HMSPlaylistActionType.PLAY,
+                    });
+                  }}
+                >
+                  {active.playing ? (
+                    <PauseIcon className={styler('icon')} />
+                  ) : (
+                    <PlayIcon className={styler('icon')} />
+                  )}
+                </Button>
+                <Button
+                  key="forward"
+                  iconOnly
+                  variant="no-fill"
+                  iconSize="md"
+                  shape="rectangle"
+                  onClick={async () => {
+                    await hmsActions.performActionOnPlaylist({
+                      type: HMSPlaylistActionType.SEEK_FORWARD,
+                    });
+                  }}
+                >
+                  <ForwardIcon />
+                </Button>
+              </div>
+              <ListItem
+                key={active.url}
+                item={active}
+                highlightSelection={false}
+                classes={{
+                  listItem:
+                    'hover:bg-transparent-0 dark:hover:bg-transparent-0',
+                }}
+                iconRight={
+                  <Button
+                    key="audioPlaylist"
+                    iconOnly
+                    variant="no-fill"
+                    iconSize="md"
+                    shape="rectangle"
+                    onClick={() => {
+                      setCollapse(value => !value);
+                    }}
+                  >
+                    <PlaylistIcon />
+                  </Button>
+                }
+              />
+            </div>
+          )}
         </div>
       </ContextMenuItem>
     </ContextMenu>
