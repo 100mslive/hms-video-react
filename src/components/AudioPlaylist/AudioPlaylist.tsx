@@ -10,11 +10,11 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import {
   AudioPlaylistIcon,
   CloseIcon,
-  ForwardIcon,
+  NextIcon,
   PauseIcon,
   PlayIcon,
   PlaylistIcon,
-  RewindIcon,
+  PrevIcon,
 } from '../Icons';
 import { Text } from '../Text';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
@@ -219,19 +219,18 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
             <div className={styler('footer')}>
               <div className={styler('controls')}>
                 <Button
-                  key="rewind"
+                  key="previous"
                   iconOnly
                   variant="no-fill"
                   iconSize="md"
                   shape="rectangle"
                   onClick={async () => {
                     await hmsActions.performActionOnPlaylist({
-                      type: HMSPlaylistActionType.SEEK,
-                      seekValue: -10,
+                      type: HMSPlaylistActionType.PLAY_PREV,
                     });
                   }}
                 >
-                  <RewindIcon />
+                  <PrevIcon />
                 </Button>
                 <Button
                   key="playpause"
@@ -256,19 +255,18 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                   )}
                 </Button>
                 <Button
-                  key="forward"
+                  key="next"
                   iconOnly
                   variant="no-fill"
                   iconSize="md"
                   shape="rectangle"
                   onClick={async () => {
                     await hmsActions.performActionOnPlaylist({
-                      type: HMSPlaylistActionType.SEEK,
-                      seekValue: 10,
+                      type: HMSPlaylistActionType.PLAY_NEXT,
                     });
                   }}
                 >
-                  <ForwardIcon />
+                  <NextIcon />
                 </Button>
               </div>
               <div className={styler('sliderContainer')}>
