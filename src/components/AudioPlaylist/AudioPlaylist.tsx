@@ -4,6 +4,7 @@ import {
   HMSPlaylistActionType,
   selectPlaylist,
   selectPlaylistCurrentSelection,
+  selectPlaylistProgress,
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -129,6 +130,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
   const hmsActions = useHMSActions();
   const playlist = useHMSStore(selectPlaylist);
   const active = useHMSStore(selectPlaylistCurrentSelection);
+  const progress = useHMSStore(selectPlaylistProgress);
   const [open, setOpen] = useState(false);
   const [collapse, setCollapse] = useState(!!active);
 
@@ -271,7 +273,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
               </div>
               <div className={styler('sliderContainer')}>
                 <Slider
-                  value={active.progress || 0}
+                  value={progress}
                   onChange={() => {}}
                   min={0}
                   max={100}
