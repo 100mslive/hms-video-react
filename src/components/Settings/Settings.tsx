@@ -262,7 +262,7 @@ export const Settings = ({
                     <div className={`${styler('formInner')}`}>
                       <div className={`${styler('selectLabel')}`}>
                         <Text variant="heading" size="sm">
-                          Audio Output:
+                          Speaker:
                         </Text>
                       </div>
                       <div className={`${styler('selectContainer')}`}>
