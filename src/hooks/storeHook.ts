@@ -32,8 +32,7 @@ export function makeHMSStoreHook(
     const HMSContextConsumer = useContext(hmsContext);
     if (!HMSContextConsumer) {
       const error =
-        'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
-        'to 100ms react docs to check on the required steps for using this hook.';
+        'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer to 100ms react docs(https://docs.100ms.live/javascript/v2/features/integration#react-hooks) to check on the required steps for using this hook.';
       throw new Error(error);
     }
     const useStore = HMSContextConsumer.store;

@@ -90,15 +90,15 @@ export const useHMSStore = makeHMSStoreHook(HMSContext);
  * const dominantSpeaker = hmsStore.getState(selectDominantSpeaker);
  * ```
  *
- * Note: Refrain from using this in React components.
+ * Note: There's no need to use the vanilla hmsStore in React components.
  * This is used in rare cases where the store needs to be accessed outside a React component.
+ * For almost every case, `useHMSStore` would get the job done.
  */
 export const useHMSVanillaStore = () => {
   const HMSContextConsumer = useContext(HMSContext);
   if (!HMSContextConsumer) {
     const error =
-      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
-      'to 100ms react docs to check on the required steps for using this hook.';
+      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer to 100ms react docs(https://docs.100ms.live/javascript/v2/features/integration#react-hooks) to check on the required steps for using this hook.';
     throw new Error(error);
   }
 
@@ -116,8 +116,7 @@ export const useHMSActions = () => {
   const HMSContextConsumer = useContext(HMSContext);
   if (!HMSContextConsumer) {
     const error =
-      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
-      'to 100ms react docs to check on the required steps for using this hook.';
+      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer to 100ms react docs(https://docs.100ms.live/javascript/v2/features/integration#react-hooks) to check on the required steps for using this hook.';
     throw new Error(error);
   }
   return HMSContextConsumer.actions;
@@ -134,8 +133,7 @@ export const useHMSNotifications = () => {
 
   if (!HMSContextConsumer) {
     const error =
-      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer' +
-      'to 100ms react docs to check on the required steps for using this hook.';
+      'It seems like you forgot to add your component within a top level HMSRoomProvider, please refer to 100ms react docs(https://docs.100ms.live/javascript/v2/features/integration#react-hooks) to check on the required steps for using this hook.';
     throw new Error(error);
   }
 
