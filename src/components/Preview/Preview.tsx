@@ -18,6 +18,7 @@ import { Input } from '../Input';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { isBrowser } from '../../utils/is-browser';
+import { ButtonClasses } from '../Button/Button';
 
 interface JoinInfo {
   audioMuted?: boolean;
@@ -32,7 +33,7 @@ export interface PreviewClasses {
   helloDiv?: string;
   nameDiv?: string;
   inputRoot?: string;
-  joinButton?: string;
+  joinButton?: ButtonClasses;
 }
 const defaultClasses: PreviewClasses = {
   root:
@@ -120,10 +121,10 @@ export const Preview = ({
   return (
     <Fragment>
       {/* root */}
-      <div className={styler('root')}>
-        <div className={styler('containerRoot')}>
+      <div className={styler('root') as string}>
+        <div className={styler('containerRoot') as string}>
           {/* header */}
-          <div className={styler('header')}>
+          <div className={styler('header') as string}>
             {/* videoTile */}
             {localPeer ? (
               <VideoTile
@@ -151,11 +152,11 @@ export const Preview = ({
             )}
           </div>
           {/* helloDiv */}
-          <div className={styler('helloDiv')}>Hi There</div>
+          <div className={styler('helloDiv') as string}>Hi There</div>
           {/* nameDiv */}
-          <div className={styler('nameDiv')}>What's your name?</div>
+          <div className={styler('nameDiv') as string}>What's your name?</div>
           {/* inputFieldRoot */}
-          <div className={styler('inputRoot')}>
+          <div className={styler('inputRoot') as string}>
             <Input
               ref={inputRef}
               {...inputProps}
@@ -168,6 +169,7 @@ export const Preview = ({
           <Button
             variant="emphasized"
             size="lg"
+            classes={styler('joinButton') as ButtonClasses}
             iconRight={inProgress || roomState === HMSRoomState.Connecting}
             icon={inProgress ? <ProgressIcon /> : undefined}
             disabled={inProgress || roomState === HMSRoomState.Connecting}

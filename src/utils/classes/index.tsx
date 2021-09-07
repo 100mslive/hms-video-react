@@ -1,15 +1,24 @@
 // @ts-ignore
 import { apply, TW } from 'twind';
 
-export const resolveClasses = (obj1: any, obj2: any) => {
-  const hash: any = {};
-  Object.keys(obj2).forEach(k => {
-    if (obj1.hasOwnProperty(k)) {
-      hash[k] = `${(obj2 as any)[k]} ${(obj1 as any)[k]}`;
+export const resolveClasses = <T extends Record<string, any>>(
+  defaults: T,
+  custom?: T,
+): T => {
+  if (!custom) {
+    return defaults;
+  }
+
+  const hash = { ...defaults };
+
+  for (const k in defaults) {
+    if (custom.hasOwnProperty(k)) {
+      Object.assign(hash, { k: `${defaults[k]} ${custom[k]}` });
     } else {
-      hash[k] = (obj2 as any)[k];
+      hash[k] = defaults[k];
     }
-  });
+  }
+
   return hash;
 };
 
@@ -49,7 +58,7 @@ export const hmsUiClassParserGenerator = <T extends {}>({
   defaultClasses,
   tag,
 }: ParseClassProps<T>) => (s: keyof T) => {
-  const finalClasses = resolveClasses(classes || {}, defaultClasses);
+  const finalClasses = resolveClasses<T>(defaultClasses, classes);
   if (tw) {
     return tw(
       `${tag}-${s}`,
@@ -57,7 +66,7 @@ export const hmsUiClassParserGenerator = <T extends {}>({
       apply(finalClasses[s]),
     );
   }
-  //handle edge case of tw not being present
+  // handle edge case of tw not being present
   else {
     return defaultStyler(defaultClasses, s);
   }
