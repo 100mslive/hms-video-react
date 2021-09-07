@@ -325,6 +325,7 @@ export const VideoTile = ({
               { value: 75 },
               { value: 100 },
             ]}
+            valueLabelFormat={(value) => Math.floor(value)}
           />
         </ContextMenuItem>,
       );
