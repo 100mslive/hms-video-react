@@ -19,8 +19,10 @@ const getVideoTileLabel = (
   // Map [isLocal, videoSource] to the label to be displayed.
   const labelMap = new Map<string, string>([
     [[true, 'screen'].toString(), 'Your Screen'],
+    [[true, 'playlist'].toString(), 'Your Video'],
     [[true, 'regular'].toString(), `You (${peerName})`],
     [[false, 'screen'].toString(), `${peerName}'s Screen`],
+    [[false, 'playlist'].toString(), `${peerName}'s Video`],
     [[false, 'regular'].toString(), peerName],
     [[false, undefined].toString(), peerName],
   ]);

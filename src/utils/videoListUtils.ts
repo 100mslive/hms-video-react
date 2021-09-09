@@ -22,13 +22,23 @@ export const getVideoTracksFromPeers = (
       videoTracks.push({ track: tracks[peer.videoTrack], peer: peer });
     }
     if (showScreenFn(peer) && peer.auxiliaryTracks.length > 0) {
-      const screenShareTrackID = peer.auxiliaryTracks[0];
+      const screenShareTrackID = peer.auxiliaryTracks.find(trackID => {
+        const track = tracks[trackID];
+        return track.type === 'video' && track.source === 'screen';
+      });
+
       // Don't show tile if screenshare only has audio
-      if (
-        tracks[screenShareTrackID] &&
-        tracks[screenShareTrackID].type === 'video'
-      ) {
+      if (screenShareTrackID) {
         videoTracks.push({ track: tracks[screenShareTrackID], peer: peer });
+      }
+    }
+    if (peer.auxiliaryTracks.length > 0) {
+      const videoPlaylistID = peer.auxiliaryTracks.find(trackID => {
+        const track = tracks[trackID];
+        return track.type === 'video' && track.source === 'playlist';
+      });
+      if (videoPlaylistID) {
+        videoTracks.push({ track: tracks[videoPlaylistID], peer: peer });
       }
     }
   }
