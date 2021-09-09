@@ -29,7 +29,7 @@ export interface VideoPlayerProps {
 const defaultClasses: VideoPlayerClasses = {
   root: 'relative w-full h-full',
   header:
-    'w-full h-7 flex justify-between items-center bg-gray-100 px-3 text-gray-500',
+    'w-full h-7 flex justify-between items-center bg-gray-100 px-2 text-gray-500',
 };
 
 export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
