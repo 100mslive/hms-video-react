@@ -62,7 +62,7 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
           key="closeVideoPlayer"
           iconOnly
           variant="no-fill"
-          iconSize="sm"
+          size="sm"
           shape="rectangle"
           onClick={() => {}}
         >
