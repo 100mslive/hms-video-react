@@ -1,10 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import {
-  HMSPlaylistItem,
   HMSPlaylistActionType,
   selectPlaylist,
   selectPlaylistCurrentSelection,
-  selectPlaylistProgress,
+  HMSPlaylistType,
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -49,7 +48,7 @@ const defaultClasses = {
   selection: 'text-brand-main',
 };
 
-export const AudioPlaylist = ({ classes }: VideoPlaylistProps) => {
+export const VideoPlaylist = ({ classes }: VideoPlaylistProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
@@ -62,11 +61,11 @@ export const AudioPlaylist = ({ classes }: VideoPlaylistProps) => {
     [classes],
   );
   const hmsActions = useHMSActions();
-  const playlist = useHMSStore(selectPlaylist);
-  const active = useHMSStore(selectPlaylistCurrentSelection);
-  const progress = useHMSStore(selectPlaylistProgress);
+  const playlist = useHMSStore(selectPlaylist(HMSPlaylistType.video));
+  const active = useHMSStore(
+    selectPlaylistCurrentSelection(HMSPlaylistType.video),
+  );
   const [open, setOpen] = useState(false);
-  const [collapse, setCollapse] = useState(!!active);
 
   return (
     <ContextMenu
@@ -131,11 +130,7 @@ export const AudioPlaylist = ({ classes }: VideoPlaylistProps) => {
               <CloseIcon />
             </Button>
           </div>
-          <div
-            className={`${styler('body')} ${
-              collapse ? styler('collapse') : ''
-            }`}
-          >
+          <div className={styler('body')}>
             {playlist.map(item => {
               return (
                 <PlaylistItem
@@ -144,7 +139,8 @@ export const AudioPlaylist = ({ classes }: VideoPlaylistProps) => {
                   onClick={async () => {
                     await hmsActions.performActionOnPlaylist({
                       url: item.url,
-                      type: HMSPlaylistActionType.PLAY,
+                      actionType: HMSPlaylistActionType.PLAY,
+                      type: HMSPlaylistType.video,
                     });
                   }}
                 />
