@@ -1,6 +1,7 @@
 import React, { Fragment, useMemo } from 'react';
 import {
   HMSPlaylistActionType,
+  HMSPlaylistType,
   selectPlaylistCurrentSelection,
   selectPlaylistProgress,
 } from '@100mslive/hms-video-store';
@@ -24,7 +25,7 @@ export interface PlaylistControlsClasses {
 
 export interface PlaylistControlsProps {
   classes?: PlaylistControlsClasses;
-  type?: 'audio' | 'video';
+  type?: HMSPlaylistType;
 }
 
 const defaultClasses: PlaylistControlsClasses = {
@@ -35,7 +36,7 @@ const defaultClasses: PlaylistControlsClasses = {
 
 export const PlaylistControls = ({
   classes,
-  type = 'audio',
+  type = HMSPlaylistType.audio,
 }: PlaylistControlsProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -49,8 +50,8 @@ export const PlaylistControls = ({
     [classes],
   );
   const hmsActions = useHMSActions();
-  const active = useHMSStore(selectPlaylistCurrentSelection);
-  const progress = useHMSStore(selectPlaylistProgress);
+  const active = useHMSStore(selectPlaylistCurrentSelection(type));
+  const progress = useHMSStore(selectPlaylistProgress(type));
 
   if (!active) {
     return null;
