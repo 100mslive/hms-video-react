@@ -67,7 +67,8 @@ export const PlaylistControls = ({
           shape="rectangle"
           onClick={async () => {
             await hmsActions.performActionOnPlaylist({
-              type: HMSPlaylistActionType.PLAY_PREV,
+              actionType: HMSPlaylistActionType.PLAY_PREV,
+              type,
             });
           }}
         >
@@ -83,9 +84,10 @@ export const PlaylistControls = ({
           onClick={async () => {
             await hmsActions.performActionOnPlaylist({
               url: active.url,
-              type: active.playing
+              actionType: active.playing
                 ? HMSPlaylistActionType.PAUSE
                 : HMSPlaylistActionType.PLAY,
+              type,
             });
           }}
         >
@@ -103,7 +105,8 @@ export const PlaylistControls = ({
           shape="rectangle"
           onClick={async () => {
             await hmsActions.performActionOnPlaylist({
-              type: HMSPlaylistActionType.PLAY_NEXT,
+              actionType: HMSPlaylistActionType.PLAY_NEXT,
+              type,
             });
           }}
         >
