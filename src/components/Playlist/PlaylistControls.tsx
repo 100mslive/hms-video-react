@@ -28,10 +28,24 @@ export interface PlaylistControlsProps {
   type?: HMSPlaylistType;
 }
 
+interface PlaylistProgressProps {
+  styler: (s: keyof PlaylistControlsClasses) => string | undefined;
+  type: HMSPlaylistType;
+}
+
 const defaultClasses: PlaylistControlsClasses = {
   root: 'px-3 flex justify-center items-center',
   icon: 'w-full h-full',
   sliderContainer: 'px-3',
+};
+
+const PlaylistProgress = ({ styler, type }: PlaylistProgressProps) => {
+  const progress = useHMSStore(selectPlaylistProgress(type));
+  return (
+    <div className={styler('sliderContainer')}>
+      <Slider value={progress} onChange={() => {}} min={0} max={100} disabled />
+    </div>
+  );
 };
 
 export const PlaylistControls = ({
@@ -51,7 +65,6 @@ export const PlaylistControls = ({
   );
   const hmsActions = useHMSActions();
   const active = useHMSStore(selectPlaylistCurrentSelection(type));
-  const progress = useHMSStore(selectPlaylistProgress(type));
 
   if (!active) {
     return null;
@@ -114,15 +127,7 @@ export const PlaylistControls = ({
           <NextIcon />
         </Button>
       </div>
-      <div className={styler('sliderContainer')}>
-        <Slider
-          value={progress}
-          onChange={() => {}}
-          min={0}
-          max={100}
-          disabled
-        />
-      </div>
+      <PlaylistProgress type={type} styler={styler} />
     </Fragment>
   );
 };
