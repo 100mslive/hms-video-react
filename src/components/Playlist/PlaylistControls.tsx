@@ -14,10 +14,6 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 
 export interface PlaylistControlsClasses {
   root?: string;
-  header?: string;
-  body?: string;
-  footer?: string;
-  collapse?: string;
   controls?: string;
   icon?: string;
   sliderContainer?: string;
@@ -34,7 +30,8 @@ interface PlaylistProgressProps {
 }
 
 const defaultClasses: PlaylistControlsClasses = {
-  root: 'px-3 flex justify-center items-center',
+  root: 'h-16 flex flex-col',
+  controls: 'px-3 flex justify-center items-center',
   icon: 'w-full h-full',
   sliderContainer: 'px-3',
 };
@@ -71,8 +68,8 @@ export const PlaylistControls = ({
   }
 
   return (
-    <Fragment>
-      <div className={styler('root')}>
+    <div className={styler('root')}>
+      <div className={styler('controls')}>
         <Button
           key="previous"
           iconOnly
@@ -128,6 +125,6 @@ export const PlaylistControls = ({
         </Button>
       </div>
       <PlaylistProgress type={type} styler={styler} />
-    </Fragment>
+    </div>
   );
 };
