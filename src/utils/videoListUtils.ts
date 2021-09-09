@@ -32,15 +32,6 @@ export const getVideoTracksFromPeers = (
         videoTracks.push({ track: tracks[screenShareTrackID], peer: peer });
       }
     }
-    if (peer.auxiliaryTracks.length > 0) {
-      const videoPlaylistID = peer.auxiliaryTracks.find(trackID => {
-        const track = tracks[trackID];
-        return track.type === 'video' && track.source === 'playlist';
-      });
-      if (videoPlaylistID) {
-        videoTracks.push({ track: tracks[videoPlaylistID], peer: peer });
-      }
-    }
   }
   return videoTracks;
 };
