@@ -17,11 +17,11 @@ import {
 import { Button } from '../Button';
 import { Slider } from '../Slider/Slider';
 import { VideoPlaylist } from './VideoPlaylist';
+import { Text } from '../Text';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { formatDuration } from '../../utils/timerUtils';
-import { Text } from '../Text';
 
 export interface PlaylistControlsClasses {
   root?: string;
