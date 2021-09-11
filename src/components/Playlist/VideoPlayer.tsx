@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useState } from 'react';
 import {
   HMSPeer,
   HMSPlaylistType,
@@ -13,6 +13,7 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { Text } from '../Text';
 import { Button } from '../Button';
 import { CloseIcon } from '../Icons';
+import { toggleFullScreen } from '../../utils';
 
 export interface VideoPlayerClasses {
   root?: string;
@@ -29,7 +30,7 @@ export interface VideoPlayerProps {
 const defaultClasses: VideoPlayerClasses = {
   root: 'relative w-full h-full',
   header:
-    'w-full h-7 flex justify-between items-center bg-gray-100 px-2 text-gray-500',
+    'w-full h-7 flex justify-between items-center bg-gray-100 text-gray-500',
 };
 
 export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
@@ -48,11 +49,24 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
   const currentVideo = useHMSStore(
     selectPlaylistCurrentSelection(HMSPlaylistType.video),
   );
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const handleFullScreen = async () => {
+    if (!rootRef.current) {
+      return;
+    }
+    const fs = await toggleFullScreen(rootRef.current, !isFullScreen);
+    console.log('fs', fs);
+    if (fs !== undefined) {
+      setIsFullScreen(fs);
+    }
+  };
 
   return (
-    <div className={styler('root')}>
+    <div className={styler('root')} ref={rootRef}>
       <div className={styler('header')}>
-        <Text variant="body" size="sm">
+        <Text variant="body" size="sm" classes={{ root: 'px-2' }}>
           Video Player
         </Text>
         <Text variant="body" size="sm">
@@ -77,6 +91,7 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
       <PlaylistControls
         classes={{ root: 'absolute left-0 bottom-3 w-full flex-col-reverse' }}
         type={HMSPlaylistType.video}
+        toggleFullScreen={handleFullScreen}
       />
     </div>
   );

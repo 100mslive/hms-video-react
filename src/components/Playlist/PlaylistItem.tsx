@@ -14,7 +14,7 @@ export interface PlaylistItemClasses {
 
 const defaultClasses = {
   root:
-    'flex justify-between w-full px-3 py-3 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
+    'flex justify-between items-center w-full px-3 py-3 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
   titleContainer: 'flex flex-column flex-1',
   truncate: 'min-w-0 truncate',
   selection: 'text-brand-main',

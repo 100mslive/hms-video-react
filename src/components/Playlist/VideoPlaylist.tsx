@@ -2,7 +2,6 @@ import React, { useMemo, useState } from 'react';
 import {
   HMSPlaylistActionType,
   selectPlaylist,
-  selectPlaylistCurrentSelection,
   HMSPlaylistType,
 } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
@@ -33,8 +32,8 @@ export interface VideoPlaylistItemClasses {
 }
 
 export interface VideoPlaylistProps {
-  classes: VideoPlaylistClasses;
-  onClose: () => void;
+  classes?: VideoPlaylistClasses;
+  onClose?: () => void;
 }
 
 const defaultClasses = {
@@ -62,9 +61,6 @@ export const VideoPlaylist = ({ classes }: VideoPlaylistProps) => {
   );
   const hmsActions = useHMSActions();
   const playlist = useHMSStore(selectPlaylist(HMSPlaylistType.video));
-  const active = useHMSStore(
-    selectPlaylistCurrentSelection(HMSPlaylistType.video),
-  );
   const [open, setOpen] = useState(false);
 
   return (
@@ -93,7 +89,7 @@ export const VideoPlaylist = ({ classes }: VideoPlaylistProps) => {
       menuProps={{
         anchorOrigin: {
           vertical: 'top',
-          horizontal: 'center',
+          horizontal: -48,
         },
         transformOrigin: {
           vertical: 'bottom',

@@ -634,6 +634,51 @@ function isMobileDevice() {
   return device && device.type === 'mobile';
 }
 
+const toggleFullScreen = async (
+  element: HTMLDivElement,
+  setFullScreen: boolean,
+): Promise<undefined | boolean> => {
+  const isFullScreen = document.fullscreenElement !== null;
+  console.log('setFullScreen', isFullScreen, setFullScreen);
+
+  if (setFullScreen === isFullScreen) {
+    return undefined;
+  }
+
+  if (setFullScreen) {
+    try {
+      const fullScreenFn =
+        element.requestFullscreen ||
+        //@ts-ignore
+        element.webkitRequestFullscreen ||
+        //@ts-ignore
+        element.mozRequestFullscreen;
+      if (fullScreenFn) {
+        await fullScreenFn.call(element);
+        return true;
+      }
+      return undefined;
+    } catch (error) {
+      console.error('FullScreen Error', error);
+    }
+  } else {
+    try {
+      const exitFullScreenFn =
+        //@ts-ignore
+        document.exitFullScreen ||
+        //@ts-ignore
+        document.webkitExitFullscreen ||
+        //@ts-ignore
+        document.mozCancelFullScreen;
+      await exitFullScreenFn.call(document);
+      return false;
+    } catch (error) {
+      console.error('FullScreen Error', error);
+    }
+  }
+  return undefined;
+};
+
 export {
   closeMediaStream,
   getVideoTileLabel,
@@ -651,4 +696,5 @@ export {
   calculateLayoutSizes,
   sigmoid,
   isMobileDevice,
+  toggleFullScreen,
 };
