@@ -4,6 +4,7 @@ import {
   HMSPlaylistType,
   selectPlaylistCurrentSelection,
   selectPlaylistProgress,
+  selectPlaylistVolume,
 } from '@100mslive/hms-video-store';
 import {
   NextIcon,
@@ -11,6 +12,7 @@ import {
   PlayIcon,
   PrevIcon,
   VideoFullScreenIcon,
+  VolumeIcon,
 } from '../Icons';
 import { Button } from '../Button';
 import { Slider } from '../Slider/Slider';
@@ -29,6 +31,8 @@ export interface PlaylistControlsClasses {
   progress?: string;
   sliderContainer?: string;
   rightControls?: string;
+  volumeControl?: string;
+  volumeControlIcon?: string;
 }
 
 export interface PlaylistControlsProps {
@@ -51,6 +55,8 @@ const defaultClasses: PlaylistControlsClasses = {
   progress: 'flex items-center px-2 text-gray-500',
   sliderContainer: 'px-3 flex-1',
   rightControls: 'flex items-center px-2',
+  volumeControl: 'flex items-center w-24 pl-2',
+  volumeControlIcon: 'mr-2 fill-current text-gray-100 dark:text-white',
 };
 
 const PlaylistProgress = ({
@@ -62,7 +68,7 @@ const PlaylistProgress = ({
   return (
     <div className={styler('progress')}>
       {type === 'video' && duration && (
-        <Text variant="body" size="sm" classes={{ root: 'mb-2'}}>
+        <Text variant="body" size="sm" classes={{ root: 'mb-2' }}>
           {formatDuration(progress * 0.01 * duration)}
         </Text>
       )}
@@ -76,10 +82,38 @@ const PlaylistProgress = ({
         />
       </div>
       {type === 'video' && duration && (
-        <Text variant="body" size="sm" classes={{ root: 'mb-2'}}>
+        <Text variant="body" size="sm" classes={{ root: 'mb-2' }}>
           {formatDuration(duration)}
         </Text>
       )}
+    </div>
+  );
+};
+
+const VolumeControl = ({
+  styler,
+  type,
+}: Omit<PlaylistProgressProps, 'duration'>) => {
+  const hmsActions = useHMSActions();
+  const volume = useHMSStore(selectPlaylistVolume(type));
+  return (
+    <div className={styler('volumeControl')}>
+      <VolumeIcon className={styler('volumeControlIcon')} />
+      <Slider
+        value={volume}
+        // @ts-ignore
+        onChange={(event: any, value: number | number[]) => {
+          if (typeof value === 'number') {
+            hmsActions.performActionOnPlaylist({
+              actionType: HMSPlaylistActionType.VOLUME,
+              type,
+              volume: value,
+            });
+          }
+        }}
+        min={0}
+        max={100}
+      />
     </div>
   );
 };
@@ -110,6 +144,7 @@ export const PlaylistControls = ({
   return (
     <div className={styler('root')}>
       <div className={styler('controlsContainer')}>
+        {type === 'video' && <VolumeControl styler={styler} type={type} />}
         <div className={styler('controls')}>
           <Button
             key="previous"
