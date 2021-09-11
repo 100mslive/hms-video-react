@@ -18,12 +18,15 @@ import { VideoPlaylist } from './VideoPlaylist';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { formatDuration } from '../../utils/timerUtils';
+import { Text } from '../Text';
 
 export interface PlaylistControlsClasses {
   root?: string;
   controlsContainer?: string;
   controls?: string;
   icon?: string;
+  progress?: string;
   sliderContainer?: string;
   rightControls?: string;
 }
@@ -37,6 +40,7 @@ export interface PlaylistControlsProps {
 interface PlaylistProgressProps {
   styler: (s: keyof PlaylistControlsClasses) => string | undefined;
   type: HMSPlaylistType;
+  duration?: number;
 }
 
 const defaultClasses: PlaylistControlsClasses = {
@@ -44,15 +48,38 @@ const defaultClasses: PlaylistControlsClasses = {
   controlsContainer: 'flex justify-between',
   controls: 'px-3 flex-1 flex justify-center items-center',
   icon: 'w-full h-full',
-  sliderContainer: 'px-3',
+  progress: 'flex items-center px-2 text-gray-500',
+  sliderContainer: 'px-3 flex-1',
   rightControls: 'flex items-center px-2',
 };
 
-const PlaylistProgress = ({ styler, type }: PlaylistProgressProps) => {
+const PlaylistProgress = ({
+  styler,
+  type,
+  duration,
+}: PlaylistProgressProps) => {
   const progress = useHMSStore(selectPlaylistProgress(type));
   return (
-    <div className={styler('sliderContainer')}>
-      <Slider value={progress} onChange={() => {}} min={0} max={100} disabled />
+    <div className={styler('progress')}>
+      {type === 'video' && duration && (
+        <Text variant="body" size="sm" classes={{ root: 'mb-2'}}>
+          {formatDuration(progress * 0.01 * duration)}
+        </Text>
+      )}
+      <div className={styler('sliderContainer')}>
+        <Slider
+          value={progress}
+          onChange={() => {}}
+          min={0}
+          max={100}
+          disabled
+        />
+      </div>
+      {type === 'video' && duration && (
+        <Text variant="body" size="sm" classes={{ root: 'mb-2'}}>
+          {formatDuration(duration)}
+        </Text>
+      )}
     </div>
   );
 };
@@ -155,7 +182,11 @@ export const PlaylistControls = ({
           </div>
         )}
       </div>
-      <PlaylistProgress type={type} styler={styler} />
+      <PlaylistProgress
+        type={type}
+        styler={styler}
+        duration={active.duration}
+      />
     </div>
   );
 };

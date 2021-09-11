@@ -26,7 +26,7 @@ const useStyles = makeStyles({
   },
   thumb: {
     backgroundColor: (props: ModeProps) =>
-      props.darkMode ? '#212121' : 'white',
+      props.darkMode ? 'white' : '#212121',
     border: '2px solid currentColor',
     '&:focus, &:hover, &$active': {
       boxShadow: 'inherit',
