@@ -57,7 +57,6 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
       return;
     }
     const fs = await toggleFullScreen(rootRef.current, !isFullScreen);
-    console.log('fs', fs);
     if (fs !== undefined) {
       setIsFullScreen(fs);
     }
@@ -65,24 +64,26 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
 
   return (
     <div className={styler('root')} ref={rootRef}>
-      <div className={styler('header')}>
-        <Text variant="body" size="sm" classes={{ root: 'px-2' }}>
-          Video Player
-        </Text>
-        <Text variant="body" size="sm">
-          {currentVideo?.name}
-        </Text>
-        <Button
-          key="closeVideoPlayer"
-          iconOnly
-          variant="no-fill"
-          size="sm"
-          shape="rectangle"
-          onClick={() => {}}
-        >
-          <CloseIcon />
-        </Button>
-      </div>
+      {currentVideo && (
+        <div className={styler('header')}>
+          <Text variant="body" size="sm" classes={{ root: 'px-2' }}>
+            Video Player
+          </Text>
+          <Text variant="body" size="sm">
+            {currentVideo?.name}
+          </Text>
+          <Button
+            key="closeVideoPlayer"
+            iconOnly
+            variant="no-fill"
+            size="sm"
+            shape="rectangle"
+            onClick={() => {}}
+          >
+            <CloseIcon />
+          </Button>
+        </div>
+      )}
       <Video
         hmsVideoTrack={videoTrack}
         objectFit="cover"
