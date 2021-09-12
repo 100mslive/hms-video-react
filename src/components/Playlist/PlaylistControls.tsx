@@ -113,6 +113,7 @@ const VolumeControl = ({
         }}
         min={0}
         max={100}
+        noThumb
       />
     </div>
   );
