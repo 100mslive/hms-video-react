@@ -1,9 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import {
-  HMSPlaylistActionType,
-  selectPlaylist,
-  HMSPlaylistType,
-} from '@100mslive/hms-video-store';
+import { selectPlaylist, HMSPlaylistType } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { CloseIcon, PlaylistIcon } from '../Icons';
@@ -133,9 +129,8 @@ export const VideoPlaylist = ({ classes }: VideoPlaylistProps) => {
                   key={item.url}
                   item={item}
                   onClick={async () => {
-                    await hmsActions.performActionOnPlaylist({
+                    await hmsActions.playlist.play({
                       url: item.url,
-                      actionType: HMSPlaylistActionType.PLAY,
                       type: HMSPlaylistType.video,
                     });
                   }}

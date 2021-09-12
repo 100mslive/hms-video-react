@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import {
-  HMSPlaylistActionType,
   HMSPlaylistType,
   selectPlaylist,
   selectPlaylistCurrentSelection,
@@ -53,7 +52,9 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
   );
   const hmsActions = useHMSActions();
   const playlist = useHMSStore(selectPlaylist(HMSPlaylistType.audio));
-  const active = useHMSStore(selectPlaylistCurrentSelection(HMSPlaylistType.audio));
+  const active = useHMSStore(
+    selectPlaylistCurrentSelection(HMSPlaylistType.audio),
+  );
   const [open, setOpen] = useState(false);
   const [collapse, setCollapse] = useState(!!active);
 
@@ -131,9 +132,9 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                   key={item.url}
                   item={item}
                   onClick={async () => {
-                    await hmsActions.performActionOnPlaylist({
+                    await hmsActions.playlist.play({
                       url: item.url,
-                      actionType: HMSPlaylistActionType.PLAY,
+                      type: HMSPlaylistType.audio,
                     });
                   }}
                 />

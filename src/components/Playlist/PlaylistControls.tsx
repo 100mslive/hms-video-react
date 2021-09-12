@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react';
 import {
-  HMSPlaylistActionType,
   HMSPlaylistType,
   selectPlaylistCurrentSelection,
   selectPlaylistProgress,
@@ -104,11 +103,7 @@ const VolumeControl = ({
         // @ts-ignore
         onChange={(event: any, value: number | number[]) => {
           if (typeof value === 'number') {
-            hmsActions.performActionOnPlaylist({
-              actionType: HMSPlaylistActionType.VOLUME,
-              type,
-              volume: value,
-            });
+            hmsActions.playlist.setVolume({ volume: value, type });
           }
         }}
         min={0}
@@ -154,10 +149,7 @@ export const PlaylistControls = ({
             iconSize="md"
             shape="rectangle"
             onClick={async () => {
-              await hmsActions.performActionOnPlaylist({
-                actionType: HMSPlaylistActionType.PLAY_PREV,
-                type,
-              });
+              await hmsActions.playlist.playPrevious({ type });
             }}
           >
             <PrevIcon />
@@ -170,13 +162,11 @@ export const PlaylistControls = ({
             size="xl"
             shape="rectangle"
             onClick={async () => {
-              await hmsActions.performActionOnPlaylist({
-                url: active.url,
-                actionType: active.playing
-                  ? HMSPlaylistActionType.PAUSE
-                  : HMSPlaylistActionType.PLAY,
-                type,
-              });
+              if (active.playing) {
+                await hmsActions.playlist.pause({ type });
+              } else {
+                await hmsActions.playlist.play({ type });
+              }
             }}
           >
             {active.playing ? (
@@ -192,10 +182,7 @@ export const PlaylistControls = ({
             iconSize="md"
             shape="rectangle"
             onClick={async () => {
-              await hmsActions.performActionOnPlaylist({
-                actionType: HMSPlaylistActionType.PLAY_NEXT,
-                type,
-              });
+              await hmsActions.playlist.playNext({ type });
             }}
           >
             <NextIcon />
