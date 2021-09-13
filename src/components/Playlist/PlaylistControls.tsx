@@ -10,6 +10,7 @@ import {
   PauseIcon,
   PlayIcon,
   PrevIcon,
+  VideoExitFullScreenIcon,
   VideoFullScreenIcon,
   VolumeIcon,
 } from '../Icons';
@@ -38,6 +39,7 @@ export interface PlaylistControlsProps {
   classes?: PlaylistControlsClasses;
   type?: HMSPlaylistType;
   toggleFullScreen?: () => void;
+  isFullScreen?: boolean;
 }
 
 interface PlaylistProgressProps {
@@ -118,6 +120,7 @@ export const PlaylistControls = ({
   classes,
   type = HMSPlaylistType.audio,
   toggleFullScreen = () => {},
+  isFullScreen = false,
 }: PlaylistControlsProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -200,7 +203,11 @@ export const PlaylistControls = ({
               classes={{ root: 'cursor-pointer' }}
               onClick={toggleFullScreen}
             >
-              <VideoFullScreenIcon />
+              {isFullScreen ? (
+                <VideoExitFullScreenIcon />
+              ) : (
+                <VideoFullScreenIcon />
+              )}
             </Button>
           </div>
         )}

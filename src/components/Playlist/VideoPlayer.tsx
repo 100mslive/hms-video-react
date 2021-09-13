@@ -107,6 +107,7 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
         classes={{ root: 'absolute left-0 bottom-3 w-full flex-col-reverse' }}
         type={HMSPlaylistType.video}
         toggleFullScreen={handleFullScreen}
+        isFullScreen={isFullScreen}
       />
     </div>
   );
