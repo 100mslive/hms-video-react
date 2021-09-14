@@ -24,7 +24,7 @@ export const getVideoTracksFromPeers = (
     if (showScreenFn(peer) && peer.auxiliaryTracks.length > 0) {
       const screenShareTrackID = peer.auxiliaryTracks.find(trackID => {
         const track = tracks[trackID];
-        return track.type === 'video' && track.source === 'screen';
+        return track?.type === 'video' && track?.source === 'screen';
       });
 
       // Don't show tile if screenshare only has audio
