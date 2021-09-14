@@ -43,11 +43,11 @@ const useStyles = makeStyles({
   },
 });
 
-export const Slider = ({ ...props }: SliderProps) => {
+export const Slider = ({ noThumb, ...props }: SliderProps) => {
   const { appBuilder } = useHMSTheme();
   const sliderClasses = useStyles({
     darkMode: appBuilder.theme === 'dark',
-    noThumb: props.noThumb,
+    noThumb,
   } as StyleProps);
   return (
     <MaterialSlider
