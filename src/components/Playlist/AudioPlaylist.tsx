@@ -73,7 +73,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
           variant="no-fill"
           iconSize="md"
           shape="rectangle"
-          active={open}
+          active={open || !!active}
         >
           <AudioPlaylistIcon onClick={() => setOpen(value => !value)} />
         </Button>
