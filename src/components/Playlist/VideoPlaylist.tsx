@@ -130,7 +130,7 @@ export const VideoPlaylist = ({ classes }: VideoPlaylistProps) => {
                   item={item}
                   onClick={async () => {
                     await hmsActions.playlist.play({
-                      url: item.url,
+                      id: item.id,
                       type: HMSPlaylistType.video,
                     });
                   }}

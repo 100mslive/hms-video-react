@@ -169,9 +169,9 @@ export const PlaylistControls = ({
             shape="rectangle"
             onClick={async () => {
               if (active.playing) {
-                await hmsActions.playlist.pause({ type, url: active.url });
+                await hmsActions.playlist.pause({ type, id: active.id });
               } else {
-                await hmsActions.playlist.play({ type, url: active.url });
+                await hmsActions.playlist.play({ type, id: active.id });
               }
             }}
           >

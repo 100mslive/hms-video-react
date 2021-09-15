@@ -138,7 +138,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                   item={item}
                   onClick={async () => {
                     await hmsActions.playlist.play({
-                      url: item.url,
+                      id: item.id,
                       type: HMSPlaylistType.audio,
                     });
                   }}
