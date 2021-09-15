@@ -114,7 +114,12 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
               variant="no-fill"
               iconSize="md"
               shape="rectangle"
-              onClick={() => {
+              onClick={async () => {
+                if (active) {
+                  await hmsActions.playlist.stop({
+                    type: HMSPlaylistType.audio,
+                  });
+                }
                 setOpen(false);
               }}
             >
