@@ -10,13 +10,15 @@ export interface PlaylistItemClasses {
   titleContainer?: string;
   truncate?: string;
   selection?: string;
+  subtitle?: string;
 }
 
 const defaultClasses = {
   root:
     'flex justify-between items-center w-full px-3 py-3 hover:bg-gray-600 dark:hover:bg-gray-300 cursor-pointer',
-  titleContainer: 'flex flex-column flex-1',
+  titleContainer: 'flex flex-col flex-1',
   truncate: 'min-w-0 truncate',
+  subtitle: 'text-gray-500 dark:text-gray-500',
   selection: 'text-brand-main',
 };
 
@@ -53,20 +55,30 @@ export const PlaylistItem = ({
         <Text
           variant="body"
           size="md"
-          className={`${styler('truncate')} ${
-            item.selected && highlightSelection ? styler('selection') : ''
-          }`}
+          classes={{
+            rootBodyMd: `${styler('truncate')} ${
+              item.selected && highlightSelection ? styler('selection') : ''
+            }`,
+          }}
         >
           {item.name}
         </Text>
-        <Text variant="body" size="sm" className={styler('truncate')}>
-          {item.description}
+        <Text
+          variant="body"
+          size="sm"
+          classes={{ rootBodySm: `${styler('truncate')}${styler('subtitle')}` }}
+        >
+          {item.metadata?.description}
         </Text>
       </div>
       {iconRight ? (
         iconRight
       ) : (
-        <Text variant="body" size="sm">
+        <Text
+          variant="body"
+          size="sm"
+          classes={{ rootBodySm: styler('subtitle') }}
+        >
           {formatDuration(item.duration)}
         </Text>
       )}
