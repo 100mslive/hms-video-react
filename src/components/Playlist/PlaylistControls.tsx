@@ -3,6 +3,7 @@ import {
   HMSPlaylistType,
   selectPlaylistCurrentSelection,
   selectPlaylistProgress,
+  selectPlaylistSelection,
   selectPlaylistVolume,
 } from '@100mslive/hms-video-store';
 import {
@@ -134,6 +135,7 @@ export const PlaylistControls = ({
     [classes],
   );
   const hmsActions = useHMSActions();
+  const selection = useHMSStore(selectPlaylistSelection(type));
   const active = useHMSStore(selectPlaylistCurrentSelection(type));
 
   if (!active) {
@@ -151,6 +153,7 @@ export const PlaylistControls = ({
             variant="no-fill"
             iconSize="md"
             shape="rectangle"
+            disabled={!selection.hasPrevious}
             onClick={async () => {
               await hmsActions.playlist.playPrevious({ type });
             }}
@@ -184,6 +187,7 @@ export const PlaylistControls = ({
             variant="no-fill"
             iconSize="md"
             shape="rectangle"
+            disabled={!selection.hasNext}
             onClick={async () => {
               await hmsActions.playlist.playNext({ type });
             }}
