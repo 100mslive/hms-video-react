@@ -17,7 +17,7 @@ const defaultClasses = {
 };
 
 export interface PlaylistItemProps {
-  item: HMSPlaylistItem;
+  item: HMSPlaylistItem<any>;
   onClick?: () => void;
   iconRight?: JSX.Element;
   classes?: PlaylistItemClasses;
