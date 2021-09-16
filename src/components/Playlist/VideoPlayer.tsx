@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import {
   HMSPeer,
   HMSPlaylistType,
-  selectPlaylistVideoTrackByPeerID,
+  selectVideoPlaylistVideoTrackByPeerID,
   selectVideoPlaylist,
 } from '@100mslive/hms-video-store';
 import { PlaylistControls } from './PlaylistControls';
@@ -45,7 +45,9 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
       }),
     [classes],
   );
-  const videoTrack = useHMSStore(selectPlaylistVideoTrackByPeerID(peer.id));
+  const videoTrack = useHMSStore(
+    selectVideoPlaylistVideoTrackByPeerID(peer.id),
+  );
   const currentVideo = useHMSStore(selectVideoPlaylist.selectedItem);
   const hmsActions = useHMSActions();
   const rootRef = useRef<HTMLDivElement>(null);
