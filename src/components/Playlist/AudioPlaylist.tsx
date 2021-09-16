@@ -51,7 +51,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
   );
   const hmsActions = useHMSActions();
   const playlist = useHMSStore(selectAudioPlaylist.list);
-  const active = useHMSStore(selectAudioPlaylist.currentSelection);
+  const active = useHMSStore(selectAudioPlaylist.selectedItem);
   const [open, setOpen] = useState(false);
   const [collapse, setCollapse] = useState(!!active);
 

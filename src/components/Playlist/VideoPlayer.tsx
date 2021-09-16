@@ -46,7 +46,7 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
     [classes],
   );
   const videoTrack = useHMSStore(selectPlaylistVideoTrackByPeerID(peer.id));
-  const currentVideo = useHMSStore(selectVideoPlaylist.currentSelection);
+  const currentVideo = useHMSStore(selectVideoPlaylist.selectedItem);
   const hmsActions = useHMSActions();
   const rootRef = useRef<HTMLDivElement>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);

@@ -140,7 +140,7 @@ export const PlaylistControls = ({
   const selectPlaylist =
     type === HMSPlaylistType.audio ? selectAudioPlaylist : selectVideoPlaylist;
   const selection = useHMSStore(selectPlaylist.selection);
-  const active = useHMSStore(selectPlaylist.currentSelection);
+  const active = useHMSStore(selectPlaylist.selectedItem);
 
   if (!active) {
     return null;
