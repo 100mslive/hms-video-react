@@ -116,7 +116,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
               shape="rectangle"
               onClick={async () => {
                 if (active) {
-                  await hmsActions.playlist.stop(HMSPlaylistType.audio);
+                  await hmsActions.audioPlaylist.stop();
                 }
                 setOpen(false);
               }}
@@ -135,7 +135,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                   key={item.url}
                   item={item}
                   onClick={async () => {
-                    await hmsActions.playlist.play(
+                    await hmsActions.audioPlaylist.play(
                       item.id,
                       HMSPlaylistType.audio,
                     );
