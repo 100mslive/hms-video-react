@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { selectPlaylist, HMSPlaylistType } from '@100mslive/hms-video-store';
+import { selectVideoPlaylist } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { CloseIcon, PlaylistIcon } from '../Icons';
@@ -56,7 +56,7 @@ export const VideoPlaylist = ({ classes }: VideoPlaylistProps) => {
     [classes],
   );
   const hmsActions = useHMSActions();
-  const playlist = useHMSStore(selectPlaylist(HMSPlaylistType.video));
+  const playlist = useHMSStore(selectVideoPlaylist.list);
   const [open, setOpen] = useState(false);
 
   return (

@@ -1,10 +1,8 @@
 import React, { useMemo } from 'react';
 import {
   HMSPlaylistType,
-  selectPlaylistCurrentSelection,
-  selectPlaylistProgress,
-  selectPlaylistSelection,
-  selectPlaylistVolume,
+  selectAudioPlaylist,
+  selectVideoPlaylist,
 } from '@100mslive/hms-video-store';
 import {
   NextIcon,
@@ -66,7 +64,9 @@ const PlaylistProgress = ({
   type,
   duration,
 }: PlaylistProgressProps) => {
-  const progress = useHMSStore(selectPlaylistProgress(type));
+  const selectPlaylist =
+    type === HMSPlaylistType.audio ? selectAudioPlaylist : selectVideoPlaylist;
+  const progress = useHMSStore(selectPlaylist.progress);
   return (
     <div className={styler('progress')}>
       {type === 'video' && duration && (
@@ -97,7 +97,9 @@ const VolumeControl = ({
   type,
 }: Omit<PlaylistProgressProps, 'duration'>) => {
   const hmsActions = useHMSActions();
-  const volume = useHMSStore(selectPlaylistVolume(type));
+  const selectPlaylist =
+    type === HMSPlaylistType.audio ? selectAudioPlaylist : selectVideoPlaylist;
+  const volume = useHMSStore(selectPlaylist.volume);
   return (
     <div className={styler('volumeControl')}>
       <VolumeIcon className={styler('volumeControlIcon')} />
@@ -135,8 +137,10 @@ export const PlaylistControls = ({
     [classes],
   );
   const hmsActions = useHMSActions();
-  const selection = useHMSStore(selectPlaylistSelection(type));
-  const active = useHMSStore(selectPlaylistCurrentSelection(type));
+  const selectPlaylist =
+    type === HMSPlaylistType.audio ? selectAudioPlaylist : selectVideoPlaylist;
+  const selection = useHMSStore(selectPlaylist.selection);
+  const active = useHMSStore(selectPlaylist.currentSelection);
 
   if (!active) {
     return null;

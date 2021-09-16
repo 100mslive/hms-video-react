@@ -2,9 +2,8 @@ import React, { useMemo, useRef, useState } from 'react';
 import {
   HMSPeer,
   HMSPlaylistType,
-  selectPlaylistCurrentSelection,
   selectPlaylistVideoTrackByPeerID,
-  selectPlaylistAudioTrackByPeerID,
+  selectVideoPlaylist,
 } from '@100mslive/hms-video-store';
 import { PlaylistControls } from './PlaylistControls';
 import { Video } from '../Video/Video';
@@ -47,10 +46,7 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
     [classes],
   );
   const videoTrack = useHMSStore(selectPlaylistVideoTrackByPeerID(peer.id));
-  const audioTrack = useHMSStore(selectPlaylistAudioTrackByPeerID(peer.id));
-  const currentVideo = useHMSStore(
-    selectPlaylistCurrentSelection(HMSPlaylistType.video),
-  );
+  const currentVideo = useHMSStore(selectVideoPlaylist.currentSelection);
   const hmsActions = useHMSActions();
   const rootRef = useRef<HTMLDivElement>(null);
   const [isFullScreen, setIsFullScreen] = useState(false);

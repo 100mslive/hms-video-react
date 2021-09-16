@@ -1,8 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import {
   HMSPlaylistType,
-  selectPlaylist,
-  selectPlaylistCurrentSelection,
+  selectAudioPlaylist,
 } from '@100mslive/hms-video-store';
 import { AudioPlaylistIcon, CloseIcon, PlaylistIcon } from '../Icons';
 import { Text } from '../Text';
@@ -51,10 +50,8 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
     [classes],
   );
   const hmsActions = useHMSActions();
-  const playlist = useHMSStore(selectPlaylist(HMSPlaylistType.audio));
-  const active = useHMSStore(
-    selectPlaylistCurrentSelection(HMSPlaylistType.audio),
-  );
+  const playlist = useHMSStore(selectAudioPlaylist.list);
+  const active = useHMSStore(selectAudioPlaylist.currentSelection);
   const [open, setOpen] = useState(false);
   const [collapse, setCollapse] = useState(!!active);
 
@@ -135,10 +132,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                   key={item.url}
                   item={item}
                   onClick={async () => {
-                    await hmsActions.audioPlaylist.play(
-                      item.id,
-                      HMSPlaylistType.audio,
-                    );
+                    await hmsActions.audioPlaylist.play(item.id);
                   }}
                 />
               );
