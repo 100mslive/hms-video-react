@@ -82,7 +82,7 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
             size="sm"
             shape="rectangle"
             onClick={async () => {
-              await hmsActions.playlist.stop({ type: HMSPlaylistType.video });
+              await hmsActions.playlist.stop(HMSPlaylistType.video);
             }}
           >
             <CloseIcon />

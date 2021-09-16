@@ -106,7 +106,7 @@ const VolumeControl = ({
         // @ts-ignore
         onChange={(event: any, value: number | number[]) => {
           if (typeof value === 'number') {
-            hmsActions.playlist.setVolume({ volume: value, type });
+            hmsActions.playlist.setVolume(value, type);
           }
         }}
         min={0}
@@ -155,7 +155,7 @@ export const PlaylistControls = ({
             shape="rectangle"
             disabled={!selection.hasPrevious}
             onClick={async () => {
-              await hmsActions.playlist.playPrevious({ type });
+              await hmsActions.playlist.playPrevious(type);
             }}
           >
             <PrevIcon />
@@ -169,9 +169,9 @@ export const PlaylistControls = ({
             shape="rectangle"
             onClick={async () => {
               if (active.playing) {
-                await hmsActions.playlist.pause({ type, id: active.id });
+                await hmsActions.playlist.pause(active.id, type);
               } else {
-                await hmsActions.playlist.play({ type, id: active.id });
+                await hmsActions.playlist.play(active.id, type);
               }
             }}
           >
@@ -189,7 +189,7 @@ export const PlaylistControls = ({
             shape="rectangle"
             disabled={!selection.hasNext}
             onClick={async () => {
-              await hmsActions.playlist.playNext({ type });
+              await hmsActions.playlist.playNext(type);
             }}
           >
             <NextIcon />
