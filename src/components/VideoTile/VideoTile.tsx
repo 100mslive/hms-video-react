@@ -284,7 +284,7 @@ export const VideoTile = ({
         <ContextMenuItem
           icon={storeHmsVideoTrack?.enabled ? <CamOnIcon /> : <CamOffIcon />}
           label={`${storeHmsVideoTrack?.enabled ? 'Mute' : 'Unmute'} Video`}
-          key={storeHmsVideoTrack?.id}
+          key="remoteMuteVideo"
           onClick={() => toggleTrackEnabled(storeHmsVideoTrack)}
         />,
       );
@@ -298,7 +298,7 @@ export const VideoTile = ({
         <ContextMenuItem
           icon={storeHmsAudioTrack?.enabled ? <MicOnIcon /> : <MicOffIcon />}
           label={`${storeHmsAudioTrack?.enabled ? 'Mute' : 'Unmute'} Audio`}
-          key={storeHmsAudioTrack?.id}
+          key="remoteMuteAudio"
           onClick={() => toggleTrackEnabled(storeHmsAudioTrack)}
         />,
       );
@@ -330,6 +330,7 @@ export const VideoTile = ({
               { value: 75 },
               { value: 100 },
             ]}
+            valueLabelFormat={value => Math.floor(value)}
           />
         </ContextMenuItem>,
       );

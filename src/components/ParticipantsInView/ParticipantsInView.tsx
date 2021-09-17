@@ -3,7 +3,6 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { MessageModal } from '../MessageModal';
 import { Slider } from '../Slider/Slider';
-import { Text } from '../Text';
 
 export interface ParticipantsInViewClasses {
   sliderContainer?: string;

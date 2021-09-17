@@ -41,11 +41,12 @@ export interface ContextMenuProps {
     | React.ReactElement<ContextMenuItemProps>
     | React.ReactElement<ContextMenuItemProps>[];
   menuProps?: Partial<MenuProps>;
+  noGutters?: boolean;
 }
 
 export interface ContextMenuItemProps extends ContextMenuDataItem {
   classes?: ContextMenuItemClasses;
-  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLElement>) => void;
   children?: JSX.Element;
   active?: boolean;
   closeMenuOnClick?: boolean;
@@ -70,15 +71,20 @@ const defaultClasses: ContextMenuClasses = {
   menuTitleContainer: 'w-full flex items-center py-2',
 };
 
-export const StyledMenu = withStyles({
+const useMenuStyles = makeStyles({
   paper: {
     borderRadius: '12px',
+    '& > .MuiList-padding': {
+      padding: (props: Partial<ContextMenuProps>) =>
+        props.noGutters ? '0' : '8px 0',
+    },
   },
-})(Menu);
+});
 
 const useStyles = makeStyles({
   gutters: {
-    padding: '0 12px',
+    padding: (props: Partial<ContextMenuProps>) =>
+      props.noGutters ? '0' : '0 12px',
   },
   divider: {
     borderTop: '1px solid #777777',
@@ -134,6 +140,7 @@ export const ContextMenu = ({
   trigger,
   onTrigger,
   menuProps,
+  noGutters,
 }: ContextMenuProps) => {
   const { tw } = useHMSTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -148,7 +155,8 @@ export const ContextMenu = ({
       }),
     [classes],
   );
-  const menuItemClasses = useStyles();
+  const menuItemClasses = useStyles({ noGutters });
+  const menuClasses = useMenuStyles({ noGutters });
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setOpen(true);
@@ -182,7 +190,7 @@ export const ContextMenu = ({
           />
         )}
       </div>
-      <StyledMenu
+      <Menu
         id="context-menu"
         anchorEl={anchorEl}
         autoFocus={false}
@@ -197,7 +205,7 @@ export const ContextMenu = ({
           vertical: 'top',
           horizontal: 'right',
         }}
-        classes={{ paper: styler('menu') }}
+        classes={{ paper: `${menuClasses.paper} ${styler('menu')}` }}
         {...menuProps}
       >
         {React.Children.map(children, child => {
@@ -213,6 +221,7 @@ export const ContextMenu = ({
                 } ${child.props.addDivider ? menuItemClasses.divider : ''}`,
                 gutters: menuItemClasses.gutters,
               }}
+              disableTouchRipple
               style={{
                 minHeight: 40,
               }}
@@ -227,7 +236,7 @@ export const ContextMenu = ({
             </MenuItem>
           );
         })}
-      </StyledMenu>
+      </Menu>
     </div>
   );
 };

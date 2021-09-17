@@ -12,7 +12,7 @@ interface StyledButtonProps {
   /**
    * Size
    */
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   /**
    * Only Case
    */
@@ -20,7 +20,7 @@ interface StyledButtonProps {
   /**
    * Icon Size
    */
-  iconSize?: 'sm' | 'md' | 'lg';
+  iconSize?: 'sm' | 'md' | 'lg' | 'xl';
   /**
    * Shape
    */
@@ -75,9 +75,11 @@ export interface ButtonClasses {
   rootSizeSm: string;
   rootSizeMd: string;
   rootSizeLg: string;
+  rootSizeXl: string;
   rootIconSizeSm: string;
   rootIconSizeMd: string;
   rootIconSizeLg: string;
+  rootIconSizeXl: string;
   rootIconOnlyStandard: string;
   rootIconOnlyDanger: string;
   rootIconOnlyStandardActive: string;
@@ -122,9 +124,11 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
     rootSizeSm: `px-2.5 py-1.5`,
     rootSizeMd: `px-4 py-2`,
     rootSizeLg: `px-6 py-3`,
+    rootSizeXl: `px-8 py-3`,
     rootIconSizeSm: `w-7 h-7 p-0.5 rounded-full`,
     rootIconSizeMd: `w-8 h-8 p-1`,
     rootIconSizeLg: `w-10 h-10 p-1`,
+    rootIconSizeXl: 'w-11 h-11 p-1',
     rootIconOnlyStandard: `text-black dark:text-white ${ifDisabled(
       'hover:bg-transparent-700 dark:hover:bg-transparent-300',
     )}`,
@@ -165,11 +169,13 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
         sm: `${finalClasses.rootSizeSm}`,
         md: `${finalClasses.rootSizeMd}`,
         lg: `${finalClasses.rootSizeLg}`,
+        xl: `${finalClasses.rootSizeXl}`,
       },
       iconSize: {
         sm: `${finalClasses.rootIconSizeSm}`,
         md: `${finalClasses.rootIconSizeMd}`,
         lg: `${finalClasses.rootIconSizeLg}`,
+        xl: `${finalClasses.rootIconSizeXl}`,
       },
       active: {
         false: '',

@@ -2,19 +2,19 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@0.2.38":
-  version "0.2.38"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.38.tgz#e56f70ab0ab5c7d692ed932050d168b30f895e5e"
-  integrity sha512-aNAXgpOz4+XcoxV4hThgtRaf4BHOi/WzKTJn7cNno6RJ0KLnZ+vcJraGdqwj6BCMcf3PgK4ZGJUrcDAtKbBeig==
+"@100mslive/hms-video-store@0.2.42":
+  version "0.2.42"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.42.tgz#d5f12b65bbc3bafd648634376c3ec53750fb3de3"
+  integrity sha512-lcx+VRktk8802WDpqG2eJazTG+Rp1G4qGquknYvd/ZrA/G1/V18OtHzOQmfgFISjRH17F7X4c2lLA9SNe3vJOQ==
   dependencies:
-    immer "^9.0.5"
+    immer "^9.0.6"
     reselect "^4.0.0"
     zustand "3.5.7"
 
-"@100mslive/hms-video@^0.0.179":
-  version "0.0.179"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.179.tgz#57268fc1d46371b22b9e114f643b3d4a92e40f8f"
-  integrity sha512-tC9RtNn4hHcTXKT3temhPXNytLh6/BpNgYZdL0k+QI9NJaqkn242R+kjhmWo/spwhrUsyTAvjiABGMnav8X4oQ==
+"@100mslive/hms-video@^0.0.183":
+  version "0.0.183"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.0.183.tgz#7b1681e4b1acde31ee76e3c5be8e0da75d0651ea"
+  integrity sha512-/grW/3KXRpTJkM4M5lhfFtcHFJJrIMJurq9Xr0ST+xytr93fQ3UxBnC2Kk/+lJ7K6Yw7BDGrOsodJonyhwE7xQ==
   dependencies:
     events "^3.3.0"
     sdp-transform "^2.14.1"
@@ -7518,10 +7518,10 @@ immer@8.0.1:
   resolved "https://registry.yarnpkg.com/immer/-/immer-8.0.1.tgz#9c73db683e2b3975c424fb0572af5889877ae656"
   integrity sha512-aqXhGP7//Gui2+UrEtvxZxSquQVXTpZ7KDxfCcKAF3Vysvw0CViVaW9RZ1j1xlIYqaaaipBoqdqeibkc18PNvA==
 
-immer@^9.0.5:
-  version "9.0.5"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.5.tgz#a7154f34fe7064f15f00554cc94c66cc0bf453ec"
-  integrity sha512-2WuIehr2y4lmYz9gaQzetPR2ECniCifk4ORaQbU3g5EalLt+0IVTosEPJ5BoYl/75ky2mivzdRzV8wWgQGOSYQ==
+immer@^9.0.6:
+  version "9.0.6"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.6.tgz#7a96bf2674d06c8143e327cbf73539388ddf1a73"
+  integrity sha512-G95ivKpy+EvVAnAab4fVa4YGYn24J1SpEktnJX7JJ45Bd7xqME/SCplFzYFmTbrkwZbQ4xJK1xMTUYBkN6pWsQ==
 
 import-cwd@^3.0.0:
   version "3.0.0"

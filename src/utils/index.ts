@@ -19,8 +19,10 @@ const getVideoTileLabel = (
   // Map [isLocal, videoSource] to the label to be displayed.
   const labelMap = new Map<string, string>([
     [[true, 'screen'].toString(), 'Your Screen'],
+    [[true, 'playlist'].toString(), 'Your Video'],
     [[true, 'regular'].toString(), `You (${peerName})`],
     [[false, 'screen'].toString(), `${peerName}'s Screen`],
+    [[false, 'playlist'].toString(), `${peerName}'s Video`],
     [[false, 'regular'].toString(), peerName],
     [[false, undefined].toString(), peerName],
   ]);
@@ -632,6 +634,51 @@ function isMobileDevice() {
   return device && device.type === 'mobile';
 }
 
+const toggleFullScreen = async (
+  element: HTMLDivElement,
+  setFullScreen: boolean,
+): Promise<undefined | boolean> => {
+  const isFullScreen = document.fullscreenElement !== null;
+  console.log('setFullScreen', isFullScreen, setFullScreen);
+
+  if (setFullScreen === isFullScreen) {
+    return undefined;
+  }
+
+  if (setFullScreen) {
+    try {
+      const fullScreenFn =
+        element.requestFullscreen ||
+        //@ts-ignore
+        element.webkitRequestFullscreen ||
+        //@ts-ignore
+        element.mozRequestFullscreen;
+      if (fullScreenFn) {
+        await fullScreenFn.call(element);
+        return true;
+      }
+      return undefined;
+    } catch (error) {
+      console.error('FullScreen Error', error);
+    }
+  } else {
+    try {
+      const exitFullScreenFn =
+        //@ts-ignore
+        document.exitFullScreen ||
+        //@ts-ignore
+        document.webkitExitFullscreen ||
+        //@ts-ignore
+        document.mozCancelFullScreen;
+      await exitFullScreenFn.call(document);
+      return false;
+    } catch (error) {
+      console.error('FullScreen Error', error);
+    }
+  }
+  return undefined;
+};
+
 export {
   closeMediaStream,
   getVideoTileLabel,
@@ -649,4 +696,5 @@ export {
   calculateLayoutSizes,
   sigmoid,
   isMobileDevice,
+  toggleFullScreen,
 };
