@@ -26,7 +26,6 @@ export interface AudioPlaylistClasses {
 
 export interface AudioPlaylistProps {
   classes: AudioPlaylistClasses;
-  onClose: () => void;
 }
 
 const defaultClasses = {

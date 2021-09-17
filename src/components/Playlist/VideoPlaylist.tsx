@@ -29,7 +29,6 @@ export interface VideoPlaylistItemClasses {
 
 export interface VideoPlaylistProps {
   classes?: VideoPlaylistClasses;
-  onClose?: () => void;
 }
 
 const defaultClasses = {
