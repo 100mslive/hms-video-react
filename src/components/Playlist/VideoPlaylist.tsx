@@ -29,6 +29,8 @@ export interface VideoPlaylistItemClasses {
 
 export interface VideoPlaylistProps {
   classes?: VideoPlaylistClasses;
+  trigger?: JSX.Element;
+  active: boolean;
 }
 
 const defaultClasses = {
@@ -42,7 +44,11 @@ const defaultClasses = {
   selection: 'text-brand-main',
 };
 
-export const VideoPlaylist = ({ classes }: VideoPlaylistProps) => {
+export const VideoPlaylist = ({
+  classes,
+  trigger,
+  active,
+}: VideoPlaylistProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
     () =>
@@ -73,9 +79,9 @@ export const VideoPlaylist = ({ classes }: VideoPlaylistProps) => {
           variant="no-fill"
           iconSize="md"
           shape="rectangle"
-          active={open}
+          active={active || open}
         >
-          <PlaylistIcon onClick={() => setOpen(value => !value)} />
+          {trigger || <PlaylistIcon onClick={() => setOpen(value => !value)} />}
         </Button>
       }
       onTrigger={value => {
@@ -129,6 +135,7 @@ export const VideoPlaylist = ({ classes }: VideoPlaylistProps) => {
                   item={item}
                   onClick={async () => {
                     await hmsActions.videoPlaylist.play(item.id);
+                    setOpen(false);
                   }}
                 />
               );
