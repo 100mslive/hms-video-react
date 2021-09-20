@@ -30,7 +30,7 @@ export interface VideoPlaylistItemClasses {
 export interface VideoPlaylistProps {
   classes?: VideoPlaylistClasses;
   trigger?: JSX.Element;
-  active: boolean;
+  active?: boolean;
 }
 
 const defaultClasses = {
