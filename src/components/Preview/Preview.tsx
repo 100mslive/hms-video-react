@@ -96,11 +96,14 @@ export const Preview = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    hmsActions.preview(config);
+    // Call preview only when roomState is in disconnected state
+    if (roomState === HMSRoomState.Disconnected) {
+      hmsActions.preview(config);
+    }
     if (isBrowser) {
       window.onunload = () => hmsActions.leave();
     }
-  }, [config.authToken]);
+  }, [config.authToken, roomState]);
 
   const inputProps = {
     compact: true,
