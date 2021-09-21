@@ -67,9 +67,19 @@ const PlaylistProgress = ({
   const selectPlaylist =
     type === HMSPlaylistType.audio ? selectAudioPlaylist : selectVideoPlaylist;
   const progress = useHMSStore(selectPlaylist.progress);
+  const hmsActions = useHMSActions();
+  const playlistAction =
+    type === HMSPlaylistType.audio
+      ? hmsActions.audioPlaylist
+      : hmsActions.videoPlaylist;
+
+  if (!duration) {
+    return null;
+  }
+
   return (
     <div className={styler('progress')}>
-      {type === 'video' && duration && (
+      {type === 'video' && (
         <Text variant="body" size="sm" classes={{ root: 'mb-2' }}>
           {formatDuration(progress * 0.01 * duration)}
         </Text>
@@ -78,9 +88,13 @@ const PlaylistProgress = ({
         <Slider
           value={progress}
           onChange={() => {}}
+          onChangeCommitted={(event: any, value: number | number[]) => {
+            if (typeof value === 'number') {
+              playlistAction.seekTo(value * 0.01 * duration);
+            }
+          }}
           min={0}
           max={100}
-          disabled
         />
       </div>
       {type === 'video' && duration && (
