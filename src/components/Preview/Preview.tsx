@@ -97,7 +97,7 @@ export const Preview = ({
 
   useEffect(() => {
     // Call preview only when roomState is in disconnected state
-    if (roomState === 'Disconnected') {
+    if (roomState === HMSRoomState.Disconnected) {
       hmsActions.preview(config);
     }
     if (isBrowser) {
