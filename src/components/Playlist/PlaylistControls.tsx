@@ -123,13 +123,13 @@ const VolumeControl = ({
     selectVideoPlaylistAudioTrackByPeerID(peerSharingPlaylist?.id),
   );
   const audioTrackVolume = useHMSStore(selectAudioTrackVolume(audioTrack?.id));
-  const sliderVolume = active ? volume : audioTrackVolume
+  const sliderVolume = active ? volume : audioTrackVolume;
 
   return (
     <div className={styler('volumeControl')}>
       <VolumeIcon className={styler('volumeControlIcon')} />
       <Slider
-        value={sliderVolume || 100}
+        value={sliderVolume === undefined ? 100 : sliderVolume}
         // @ts-ignore
         onChange={(event: any, value: number | number[]) => {
           if (typeof value === 'number') {
