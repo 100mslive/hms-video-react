@@ -2,7 +2,10 @@ import React, { useMemo } from 'react';
 import {
   HMSPlaylistType,
   selectAudioPlaylist,
+  selectAudioTrackVolume,
+  selectPeerSharingVideoPlaylist,
   selectVideoPlaylist,
+  selectVideoPlaylistAudioTrackByPeerID,
 } from '@100mslive/hms-video-store';
 import {
   NextIcon,
@@ -114,15 +117,27 @@ const VolumeControl = ({
   const selectPlaylist =
     type === HMSPlaylistType.audio ? selectAudioPlaylist : selectVideoPlaylist;
   const volume = useHMSStore(selectPlaylist.volume);
+  const active = useHMSStore(selectPlaylist.selectedItem);
+  const peerSharingPlaylist = useHMSStore(selectPeerSharingVideoPlaylist);
+  const audioTrack = useHMSStore(
+    selectVideoPlaylistAudioTrackByPeerID(peerSharingPlaylist?.id),
+  );
+  const audioTrackVolume = useHMSStore(selectAudioTrackVolume(audioTrack?.id));
+  const sliderVolume = active ? volume : audioTrackVolume;
+
   return (
     <div className={styler('volumeControl')}>
       <VolumeIcon className={styler('volumeControlIcon')} />
       <Slider
-        value={volume}
+        value={sliderVolume === undefined ? 100 : sliderVolume}
         // @ts-ignore
         onChange={(event: any, value: number | number[]) => {
           if (typeof value === 'number') {
-            hmsActions.videoPlaylist.setVolume(value);
+            if (active) {
+              hmsActions.videoPlaylist.setVolume(value);
+            } else if (audioTrack) {
+              hmsActions.setVolume(value, audioTrack.id);
+            }
           }
         }}
         min={0}
@@ -156,10 +171,6 @@ export const PlaylistControls = ({
   const selection = useHMSStore(selectPlaylist.selection);
   const active = useHMSStore(selectPlaylist.selectedItem);
 
-  if (!active) {
-    return null;
-  }
-
   const playlist =
     type === HMSPlaylistType.audio
       ? hmsActions.audioPlaylist
@@ -169,58 +180,60 @@ export const PlaylistControls = ({
     <div className={styler('root')}>
       <div className={styler('controlsContainer')}>
         {type === 'video' && <VolumeControl styler={styler} type={type} />}
-        <div className={styler('controls')}>
-          <Button
-            key="previous"
-            iconOnly
-            variant="no-fill"
-            iconSize="md"
-            shape="rectangle"
-            disabled={!selection.hasPrevious}
-            onClick={async () => {
-              await playlist.playPrevious();
-            }}
-          >
-            <PrevIcon />
-          </Button>
-          <Button
-            key="playpause"
-            iconOnly
-            variant="no-fill"
-            iconSize="xl"
-            size="xl"
-            shape="rectangle"
-            onClick={async () => {
-              if (active.playing) {
-                await playlist.pause(active.id);
-              } else {
-                await playlist.play(active.id);
-              }
-            }}
-          >
-            {active.playing ? (
-              <PauseIcon className={styler('icon')} />
-            ) : (
-              <PlayIcon className={styler('icon')} />
-            )}
-          </Button>
-          <Button
-            key="next"
-            iconOnly
-            variant="no-fill"
-            iconSize="md"
-            shape="rectangle"
-            disabled={!selection.hasNext}
-            onClick={async () => {
-              await playlist.playNext();
-            }}
-          >
-            <NextIcon />
-          </Button>
-        </div>
+        {active && (
+          <div className={styler('controls')}>
+            <Button
+              key="previous"
+              iconOnly
+              variant="no-fill"
+              iconSize="md"
+              shape="rectangle"
+              disabled={!selection.hasPrevious}
+              onClick={async () => {
+                await playlist.playPrevious();
+              }}
+            >
+              <PrevIcon />
+            </Button>
+            <Button
+              key="playpause"
+              iconOnly
+              variant="no-fill"
+              iconSize="xl"
+              size="xl"
+              shape="rectangle"
+              onClick={async () => {
+                if (active.playing) {
+                  await playlist.pause(active.id);
+                } else {
+                  await playlist.play(active.id);
+                }
+              }}
+            >
+              {active.playing ? (
+                <PauseIcon className={styler('icon')} />
+              ) : (
+                <PlayIcon className={styler('icon')} />
+              )}
+            </Button>
+            <Button
+              key="next"
+              iconOnly
+              variant="no-fill"
+              iconSize="md"
+              shape="rectangle"
+              disabled={!selection.hasNext}
+              onClick={async () => {
+                await playlist.playNext();
+              }}
+            >
+              <NextIcon />
+            </Button>
+          </div>
+        )}
         {type === 'video' && (
           <div className={styler('rightControls')}>
-            <VideoPlaylist />
+            {active && <VideoPlaylist />}
             <Button
               key="fullscreen"
               iconOnly
@@ -239,11 +252,13 @@ export const PlaylistControls = ({
           </div>
         )}
       </div>
-      <PlaylistProgress
-        type={type}
-        styler={styler}
-        duration={active.duration}
-      />
+      {active && (
+        <PlaylistProgress
+          type={type}
+          styler={styler}
+          duration={active.duration}
+        />
+      )}
     </div>
   );
 };
