@@ -197,7 +197,6 @@ export const VideoTile = ({
     ? screenshareAudioTrack?.id
     : peer.audioTrack;
   const storeHmsAudioTrack = useHMSStore(selectTrackByID(tileAudioTrack));
-  const storeAudioLevel = useHMSStore(selectTrackAudioByID(tileAudioTrack));
   const simulcastLayer = useHMSStore(
     selectSimulcastLayerByTrack(storeHmsVideoTrack?.id),
   );
@@ -216,8 +215,6 @@ export const VideoTile = ({
       }
     }
   };
-
-  audioLevel = audioLevel || storeAudioLevel;
 
   const storeAudioTrackVolume = useHMSStore(
     selectAudioTrackVolume(tileAudioTrack),
@@ -448,6 +445,7 @@ export const VideoTile = ({
               audioLevelDisplayType={audioLevelDisplayType}
               audioLevelDisplayColor={audioLevelDisplayColor}
               displayShape={displayShape}
+              audioTrackId={tileAudioTrack}
             />
             {isVideoMuted && (
               <div

@@ -56,6 +56,7 @@ export interface VideoProps {
    */
   isLocal?: boolean;
   peerId?: string;
+  audioTrackId?: string;
   /**
    * Indicates whether to show the volume of the stream's audio. Needs audioLevel to display the audio level.
    */
@@ -113,6 +114,7 @@ export const Video = ({
   audioLevelDisplayColor,
   displayShape,
   classes,
+  audioTrackId,
 }: VideoProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -192,7 +194,7 @@ export const Video = ({
       ></video>
       {showAudioLevel && audioLevelDisplayType === 'border' && (
         <AudioLevelIndicator
-          peerId={peerId}
+          audioTrackId={audioTrackId}
           type={'border'}
           level={audioLevel}
           displayShape={displayShape}
