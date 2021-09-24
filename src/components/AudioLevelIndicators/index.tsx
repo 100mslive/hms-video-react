@@ -1,14 +1,14 @@
 import React from 'react';
+import { selectTrackAudioByID } from '@100mslive/hms-video-store';
 import { AudioLevelDisplayType } from '../../types';
 import { DisplayShapes } from '../Video/Video';
 import InlineCircle from './InlineCircle';
 import InlineWave from './InlineWave';
 import { AudioLevelBorder, AudioLevelIndicatorClasses } from './Border';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
-import { selectPeerAudioByID } from '@100mslive/hms-video-store';
 
 export interface AudioLevelIndicatorProps {
-  peerId?: string;
+  audioTrackId?: string;
   type: AudioLevelDisplayType;
   level?: number;
   color?: string;
@@ -17,14 +17,14 @@ export interface AudioLevelIndicatorProps {
 }
 
 export const AudioLevelIndicator = ({
-  peerId,
+  audioTrackId,
   type,
   level = 0,
   color,
   displayShape = 'rectangle',
   classes,
 }: AudioLevelIndicatorProps) => {
-  let audioLevel = useHMSStore(selectPeerAudioByID(peerId));
+  let audioLevel = useHMSStore(selectTrackAudioByID(audioTrackId));
   audioLevel = level || audioLevel;
 
   switch (type) {
