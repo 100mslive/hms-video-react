@@ -204,7 +204,7 @@ export const PlaylistControls = ({
               shape="rectangle"
               onClick={async () => {
                 if (active.playing) {
-                  await playlist.pause(active.id);
+                  await playlist.pause();
                 } else {
                   await playlist.play(active.id);
                 }
