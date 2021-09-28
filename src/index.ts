@@ -26,6 +26,7 @@ export * from './components/Text';
 export * from './components/ContextMenu';
 export * from './components/ParticipantsInView';
 export * from './components/Playlist';
+export * from './components/Dialog';
 export {
   HMSRoomProvider,
   useHMSStore,
