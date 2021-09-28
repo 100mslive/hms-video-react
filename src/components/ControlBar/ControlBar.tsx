@@ -25,13 +25,13 @@ export interface ControlBarProps {
   isAudioMuted?: boolean;
   isVideoMuted?: boolean;
   isChatOpen?: boolean;
-  buttonDisplay: ButtonDisplayType;
+  buttonDisplay?: ButtonDisplayType;
 
   audioButtonOnClick: React.MouseEventHandler;
   videoButtonOnClick: React.MouseEventHandler;
-  leaveButtonOnClick: React.MouseEventHandler;
-  chatButtonOnClick: React.MouseEventHandler;
-  screenshareButtonOnClick: React.MouseEventHandler;
+  leaveButtonOnClick?: React.MouseEventHandler;
+  chatButtonOnClick?: React.MouseEventHandler;
+  screenshareButtonOnClick?: React.MouseEventHandler;
 
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;

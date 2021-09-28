@@ -1,0 +1,1 @@
+export { HMSDialog } from './Dialog';

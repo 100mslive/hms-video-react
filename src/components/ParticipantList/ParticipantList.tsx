@@ -23,10 +23,10 @@ import {
   ParticipantListClasses,
   ParticipantListProps,
 } from './ParticipantProps';
-import { Dialog, withStyles } from '@material-ui/core';
 import { Text } from '../Text';
 import { selectAvailableRoleNames } from '@100mslive/hms-video-store';
 import { Button } from '../Button';
+import { HMSDialog } from '../Dialog';
 
 const defaultClasses: ParticipantListClasses = {
   root: 'flex flex-grow border-opacity-0 sm:hidden md:inline-block relative',
@@ -68,13 +68,6 @@ const customClasses: ParticipantListClasses = {
   menuRoot: 'hmsui-participantList-scrollbar',
   onIcon: 'hmsui-participantList-show-on-group-hover',
 };
-
-const HMSDialog = withStyles({
-  paper: {
-    borderRadius: '12px',
-    backgroundColor: 'inherit',
-  },
-})(Dialog);
 
 export const ParticipantList = ({
   participantList,
