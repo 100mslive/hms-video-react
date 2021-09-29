@@ -139,10 +139,6 @@ const MeetTemplate: Story<VideoTileProps> = args => {
                     isAudioMuted={args.isAudioMuted}
                     showAudioMuteStatus={args.showAudioMuteStatus}
                     showGradient={false}
-                    allowRemoteMute={false}
-                    showAudioLevel={args.showAudioLevel}
-                    audioLevelDisplayType="inline-wave"
-                    audioLevel={args.audioLevel}
                   />
                 </>
               }
