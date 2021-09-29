@@ -46,7 +46,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
         defaultClasses,
         tag: 'hmsui-audioplaylist',
       }),
-    [classes],
+    [],
   );
   const hmsActions = useHMSActions();
   const playlist = useHMSStore(selectAudioPlaylist.list);
@@ -71,7 +71,10 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
           shape="rectangle"
           active={open || !!active}
         >
-          <AudioPlaylistIcon onClick={() => setOpen(value => !value)} />
+          <AudioPlaylistIcon
+            key="audioPlaylistTriggerIcon"
+            onClick={() => setOpen(value => !value)}
+          />
         </Button>
       }
       onTrigger={value => {

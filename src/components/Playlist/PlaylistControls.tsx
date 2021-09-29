@@ -163,7 +163,7 @@ export const PlaylistControls = ({
         defaultClasses,
         tag: 'hmsui-playlistcontrols',
       }),
-    [classes],
+    [],
   );
   const hmsActions = useHMSActions();
   const selectPlaylist =

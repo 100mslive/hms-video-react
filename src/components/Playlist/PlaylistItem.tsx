@@ -40,7 +40,7 @@ export const PlaylistItem = ({
         defaultClasses,
         tag: 'hmsui-playlistitem',
       }),
-    [classes],
+    [],
   );
 
   return (

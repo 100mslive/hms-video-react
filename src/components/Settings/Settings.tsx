@@ -89,7 +89,7 @@ export const Settings = ({
         defaultClasses,
         tag: 'hmsui-settings',
       }),
-    [classes],
+    [],
   );
 
   const hmsActions = useHMSActions();

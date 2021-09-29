@@ -58,7 +58,7 @@ export const VideoPlaylist = ({
         defaultClasses,
         tag: 'hmsui-audioplaylist',
       }),
-    [classes],
+    [],
   );
   const hmsActions = useHMSActions();
   const playlist = useHMSStore(selectVideoPlaylist.list);
