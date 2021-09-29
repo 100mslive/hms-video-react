@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import Menu, { MenuProps } from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { withStyles, makeStyles } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { DotMenuIcon } from '../Icons';
@@ -109,7 +109,7 @@ export const ContextMenuItem = ({
         defaultClasses,
         tag: 'hmsui-contextmenu',
       }),
-    [classes],
+    [],
   );
 
   return (
@@ -153,7 +153,7 @@ export const ContextMenu = ({
         defaultClasses,
         tag: 'hmsui-contextmenu',
       }),
-    [classes],
+    [],
   );
   const menuItemClasses = useStyles({ noGutters });
   const menuClasses = useMenuStyles({ noGutters });
