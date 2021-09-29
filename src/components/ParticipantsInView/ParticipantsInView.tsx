@@ -40,7 +40,7 @@ export const ParticipantsInView = ({
         defaultClasses,
         tag: 'hmsui-participants-in-view',
       }),
-    [classes],
+    [],
   );
   const [open, setOpen] = useState(false);
 

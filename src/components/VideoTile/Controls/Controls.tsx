@@ -1,6 +1,4 @@
 import React, { useMemo } from 'react';
-import { useResizeDetector } from 'react-resize-detector';
-import { AudioLevelDisplayType } from '../../../types';
 import { Button } from '../../Button';
 import { MicOffIcon } from '../../Icons';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
@@ -22,10 +20,6 @@ export interface VideoTileControlsProps {
   isAudioMuted?: boolean;
   showGradient?: boolean;
   showAudioMuteStatus?: boolean;
-  allowRemoteMute?: boolean;
-  showAudioLevel?: boolean;
-  audioLevelDisplayType?: AudioLevelDisplayType;
-  audioLevel?: number;
   classes?: VideoTileControlsClasses;
   isLocal?: boolean;
 }
@@ -48,13 +42,11 @@ const customClasses: VideoTileControlsClasses = {
   controls: 'hmsui-videoTile-showControlsOnHoverChild',
 };
 
-export const VideoTileControls = ({
+const TileControls = ({
   label = '',
   isAudioMuted = false,
   showGradient = true,
   showAudioMuteStatus = true,
-  isLocal = false,
-  allowRemoteMute = false,
   classes,
 }: VideoTileControlsProps) => {
   const { tw } = useHMSTheme();
@@ -91,14 +83,9 @@ export const VideoTileControls = ({
         <div className={`${styler('label')}`} title={label}>
           {label}
         </div>
-        {/* <div className={`${styler('controls')}`}>
-          {!isLocal && showAudioMuteStatus && !isAudioMuted && allowRemoteMute && (
-            <Button iconOnly size={'md'} classes={{ root: 'dark' }}>
-              <MicOffIcon />
-            </Button>
-          )}
-        </div> */}
       </div>
     </div>
   );
 };
+
+export const VideoTileControls = React.memo(TileControls);

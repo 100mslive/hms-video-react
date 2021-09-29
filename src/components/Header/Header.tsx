@@ -11,8 +11,8 @@ export interface HeaderClasses {
   rightRoot?: string;
 }
 export interface HeaderProps {
-  time: number;
-  speaker: string;
+  time?: number;
+  speaker?: string;
   leftComponents: Array<React.ReactNode>;
   centerComponents: Array<React.ReactNode>;
   rightComponents: Array<React.ReactNode>;

@@ -1,6 +1,4 @@
 import React, { ChangeEventHandler, useMemo, useState, useEffect } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import { withStyles } from '@material-ui/core/styles';
 import {
   selectLocalMediaSettings,
   selectDevices,
@@ -15,6 +13,7 @@ import { SettingsIcon, CloseIcon } from '../Icons';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
+import { HMSDialog } from '../Dialog';
 
 interface SettingsClasses {
   root?: string;
@@ -72,12 +71,6 @@ const customClasses: SettingsClasses = {
   dialogContainer: 'no-scrollbar ',
 };
 
-const HMSDialog = withStyles({
-  paper: {
-    borderRadius: '12px',
-    backgroundColor: 'inherit',
-  },
-})(Dialog);
 //TODO split button and settings dialog
 
 export const Settings = ({
@@ -96,7 +89,7 @@ export const Settings = ({
         defaultClasses,
         tag: 'hmsui-settings',
       }),
-    [classes],
+    [],
   );
 
   const hmsActions = useHMSActions();

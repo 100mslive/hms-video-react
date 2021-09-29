@@ -43,7 +43,7 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
         defaultClasses,
         tag: 'hmsui-videoplayer',
       }),
-    [classes],
+    [],
   );
   const videoTrack = useHMSStore(
     selectVideoPlaylistVideoTrackByPeerID(peer.id),
