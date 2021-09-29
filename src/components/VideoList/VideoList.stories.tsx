@@ -162,10 +162,6 @@ const GoogleMeetControls = ({
         isAudioMuted={isAudioMuted}
         showAudioMuteStatus={showAudioMuteStatus}
         showGradient={false}
-        allowRemoteMute={allowRemoteMute}
-        showAudioLevel={showAudioLevel}
-        audioLevelDisplayType="inline-wave"
-        audioLevel={audioLevel}
       />
       ;
     </>

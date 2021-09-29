@@ -404,11 +404,8 @@ export const VideoTile = ({
           setShowTrigger(false);
         }}
       >
-        {!peer.isLocal && (
+        {!peer.isLocal && (showMenu || showTrigger) && (
           <ContextMenu
-            classes={{
-              root: showMenu || showTrigger ? 'visible' : 'invisible',
-            }}
             menuOpen={showMenu}
             onTrigger={value => setShowMenu(value)}
           >
@@ -468,12 +465,6 @@ export const VideoTile = ({
                 isAudioMuted={isAudioMuted}
                 showAudioMuteStatus={showAudioMuteStatus}
                 showGradient={displayShape === 'circle'}
-                allowRemoteMute={allowRemoteMute}
-                showAudioLevel={
-                  showAudioLevel && audioLevelDisplayType !== 'border'
-                }
-                audioLevelDisplayType={audioLevelDisplayType}
-                audioLevel={audioLevel}
               />
             )}
           </div>
