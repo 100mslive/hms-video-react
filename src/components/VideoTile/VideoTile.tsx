@@ -404,11 +404,8 @@ export const VideoTile = ({
           setShowTrigger(false);
         }}
       >
-        {!peer.isLocal && (
+        {!peer.isLocal && (showMenu || showTrigger) && (
           <ContextMenu
-            classes={{
-              root: showMenu || showTrigger ? 'visible' : 'invisible',
-            }}
             menuOpen={showMenu}
             onTrigger={value => setShowMenu(value)}
           >
