@@ -2,7 +2,7 @@ import { css } from 'twind/css';
 //@ts-ignore
 import { create } from 'twind';
 import clsx from 'clsx';
-import reduce from 'lodash/reduce';
+import reduce from 'lodash.reduce';
 import { HMSTrackSource } from '@100mslive/hms-video-store';
 import { parsedUserAgent } from '@100mslive/hms-video';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';

@@ -9,7 +9,7 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { CloseIcon, DownCaratIcon, SettingsIcon, UpCaratIcon } from '../Icons';
 import { ParticipantInList } from './ParticipantInList';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import groupBy from 'lodash/groupBy';
+import groupBy from 'lodash.groupby';
 import './index.css';
 import ClickAwayListener from 'react-click-away-listener';
 import {
@@ -131,7 +131,7 @@ export const ParticipantList = ({
       try {
         await hmsActions.changeRole(selectedPeer.id, selectedRole, forceChange);
       } catch (error) {
-        toast(error.message);
+        toast((error as Error).message);
       }
     }
 
