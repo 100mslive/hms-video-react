@@ -82,6 +82,7 @@ const List = ({
     participantList,
     participant => participant.peer.roleName,
   );
+  const roles = Object.keys(rolesMap);
   const hmsActions = useHMSActions();
   const localPeerRole = useHMSStore(selectLocalPeerRole);
   const [selectedPeer, setSelectedPeer] = useState<HMSPeer | null>(null);
@@ -204,8 +205,8 @@ const List = ({
         aria-labelledby="menu-button"
         tabIndex={-1}
       >
-        {roleNames &&
-          roleNames.map(role => (
+        {roles &&
+          roles.map(role => (
             <div key={role}>
               <span className={`${styler('menuSection')}`} role="menuitem">
                 {role === 'undefined' ? 'Unknown' : role}(
