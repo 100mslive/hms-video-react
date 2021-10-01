@@ -1,6 +1,5 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import ClickAwayListener from 'react-click-away-listener';
-import isEqual from 'lodash.isequal';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -34,6 +33,7 @@ import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { getVideoTileLabel } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
+import { AudioLevelIndicator } from '../AudioLevelIndicators';
 
 export interface AdditionalVideoTileProps {
   customAvatar?: React.ReactNode;
@@ -138,7 +138,7 @@ const customClasses: VideoTileClasses = {
 const Tile = ({
   videoTrack,
   peer,
-  hmsVideoTrack,
+  hmsVideoTrackId,
   showScreen = false,
   audioLevel = 0,
   isAudioMuted,
@@ -176,10 +176,6 @@ const Tile = ({
     audioLevelDisplayColor ||
     tailwindConfig.theme.extend.colors.brand.main ||
     '#0F6CFF';
-
-  if (hmsVideoTrack?.source === 'screen') {
-    showScreen = true;
-  }
 
   const selectVideoByPeerID = showScreen
     ? selectScreenShareByPeerID
@@ -226,25 +222,23 @@ const Tile = ({
     showAudioLevel = !showScreen; // don't show audio levels for screenshare
   }
 
-  hmsVideoTrack = hmsVideoTrack || storeHmsVideoTrack;
-
   if (!showScreen && (isAudioMuted === undefined || isAudioMuted === null)) {
     isAudioMuted = storeIsAudioMuted;
   }
 
   if (!showScreen && (isVideoMuted === undefined || isVideoMuted === null)) {
-    isVideoMuted = storeIsVideoMuted || Boolean(hmsVideoTrack?.degraded);
+    isVideoMuted = storeIsVideoMuted || Boolean(storeHmsVideoTrack?.degraded);
   }
 
   const label = getVideoTileLabel(
     peer.name,
     peer.isLocal,
-    hmsVideoTrack?.source,
+    storeHmsVideoTrack?.source,
     storeIsLocallyMuted,
-    hmsVideoTrack?.degraded,
+    storeHmsVideoTrack?.degraded,
   );
 
-  const layerDefinitions = hmsVideoTrack?.layerDefinitions || [];
+  const layerDefinitions = storeHmsVideoTrack?.layerDefinitions || [];
 
   try {
     if (aspectRatio === undefined) {
@@ -257,10 +251,10 @@ const Tile = ({
   avatarType = avatarType || 'initial';
 
   let { width, height } = { width: 1, height: 1 };
-  if (hmsVideoTrack) {
-    if (hmsVideoTrack?.width && hmsVideoTrack.height) {
-      width = hmsVideoTrack.width;
-      height = hmsVideoTrack.height;
+  if (storeHmsVideoTrack) {
+    if (storeHmsVideoTrack?.width && storeHmsVideoTrack.height) {
+      width = storeHmsVideoTrack.width;
+      height = storeHmsVideoTrack.height;
     }
   } else if (videoTrack) {
     let trackSettings = videoTrack.getSettings();
@@ -430,18 +424,25 @@ const Tile = ({
           >
             {/* TODO this doesn't work in Safari and looks ugly with contain*/}
             <Video
-              peerId={peer.id}
-              hmsVideoTrack={hmsVideoTrack}
+              hmsVideoTrackId={hmsVideoTrackId}
               videoTrack={videoTrack}
               objectFit={objectFit}
               isLocal={peer.isLocal}
-              showAudioLevel={showAudioLevel}
-              audioLevel={audioLevel}
-              audioLevelDisplayType={audioLevelDisplayType}
-              audioLevelDisplayColor={audioLevelDisplayColor}
               displayShape={displayShape}
-              audioTrackId={tileAudioTrack}
             />
+            {showAudioLevel && audioLevelDisplayType === 'border' && (
+              <AudioLevelIndicator
+                audioTrackId={tileAudioTrack}
+                type={'border'}
+                level={audioLevel}
+                displayShape={displayShape}
+                classes={{
+                  videoCircle: styler('videoCircle'),
+                  root: styler('borderAudioRoot'),
+                }}
+                color={audioLevelDisplayColor}
+              />
+            )}
             {isVideoMuted && (
               <div
                 className={`${styler('avatarContainer')} ${
@@ -472,4 +473,4 @@ const Tile = ({
   );
 };
 
-export const VideoTile = React.memo(Tile, isEqual);
+export const VideoTile = React.memo(Tile);

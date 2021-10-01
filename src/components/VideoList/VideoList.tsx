@@ -15,7 +15,7 @@ import {
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { HMSPeer, HMSTrack, HMSTrackID } from '@100mslive/hms-video-store';
-import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { useHMSVanillaStore } from '../../hooks/HMSRoomProvider';
 import { selectTracksMap } from '@100mslive/hms-video-store';
 import {
   getVideoTracksFromPeers,
@@ -186,7 +186,10 @@ export const VideoList = ({
       }),
     [],
   );
-  const tracksMap: Record<HMSTrackID, HMSTrack> = useHMSStore(selectTracksMap);
+  const store = useHMSVanillaStore();
+  const tracksMap: Record<HMSTrackID, HMSTrack> = store.getState(
+    selectTracksMap,
+  );
   const { width = 0, height = 0, ref } = useResizeDetector();
 
   if (aspectRatio === undefined) {
@@ -301,7 +304,7 @@ export const VideoList = ({
                       >
                         <VideoTile
                           peer={trackPeer.peer}
-                          hmsVideoTrack={trackPeer.track}
+                          hmsVideoTrackId={trackPeer.track?.id}
                           objectFit={objectFit}
                           displayShape={displayShape}
                           audioLevelDisplayType={audioLevelDisplayType}
