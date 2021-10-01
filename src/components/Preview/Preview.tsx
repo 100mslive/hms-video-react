@@ -134,6 +134,7 @@ export const Preview = ({
               <VideoTile
                 {...videoTileProps}
                 peer={{ ...localPeer, name }}
+                hmsVideoTrackId={localPeer.videoTrack}
                 objectFit="cover"
                 aspectRatio={{
                   width: 1,
