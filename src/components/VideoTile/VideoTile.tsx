@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useCallback } from 'react';
 import ClickAwayListener from 'react-click-away-listener';
+import isEqual from 'lodash.isequal';
 import {
   HMSPeer,
   selectCameraStreamByPeerID,
@@ -9,7 +10,6 @@ import {
   selectScreenShareByPeerID,
   selectAudioTrackVolume,
   selectScreenShareAudioByPeerID,
-  selectTrackAudioByID,
   selectSimulcastLayerByTrack,
   HMSTrack,
   selectTrackByID,
@@ -135,7 +135,7 @@ const customClasses: VideoTileClasses = {
   root: 'hmsui-videoTile-showControlsOnHoverParent',
 };
 
-export const VideoTile = ({
+const Tile = ({
   videoTrack,
   peer,
   hmsVideoTrack,
@@ -150,11 +150,9 @@ export const VideoTile = ({
   displayShape = 'rectangle',
   audioLevelDisplayType = 'border',
   audioLevelDisplayColor,
-  allowRemoteMute = false,
   controlsComponent,
   classes,
   avatarType,
-  compact = false,
   customAvatar,
   contextMenuItems,
 }: VideoTileProps) => {
@@ -473,3 +471,5 @@ export const VideoTile = ({
     </ClickAwayListener>
   );
 };
+
+export const VideoTile = React.memo(Tile, isEqual);
