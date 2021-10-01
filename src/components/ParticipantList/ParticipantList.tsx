@@ -17,6 +17,7 @@ import {
   selectPeersWithAudioStatus,
   HMSPeer,
   selectLocalPeerRole,
+  selectPeerCount,
 } from '@100mslive/hms-video-store';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
@@ -69,45 +70,23 @@ const customClasses: ParticipantListClasses = {
   onIcon: 'hmsui-participantList-show-on-group-hover',
 };
 
-export const ParticipantList = ({
-  participantList,
-  classes,
-  onToggle,
-}: ParticipantListProps) => {
-  const { tw, toast } = useHMSTheme();
-  const styler = useMemo(
-    () =>
-      hmsUiClassParserGenerator<ParticipantListClasses>({
-        tw,
-        classes,
-        customClasses,
-        defaultClasses,
-        tag: 'hmsui-participantList',
-      }),
-    [],
-  );
-  const participantsFromStore = useHMSStore(selectPeersWithAudioStatus);
-  const [listOpen, setListOpen] = useState(false);
-  participantList = participantList || participantsFromStore;
-  const handleClick = useCallback(() => setListOpen(open => !open), []);
-  const handleClose = useCallback(() => setListOpen(false), []);
+const List = ({
+  styler,
+}: {
+  styler: (s: keyof ParticipantListClasses) => string | undefined;
+}) => {
+  const { toast } = useHMSTheme();
+  const participantList = useHMSStore(selectPeersWithAudioStatus);
+  const roleNames = useHMSStore(selectAvailableRoleNames);
   const rolesMap: Record<string, HMSPeerWithMuteStatus[]> = groupBy(
     participantList,
     participant => participant.peer.roleName,
   );
-  const roles = Object.keys(rolesMap);
-  const [selectedPeer, setSelectedPeer] = useState<HMSPeer | null>(null);
-  const roleNames = useHMSStore(selectAvailableRoleNames);
   const hmsActions = useHMSActions();
   const localPeerRole = useHMSStore(selectLocalPeerRole);
+  const [selectedPeer, setSelectedPeer] = useState<HMSPeer | null>(null);
   const [selectedRole, setSelectedRole] = useState<string>('');
   const [forceChange, setForceChange] = useState(false);
-
-  useEffect(() => {
-    if (onToggle) {
-      onToggle(listOpen);
-    }
-  }, [listOpen]);
 
   const handleRoleChangeClose = () => {
     setSelectedPeer(null);
@@ -218,65 +197,92 @@ export const ParticipantList = ({
           </div>
         </div>
       </HMSDialog>
-      <ClickAwayListener onClickAway={handleClose}>
-        <div className={`${styler('root')}`}>
-          <button // button to open/close participant list
-            type="button"
-            className={`${styler('buttonRoot')}
-          ${listOpen ? styler('buttonOpen') : styler('buttonClosed')}`}
-            onClick={handleClick}
-          >
-            <div className={`${styler('buttonInner')}`}>
-              {participantList?.length} in room
-              <span className={`${styler('buttonText')}`}>
-                {listOpen ? (
-                  <UpCaratIcon className={styler('carat')} />
-                ) : (
-                  <DownCaratIcon className={styler('carat')} />
-                )}
+      <div
+        className={`${styler('menuRoot')}`}
+        role="menu"
+        aria-orientation="vertical"
+        aria-labelledby="menu-button"
+        tabIndex={-1}
+      >
+        {roleNames &&
+          roleNames.map(role => (
+            <div key={role}>
+              <span className={`${styler('menuSection')}`} role="menuitem">
+                {role === 'undefined' ? 'Unknown' : role}(
+                {rolesMap[role].length})
               </span>
+              <div>
+                {rolesMap[role] &&
+                  rolesMap[role].map(participant => (
+                    <ParticipantInList
+                      key={participant.peer.id}
+                      styler={styler}
+                      isAudioEnabled={participant.isAudioEnabled}
+                      name={participant.peer.name}
+                      onUserSettingsClick={() => {
+                        setSelectedPeer(participant.peer);
+                        setSelectedRole(participant.peer.roleName || '');
+                      }}
+                    />
+                  ))}
+              </div>
             </div>
-          </button>
-
-          {listOpen && (
-            <div
-              className={`${styler('menuRoot')}`}
-              role="menu"
-              aria-orientation="vertical"
-              aria-labelledby="menu-button"
-              tabIndex={-1}
-            >
-              {roles &&
-                roles.map(role => (
-                  <div key={role}>
-                    <span
-                      className={`${styler('menuSection')}`}
-                      role="menuitem"
-                    >
-                      {role === 'undefined' ? 'Unknown' : role}(
-                      {rolesMap[role].length})
-                    </span>
-                    <div>
-                      {rolesMap[role] &&
-                        rolesMap[role].map(participant => (
-                          <ParticipantInList
-                            key={participant.peer.id}
-                            styler={styler}
-                            isAudioEnabled={participant.isAudioEnabled}
-                            name={participant.peer.name}
-                            onUserSettingsClick={() => {
-                              setSelectedPeer(participant.peer);
-                              setSelectedRole(participant.peer.roleName || '');
-                            }}
-                          />
-                        ))}
-                    </div>
-                  </div>
-                ))}
-            </div>
-          )}
-        </div>
-      </ClickAwayListener>
+          ))}
+      </div>
     </>
+  );
+};
+
+export const ParticipantList = ({
+  classes,
+  onToggle,
+}: ParticipantListProps) => {
+  const { tw } = useHMSTheme();
+  const styler = useMemo(
+    () =>
+      hmsUiClassParserGenerator<ParticipantListClasses>({
+        tw,
+        classes,
+        customClasses,
+        defaultClasses,
+        tag: 'hmsui-participantList',
+      }),
+    [],
+  );
+  const peerCount = useHMSStore(selectPeerCount);
+  const [listOpen, setListOpen] = useState(false);
+  const handleClick = useCallback(() => setListOpen(open => !open), []);
+  const handleClose = useCallback(() => setListOpen(false), []);
+
+  useEffect(() => {
+    if (onToggle) {
+      onToggle(listOpen);
+    }
+  }, [listOpen]);
+
+  return (
+    <ClickAwayListener onClickAway={handleClose}>
+      <div className={`${styler('root')}`}>
+        <button // button to open/close participant list
+          type="button"
+          className={`${styler('buttonRoot')}
+          ${listOpen ? styler('buttonOpen') : styler('buttonClosed')}`}
+          onClick={handleClick}
+        >
+          <div className={`${styler('buttonInner')}`}>
+            {peerCount} in room
+            <span className={`${styler('buttonText')}`}>
+              {listOpen ? (
+                <UpCaratIcon className={styler('carat')} />
+              ) : (
+                <DownCaratIcon className={styler('carat')} />
+              )}
+            </span>
+          </div>
+        </button>
+
+        {listOpen && <List styler={styler} />}
+      </div>
+    </ClickAwayListener>
   );
 };
