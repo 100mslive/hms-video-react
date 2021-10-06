@@ -1,5 +1,4 @@
 import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core';
-import { blue } from '@material-ui/core/colors';
 import React, { useMemo, useState, useEffect, Fragment } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -23,15 +22,22 @@ const defaultClasses = {
 
 export interface UiSettingsProps {
   classes?: UiSettingsClasses;
-  onTileCountChange: (value: number) => void;
-  maxTileCount: number;
+  sliderProps: {
+    onTileCountChange: (value: number) => void;
+    maxTileCount: number;
+  };
+  notificationProps: {
+    onNotificationChange: (value: { "type": string, "isSubscribed": boolean }) => void;
+    subscribedNotifications: { [key: string]: boolean; };
+  };
+
   showModal?: boolean;
   onModalClose?: () => void;
 }
 export const UiSettings = ({
   classes,
-  onTileCountChange,
-  maxTileCount,
+  sliderProps,
+  notificationProps,
   showModal,
   onModalClose = () => { },
 }: UiSettingsProps) => {
@@ -63,9 +69,12 @@ export const UiSettings = ({
   const handleSliderChange = (event: any, newValue: number | number[]) => {
     //TODO make this generic
     if (typeof newValue === 'number') {
-      onTileCountChange(newValue);
+      sliderProps.onTileCountChange(newValue);
     }
   };
+  const handleNotificationChange = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
+    notificationProps.onNotificationChange({ type, isSubscribed: event.target.checked });
+  }
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   return (
@@ -82,7 +91,7 @@ export const UiSettings = ({
               <div className={styler('slider')}>
                 <Slider
                   name="maxTileCount"
-                  value={maxTileCount}
+                  value={sliderProps.maxTileCount}
                   //@ts-ignore
                   onChange={handleSliderChange}
                   aria-labelledby="continuous-slider"
@@ -106,10 +115,13 @@ export const UiSettings = ({
           <SingleSection title="Recieve notifications for" body={
             <div className={styler('notificationContainer')} >
               <FormGroup>
-                <FormControlLabel control={<Checkbox {...label} defaultChecked size="small" />} label="Peer Join" />
-                <FormControlLabel control={<Checkbox {...label} defaultChecked size="small" />} label="Peer Leave" />
-                <FormControlLabel control={<Checkbox {...label} defaultChecked size="small" />} label="New Message" />
-                <FormControlLabel control={<Checkbox {...label} defaultChecked size="small" />} label="Errors" />
+                <FormControlLabel control={<Checkbox  {...label} onChange={(e) => handleNotificationChange(e, "PEER_JOINED")} color="primary" checked={notificationProps.subscribedNotifications.PEER_JOINED} size="small" />} label="Peer Join" />
+
+                <FormControlLabel control={<Checkbox {...label} onChange={(e) => handleNotificationChange(e, "PEER_LEFT")} color="primary" checked={notificationProps.subscribedNotifications.PEER_LEFT} size="small" />} label="Peer Leave" />
+
+                <FormControlLabel control={<Checkbox {...label} onChange={(e) => handleNotificationChange(e, "NEW_MESSAGE")} color="primary" checked={notificationProps.subscribedNotifications.NEW_MESSAGE} size="small" />} label="New Message" />
+                
+                <FormControlLabel control={<Checkbox {...label} onChange={(e) => handleNotificationChange(e, "ERROR")} color="primary" checked={notificationProps.subscribedNotifications.ERROR} size="small" />} label="Errors" />
               </FormGroup>
             </div>
           } />
