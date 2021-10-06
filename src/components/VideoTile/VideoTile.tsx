@@ -36,6 +36,7 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
 
 export interface AdditionalVideoTileProps {
+  children?: React.ReactNode;
   customAvatar?: React.ReactNode;
 
   /**
@@ -157,6 +158,7 @@ export const VideoTile = ({
   compact = false,
   customAvatar,
   contextMenuItems,
+  children,
 }: VideoTileProps) => {
   const { appBuilder, tw, tailwindConfig, toast } = useHMSTheme();
   const hmsActions = useHMSActions();
@@ -469,6 +471,7 @@ export const VideoTile = ({
             )}
           </div>
         )}
+        {children}
       </div>
     </ClickAwayListener>
   );
