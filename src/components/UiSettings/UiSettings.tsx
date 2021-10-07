@@ -7,17 +7,19 @@ import { Slider } from '../Slider/Slider';
 import { UiSettingsSection } from './UiSettingsSection';
 
 export interface UiSettingsClasses {
-  sliderContainer?: string;
-  slider?: string;
-  divider?: string;
+  sliderContainer?: string
+  slider?: string
+  divider?: string
   notificationContainer?: string
+  checkBoxLabel?: string
 }
 
 const defaultClasses = {
   sliderContainer: 'w-full',
   slider: 'rounded-lg w-full p-2 flex items-center ',
   divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
-  notificationContainer: 'w-full mt-2 p-2'
+  notificationContainer: 'w-full p-2',
+  checkBoxLabel: 'text-lg space-x-1.5 flex items-center'
 };
 
 export interface UiSettingsProps {
@@ -114,15 +116,38 @@ export const UiSettings = ({
           } />
           <UiSettingsSection title="Recieve notifications for" body={
             <div className={styler('notificationContainer')} >
-              <FormGroup>
-                <FormControlLabel control={<Checkbox  {...label} onChange={(e) => handleNotificationChange(e, "PEER_JOINED")} color="primary" checked={notificationProps.subscribedNotifications.PEER_JOINED} size="small" />} label="Peer Join" />
-
-                <FormControlLabel control={<Checkbox {...label} onChange={(e) => handleNotificationChange(e, "PEER_LEFT")} color="primary" checked={notificationProps.subscribedNotifications.PEER_LEFT} size="small" />} label="Peer Leave" />
-
-                <FormControlLabel control={<Checkbox {...label} onChange={(e) => handleNotificationChange(e, "NEW_MESSAGE")} color="primary" checked={notificationProps.subscribedNotifications.NEW_MESSAGE} size="small" />} label="New Message" />
-                
-                <FormControlLabel control={<Checkbox {...label} onChange={(e) => handleNotificationChange(e, "ERROR")} color="primary" checked={notificationProps.subscribedNotifications.ERROR} size="small" />} label="Errors" />
-              </FormGroup>
+              <label className={styler('checkBoxLabel')}>
+                <input
+                  type="checkbox"
+                  onChange={(e) => handleNotificationChange(e, "PEER_JOINED")}
+                  checked={notificationProps.subscribedNotifications.PEER_JOINED}
+                />
+                <span>Peer Join</span>
+              </label>
+              <label className={styler('checkBoxLabel')}>
+                <input
+                  type="checkbox"
+                  onChange={(e) => handleNotificationChange(e, "PEER_LEFT")}
+                  checked={notificationProps.subscribedNotifications.PEER_LEFT}
+                />
+                <span>Peer Leave</span>
+              </label>
+              <label className={styler('checkBoxLabel')}>
+                <input
+                  type="checkbox"
+                  onChange={(e) => handleNotificationChange(e, "NEW_MESSAGE")}
+                  checked={notificationProps.subscribedNotifications.NEW_MESSAGE}
+                />
+                <span>New Message</span>
+              </label>
+              <label className={styler('checkBoxLabel')}>
+                <input
+                  type="checkbox"
+                  onChange={(e) => handleNotificationChange(e, "ERROR")}
+                  checked={notificationProps.subscribedNotifications.ERROR}
+                />
+                <span>Errors</span>
+              </label>
             </div>
           } />
         </Fragment>

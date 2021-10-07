@@ -19,7 +19,7 @@ const Template: Story<UiSettingsProps> = (
 ) => {
   const [maxTileCount, setMaxTileCount] = useState(9);
   const [showModal, setShowModal] = useState(false);
-  const [subscribedNotifications, setSubscribedNotifications] = useState({ "PEER_JOINED": true, "PEER_LEFT": true, "NEW_MESSAGE": true, "ERROR": true });
+  const [subscribedNotifications, setSubscribedNotifications] = useState({ "PEER_JOINED": false, "PEER_LEFT": false, "NEW_MESSAGE": true, "ERROR": true });
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
@@ -75,7 +75,7 @@ const LightThemeTemplate: Story<UiSettingsProps> = (
 ) => {
   const [maxTileCount, setMaxTileCount] = useState(9);
   const [showModal, setShowModal] = useState(false);
-  const [subscribedNotifications, setSubscribedNotifications] = useState({ "PEER_JOINED": true, "PEER_LEFT": true, "NEW_MESSAGE": true, "ERROR": true });
+  const [subscribedNotifications, setSubscribedNotifications] = useState({ "PEER_JOINED": false, "PEER_LEFT": false, "NEW_MESSAGE": true, "ERROR": true });
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
