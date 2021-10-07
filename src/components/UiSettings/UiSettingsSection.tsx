@@ -1,8 +1,8 @@
-import React, { useMemo, useState, useEffect, Fragment } from 'react';
+import React, { useMemo, Fragment } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
-export interface SingleSectionClasses {
+export interface UiSettingsSectionClasses {
     sectionContainer?: string;
     title?:string,
     body?:string
@@ -14,21 +14,21 @@ const defaultClasses = {
     body: 'w-full',
 };
 
-export interface SingleSectionProps {
-    classes?: SingleSectionClasses;
+export interface UiSettingsSectionProps {
+    classes?: UiSettingsSectionClasses;
     title: string;
     body: React.ReactNode;
 }
 
-export const SingleSection = ({
+export const UiSettingsSection = ({
     classes,
     title,
     body
-}: SingleSectionProps) => {
+}: UiSettingsSectionProps) => {
     const { tw } = useHMSTheme();
     const styler = useMemo(
         () =>
-            hmsUiClassParserGenerator<SingleSectionClasses>({
+            hmsUiClassParserGenerator<UiSettingsSectionClasses>({
                 tw,
                 classes,
                 defaultClasses,

@@ -27,11 +27,7 @@ const Template: Story<UiSettingsProps> = (
   };
 
   const onNotificationChange = (notification: { "type": string, "isSubscribed": boolean }) => {
-    setSubscribedNotifications((prevState: any) => {
-      if (notification.isSubscribed) prevState[notification.type] = true;
-      else prevState[notification.type] = false;
-      return { ...prevState };
-    });
+    setSubscribedNotifications((prevState: any) => ({ ...prevState, [notification.type]: notification.isSubscribed }));
   }
 
   const uiSettingsProps = {
@@ -87,11 +83,7 @@ const LightThemeTemplate: Story<UiSettingsProps> = (
   };
 
   const onNotificationChange = (notification: { "type": string, "isSubscribed": boolean }) => {
-    setSubscribedNotifications((prevState: any) => {
-      if (notification.isSubscribed) prevState[notification.type] = true;
-      else prevState[notification.type] = false;
-      return { ...prevState };
-    });
+    setSubscribedNotifications((prevState: any) => ({ ...prevState, [notification.type]: notification.isSubscribed }));
   }
 
   const uiSettingsProps = {

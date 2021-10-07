@@ -4,7 +4,7 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { MessageModal } from '../MessageModal';
 import { Slider } from '../Slider/Slider';
-import { SingleSection } from './SingleSection';
+import { UiSettingsSection } from './UiSettingsSection';
 
 export interface UiSettingsClasses {
   sliderContainer?: string;
@@ -86,7 +86,7 @@ export const UiSettings = ({
       body={
         <Fragment>
           <div className={styler('divider')}></div>
-          <SingleSection title="Participants In View" body={
+          <UiSettingsSection title="Participants In View" body={
             <div className={styler('sliderContainer')}>
               <div className={styler('slider')}>
                 <Slider
@@ -112,7 +112,7 @@ export const UiSettings = ({
               </div>
             </div>
           } />
-          <SingleSection title="Recieve notifications for" body={
+          <UiSettingsSection title="Recieve notifications for" body={
             <div className={styler('notificationContainer')} >
               <FormGroup>
                 <FormControlLabel control={<Checkbox  {...label} onChange={(e) => handleNotificationChange(e, "PEER_JOINED")} color="primary" checked={notificationProps.subscribedNotifications.PEER_JOINED} size="small" />} label="Peer Join" />
