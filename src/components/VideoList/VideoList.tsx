@@ -54,6 +54,10 @@ export interface VideoListClasses extends VideoTileClasses {
 }
 export interface VideoListProps {
   /**
+   * Children props for VideoTile
+   */
+  videoTileChildren?: React.ReactNode;
+  /**
     HMS Peers who need to be displayed
     */
   peers: HMSPeer[];
@@ -154,6 +158,7 @@ const defaultClasses: VideoListClasses = {
 };
 
 export const VideoList = ({
+  videoTileChildren,
   peers,
   showScreenFn = () => true,
   overflow = 'scroll-x',
@@ -316,7 +321,9 @@ export const VideoList = ({
                           avatarType={avatarType}
                           compact={compact}
                           {...additionalProps}
-                        />
+                        >
+                          {videoTileChildren}
+                        </VideoTile>
                       </div>
                     );
                   })}
