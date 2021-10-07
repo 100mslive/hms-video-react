@@ -32,7 +32,7 @@ export const UiSettingsSection = ({
                 tw,
                 classes,
                 defaultClasses,
-                tag: 'hmsui-single-section',
+                tag: 'hmsui-uisettings-section',
             }),
         [],
     );
