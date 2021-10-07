@@ -85,7 +85,11 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
           peer={(() => storyBookSDK.getRandomPeer())()}
           videoTrack={videoTrack}
           audioTrack={audioTrack}
-        />
+        >
+          <span className="absolute bottom-4 bg-red-600 left-4">
+            HandRaiseIcon
+          </span>
+        </VideoTile>
       </div>
     </HMSThemeProvider>
   );
