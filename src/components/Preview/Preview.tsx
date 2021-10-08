@@ -89,9 +89,6 @@ export const Preview = ({
   const videoEnabled = useHMSStore(selectIsLocalVideoDisplayEnabled);
   const isAllowedToPublish = useHMSStore(selectIsAllowedToPublish);
 
-  const setAudioEnabled = hmsActions.setLocalAudioEnabled.bind(hmsActions);
-  const setVideoEnabled = hmsActions.setLocalVideoEnabled.bind(hmsActions);
-
   const [name, setName] = useState(config.userName || '');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -143,8 +140,6 @@ export const Preview = ({
                 classes={classes?.videoTile}
                 controlsComponent={
                   <PreviewControls
-                    audioButtonOnClick={() => setAudioEnabled(!audioEnabled)}
-                    videoButtonOnClick={() => setVideoEnabled(!videoEnabled)}
                     isAudioMuted={!audioEnabled}
                     isVideoMuted={!videoEnabled}
                     isAudioAllowed={isAllowedToPublish.audio}
