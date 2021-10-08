@@ -50,7 +50,7 @@ const Icons = ({
   );
 };
 
-export const ParticipantInList = ({
+const ListItem = ({
   styler = () => '',
   name,
   peerId,
@@ -80,3 +80,8 @@ export const ParticipantInList = ({
     </span>
   );
 };
+
+export const ParticipantInList = React.memo(
+  ListItem,
+  (prev, next) => prev.peerId === next.peerId,
+);
