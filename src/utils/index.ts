@@ -3,7 +3,10 @@ import { css } from 'twind/css';
 import { create } from 'twind';
 import clsx from 'clsx';
 import reduce from 'lodash.reduce';
-import { HMSTrackSource } from '@100mslive/hms-video-store';
+import {
+  HMSTrackSource,
+  HMSPeer,
+} from '@100mslive/hms-video-store';
 import { parsedUserAgent } from '@100mslive/hms-video';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
 import { theme as defaultTailwindConfig } from '../defaultTheme';
@@ -677,6 +680,22 @@ const toggleFullScreen = async (
     }
   }
   return undefined;
+};
+
+export const groupBy = (peers: HMSPeer[]) => {
+  const res: Array<[role: string, peers: HMSPeer[]]> = [];
+  const roleMap: Record<string, HMSPeer[]> = {};
+  for (const peer of peers) {
+    if (peer.roleName) {
+      roleMap[peer.roleName].push(peer);
+    }
+  }
+  for(const role in roleMap) {
+    if(roleMap[role].length) {
+      res.push([role, roleMap[role]]);
+    }
+  }
+  return res;
 };
 
 export {
