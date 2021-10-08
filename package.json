@@ -91,7 +91,6 @@
     "@twind/aspect-ratio": "^0.1.4",
     "autoprefixer": "^9.8.6",
     "clsx": "^1.1.1",
-    "lodash.groupby": "^4.6.0",
     "lodash.merge": "^4.6.2",
     "lodash.reduce": "^4.6.0",
     "postcss": "8.2.10",
