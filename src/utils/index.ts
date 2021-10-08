@@ -683,7 +683,7 @@ const toggleFullScreen = async (
 };
 
 export const groupBy = (peers: HMSPeer[]) => {
-  const res: Array<[role: string, peers: HMSPeer[]]> = [];
+  const res: Array<[string, HMSPeer[]]> = [];
   const roleMap: Record<string, HMSPeer[]> = {};
   for (const peer of peers) {
     if (peer.roleName) {
