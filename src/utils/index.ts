@@ -3,16 +3,13 @@ import { css } from 'twind/css';
 import { create } from 'twind';
 import clsx from 'clsx';
 import reduce from 'lodash.reduce';
-import {
-  HMSTrackSource,
-  HMSPeer,
-} from '@100mslive/hms-video-store';
+import { HMSTrackSource, HMSPeer } from '@100mslive/hms-video-store';
 import { parsedUserAgent } from '@100mslive/hms-video';
 import { useHMSTheme } from '../hooks/HMSThemeProvider';
 import { theme as defaultTailwindConfig } from '../defaultTheme';
 import { TrackWithPeer } from './videoListUtils';
 
-const getVideoTileLabel = (
+export const getVideoTileLabel = (
   peerName: string,
   isLocal: boolean,
   videoSource: HMSTrackSource = 'regular',
@@ -41,7 +38,7 @@ const getVideoTileLabel = (
   return `${label}${isLocallyMuted ? ' (Muted for you)' : ''}`;
 };
 
-const closeMediaStream = (stream: MediaStream | undefined) => {
+export const closeMediaStream = (stream: MediaStream | undefined) => {
   if (!stream) {
     return;
   }
@@ -78,7 +75,11 @@ const closeMediaStream = (stream: MediaStream | undefined) => {
   }
 };
 
-const chunk = <T>(elements: T[], chunkSize: number, onlyOnePage: boolean) => {
+export const chunk = <T>(
+  elements: T[],
+  chunkSize: number,
+  onlyOnePage: boolean,
+) => {
   return elements.reduce((resultArray: T[][], tile: T, index: number) => {
     const chunkIndex = Math.floor(index / chunkSize);
     if (chunkIndex > 0 && onlyOnePage) {
@@ -110,7 +111,7 @@ interface GetTileSizesInList {
  * get the aspect ration occurring with the highest frequency
  * @param tracks - video tracks to infer aspect ratios from
  */
-const getModeAspectRatio = (tracks: TrackWithPeer[]): number | null => {
+export const getModeAspectRatio = (tracks: TrackWithPeer[]): number | null => {
   return mode(
     tracks
       .filter(track => track.track?.width && track.track?.height)
@@ -131,7 +132,7 @@ interface GetTileSizes {
   aspectRatio: { width: number; height: number };
 }
 
-const getTileSizesWithPageConstraint = ({
+export const getTileSizesWithPageConstraint = ({
   parentWidth,
   parentHeight,
   count,
@@ -178,7 +179,7 @@ const getTileSizesWithPageConstraint = ({
   };
 };
 
-const getTileSizesWithRowConstraint = ({
+export const getTileSizesWithRowConstraint = ({
   parentWidth,
   parentHeight,
   count,
@@ -234,7 +235,7 @@ const getTileSizesWithRowConstraint = ({
   };
 };
 
-const getTileSizesWithColConstraint = ({
+export const getTileSizesWithColConstraint = ({
   parentWidth,
   parentHeight,
   count,
@@ -290,7 +291,7 @@ const getTileSizesWithColConstraint = ({
   };
 };
 
-function calculateLayoutSizes({
+export function calculateLayoutSizes({
   count,
   parentWidth,
   parentHeight,
@@ -401,7 +402,7 @@ interface ChunkElements<T> {
  * @return 2D list for every page which has the original element and height and width
  * for its tile.
  */
-const chunkElements = <T>({
+export const chunkElements = <T>({
   elements,
   tilesInFirstPage,
   onlyOnePage,
@@ -432,7 +433,7 @@ const chunkElements = <T>({
  * Mathematical mode - the element with the highest occurrence in an array
  * @param array
  */
-function mode(array: number[]): number | null {
+export function mode(array: number[]): number | null {
   if (array.length === 0) {
     return null;
   }
@@ -454,7 +455,7 @@ function mode(array: number[]): number | null {
   return maxEl;
 }
 
-const getInitialsFromName = (name: string | undefined) => {
+export const getInitialsFromName = (name: string | undefined) => {
   if (!name) {
     return undefined;
   } else {
@@ -478,7 +479,7 @@ const getInitialsFromName = (name: string | undefined) => {
  * @param {Number}  height              The unscaled height of the rectangles to be placed.
  * @return {Object}                     The area and number of rows and columns that fit.
  */
-const largestRect = (
+export const largestRect = (
   containerWidth: number,
   containerHeight: number,
   numRects: number,
@@ -535,7 +536,10 @@ interface GenerateClassNameProps {
 
 const packageIdentifier = 'hmsui';
 
-const generateClassName = ({ seed, componentName }: GenerateClassNameProps) => {
+export const generateClassName = ({
+  seed,
+  componentName,
+}: GenerateClassNameProps) => {
   return [packageIdentifier, componentName, seed].join('-');
 };
 
@@ -544,7 +548,7 @@ interface AddGlobalCssProps<Type> {
   componentName: string;
 }
 
-function addGlobalCss<Type>({
+export function addGlobalCss<Type>({
   seedStyleMap,
   componentName,
 }: AddGlobalCssProps<Type>) {
@@ -582,7 +586,7 @@ function addGlobalCss<Type>({
   return calculatedSeedStyleMap;
 }
 
-function combineClasses(
+export function combineClasses(
   defaultClasses: Record<string, string | undefined> | undefined,
   extraClasses: Record<string, string | undefined> | undefined,
 ) {
@@ -597,13 +601,12 @@ function combineClasses(
       )
     : defaultClasses;
 }
-
-const generateRandomString = () =>
+export const generateRandomString = () =>
   Math.random()
     .toString(36)
     .substring(7);
 
-const mergeRefs = (
+export const mergeRefs = (
   ...refs: (React.MutableRefObject<any> | ((node?: Element | null) => void))[]
 ) => {
   const filteredRefs = refs.filter(Boolean);
@@ -624,20 +627,20 @@ const mergeRefs = (
   };
 };
 
-const scrollTo = (element: React.MutableRefObject<any>) => () => {
+export const scrollTo = (element: React.MutableRefObject<any>) => () => {
   element.current.scrollIntoView();
 };
 
-const sigmoid = (z: number) => {
+export const sigmoid = (z: number) => {
   return 1 / (1 + Math.exp(-z));
 };
 
-function isMobileDevice() {
+export function isMobileDevice() {
   const device = parsedUserAgent.getDevice();
   return device && device.type === 'mobile';
 }
 
-const toggleFullScreen = async (
+export const toggleFullScreen = async (
   element: HTMLDivElement,
   setFullScreen: boolean,
 ): Promise<undefined | boolean> => {
@@ -687,33 +690,16 @@ export const groupBy = (peers: HMSPeer[]) => {
   const roleMap: Record<string, HMSPeer[]> = {};
   for (const peer of peers) {
     if (peer.roleName) {
+      if (!roleMap[peer.roleName]) {
+        roleMap[peer.roleName] = [];
+      }
       roleMap[peer.roleName].push(peer);
     }
   }
-  for(const role in roleMap) {
-    if(roleMap[role].length) {
+  for (const role in roleMap) {
+    if (roleMap[role].length) {
       res.push([role, roleMap[role]]);
     }
   }
   return res;
-};
-
-export {
-  closeMediaStream,
-  getVideoTileLabel,
-  getInitialsFromName,
-  largestRect,
-  generateClassName,
-  addGlobalCss,
-  combineClasses,
-  chunkElements,
-  mode,
-  generateRandomString,
-  mergeRefs,
-  scrollTo,
-  getModeAspectRatio,
-  calculateLayoutSizes,
-  sigmoid,
-  isMobileDevice,
-  toggleFullScreen,
 };

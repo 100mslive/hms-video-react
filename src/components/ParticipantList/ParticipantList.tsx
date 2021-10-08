@@ -9,15 +9,13 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { CloseIcon, DownCaratIcon, SettingsIcon, UpCaratIcon } from '../Icons';
 import { ParticipantInList } from './ParticipantInList';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import groupBy from 'lodash.groupby';
 import './index.css';
 import ClickAwayListener from 'react-click-away-listener';
 import {
-  HMSPeerWithMuteStatus,
-  selectPeersWithAudioStatus,
   HMSPeer,
   selectLocalPeerRole,
   selectPeerCount,
+  selectPeers,
 } from '@100mslive/hms-video-store';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
@@ -28,6 +26,7 @@ import { Text } from '../Text';
 import { selectAvailableRoleNames } from '@100mslive/hms-video-store';
 import { Button } from '../Button';
 import { HMSDialog } from '../Dialog';
+import { groupBy } from '../../utils';
 
 const defaultClasses: ParticipantListClasses = {
   root: 'flex flex-grow border-opacity-0 sm:hidden md:inline-block relative',
@@ -76,13 +75,9 @@ const List = ({
   styler: (s: keyof ParticipantListClasses) => string | undefined;
 }) => {
   const { toast } = useHMSTheme();
-  const participantList = useHMSStore(selectPeersWithAudioStatus);
+  const participantList = useHMSStore(selectPeers);
   const roleNames = useHMSStore(selectAvailableRoleNames);
-  const rolesMap: Record<string, HMSPeerWithMuteStatus[]> = groupBy(
-    participantList,
-    participant => participant.peer.roleName,
-  );
-  const roles = Object.keys(rolesMap);
+  const roles = groupBy(participantList);
   const hmsActions = useHMSActions();
   const localPeerRole = useHMSStore(selectLocalPeerRole);
   const [selectedPeer, setSelectedPeer] = useState<HMSPeer | null>(null);
@@ -205,30 +200,27 @@ const List = ({
         aria-labelledby="menu-button"
         tabIndex={-1}
       >
-        {roles &&
-          roles.map(role => (
-            <div key={role}>
-              <span className={`${styler('menuSection')}`} role="menuitem">
-                {role === 'undefined' ? 'Unknown' : role}(
-                {rolesMap[role].length})
-              </span>
-              <div>
-                {rolesMap[role] &&
-                  rolesMap[role].map(participant => (
-                    <ParticipantInList
-                      key={participant.peer.id}
-                      styler={styler}
-                      isAudioEnabled={participant.isAudioEnabled}
-                      name={participant.peer.name}
-                      onUserSettingsClick={() => {
-                        setSelectedPeer(participant.peer);
-                        setSelectedRole(participant.peer.roleName || '');
-                      }}
-                    />
-                  ))}
-              </div>
+        {roles.map(([role, peers]) => (
+          <div key={role}>
+            <span className={`${styler('menuSection')}`} role="menuitem">
+              {role === 'undefined' ? 'Unknown' : role}({peers.length})
+            </span>
+            <div>
+              {peers.map(peer => (
+                <ParticipantInList
+                  key={peer.id}
+                  styler={styler}
+                  name={peer.name}
+                  peerId={peer.id}
+                  onUserSettingsClick={() => {
+                    setSelectedPeer(peer);
+                    setSelectedRole(peer.roleName || '');
+                  }}
+                />
+              ))}
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </>
   );
