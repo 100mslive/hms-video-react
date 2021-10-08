@@ -40,11 +40,11 @@
   "size-limit": [
     {
       "path": "dist/hms-video-react.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "600 KB"
     },
     {
       "path": "dist/hms-video-react.esm.js",
-      "limit": "10 KB"
+      "limit": "600 KB"
     }
   ],
   "peerDependencies": {
