@@ -36,6 +36,7 @@ import './index.css';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
 
 export interface AdditionalVideoTileProps {
+  children?: React.ReactNode;
   customAvatar?: React.ReactNode;
 
   /**
@@ -155,6 +156,7 @@ const Tile = ({
   avatarType,
   customAvatar,
   contextMenuItems,
+  children,
 }: VideoTileProps) => {
   const { appBuilder, tw, tailwindConfig, toast } = useHMSTheme();
   const hmsActions = useHMSActions();
@@ -468,6 +470,7 @@ const Tile = ({
             )}
           </div>
         )}
+        {children}
       </div>
     </ClickAwayListener>
   );
