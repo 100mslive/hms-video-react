@@ -7,6 +7,7 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { withClasses } from '../../utils/styles';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     backdrop: {
@@ -28,6 +29,8 @@ export interface MessageModalClasses {
   closeButton?: string;
   body?: string;
   footer?: string;
+  modalType?: string;
+  feedbackTitle?: string;
 }
 
 export interface StyledMessageModalProps {
@@ -38,6 +41,7 @@ export interface StyledMessageModalProps {
   onClose: () => void;
   defaultClasses?: MessageModalClasses;
   classes?: MessageModalClasses;
+  modalType?: string;
 }
 
 const defaultClasses: MessageModalClasses = {
@@ -57,11 +61,14 @@ const defaultClasses: MessageModalClasses = {
     'w-full justify-end text-base font-medium rounded-xl focus:outline-none',
   body: 'w-full',
   footer: 'mt-4 w-full flex justify-end',
+  feedbackTitle:
+    'flex flex-1 lg:text-xl sm:text-xl self-center justify-center text-gray-100 dark:text-white font-small'
 };
 
 export const StyledMessageModal = ({
   title = '',
   show = true,
+  modalType,
   body,
   footer,
   onClose,
@@ -97,8 +104,8 @@ export const StyledMessageModal = ({
             <div className={styler('boxTransition')}>
               <div className={styler('boxRoot')}>
                 <div className={styler('header')}>
-                  <div className={styler('title')}>{title}</div>
-                  <div className={styler('closeRoot')}>
+                  <div className={` ${modalType && modalType === 'feedback' ? styler("feedbackTitle") : styler("title")}`}>{title}</div>
+                  <div style={{ display: (modalType && modalType === 'feedback') ? 'none' : 'flex' }} className={styler('closeRoot')}>
                     <Button
                       variant="no-fill"
                       onClick={onClose}
@@ -108,6 +115,7 @@ export const StyledMessageModal = ({
                       <CloseIcon />
                     </Button>
                   </div>
+
                 </div>
                 <div className={styler('body')}>{body}</div>
                 <div className={styler('footer')}>{footer}</div>

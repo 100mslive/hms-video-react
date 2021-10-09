@@ -1,3 +1,3 @@
 import { PostLeaveDisplay } from './PostLeaveDisplay';
-
-export { PostLeaveDisplay };
+import { FeedbackForm } from './FeedbackForm';
+export { PostLeaveDisplay, FeedbackForm };

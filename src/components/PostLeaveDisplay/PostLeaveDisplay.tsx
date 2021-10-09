@@ -1,9 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { SunWithFace } from '../Icons';
 import { Text } from '../Text';
 import { Button } from '../Button';
+
 import post_leave_img from './post_leave.png';
 
 interface Props {
@@ -11,6 +12,8 @@ interface Props {
   classes?: PostLeaveDisplayClasses;
   joinRoomOnClick?: (event: React.MouseEvent) => void;
   goToDashboardOnClick?: (event: React.MouseEvent) => void;
+  getFeedbackOnClick?: (values: any) => void;
+  FeedbackForm?: any;
   src?: string;
 }
 
@@ -21,6 +24,7 @@ interface PostLeaveDisplayClasses {
   sunnyFaceIconDiv: string;
   divider: string;
   buttonWrapper: string;
+  feedbackSection: string;
 }
 
 export const PostLeaveDisplay: React.FC<Props> = ({
@@ -28,6 +32,9 @@ export const PostLeaveDisplay: React.FC<Props> = ({
   classes,
   joinRoomOnClick,
   goToDashboardOnClick,
+  getFeedbackOnClick,
+  FeedbackForm,
+
   src,
 }) => {
   const defaultClasses: PostLeaveDisplayClasses = {
@@ -37,8 +44,10 @@ export const PostLeaveDisplay: React.FC<Props> = ({
     sunnyFaceIconDiv: `mt-24 mb-6`,
     divider: `bg-gray-600  h-px w-96 my-8`,
     buttonWrapper: `space-x-5`,
+    feedbackSection: `mt-48`
   };
   const { tw } = useHMSTheme();
+  const [showModal, setShowModal] = useState(false);
   const styler = useMemo(
     () =>
       hmsUiClassParserGenerator<PostLeaveDisplayClasses>({
@@ -78,6 +87,20 @@ export const PostLeaveDisplay: React.FC<Props> = ({
               Join Again
             </Button>
             <Button onClick={goToDashboardOnClick}>Go to Dashboard</Button>
+
+          </div>
+          <div className={styler('feedbackSection')} style={{
+            marginTop: `35%`
+          }}>
+            <Button style={{
+              backgroundColor: `#E3E3E3`,
+              color: `#767676`
+            }} onClick={() => {
+              if (getFeedbackOnClick) {
+                getFeedbackOnClick(setShowModal)
+              }
+            }}>Send Feedback</Button>
+            <FeedbackForm setShowModal={setShowModal} showModal={showModal} />
           </div>
         </div>
       </div>
