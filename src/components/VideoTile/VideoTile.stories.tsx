@@ -32,6 +32,12 @@ const meta: Meta = {
 
 export default meta;
 
+function VideoTileInnerComponent() {
+  return (
+    <span className="absolute bottom-4 bg-red-600 left-4">HandRaiseIcon</span>
+  );
+}
+
 const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
   const [videoTrack, setVideoTrack] = useState<MediaStreamTrack>();
   const [audioTrack, setAudioTrack] = useState<MediaStreamTrack>();
@@ -85,11 +91,8 @@ const Template: Story<VideoTileProps> = (args: VideoTileProps) => {
           peer={(() => storyBookSDK.getRandomPeer())()}
           videoTrack={videoTrack}
           audioTrack={audioTrack}
-        >
-          <span className="absolute bottom-4 bg-red-600 left-4">
-            HandRaiseIcon
-          </span>
-        </VideoTile>
+          innerComponent={VideoTileInnerComponent()}
+        />
       </div>
     </HMSThemeProvider>
   );

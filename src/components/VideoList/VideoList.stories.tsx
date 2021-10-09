@@ -29,6 +29,18 @@ interface VideoListStoryProps extends VideoListProps {
   height?: string;
 }
 
+function VideoTileInnerComponent({
+  peer,
+  track,
+}: {
+  peer: HMSPeer;
+  track?: HMSTrack;
+}) {
+  return (
+    <span className="absolute bottom-4 bg-red-600 left-4">{`peer${peer?.id},track${track?.id}`}</span>
+  );
+}
+
 const Template: Story<VideoListStoryProps> = args => {
   const dummyCameraVideoRef = useRef<HTMLVideoElement>(null);
   const dummyScreenVideoRef = useRef<HTMLVideoElement>(null);
@@ -74,7 +86,13 @@ const Template: Story<VideoListStoryProps> = args => {
           loop
           autoPlay
         ></video>
-        <VideoList {...args} peers={storyBookSDK.getPeers()} />
+        <VideoList
+          {...args}
+          peers={storyBookSDK.getPeers()}
+          videoTileProps={(peer, track) => {
+            return { innerComponent: VideoTileInnerComponent({ peer, track }) };
+          }}
+        />
       </div>
     </HMSThemeProvider>
   );
@@ -197,6 +215,11 @@ const MeetTemplate: Story<VideoListStoryProps> = (
                   showAudioMuteStatus={true}
                 />
               ))}
+              videoTileProps={(peer, track) => {
+                return {
+                  innerComponent: VideoTileInnerComponent({ peer, track }),
+                };
+              }}
             />
           }
         </div>
