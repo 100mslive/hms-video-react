@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { PostLeaveDisplay, FeedbackForm } from './index';
+import { PostLeaveDisplay, FeedbackDisplay } from './index';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
@@ -30,10 +30,9 @@ const Template: Story = args => {
           }}
 
           getFeedbackOnClick={(setShowModal) => {
-            alert('feedback clicked');
             setShowModal(true);
           }}
-          FeedbackForm={FeedbackForm}
+          FeedbackDisplay={FeedbackDisplay}
         />
       </HMSThemeProvider>
     </div>
@@ -63,7 +62,7 @@ const Custom: Story = args => {
           getFeedbackOnClick={(setShowModal) => {
             setShowModal(true);
           }}
-          FeedbackForm={FeedbackForm}
+          FeedbackDisplay={FeedbackDisplay}
         />
       </HMSThemeProvider>
     </div>

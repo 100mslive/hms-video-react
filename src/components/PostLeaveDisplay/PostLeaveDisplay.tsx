@@ -13,7 +13,7 @@ interface Props {
   joinRoomOnClick?: (event: React.MouseEvent) => void;
   goToDashboardOnClick?: (event: React.MouseEvent) => void;
   getFeedbackOnClick?: (values: any) => void;
-  FeedbackForm?: any;
+  FeedbackDisplay?: any;
   src?: string;
 }
 
@@ -25,6 +25,7 @@ interface PostLeaveDisplayClasses {
   divider: string;
   buttonWrapper: string;
   feedbackSection: string;
+  cancelFeedback: string;
 }
 
 export const PostLeaveDisplay: React.FC<Props> = ({
@@ -33,8 +34,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
   joinRoomOnClick,
   goToDashboardOnClick,
   getFeedbackOnClick,
-  FeedbackForm,
-
+  FeedbackDisplay,
   src,
 }) => {
   const defaultClasses: PostLeaveDisplayClasses = {
@@ -44,7 +44,8 @@ export const PostLeaveDisplay: React.FC<Props> = ({
     sunnyFaceIconDiv: `mt-24 mb-6`,
     divider: `bg-gray-600  h-px w-96 my-8`,
     buttonWrapper: `space-x-5`,
-    feedbackSection: `mt-48`
+    feedbackSection: `mt-48`,
+    cancelFeedback: `justify-center pt-5 mr-48`
   };
   const { tw } = useHMSTheme();
   const [showModal, setShowModal] = useState(false);
@@ -58,6 +59,19 @@ export const PostLeaveDisplay: React.FC<Props> = ({
       }),
     [],
   );
+  const getFooter = () => {
+    return (
+      <div className={styler("cancelFeedback")}>
+        <Button
+          onClick={() => setShowModal(false)}
+          variant="no-fill"
+          size="sm"
+          style={{ color: "#6085BC" }}>
+          Cancel
+        </Button>
+      </div>
+    )
+  }
   return (
     <div className={styler('root')}>
       <div
@@ -100,7 +114,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
                 getFeedbackOnClick(setShowModal)
               }
             }}>Send Feedback</Button>
-            <FeedbackForm setShowModal={setShowModal} showModal={showModal} />
+            <FeedbackDisplay setShowModal={setShowModal} showModal={showModal} footer={getFooter()} />
           </div>
         </div>
       </div>
