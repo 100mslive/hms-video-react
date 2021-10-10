@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Meta, Story } from '@storybook/react';
 import { PostLeaveDisplay, FeedbackDisplay } from './index';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
@@ -11,7 +11,7 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story = args => {
-  // const [showModal, setShowModal] = useState(false);
+  
   return (
     <div className="w-full h-screen">
       <HMSThemeProvider

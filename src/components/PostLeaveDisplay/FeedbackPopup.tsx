@@ -1,10 +1,9 @@
-import React, { useMemo, SetStateAction, Dispatch } from 'react';
+import React, {  useMemo} from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import thumbsup from '../../../public/thumbsup.png';
 import thumbsdown from '../../../public/thumbsdown.png';
-import { FeedbackForm } from './FeedbackForm';
-import { Button } from '../Button';
+
 
 export interface FeedbackPopupClasses {
     feedbackSection?: string;
@@ -18,27 +17,21 @@ export interface FeedbackPopupClasses {
 export interface FeedbackPopupProps {
     classes?: FeedbackPopupClasses;
     setShowModal?: (value: boolean) => void;
-    setFeedbackBody?: Dispatch<SetStateAction<JSX.Element>>;
-    setModalFooter?: Dispatch<SetStateAction<JSX.Element>>;
-    popupFooter: JSX.Element;
-    setModalTitle?: Dispatch<SetStateAction<string>>;
+    getFeedbackHandler?: () => void
 }
 
 const defaultClasses = {
     feedbackSection: "flex justify-evenly",
     feedbackIconSection: "w-full h-24 mt-10 mb-2",
     feedbackColumn: "flex-col text-center justify-evenly cursor-pointer",
-    footerFeedback:"flex  mr-44 space-x-5"
+    footerFeedback: "flex  mr-40 space-x-5"
 };
 
 
 export const FeedbackPopup: React.FunctionComponent<FeedbackPopupProps> = ({
     classes,
     setShowModal = () => { },
-    setFeedbackBody = () => { },
-    setModalTitle = () => { },
-    setModalFooter = () => { },
-    popupFooter
+    getFeedbackHandler = () => { }
 }: FeedbackPopupProps) => {
     const { tw } = useHMSTheme();
     const styler = useMemo(
@@ -53,41 +46,7 @@ export const FeedbackPopup: React.FunctionComponent<FeedbackPopupProps> = ({
     );
 
     const likeHandler = () => {
-        console.info('Like Clicked');
         setShowModal(false);
-    }
-
-    const getFeedbackHandler = () => {
-        setFeedbackBody(<FeedbackForm />)
-        setModalTitle('What went wrong ?')
-        setModalFooter(getFeedbackFormFooter())
-    }
-
-    const getFeedbackFormFooter = () => {
-        return (
-            <div className={styler("footerFeedback")}>
-                <div className={styler("cancelFeedback")}>
-                    <Button
-                        variant="emphasized"
-                        size="md"
-                        disabled={true}
-                    >
-                        Submit
-                    </Button>
-                </div>
-
-                <div className={styler("cancelFeedback")}>
-                    <Button
-                        onClick={() => { setShowModal(false); setModalFooter(popupFooter) }}
-                        variant="no-fill"
-                        size="md"
-                        style={{ color: "#6085BC" }}>
-                        Cancel
-                    </Button>
-                </div>
-
-            </div>
-        )
     }
 
     return (

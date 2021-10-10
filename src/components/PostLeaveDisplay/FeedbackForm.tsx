@@ -1,10 +1,12 @@
-import React, { useMemo, useEffect, ElementType, ChangeEvent } from 'react';
+
+
+import React, { useMemo, ChangeEvent, Dispatch, SetStateAction } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { RowLayout } from './RowLayout';
 
 
-
+import './index.css';
 
 export interface FeedbackFormClasses {
     feedbackSection?: string;
@@ -13,22 +15,33 @@ export interface FeedbackFormClasses {
     cancelFeedback?: string;
     checkBoxLabel?: string;
     feedbackChoiceSection?: string;
+    formLabel?: string;
+
 }
 
 
 export interface FeedbackFormProps {
     classes?: FeedbackFormClasses;
     setShowModal?: (value: boolean) => void;
+    onChoiceChangeHandler: (event: ChangeEvent<HTMLInputElement>) => void;
+    setUserComment: Dispatch<SetStateAction<string>>;
+    userComment:string;
+    userCommentHandler:(event:ChangeEvent<HTMLTextAreaElement>)=>void
+
+
 }
 
 const defaultClasses = {
-    feedbackChoiceSection: 'mt-5'
+    feedbackChoiceSection: 'mt-2',
+    formLabel: 'text-sm text-gray-400 mb-2 block'
 };
 
 
 export const FeedbackForm = ({
     classes,
-    setShowModal = () => { },
+    onChoiceChangeHandler,
+    userComment,
+    userCommentHandler
 }: FeedbackFormProps) => {
     const { tw } = useHMSTheme();
 
@@ -42,10 +55,6 @@ export const FeedbackForm = ({
     ]
     let layoutSection = [];
 
-    const onChoiceChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        console.info(event.target.value);
-    }
-
 
 
     for (let contentInd = 0; contentInd < feedbackOptions.length; contentInd += 2) {
@@ -57,10 +66,7 @@ export const FeedbackForm = ({
         }
     }
 
-
-
-
-
+   
     const styler = useMemo(
         () =>
             hmsUiClassParserGenerator<FeedbackFormClasses>({
@@ -77,7 +83,12 @@ export const FeedbackForm = ({
     return (
         <div className={styler("feedbackChoiceSection")}>
             {layoutSection}
+            <div className="feedback">
+                <div className="form">
+                    <label htmlFor="feedbackText" className={styler("formLabel")}>Additional Comments</label>
+                    <textarea value={userComment} onChange={userCommentHandler} name="feedbackText"></textarea>
+                </div>
+            </div>
         </div>
-
     );
 };
