@@ -7,7 +7,7 @@ import { ParticipantListClasses } from './ParticipantProps';
 import { StylerType } from '../../types';
 import {
   selectIsPeerAudioEnabled,
-  selectLocalPeerRole,
+  selectPermissions,
 } from '@100mslive/hms-video-store';
 import { useHMSStore } from '../../hooks/HMSRoomProvider';
 
@@ -23,11 +23,11 @@ const Icons = ({
   peerId,
   onUserSettingsClick,
 }: Omit<PropsType, 'name'>) => {
-  const localPeerRole = useHMSStore(selectLocalPeerRole);
+  const permissions = useHMSStore(selectPermissions);
   const isAudioEnabled = useHMSStore(selectIsPeerAudioEnabled(peerId));
   return (
     <Fragment>
-      {localPeerRole?.permissions.changeRole && (
+      {permissions?.changeRole && (
         <div>
           <Button
             iconOnly
