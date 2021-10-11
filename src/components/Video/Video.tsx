@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useMemo, useCallback } from 'react';
 import { AudioLevelDisplayType } from '../../types';
-import { AudioLevelIndicator } from '../AudioLevelIndicators';
 import { useInView } from 'react-intersection-observer';
 import HMSLogger from '../../utils/ui-logger';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { useHMSActions } from '../../hooks/HMSRoomProvider';
-import { HMSTrack } from '@100mslive/hms-video-store';
+import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import { HMSTrackID, selectTrackByID } from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export type DisplayShapes = 'circle' | 'rectangle';
@@ -46,7 +45,7 @@ export interface VideoProps {
   /**
    * HMS Video Track is for track related metadata
    */
-  hmsVideoTrack?: HMSTrack;
+  hmsVideoTrackId?: HMSTrackID;
   /**
    * Audio Track to be displayed.
    */
@@ -103,18 +102,12 @@ const defaultClasses: VideoClasses = {
 };
 
 export const Video = ({
-  peerId,
   videoTrack,
-  hmsVideoTrack,
+  hmsVideoTrackId,
   objectFit,
   isLocal,
-  showAudioLevel,
-  audioLevel = 0,
-  audioLevelDisplayType,
-  audioLevelDisplayColor,
   displayShape,
   classes,
-  audioTrackId,
 }: VideoProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -128,6 +121,7 @@ export const Video = ({
     [],
   );
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const hmsVideoTrack = useHMSStore(selectTrackByID(hmsVideoTrackId));
 
   const hmsActions = useHMSActions();
 
@@ -192,19 +186,6 @@ export const Video = ({
           ${objectFit === 'cover' ? styler('videoCover') : ''}
         `}
       ></video>
-      {showAudioLevel && audioLevelDisplayType === 'border' && (
-        <AudioLevelIndicator
-          audioTrackId={audioTrackId}
-          type={'border'}
-          level={audioLevel}
-          displayShape={displayShape}
-          classes={{
-            videoCircle: styler('videoCircle'),
-            root: styler('borderAudioRoot'),
-          }}
-          color={audioLevelDisplayColor}
-        />
-      )}
     </>
   );
 };

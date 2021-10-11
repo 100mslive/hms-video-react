@@ -7,7 +7,6 @@ import {
   selectPeerNameByID,
   selectBroadcastMessages,
   selectBroadcastMessagesUnreadCount,
-  HMSMessageInput,
   selectMessagesUnreadCountByRole,
   selectMessagesUnreadCountByPeerID,
 } from '@100mslive/hms-video-store';
@@ -163,7 +162,7 @@ export const ChatBox = ({
         await hmsActions.sendBroadcastMessage(message);
       }
     } catch (error) {
-      toast(error.message);
+      toast((error as Error).message);
     }
   };
   const [messageDraft, setMessageDraft] = useState('');
