@@ -1,6 +1,6 @@
 import React from 'react';
 import { Meta, Story } from '@storybook/react';
-import { PostLeaveDisplay, FeedbackDisplay } from './index';
+import { PostLeaveDisplay } from './index';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 
 const meta: Meta = {
@@ -11,7 +11,6 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story = args => {
-  
   return (
     <div className="w-full h-screen">
       <HMSThemeProvider
@@ -32,7 +31,6 @@ const Template: Story = args => {
           getFeedbackOnClick={(setShowModal) => {
             setShowModal(true);
           }}
-          FeedbackDisplay={FeedbackDisplay}
         />
       </HMSThemeProvider>
     </div>
@@ -62,7 +60,6 @@ const Custom: Story = args => {
           getFeedbackOnClick={(setShowModal) => {
             setShowModal(true);
           }}
-          FeedbackDisplay={FeedbackDisplay}
         />
       </HMSThemeProvider>
     </div>

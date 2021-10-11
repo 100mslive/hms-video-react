@@ -6,6 +6,7 @@ import { Text } from '../Text';
 import { Button } from '../Button';
 
 import post_leave_img from './post_leave.png';
+import { FeedbackDisplay } from './FeedbackDisplay';
 
 interface Props {
   username?: string;
@@ -13,7 +14,6 @@ interface Props {
   joinRoomOnClick?: (event: React.MouseEvent) => void;
   goToDashboardOnClick?: (event: React.MouseEvent) => void;
   getFeedbackOnClick?: (values: any) => void;
-  FeedbackDisplay?: any;
   src?: string;
 }
 
@@ -34,7 +34,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
   joinRoomOnClick,
   goToDashboardOnClick,
   getFeedbackOnClick,
-  FeedbackDisplay,
+  // FeedbackDisplay,
   src,
 }) => {
   const defaultClasses: PostLeaveDisplayClasses = {
