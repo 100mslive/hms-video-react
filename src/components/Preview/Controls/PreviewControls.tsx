@@ -3,6 +3,7 @@ import { MicOffIcon, MicOnIcon, CamOnIcon, CamOffIcon } from '../../Icons';
 import { Button } from '../../Button';
 import { Settings } from '../../Settings/Settings';
 import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
+import { useHMSActions } from '../../../hooks/HMSRoomProvider';
 import { ButtonDisplayType } from '../../../types';
 import { hmsUiClassParserGenerator } from '../../../utils/classes';
 import '../index.css';
@@ -17,8 +18,6 @@ export interface PreviewControlsProps {
   isVideoMuted?: boolean;
   showGradient?: boolean;
   classes?: PreviewControlsClasses;
-  audioButtonOnClick: () => void;
-  videoButtonOnClick: React.MouseEventHandler;
   buttonDisplay?: ButtonDisplayType;
   isAudioAllowed?: boolean;
   isVideoAllowed?: boolean;
@@ -35,16 +34,13 @@ const defaultClasses: PreviewControlsClasses = {
     'flex absolute bottom-0 w-full p-3 bottom-background z-40 rounded-lg min-h-0 focus:outline-none',
   controls:
     'dark flex flex-1 self-center justify-center hover-hide space-x-1 relative',
-  rightControls:
-    'dark flex items-center justify-self-end',
+  rightControls: 'dark flex items-center justify-self-end',
 };
 
-export const PreviewControls = ({
+const Controls = ({
   isAudioMuted = false,
   isVideoMuted = false,
   buttonDisplay = 'rectangle',
-  audioButtonOnClick,
-  videoButtonOnClick,
   classes,
   isAudioAllowed = true,
   isVideoAllowed = true,
@@ -60,6 +56,7 @@ export const PreviewControls = ({
       }),
     [],
   );
+  const hmsActions = useHMSActions();
 
   return (
     <div className={`${styler('root')}`}>
@@ -70,7 +67,9 @@ export const PreviewControls = ({
             variant="no-fill"
             active={isAudioMuted}
             shape={buttonDisplay}
-            onClick={audioButtonOnClick}
+            onClick={() => {
+              hmsActions.setLocalAudioEnabled(isAudioMuted);
+            }}
           >
             {isAudioMuted ? <MicOffIcon /> : <MicOnIcon />}
           </Button>
@@ -81,7 +80,9 @@ export const PreviewControls = ({
             variant="no-fill"
             active={isVideoMuted}
             shape={buttonDisplay}
-            onClick={videoButtonOnClick}
+            onClick={() => {
+              hmsActions.setLocalVideoEnabled(isVideoMuted);
+            }}
           >
             {isVideoMuted ? <CamOffIcon /> : <CamOnIcon />}
           </Button>
@@ -93,3 +94,5 @@ export const PreviewControls = ({
     </div>
   );
 };
+
+export const PreviewControls = React.memo(Controls);

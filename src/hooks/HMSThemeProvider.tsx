@@ -2,7 +2,7 @@ import React, { useContext, createContext } from 'react';
 
 import HMSThemeProps, { appBuilder } from './interfaces/HMSThemeProvider';
 
-import merge from 'lodash/merge';
+import merge from 'lodash.merge';
 
 import { theme as defaultTailwindConfig } from '../defaultTheme';
 // @ts-ignore

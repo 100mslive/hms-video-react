@@ -88,7 +88,7 @@ export const VideoPlayer = ({ classes, peer }: VideoPlayerProps) => {
         </div>
       )}
       <Video
-        hmsVideoTrack={videoTrack}
+        hmsVideoTrackId={videoTrack?.id}
         objectFit="cover"
         classes={{ video: 'static rounded-none' }}
       />

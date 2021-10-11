@@ -1,5 +1,5 @@
 {
-  "version": "0.3.88",
+  "version": "0.3.89",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -40,19 +40,19 @@
   "size-limit": [
     {
       "path": "dist/hms-video-react.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "600 KB"
     },
     {
       "path": "dist/hms-video-react.esm.js",
-      "limit": "10 KB"
+      "limit": "600 KB"
     }
   ],
   "peerDependencies": {
-    "@100mslive/hms-video": "^0.0.209",
+    "@100mslive/hms-video": "^0.1.0",
     "react": ">=16"
   },
   "devDependencies": {
-    "@100mslive/hms-video": "^0.0.209",
+    "@100mslive/hms-video": "^0.1.0",
     "@babel/core": "^7.13.14",
     "@rollup/plugin-image": "^2.0.6",
     "@size-limit/preset-small-lib": "^4.10.2",
@@ -64,7 +64,9 @@
     "@storybook/react": "^6.2.3",
     "@storybook/theming": "^6.2.5",
     "@tailwindcss/postcss7-compat": "^2.1.0",
-    "@types/lodash": "^4.14.168",
+    "@types/lodash.groupby": "^4.6.6",
+    "@types/lodash.merge": "^4.6.6",
+    "@types/lodash.reduce": "^4.6.6",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
     "@types/react-linkify": "^1.0.0",
@@ -84,13 +86,13 @@
     "typescript": "4.2.4"
   },
   "dependencies": {
-    "@100mslive/hms-video-store": "0.2.62",
+    "@100mslive/hms-video-store": "0.2.66",
     "@material-ui/core": "^4.11.3",
     "@twind/aspect-ratio": "^0.1.4",
     "autoprefixer": "^9.8.6",
     "clsx": "^1.1.1",
-    "lodash": "^4.17.21",
-    "lodash-es": "^4.17.21",
+    "lodash.merge": "^4.6.2",
+    "lodash.reduce": "^4.6.0",
     "postcss": "8.2.10",
     "react-click-away-listener": "^2.0.3",
     "react-intersection-observer": "^8.31.1",
