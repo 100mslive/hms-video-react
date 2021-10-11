@@ -25,8 +25,9 @@ export interface FeedbackFormProps {
     setShowModal?: (value: boolean) => void;
     onChoiceChangeHandler: (event: ChangeEvent<HTMLInputElement>) => void;
     setUserComment: Dispatch<SetStateAction<string>>;
-    userComment:string;
-    userCommentHandler:(event:ChangeEvent<HTMLTextAreaElement>)=>void
+    userComment: string;
+    showChoice: boolean
+    userCommentHandler: (event: ChangeEvent<HTMLTextAreaElement>) => void
 
 
 }
@@ -41,7 +42,8 @@ export const FeedbackForm = ({
     classes,
     onChoiceChangeHandler,
     userComment,
-    userCommentHandler
+    userCommentHandler,
+    showChoice
 }: FeedbackFormProps) => {
     const { tw } = useHMSTheme();
 
@@ -66,7 +68,7 @@ export const FeedbackForm = ({
         }
     }
 
-   
+
     const styler = useMemo(
         () =>
             hmsUiClassParserGenerator<FeedbackFormClasses>({
@@ -82,7 +84,7 @@ export const FeedbackForm = ({
 
     return (
         <div className={styler("feedbackChoiceSection")}>
-            {layoutSection}
+            <div className="feedbackChoices" style={{ display: (showChoice) ? 'block' : 'none' }}>{layoutSection}</div>
             <div className="feedback">
                 <div className="form">
                     <label htmlFor="feedbackText" className={styler("formLabel")}>Additional Comments</label>

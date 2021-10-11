@@ -58,23 +58,36 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
     const [userFeedbackChoices, setUserFeedbackChoices] = useState(0);
     const [userComment, setUserComment] = useState('');
     const [feedbackData, setFeedbackData] = useState<{ choices: string[], comment: string }>({ "choices": [], "comment": "" })
-
-    const getFeedbackForm = () => {
+    const [currentSection,setCurrentSection] = useState(true);
+    const getFeedbackForm = (showChoice:boolean) => {
         return (
             <FeedbackForm
                 userComment={userComment}
                 setUserComment={setUserComment}
                 onChoiceChangeHandler={onChoiceChangeHandler}
                 userCommentHandler={userCommentHandler}
+                showChoice={showChoice}
             />
         )
     }
     const [initialState, setInitialState] = useState(false);
+
     const getFeedbackHandler = () => {
-        setFeedbackBody(getFeedbackForm())
+        setFeedbackBody(getFeedbackForm(true))
         setModalTitle('What went wrong ?')
         setModalFooter(getFeedbackFormFooter())
         setInitialState(true);
+        setCurrentSection(true);
+        setFeedbackData({choices:[],comment:""})
+    }
+
+    const getPostiveFeedbackHandler = () => {
+        setFeedbackBody(getFeedbackForm(false))
+        setModalTitle('What did you like the most ?')
+        setModalFooter(getFeedbackFormFooter())
+        setInitialState(true);
+        setCurrentSection(false);
+        setFeedbackData({choices:[],comment:""})
     }
 
     const addChoiceToState = (selectedChoice: string) => {
@@ -113,6 +126,16 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
             console.info(currentData);
             return currentData;
         }));
+        setToDefault();
+
+    }
+
+    const setToDefault = () => {
+        setShowModal(false);
+        setModalFooter(footer);
+        setUserFeedbackChoices(0);
+        setUserComment('');
+        setInitialState(false)
     }
 
     useEffect(() => {
@@ -125,7 +148,7 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
 
     useEffect(() => {
         if (initialState) {
-            setFeedbackBody(getFeedbackForm())
+            setFeedbackBody(getFeedbackForm(currentSection))
             setModalFooter(getFeedbackFormFooter())
         }
 
@@ -148,11 +171,7 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
                 <div className={styler("cancelFeedback")}>
                     <Button
                         onClick={() => {
-                            setShowModal(false);
-                            setModalFooter(footer);
-                            setUserFeedbackChoices(0);
-                            setUserComment('');
-                            setInitialState(false)
+                            setToDefault();
                         }}
                         variant="no-fill"
                         size="md"
@@ -169,10 +188,11 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
         setFeedbackBody(<FeedbackPopup
             setShowModal={setShowModal}
             getFeedbackHandler={getFeedbackHandler}
+            getPostiveFeedbackHandler={getPostiveFeedbackHandler}
         />)
 
     }, [showModal])
-    
+
     const handleClose = () => {
         setShowModal(false);
     };

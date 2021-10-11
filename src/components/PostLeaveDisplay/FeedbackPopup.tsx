@@ -17,7 +17,8 @@ export interface FeedbackPopupClasses {
 export interface FeedbackPopupProps {
     classes?: FeedbackPopupClasses;
     setShowModal?: (value: boolean) => void;
-    getFeedbackHandler?: () => void
+    getFeedbackHandler?: () => void;
+    getPostiveFeedbackHandler?: () => void;
 }
 
 const defaultClasses = {
@@ -31,7 +32,8 @@ const defaultClasses = {
 export const FeedbackPopup: React.FunctionComponent<FeedbackPopupProps> = ({
     classes,
     setShowModal = () => { },
-    getFeedbackHandler = () => { }
+    getFeedbackHandler = () => { },
+    getPostiveFeedbackHandler = () => { },
 }: FeedbackPopupProps) => {
     const { tw } = useHMSTheme();
     const styler = useMemo(
@@ -45,13 +47,10 @@ export const FeedbackPopup: React.FunctionComponent<FeedbackPopupProps> = ({
         [],
     );
 
-    const likeHandler = () => {
-        setShowModal(false);
-    }
 
     return (
         <div className={styler("feedbackSection")}>
-            <div onClick={likeHandler} className={styler("feedbackColumn")}>
+            <div onClick={getPostiveFeedbackHandler} className={styler("feedbackColumn")}>
                 <img src={thumbsup} className={styler("feedbackIconSection")} alt="thumbsup" />
                 <div>Good</div>
             </div>
