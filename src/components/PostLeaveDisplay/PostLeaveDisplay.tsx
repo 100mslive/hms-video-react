@@ -4,10 +4,8 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { SunWithFace } from '../Icons';
 import { Text } from '../Text';
 import { Button } from '../Button';
-
 import post_leave_img from './post_leave.png';
 import { FeedbackDisplay } from './FeedbackDisplay';
-
 interface Props {
   username?: string;
   classes?: PostLeaveDisplayClasses;
@@ -16,7 +14,6 @@ interface Props {
   getFeedbackOnClick?: (values: any) => void;
   src?: string;
 }
-
 interface PostLeaveDisplayClasses {
   root: string;
   rootBg: string;
@@ -34,7 +31,6 @@ export const PostLeaveDisplay: React.FC<Props> = ({
   joinRoomOnClick,
   goToDashboardOnClick,
   getFeedbackOnClick,
-  // FeedbackDisplay,
   src,
 }) => {
   const defaultClasses: PostLeaveDisplayClasses = {

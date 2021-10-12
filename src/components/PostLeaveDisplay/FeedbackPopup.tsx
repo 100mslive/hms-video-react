@@ -3,8 +3,6 @@ import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import thumbsup from '../../../public/thumbsup.png';
 import thumbsdown from '../../../public/thumbsdown.png';
-
-
 export interface FeedbackPopupClasses {
     feedbackSection?: string;
     feedbackIconSection?: string;
@@ -12,8 +10,6 @@ export interface FeedbackPopupClasses {
     cancelFeedback?: string;
     footerFeedback?: string;
 }
-
-
 export interface FeedbackPopupProps {
     classes?: FeedbackPopupClasses;
     setShowModal?: (value: boolean) => void;
@@ -27,8 +23,6 @@ const defaultClasses = {
     feedbackColumn: "flex-col text-center justify-evenly cursor-pointer",
     footerFeedback: "flex  mr-40 space-x-5"
 };
-
-
 export const FeedbackPopup: React.FunctionComponent<FeedbackPopupProps> = ({
     classes,
     setShowModal = () => { },

@@ -20,8 +20,6 @@ const defaultClasses = {
     cancelFeedback: "justify-center pt-5",
     footerFeedback: "flex  mr-40 space-x-5"
 };
-
-
 export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
     classes,
     showModal,
@@ -77,14 +75,12 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
         setCurrentSection(false);
         setFeedbackData({ choices: [], comment: "" })
     }
-
     const addChoiceToState = (selectedChoice: string) => {
         setFeedbackData((currentData) => {
             return { choices: [...currentData.choices, selectedChoice], comment: currentData.comment }
         })
     }
-
-    const userCommentHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
+     const userCommentHandler = (event: ChangeEvent<HTMLTextAreaElement>) => {
         setUserComment(event.target.value);
         setFeedbackData((currentData) => {
             return { choices: [...currentData.choices], comment: event.target.value }
@@ -108,7 +104,6 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
             removeChoiceFromState(event.target.value);
         }
     }
-
     const getUserFeedback = () => {
         (setFeedbackData((currentData) => {
             console.info(currentData);
@@ -141,7 +136,6 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
         }
 
     }, [userComment])
-
     const getFeedbackFormFooter = () => {
         return (
             <div className={styler("footerFeedback")}>
