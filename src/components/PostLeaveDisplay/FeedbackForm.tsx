@@ -1,11 +1,9 @@
 
 
-import React, { useMemo, ChangeEvent, Dispatch, SetStateAction } from 'react';
+import React, { ChangeEvent, Dispatch, SetStateAction, useMemo } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { RowLayout } from './RowLayout';
-
-
 import './index.css';
 
 export interface FeedbackFormClasses {
@@ -18,8 +16,6 @@ export interface FeedbackFormClasses {
     formLabel?: string;
 
 }
-
-
 export interface FeedbackFormProps {
     classes?: FeedbackFormClasses;
     setShowModal?: (value: boolean) => void;
@@ -28,8 +24,6 @@ export interface FeedbackFormProps {
     userComment: string;
     showChoice: boolean
     userCommentHandler: (event: ChangeEvent<HTMLTextAreaElement>) => void
-
-
 }
 
 const defaultClasses = {
@@ -47,7 +41,7 @@ export const FeedbackForm = ({
 }: FeedbackFormProps) => {
     const { tw } = useHMSTheme();
 
-    let feedbackOptions = [
+    const feedbackOptions = [
         "I could not hear others",
         "I could not see others",
         "Others could not hear me",
@@ -55,19 +49,6 @@ export const FeedbackForm = ({
         "Poor audio quality",
         "Poor video quality"
     ]
-    let layoutSection = [];
-
-
-
-    for (let contentInd = 0; contentInd < feedbackOptions.length; contentInd += 2) {
-        if (contentInd + 1 < feedbackOptions.length) {
-            layoutSection.push(<RowLayout key={feedbackOptions[contentInd]} onChoiceChangeHandler={onChoiceChangeHandler} choice1={feedbackOptions[contentInd]} choice2={feedbackOptions[contentInd + 1]} />)
-        }
-        else {
-            layoutSection.push(<RowLayout key={feedbackOptions[contentInd]} onChoiceChangeHandler={onChoiceChangeHandler} choice1={feedbackOptions[contentInd]} />)
-        }
-    }
-
 
     const styler = useMemo(
         () =>
@@ -84,7 +65,19 @@ export const FeedbackForm = ({
 
     return (
         <div className={styler("feedbackChoiceSection")}>
-            <div className="feedbackChoices" style={{ display: (showChoice) ? 'block' : 'none' }}>{layoutSection}</div>
+            <div className="feedbackChoices" style={{ display: (showChoice) ? 'block' : 'none' }}>
+                {feedbackOptions.reduce(
+                    function (accumulator:Array<Array<string>>, currentValue, currentIndex, array: string[]) {
+                        if (currentIndex % 2 === 0) {
+                            accumulator.push(array.slice(currentIndex, currentIndex + 2));
+                        }
+                        return accumulator;
+                    }, []).map((choices: string[]) => {
+                        return (<RowLayout key={choices[0]} onChoiceChangeHandler={onChoiceChangeHandler} choice1={choices[0]} choice2={choices[1]} />)
+                    }
+                    )
+                }
+            </div>
             <div className="feedback">
                 <div className="form">
                     <label htmlFor="feedbackText" className={styler("formLabel")}>Additional Comments</label>

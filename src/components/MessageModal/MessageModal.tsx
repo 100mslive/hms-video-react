@@ -31,6 +31,7 @@ export interface MessageModalClasses {
   footer?: string;
   modalType?: string;
   feedbackTitle?: string;
+  hide?: string;
 }
 
 export interface StyledMessageModalProps {
@@ -62,7 +63,8 @@ const defaultClasses: MessageModalClasses = {
   body: 'w-full',
   footer: 'mt-4 w-full flex justify-end',
   feedbackTitle:
-    'flex flex-1 lg:text-xl sm:text-xl self-center justify-center text-gray-100 dark:text-white font-small'
+    'flex flex-1 lg:text-xl sm:text-xl self-center justify-center text-gray-100 dark:text-white font-small',
+  hide: 'hidden'
 };
 
 export const StyledMessageModal = ({
@@ -104,8 +106,8 @@ export const StyledMessageModal = ({
             <div className={styler('boxTransition')}>
               <div className={styler('boxRoot')}>
                 <div className={styler('header')}>
-                  <div className={` ${modalType && modalType === 'feedback' ? styler("feedbackTitle") : styler("title")}`}>{title}</div>
-                  <div style={{ display: (modalType && modalType === 'feedback') ? 'none' : 'flex' }} className={styler('closeRoot')}>
+                  <div className={`${modalType === 'feedback' ? styler("feedbackTitle") : styler("title")}`}>{title}</div>
+                  <div className={`${modalType === 'feedback' ? styler("hide") : styler("closeRoot")}`}>
                     <Button
                       variant="no-fill"
                       onClick={onClose}

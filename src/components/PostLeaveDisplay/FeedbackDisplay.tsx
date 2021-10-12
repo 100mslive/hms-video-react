@@ -1,26 +1,14 @@
-import React, { useState, useEffect, useMemo, Fragment, ChangeEvent } from 'react';
+import React, { useMemo, useState, ChangeEvent, useEffect, Fragment } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-
-
-
-import { MessageModal } from '../MessageModal';
-import { Button } from '../Button';
-
-import { FeedbackPopup } from './FeedbackPopup';
 import { FeedbackForm } from './FeedbackForm';
-
-
-
-
-
-
+import { Button } from '../Button';
+import { FeedbackPopup } from './FeedbackPopup';
+import { MessageModal } from '../MessageModal';
 export interface FeedbackDisplayClasses {
     cancelFeedback?: string;
     footerFeedback?: string;
 }
-
-
 export interface FeedbackDisplayProps {
     classes?: FeedbackDisplayClasses;
     showModal: boolean;
@@ -58,8 +46,8 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
     const [userFeedbackChoices, setUserFeedbackChoices] = useState(0);
     const [userComment, setUserComment] = useState('');
     const [feedbackData, setFeedbackData] = useState<{ choices: string[], comment: string }>({ "choices": [], "comment": "" })
-    const [currentSection,setCurrentSection] = useState(true);
-    const getFeedbackForm = (showChoice:boolean) => {
+    const [currentSection, setCurrentSection] = useState(true);
+    const getFeedbackForm = (showChoice: boolean) => {
         return (
             <FeedbackForm
                 userComment={userComment}
@@ -78,7 +66,7 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
         setModalFooter(getFeedbackFormFooter())
         setInitialState(true);
         setCurrentSection(true);
-        setFeedbackData({choices:[],comment:""})
+        setFeedbackData({ choices: [], comment: "" })
     }
 
     const getPostiveFeedbackHandler = () => {
@@ -87,7 +75,7 @@ export const FeedbackDisplay: React.FunctionComponent<FeedbackDisplayProps> = ({
         setModalFooter(getFeedbackFormFooter())
         setInitialState(true);
         setCurrentSection(false);
-        setFeedbackData({choices:[],comment:""})
+        setFeedbackData({ choices: [], comment: "" })
     }
 
     const addChoiceToState = (selectedChoice: string) => {

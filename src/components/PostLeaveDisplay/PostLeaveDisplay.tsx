@@ -59,19 +59,7 @@ export const PostLeaveDisplay: React.FC<Props> = ({
       }),
     [],
   );
-  const getFooter = () => {
-    return (
-      <div className={styler("cancelFeedback")}>
-        <Button
-          onClick={() => setShowModal(false)}
-          variant="no-fill"
-          size="sm"
-          style={{ color: "#6085BC" }}>
-          Cancel
-        </Button>
-      </div>
-    )
-  }
+
   return (
     <div className={styler('root')}>
       <div
@@ -114,7 +102,21 @@ export const PostLeaveDisplay: React.FC<Props> = ({
                 getFeedbackOnClick(setShowModal)
               }
             }}>Send Feedback</Button>
-            <FeedbackDisplay setShowModal={setShowModal} showModal={showModal} footer={getFooter()} />
+            <FeedbackDisplay
+              setShowModal={setShowModal}
+              showModal={showModal}
+              footer={
+                <div className={styler("cancelFeedback")}>
+                  <Button
+                    onClick={() => setShowModal(false)}
+                    variant="no-fill"
+                    size="sm"
+                    style={{ color: "#6085BC" }}>
+                    Cancel
+                  </Button>
+                </div>
+              }
+            />
           </div>
         </div>
       </div>
