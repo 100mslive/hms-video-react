@@ -1,8 +1,11 @@
 import React, {  useMemo} from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import thumbsup from '../../../public/thumbsup.png';
-import thumbsdown from '../../../public/thumbsdown.png';
+
+
+
+
+import { Thumbsup,Thumbsdown } from '../Icons';
 export interface FeedbackPopupClasses {
     feedbackSection?: string;
     feedbackIconSection?: string;
@@ -18,7 +21,7 @@ export interface FeedbackPopupProps {
 }
 
 const defaultClasses = {
-    feedbackSection: "flex justify-evenly",
+    feedbackSection: "flex justify-evenly mt-5",
     feedbackIconSection: "w-full h-24 mt-10 mb-2",
     feedbackColumn: "flex-col text-center justify-evenly cursor-pointer",
     footerFeedback: "flex  mr-40 space-x-5"
@@ -40,16 +43,16 @@ export const FeedbackPopup: React.FunctionComponent<FeedbackPopupProps> = ({
             }),
         [],
     );
-
+    const IconStyles = {backgroundColor:"#fff",clipPath:"circle(49%)"}
 
     return (
         <div className={styler("feedbackSection")}>
             <div onClick={getPostiveFeedbackHandler} className={styler("feedbackColumn")}>
-                <img src={thumbsup} className={styler("feedbackIconSection")} alt="thumbsup" />
+                <Thumbsup style={IconStyles}/>
                 <div>Good</div>
             </div>
             <div onClick={getFeedbackHandler} className={styler("feedbackColumn")}>
-                <img src={thumbsdown} className={styler("feedbackIconSection")} alt="thumbsdown" />
+                 <Thumbsdown style={IconStyles}/>
                 <div>Bad</div>
             </div>
         </div>

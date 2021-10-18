@@ -5,6 +5,7 @@ import { SunWithFace } from '../Icons';
 import { Text } from '../Text';
 import { Button } from '../Button';
 import post_leave_img from './post_leave.png';
+
 import { FeedbackDisplay } from './FeedbackDisplay';
 interface Props {
   username?: string;
