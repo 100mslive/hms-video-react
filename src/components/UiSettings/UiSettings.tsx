@@ -7,11 +7,11 @@ import { Slider } from '../Slider/Slider';
 import { UiSettingsSection } from './UiSettingsSection';
 
 export interface UiSettingsClasses {
-  sliderContainer?: string
-  slider?: string
-  divider?: string
-  notificationContainer?: string
-  checkBoxLabel?: string
+  sliderContainer?: string;
+  slider?: string;
+  divider?: string;
+  notificationContainer?: string;
+  checkBoxLabel?: string;
 }
 
 const defaultClasses = {
@@ -19,7 +19,7 @@ const defaultClasses = {
   slider: 'rounded-lg w-full p-2 flex items-center ',
   divider: 'bg-gray-600 dark:bg-gray-200 h-px w-full my-4',
   notificationContainer: 'w-full p-2',
-  checkBoxLabel: 'text-lg space-x-1.5 flex items-center'
+  checkBoxLabel: 'text-lg space-x-1.5 flex items-center',
 };
 
 export interface UiSettingsProps {
@@ -29,8 +29,11 @@ export interface UiSettingsProps {
     maxTileCount: number;
   };
   notificationProps: {
-    onNotificationChange: (value: { "type": string, "isSubscribed": boolean }) => void;
-    subscribedNotifications: { [key: string]: boolean; };
+    onNotificationChange: (value: {
+      type: string;
+      isSubscribed: boolean;
+    }) => void;
+    subscribedNotifications: { [key: string]: boolean };
   };
 
   showModal?: boolean;
@@ -41,7 +44,7 @@ export const UiSettings = ({
   sliderProps,
   notificationProps,
   showModal,
-  onModalClose = () => { },
+  onModalClose = () => {},
 }: UiSettingsProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -74,9 +77,15 @@ export const UiSettings = ({
       sliderProps.onTileCountChange(newValue);
     }
   };
-  const handleNotificationChange = (event: React.ChangeEvent<HTMLInputElement>, type: string) => {
-    notificationProps.onNotificationChange({ type, isSubscribed: event.target.checked });
-  }
+  const handleNotificationChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    type: string,
+  ) => {
+    notificationProps.onNotificationChange({
+      type,
+      isSubscribed: event.target.checked,
+    });
+  };
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   return (
@@ -88,68 +97,80 @@ export const UiSettings = ({
       body={
         <Fragment>
           <div className={styler('divider')}></div>
-          <UiSettingsSection title="Participants In View" body={
-            <div className={styler('sliderContainer')}>
-              <div className={styler('slider')}>
-                <Slider
-                  name="maxTileCount"
-                  value={sliderProps.maxTileCount}
-                  //@ts-ignore
-                  onChange={handleSliderChange}
-                  aria-labelledby="continuous-slider"
-                  valueLabelDisplay="auto"
-                  min={1}
-                  max={49}
-                  step={null}
-                  marks={[
-                    { value: 1 },
-                    { value: 4 },
-                    { value: 9 },
-                    { value: 16 },
-                    { value: 25 },
-                    { value: 36 },
-                    { value: 49 },
-                  ]}
-                />
+          <UiSettingsSection
+            title="Participants In View"
+            body={
+              <div className={styler('sliderContainer')}>
+                <div className={styler('slider')}>
+                  <Slider
+                    name="maxTileCount"
+                    value={sliderProps.maxTileCount}
+                    //@ts-ignore
+                    onChange={handleSliderChange}
+                    aria-labelledby="continuous-slider"
+                    valueLabelDisplay="auto"
+                    min={1}
+                    max={49}
+                    step={null}
+                    marks={[
+                      { value: 1 },
+                      { value: 4 },
+                      { value: 9 },
+                      { value: 16 },
+                      { value: 25 },
+                      { value: 36 },
+                      { value: 49 },
+                    ]}
+                  />
+                </div>
               </div>
-            </div>
-          } />
-          <UiSettingsSection title="Recieve notifications for" body={
-            <div className={styler('notificationContainer')} >
-              <label className={styler('checkBoxLabel')}>
-                <input
-                  type="checkbox"
-                  onChange={(e) => handleNotificationChange(e, "PEER_JOINED")}
-                  checked={notificationProps.subscribedNotifications.PEER_JOINED}
-                />
-                <span>Peer Join</span>
-              </label>
-              <label className={styler('checkBoxLabel')}>
-                <input
-                  type="checkbox"
-                  onChange={(e) => handleNotificationChange(e, "PEER_LEFT")}
-                  checked={notificationProps.subscribedNotifications.PEER_LEFT}
-                />
-                <span>Peer Leave</span>
-              </label>
-              <label className={styler('checkBoxLabel')}>
-                <input
-                  type="checkbox"
-                  onChange={(e) => handleNotificationChange(e, "NEW_MESSAGE")}
-                  checked={notificationProps.subscribedNotifications.NEW_MESSAGE}
-                />
-                <span>New Message</span>
-              </label>
-              <label className={styler('checkBoxLabel')}>
-                <input
-                  type="checkbox"
-                  onChange={(e) => handleNotificationChange(e, "ERROR")}
-                  checked={notificationProps.subscribedNotifications.ERROR}
-                />
-                <span>Errors</span>
-              </label>
-            </div>
-          } />
+            }
+          />
+          <UiSettingsSection
+            title="Recieve notifications for"
+            body={
+              <div className={styler('notificationContainer')}>
+                <label className={styler('checkBoxLabel')}>
+                  <input
+                    type="checkbox"
+                    onChange={e => handleNotificationChange(e, 'PEER_JOINED')}
+                    checked={
+                      notificationProps.subscribedNotifications.PEER_JOINED
+                    }
+                  />
+                  <span>Peer Join</span>
+                </label>
+                <label className={styler('checkBoxLabel')}>
+                  <input
+                    type="checkbox"
+                    onChange={e => handleNotificationChange(e, 'PEER_LEFT')}
+                    checked={
+                      notificationProps.subscribedNotifications.PEER_LEFT
+                    }
+                  />
+                  <span>Peer Leave</span>
+                </label>
+                <label className={styler('checkBoxLabel')}>
+                  <input
+                    type="checkbox"
+                    onChange={e => handleNotificationChange(e, 'NEW_MESSAGE')}
+                    checked={
+                      notificationProps.subscribedNotifications.NEW_MESSAGE
+                    }
+                  />
+                  <span>New Message</span>
+                </label>
+                <label className={styler('checkBoxLabel')}>
+                  <input
+                    type="checkbox"
+                    onChange={e => handleNotificationChange(e, 'ERROR')}
+                    checked={notificationProps.subscribedNotifications.ERROR}
+                  />
+                  <span>Errors</span>
+                </label>
+              </div>
+            }
+          />
         </Fragment>
       }
     />

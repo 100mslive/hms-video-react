@@ -27,8 +27,7 @@ const Template: Story = args => {
           goToDashboardOnClick={() => {
             alert('go to dashboard ');
           }}
-
-          getFeedbackOnClick={(setShowModal) => {
+          getFeedbackOnClick={setShowModal => {
             setShowModal(true);
           }}
         />
@@ -38,7 +37,6 @@ const Template: Story = args => {
 };
 
 const Custom: Story = args => {
-
   return (
     <div className="w-full h-screen bg-black">
       <HMSThemeProvider
@@ -56,8 +54,7 @@ const Custom: Story = args => {
           goToDashboardOnClick={() => {
             alert('go to dashboard ');
           }}
-
-          getFeedbackOnClick={(setShowModal) => {
+          getFeedbackOnClick={setShowModal => {
             setShowModal(true);
           }}
         />
