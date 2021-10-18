@@ -1,0 +1,26 @@
+.feedback {
+    margin: 5% 0 0 10%;
+}
+
+.feedback .form textarea {
+    min-height: 125px;
+    resize    : none;
+}
+
+.feedback .form input,
+.feedback .form textarea {
+    -moz-border-radius   : 3px;
+    -webkit-border-radius: 5px;
+    border-radius        : 5px;
+    -moz-box-shadow      : none;
+    -webkit-box-shadow   : none;
+    box-shadow           : none;
+    background-color     : #3B3B3B;
+    width                : 80%;
+    font-size            : 0.75rem;
+    padding              : 5%;
+}
+
+.form textarea:focus {
+    outline: none;
+}

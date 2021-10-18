@@ -1,107 +1,106 @@
 {
-  "version": "0.3.89",
-  "license": "MIT",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "files": [
-    "dist",
-    "src"
-  ],
-  "engines": {
-    "node": ">=10"
-  },
-  "scripts": {
-    "start": "tsdx watch",
-    "build": "tsdx build",
-    "test": "tsdx test --passWithNoTests",
-    "test:watch": "tsdx test --watch",
-    "lint": "tsdx lint",
-    "lint:fix": "tsdx lint --fix",
-    "prepare": "tsdx build",
-    "size": "size-limit",
-    "analyze": "size-limit --why",
-    "storybook": "start-storybook -s ./public -p  6006",
-    "build-storybook": "build-storybook -s public"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "tsdx lint"
-    }
-  },
-  "prettier": {
-    "printWidth": 80,
-    "semi": true,
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
-  "name": "@100mslive/hms-video-react",
-  "author": "100ms",
-  "module": "dist/hms-video-react.esm.js",
-  "size-limit": [
-    {
-      "path": "dist/hms-video-react.cjs.production.min.js",
-      "limit": "600 KB"
+    "version": "0.3.90",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "files": [
+        "dist",
+        "src"
+    ],
+    "engines": {
+        "node": ">=10"
     },
-    {
-      "path": "dist/hms-video-react.esm.js",
-      "limit": "600 KB"
+    "scripts": {
+        "start": "tsdx watch",
+        "build": "tsdx build",
+        "test": "tsdx test --passWithNoTests",
+        "test:watch": "tsdx test --watch",
+        "lint": "tsdx lint",
+        "lint:fix": "tsdx lint --fix",
+        "prepare": "tsdx build",
+        "size": "size-limit",
+        "analyze": "size-limit --why",
+        "storybook": "start-storybook -s ./public -p  6006",
+        "build-storybook": "build-storybook -s public"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "tsdx lint"
+        }
+    },
+    "prettier": {
+        "printWidth": 80,
+        "semi": true,
+        "singleQuote": true,
+        "trailingComma": "all"
+    },
+    "name": "@100mslive/hms-video-react",
+    "author": "100ms",
+    "module": "dist/hms-video-react.esm.js",
+    "size-limit": [{
+            "path": "dist/hms-video-react.cjs.production.min.js",
+            "limit": "600 KB"
+        },
+        {
+            "path": "dist/hms-video-react.esm.js",
+            "limit": "600 KB"
+        }
+    ],
+    "peerDependencies": {
+        "@100mslive/hms-video": "^0.1.0",
+        "react": ">=16"
+    },
+    "devDependencies": {
+        "@100mslive/hms-video": "^0.1.0",
+        "@babel/core": "^7.13.14",
+        "@rollup/plugin-image": "^2.0.6",
+        "@size-limit/preset-small-lib": "^4.10.2",
+        "@storybook/addon-essentials": "^6.2.3",
+        "@storybook/addon-info": "^5.3.21",
+        "@storybook/addon-links": "^6.2.3",
+        "@storybook/addon-storysource": "^6.2.8",
+        "@storybook/addons": "^6.2.5",
+        "@storybook/react": "^6.2.3",
+        "@storybook/theming": "^6.2.5",
+        "@tailwindcss/postcss7-compat": "^2.1.0",
+        "@types/lodash.groupby": "^4.6.6",
+        "@types/lodash.merge": "^4.6.6",
+        "@types/lodash.reduce": "^4.6.6",
+        "@types/react": "^17.0.3",
+        "@types/react-dom": "^17.0.3",
+        "@types/react-linkify": "^1.0.0",
+        "@types/react-slick": "^0.23.4",
+        "@types/react-window": "^1.8.2",
+        "babel-loader": "^8.2.2",
+        "husky": "^6.0.0",
+        "prettier": "1.19.1",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-is": "^17.0.2",
+        "rollup-plugin-postcss": "^4.0.0",
+        "rollup-plugin-static-files": "^0.2.0",
+        "size-limit": "^4.10.2",
+        "tsdx": "^0.14.1",
+        "tslib": "^2.2.0",
+        "typescript": "4.2.4"
+    },
+    "dependencies": {
+        "@100mslive/hms-video-store": "0.2.66",
+        "@material-ui/core": "^4.11.3",
+        "@twind/aspect-ratio": "^0.1.4",
+        "autoprefixer": "^9.8.6",
+        "clsx": "^1.1.1",
+        "lodash.merge": "^4.6.2",
+        "lodash.reduce": "^4.6.0",
+        "postcss": "8.2.10",
+        "react-click-away-listener": "^2.0.3",
+        "react-intersection-observer": "^8.31.1",
+        "react-markdown": "^6.0.0",
+        "react-resize-detector": "^6.6.5",
+        "remark-gfm": "^1.0.0",
+        "tailwind-percentage-heights-plugin": "^0.1.4",
+        "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
+        "twind": "^0.16.12",
+        "zustand": "3.5.7"
     }
-  ],
-  "peerDependencies": {
-    "@100mslive/hms-video": "^0.1.0",
-    "react": ">=16"
-  },
-  "devDependencies": {
-    "@100mslive/hms-video": "^0.1.0",
-    "@babel/core": "^7.13.14",
-    "@rollup/plugin-image": "^2.0.6",
-    "@size-limit/preset-small-lib": "^4.10.2",
-    "@storybook/addon-essentials": "^6.2.3",
-    "@storybook/addon-info": "^5.3.21",
-    "@storybook/addon-links": "^6.2.3",
-    "@storybook/addon-storysource": "^6.2.8",
-    "@storybook/addons": "^6.2.5",
-    "@storybook/react": "^6.2.3",
-    "@storybook/theming": "^6.2.5",
-    "@tailwindcss/postcss7-compat": "^2.1.0",
-    "@types/lodash.groupby": "^4.6.6",
-    "@types/lodash.merge": "^4.6.6",
-    "@types/lodash.reduce": "^4.6.6",
-    "@types/react": "^17.0.3",
-    "@types/react-dom": "^17.0.3",
-    "@types/react-linkify": "^1.0.0",
-    "@types/react-slick": "^0.23.4",
-    "@types/react-window": "^1.8.2",
-    "babel-loader": "^8.2.2",
-    "husky": "^6.0.0",
-    "prettier": "1.19.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-is": "^17.0.2",
-    "rollup-plugin-postcss": "^4.0.0",
-    "rollup-plugin-static-files": "^0.2.0",
-    "size-limit": "^4.10.2",
-    "tsdx": "^0.14.1",
-    "tslib": "^2.2.0",
-    "typescript": "4.2.4"
-  },
-  "dependencies": {
-    "@100mslive/hms-video-store": "0.2.66",
-    "@material-ui/core": "^4.11.3",
-    "@twind/aspect-ratio": "^0.1.4",
-    "autoprefixer": "^9.8.6",
-    "clsx": "^1.1.1",
-    "lodash.merge": "^4.6.2",
-    "lodash.reduce": "^4.6.0",
-    "postcss": "8.2.10",
-    "react-click-away-listener": "^2.0.3",
-    "react-intersection-observer": "^8.31.1",
-    "react-markdown": "^6.0.0",
-    "react-resize-detector": "^6.6.5",
-    "remark-gfm": "^1.0.0",
-    "tailwind-percentage-heights-plugin": "^0.1.4",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2",
-    "twind": "^0.16.12",
-    "zustand": "3.5.7"
-  }
 }
