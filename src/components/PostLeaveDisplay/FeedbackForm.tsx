@@ -42,7 +42,7 @@ export const FeedbackForm = ({
     'Others could not hear me',
     'Others could not see me',
     'Poor audio quality',
-    'Poor video quality'
+    'Poor video quality',
   ];
 
   const styler = useMemo(
