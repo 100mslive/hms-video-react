@@ -20,10 +20,12 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
+  const [uiViewMode, setuiViewMode] = useState({
+    ACTIVESPEAKERTOGGLE: false,
+  });
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
-    console.log(count);
   };
 
   const onNotificationChange = (notification: {
@@ -36,6 +38,16 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
+  const onLayoutChange = (notification: {
+    type: string;
+    isActive: boolean;
+  }) => {
+    setuiViewMode((prevState: any) => ({
+      ...prevState,
+      [notification.type]: notification.isActive,
+    }));
+  };
+
   const uiSettingsProps = {
     sliderProps: {
       onTileCountChange: onChange,
@@ -44,6 +56,11 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     notificationProps: {
       onNotificationChange,
       subscribedNotifications,
+    },
+
+    layoutProps: {
+      onLayoutChange,
+      uiViewMode,
     },
   };
   return (
@@ -85,10 +102,12 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
+  const [uiViewMode, setuiViewMode] = useState({
+    ACTIVESPEAKERTOGGLE: false,
+  });
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
-    console.log(count);
   };
 
   const onNotificationChange = (notification: {
@@ -101,6 +120,16 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
+  const onLayoutChange = (notification: {
+    type: string;
+    isActive: boolean;
+  }) => {
+    setuiViewMode((prevState: any) => ({
+      ...prevState,
+      [notification.type]: notification.isActive,
+    }));
+  };
+
   const uiSettingsProps = {
     sliderProps: {
       onTileCountChange: onChange,
@@ -109,6 +138,10 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     notificationProps: {
       onNotificationChange,
       subscribedNotifications,
+    },
+    layoutProps: {
+      onLayoutChange,
+      uiViewMode,
     },
   };
   return (

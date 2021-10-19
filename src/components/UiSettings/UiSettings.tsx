@@ -35,6 +35,10 @@ export interface UiSettingsProps {
     }) => void;
     subscribedNotifications: { [key: string]: boolean };
   };
+  layoutProps: {
+    onLayoutChange: (value: { type: string; isActive: boolean }) => void;
+    uiViewMode: { [key: string]: boolean };
+  };
 
   showModal?: boolean;
   onModalClose?: () => void;
@@ -43,6 +47,7 @@ export const UiSettings = ({
   classes,
   sliderProps,
   notificationProps,
+  layoutProps,
   showModal,
   onModalClose = () => {},
 }: UiSettingsProps) => {
@@ -84,6 +89,16 @@ export const UiSettings = ({
     notificationProps.onNotificationChange({
       type,
       isSubscribed: event.target.checked,
+    });
+  };
+
+  const handleLayoutChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    type: string,
+  ) => {
+    layoutProps.onLayoutChange({
+      type,
+      isActive: event.target.checked,
     });
   };
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -167,6 +182,21 @@ export const UiSettings = ({
                     checked={notificationProps.subscribedNotifications.ERROR}
                   />
                   <span>Errors</span>
+                </label>
+              </div>
+            }
+          />
+          <UiSettingsSection
+            title="View Layout"
+            body={
+              <div className={styler('notificationContainer')}>
+                <label className={styler('checkBoxLabel')}>
+                  <input
+                    type="checkbox"
+                    onChange={e => handleLayoutChange(e, 'ACTIVESPEAKERTOGGLE')}
+                    checked={layoutProps.uiViewMode.ACTIVESPEAKERTOGGLE}
+                  />
+                  <span>Active Speaker View</span>
                 </label>
               </div>
             }
