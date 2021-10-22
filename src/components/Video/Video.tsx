@@ -4,7 +4,11 @@ import { useInView } from 'react-intersection-observer';
 import HMSLogger from '../../utils/ui-logger';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
-import { HMSTrackID, selectTrackByID } from '@100mslive/hms-video-store';
+import {
+  HMSTrack,
+  HMSTrackID,
+  selectTrackByID,
+} from '@100mslive/hms-video-store';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 
 export type DisplayShapes = 'circle' | 'rectangle';
@@ -46,6 +50,11 @@ export interface VideoProps {
    * HMS Video Track is for track related metadata
    */
   hmsVideoTrackId?: HMSTrackID;
+
+  /**
+   * @deprecated will be removed in near future
+   */
+  hmsVideoTrack?: HMSTrack;
   /**
    * Audio Track to be displayed.
    */
@@ -104,6 +113,7 @@ const defaultClasses: VideoClasses = {
 export const Video = ({
   videoTrack,
   hmsVideoTrackId,
+  hmsVideoTrack,
   objectFit,
   isLocal,
   displayShape,
@@ -121,7 +131,9 @@ export const Video = ({
     [],
   );
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const hmsVideoTrack = useHMSStore(selectTrackByID(hmsVideoTrackId));
+  const hmsStoreVideoTrack = useHMSStore(
+    selectTrackByID(hmsVideoTrackId || hmsVideoTrack?.id),
+  );
 
   const hmsActions = useHMSActions();
 
@@ -137,33 +149,39 @@ export const Video = ({
 
   useEffect(() => {
     (async () => {
-      if (videoRef.current && hmsVideoTrack) {
-        HMSLogger.d('Video InView', hmsVideoTrack, inView);
+      if (videoRef.current && hmsStoreVideoTrack) {
+        HMSLogger.d('Video InView', hmsStoreVideoTrack, inView);
         if (inView) {
-          if (hmsVideoTrack.enabled) {
+          if (hmsStoreVideoTrack.enabled) {
             // attach when in view and enabled
-            await hmsActions.attachVideo(hmsVideoTrack.id, videoRef.current);
+            await hmsActions.attachVideo(
+              hmsStoreVideoTrack.id,
+              videoRef.current,
+            );
           } else {
             // detach when in view but not enabled
-            await hmsActions.detachVideo(hmsVideoTrack.id, videoRef.current);
+            await hmsActions.detachVideo(
+              hmsStoreVideoTrack.id,
+              videoRef.current,
+            );
           }
         } else {
           // detach when not in view
-          await hmsActions.detachVideo(hmsVideoTrack.id, videoRef.current);
+          await hmsActions.detachVideo(hmsStoreVideoTrack.id, videoRef.current);
         }
       }
     })();
   }, [
     inView,
     videoRef,
-    hmsVideoTrack?.id,
-    hmsVideoTrack?.enabled,
-    hmsVideoTrack?.deviceID,
-    hmsVideoTrack?.plugins,
+    hmsStoreVideoTrack?.id,
+    hmsStoreVideoTrack?.enabled,
+    hmsStoreVideoTrack?.deviceID,
+    hmsStoreVideoTrack?.plugins,
   ]);
 
   useEffect(() => {
-    if (videoRef && videoRef.current && videoTrack && !hmsVideoTrack) {
+    if (videoRef && videoRef.current && videoTrack && !hmsStoreVideoTrack) {
       videoRef.current.srcObject = new MediaStream([videoTrack]);
     }
   }, [videoRef, videoTrack, isLocal]);
@@ -178,7 +196,7 @@ export const Video = ({
         className={`${styler('video')} 
           ${displayShape === 'circle' ? styler('videoCircle') : ''}
           ${
-            isLocal && (hmsVideoTrack?.source === 'regular' || videoTrack)
+            isLocal && (hmsStoreVideoTrack?.source === 'regular' || videoTrack)
               ? styler('videoLocal')
               : ''
           }

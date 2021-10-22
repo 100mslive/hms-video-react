@@ -96,7 +96,6 @@ export interface VideoTileProps
 
   avatarType?: 'initial';
 
-  hmsVideoTrack?: HMSTrack;
   /**
    * Boolean variable to specify if videoTile is small or not
    */
