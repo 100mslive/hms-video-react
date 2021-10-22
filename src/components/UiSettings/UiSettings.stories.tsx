@@ -20,9 +20,7 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
-  const [uiViewMode, setuiViewMode] = useState({
-    ACTIVESPEAKERTOGGLE: false,
-  });
+  const [uiViewMode, setuiViewMode] = useState("grid");
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
@@ -38,14 +36,11 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
-  const onLayoutChange = (notification: {
-    type: string;
-    isActive: boolean;
-  }) => {
-    setuiViewMode((prevState: any) => ({
-      ...prevState,
-      [notification.type]: notification.isActive,
+  const onViewModeChange = (layout: string) => {
+    setuiViewMode((...prevState:any)=>({
+      ...prevState,uiViewMode:layout,
     }));
+    
   };
 
   const uiSettingsProps = {
@@ -59,7 +54,7 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     },
 
     layoutProps: {
-      onLayoutChange,
+      onViewModeChange,
       uiViewMode,
     },
   };
@@ -102,9 +97,7 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
-  const [uiViewMode, setuiViewMode] = useState({
-    ACTIVESPEAKERTOGGLE: false,
-  });
+  const [uiViewMode, setuiViewMode] = useState("grid");
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
@@ -120,14 +113,8 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
-  const onLayoutChange = (notification: {
-    type: string;
-    isActive: boolean;
-  }) => {
-    setuiViewMode((prevState: any) => ({
-      ...prevState,
-      [notification.type]: notification.isActive,
-    }));
+  const onViewModeChange = (layout: string) => {
+    setuiViewMode(layout)
   };
 
   const uiSettingsProps = {
@@ -140,7 +127,7 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
       subscribedNotifications,
     },
     layoutProps: {
-      onLayoutChange,
+      onViewModeChange,
       uiViewMode,
     },
   };

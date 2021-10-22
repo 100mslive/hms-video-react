@@ -1,4 +1,5 @@
 import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core';
+import { stringify } from 'postcss';
 import React, { useMemo, useState, useEffect, Fragment } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -36,8 +37,8 @@ export interface UiSettingsProps {
     subscribedNotifications: { [key: string]: boolean };
   };
   layoutProps: {
-    onLayoutChange: (value: { type: string; isActive: boolean }) => void;
-    uiViewMode: { [key: string]: boolean };
+    onViewModeChange: (value:string) => void;
+    uiViewMode: string;
   };
 
   showModal?: boolean;
@@ -92,14 +93,10 @@ export const UiSettings = ({
     });
   };
 
-  const handleLayoutChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    type: string,
-  ) => {
-    layoutProps.onLayoutChange({
-      type,
-      isActive: event.target.checked,
-    });
+  const handleViewModeChange = (
+    value:string,
+    ) => {
+    layoutProps.onViewModeChange(value);
   };
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -193,8 +190,8 @@ export const UiSettings = ({
                 <label className={styler('checkBoxLabel')}>
                   <input
                     type="checkbox"
-                    onChange={e => handleLayoutChange(e, 'ACTIVESPEAKERTOGGLE')}
-                    checked={layoutProps.uiViewMode.ACTIVESPEAKERTOGGLE}
+                    onChange={e => handleViewModeChange(e.target.checked?"activeSpeaker":"grid")}
+                    checked={layoutProps.uiViewMode==="activeSpeaker"}
                   />
                   <span>Active Speaker View</span>
                 </label>
