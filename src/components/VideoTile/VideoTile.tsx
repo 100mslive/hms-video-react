@@ -95,6 +95,8 @@ export interface VideoTileProps
   classes?: VideoTileClasses;
 
   avatarType?: 'initial';
+
+  hmsVideoTrack?: HMSTrack;
   /**
    * Boolean variable to specify if videoTile is small or not
    */
@@ -140,6 +142,7 @@ const Tile = ({
   videoTrack,
   peer,
   hmsVideoTrackId,
+  hmsVideoTrack,
   showScreen = false,
   audioLevel = 0,
   isAudioMuted,
@@ -426,7 +429,7 @@ const Tile = ({
           >
             {/* TODO this doesn't work in Safari and looks ugly with contain*/}
             <Video
-              hmsVideoTrackId={hmsVideoTrackId}
+              hmsVideoTrackId={hmsVideoTrackId || hmsVideoTrack?.id}
               videoTrack={videoTrack}
               objectFit={objectFit}
               isLocal={peer.isLocal}
