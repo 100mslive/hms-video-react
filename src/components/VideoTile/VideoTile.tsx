@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useRef } from 'react';
 import ClickAwayListener from 'react-click-away-listener';
 import {
   HMSPeer,
@@ -26,15 +26,17 @@ import {
   MicOnIcon,
   RemovePeerIcon,
   VolumeIcon,
+  VideoExitFullScreenIcon,
+  VideoFullScreenIcon,
 } from '../Icons';
 import { Slider } from '../Slider/Slider';
+import { Button } from '../Button';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
-import { getVideoTileLabel } from '../../utils';
+import { getVideoTileLabel, toggleFullScreen } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
-
 export interface AdditionalVideoTileProps {
   children?: React.ReactNode;
   customAvatar?: React.ReactNode;
@@ -123,6 +125,10 @@ export interface VideoTileClasses extends VideoClasses {
    * Classes added to Video container if its a circle
    */
   videoContainerCircle?: string;
+  /**
+   * Classes added to fullscreen control
+   */
+  fullScreenControl?: string;
 }
 
 const defaultClasses: VideoTileClasses = {
@@ -131,6 +137,7 @@ const defaultClasses: VideoTileClasses = {
   avatarContainer:
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
   videoContainerCircle: 'rounded-full',
+  fullScreenControl: 'flex items-end justify-end h-full px-2',
 };
 
 const customClasses: VideoTileClasses = {
@@ -391,6 +398,18 @@ const Tile = ({
   const impliedAspectRatio =
     aspectRatio && objectFit === 'cover' ? aspectRatio : { width, height };
 
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const handleFullScreen = async () => {
+    if (!rootRef.current) {
+      return;
+    }
+    const fs = await toggleFullScreen(rootRef.current, !isFullScreen);
+    if (fs !== undefined) {
+      setIsFullScreen(fs);
+    }
+  };
+
   return (
     <ClickAwayListener onClickAway={() => setShowTrigger(false)}>
       <div
@@ -399,6 +418,7 @@ const Tile = ({
         onMouseLeave={() => {
           setShowTrigger(false);
         }}
+        ref={rootRef}
       >
         {!peer.isLocal && (showMenu || showTrigger) && (
           <ContextMenu
@@ -469,6 +489,30 @@ const Tile = ({
                 showAudioMuteStatus={showAudioMuteStatus}
                 showGradient={displayShape === 'circle'}
               />
+            )}
+            {showScreen && showTrigger && (
+              <div className={styler('fullScreenControl')}>
+                <Button
+                  key="fullscreen"
+                  iconOnly
+                  variant="no-fill"
+                  iconSize="md"
+                  shape="circle"
+                  active={true}
+                  classes={{
+                    root: 'cursor-pointer z-10 mb-2',
+                    rootIconOnlyStandardActive:
+                      'dark:bg-gray-300 dark:text-white text-black dark:hover:bg-gray-300 hover:bg-white',
+                  }}
+                  onClick={handleFullScreen}
+                >
+                  {isFullScreen ? (
+                    <VideoExitFullScreenIcon />
+                  ) : (
+                    <VideoFullScreenIcon />
+                  )}
+                </Button>
+              </div>
             )}
           </div>
         )}
