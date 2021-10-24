@@ -428,7 +428,9 @@ const Tile = ({
           >
             {/* TODO this doesn't work in Safari and looks ugly with contain*/}
             <Video
-              hmsVideoTrackId={hmsVideoTrackId || hmsVideoTrack?.id}
+              hmsVideoTrackId={
+                hmsVideoTrackId || hmsVideoTrack?.id || storeHmsVideoTrack?.id
+              }
               videoTrack={videoTrack}
               objectFit={objectFit}
               isLocal={peer.isLocal}
