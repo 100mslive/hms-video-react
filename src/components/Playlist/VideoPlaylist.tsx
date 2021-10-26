@@ -67,7 +67,7 @@ export const VideoPlaylist = ({
   return (
     <ContextMenu
       classes={{
-        trigger: 'bg-transparent-0 mx-2',
+        trigger: 'bg-transparent-0',
         root: 'static',
         menu: 'mt-0 py-0 w-60',
         menuItem: 'hover:bg-transparent-0 dark:hover:bg-transparent-0',
@@ -81,10 +81,12 @@ export const VideoPlaylist = ({
           shape="rectangle"
           active={active || open}
         >
-          {trigger || <PlaylistIcon onClick={() => setOpen(value => !value)} />}
+          {trigger || (
+            <PlaylistIcon onClick={() => setOpen((value) => !value)} />
+          )}
         </Button>
       }
-      onTrigger={value => {
+      onTrigger={(value) => {
         setOpen(value);
       }}
       menuProps={{
@@ -128,7 +130,7 @@ export const VideoPlaylist = ({
             </Button>
           </div>
           <div className={styler('body')}>
-            {playlist.map(item => {
+            {playlist.map((item) => {
               return (
                 <PlaylistItem
                   key={item.url}

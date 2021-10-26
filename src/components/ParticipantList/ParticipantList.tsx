@@ -31,8 +31,9 @@ import { groupBy } from '../../utils';
 const defaultClasses: ParticipantListClasses = {
   root: 'flex flex-grow border-opacity-0 sm:hidden md:inline-block relative',
   buttonRoot:
-    'text-gray-300 dark:text-gray-500 flex border-opacity-0 focus:outline-none w-52 md:w-60 py-1.5 bg-white',
-  buttonOpen: 'rounded-t-xl dark:bg-gray-100 shadow-1 dark:shadow-none',
+    'text-gray-300 dark:text-gray-500 flex border-opacity-0 focus:outline-none w-31 md:w-31 py-0.5 my-2 bg-white',
+  buttonOpen:
+    'rounded-t-xl rounded-b-xl dark:bg-gray-100 shadow-1 dark:shadow-none',
   buttonClosed: 'rounded-xl dark:bg-black',
   buttonInner:
     'flex flex-grow justify-end md:justify-center px-3 m-0 my-1 tracking-wide self-center',
@@ -40,7 +41,7 @@ const defaultClasses: ParticipantListClasses = {
   carat: 'w-3 h-3',
   // TODO fix shadow border
   menuRoot:
-    'w-52 md:w-60 max-h-116 pb-2 overflow-y-auto rounded-b-xl bg-white shadow-1 dark:shadow-none dark:bg-gray-100 focus:outline-none z-50 absolute',
+    'w-52 md:w-60 max-h-116 pb-2 overflow-y-auto rounded-t-xl rounded-b-xl bg-white shadow-1 dark:shadow-none dark:bg-gray-100 focus:outline-none z-50 absolute right-0',
   menuSection:
     'text-gray-200 dark:text-gray-500 group flex items-center px-3 pt-3 pb-2 text-base',
   menuItem:
@@ -89,7 +90,7 @@ const List = ({
     setForceChange(false);
   };
 
-  const handleInputChange: ChangeEventHandler<any> = event => {
+  const handleInputChange: ChangeEventHandler<any> = (event) => {
     setSelectedRole(event.currentTarget.value);
   };
 
@@ -161,7 +162,7 @@ const List = ({
                   disabled={!localPeerRole?.permissions?.changeRole}
                 >
                   <option value="">Select a new role</option>
-                  {roleNames.map(roleName => (
+                  {roleNames.map((roleName) => (
                     <option value={roleName} key={roleName}>
                       {roleName}
                     </option>
@@ -173,7 +174,7 @@ const List = ({
               <label className={styler('checkBoxLabel')}>
                 <input
                   type="checkbox"
-                  onChange={() => setForceChange(prev => !prev)}
+                  onChange={() => setForceChange((prev) => !prev)}
                   checked={forceChange}
                   disabled={
                     !selectedPeer ||
@@ -206,7 +207,7 @@ const List = ({
               {role === 'undefined' ? 'Unknown' : role}({peers.length})
             </span>
             <div>
-              {peers.map(peer => (
+              {peers.map((peer) => (
                 <ParticipantInList
                   key={peer.id}
                   styler={styler}
@@ -244,7 +245,7 @@ export const ParticipantList = ({
   );
   const peerCount = useHMSStore(selectPeerCount);
   const [listOpen, setListOpen] = useState(false);
-  const handleClick = useCallback(() => setListOpen(open => !open), []);
+  const handleClick = useCallback(() => setListOpen((open) => !open), []);
   const handleClose = useCallback(() => setListOpen(false), []);
 
   useEffect(() => {

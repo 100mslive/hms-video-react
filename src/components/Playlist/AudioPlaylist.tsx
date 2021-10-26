@@ -57,7 +57,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
   return (
     <ContextMenu
       classes={{
-        trigger: 'bg-transparent-0 mx-2',
+        trigger: 'bg-transparent-0',
         root: 'static',
         menu: 'mt-0 py-0 w-60',
         menuItem: 'hover:bg-transparent-0 dark:hover:bg-transparent-0',
@@ -73,11 +73,11 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
         >
           <AudioPlaylistIcon
             key="audioPlaylistTriggerIcon"
-            onClick={() => setOpen(value => !value)}
+            onClick={() => setOpen((value) => !value)}
           />
         </Button>
       }
-      onTrigger={value => {
+      onTrigger={(value) => {
         setOpen(value);
       }}
       menuProps={{
@@ -128,7 +128,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
               collapse ? styler('collapse') : ''
             }`}
           >
-            {playlist.map(item => {
+            {playlist.map((item) => {
               return (
                 <PlaylistItem
                   key={item.url}
@@ -158,7 +158,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                     iconSize="md"
                     shape="rectangle"
                     onClick={() => {
-                      setCollapse(value => !value);
+                      setCollapse((value) => !value);
                     }}
                   >
                     <PlaylistIcon />
