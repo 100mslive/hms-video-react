@@ -73,11 +73,11 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
         >
           <AudioPlaylistIcon
             key="audioPlaylistTriggerIcon"
-            onClick={() => setOpen((value) => !value)}
+            onClick={() => setOpen(value => !value)}
           />
         </Button>
       }
-      onTrigger={(value) => {
+      onTrigger={value => {
         setOpen(value);
       }}
       menuProps={{
@@ -128,7 +128,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
               collapse ? styler('collapse') : ''
             }`}
           >
-            {playlist.map((item) => {
+            {playlist.map(item => {
               return (
                 <PlaylistItem
                   key={item.url}
@@ -158,7 +158,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
                     iconSize="md"
                     shape="rectangle"
                     onClick={() => {
-                      setCollapse((value) => !value);
+                      setCollapse(value => !value);
                     }}
                   >
                     <PlaylistIcon />

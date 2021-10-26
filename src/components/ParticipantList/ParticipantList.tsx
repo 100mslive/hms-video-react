@@ -90,7 +90,7 @@ const List = ({
     setForceChange(false);
   };
 
-  const handleInputChange: ChangeEventHandler<any> = (event) => {
+  const handleInputChange: ChangeEventHandler<any> = event => {
     setSelectedRole(event.currentTarget.value);
   };
 
@@ -162,7 +162,7 @@ const List = ({
                   disabled={!localPeerRole?.permissions?.changeRole}
                 >
                   <option value="">Select a new role</option>
-                  {roleNames.map((roleName) => (
+                  {roleNames.map(roleName => (
                     <option value={roleName} key={roleName}>
                       {roleName}
                     </option>
@@ -174,7 +174,7 @@ const List = ({
               <label className={styler('checkBoxLabel')}>
                 <input
                   type="checkbox"
-                  onChange={() => setForceChange((prev) => !prev)}
+                  onChange={() => setForceChange(prev => !prev)}
                   checked={forceChange}
                   disabled={
                     !selectedPeer ||
@@ -207,7 +207,7 @@ const List = ({
               {role === 'undefined' ? 'Unknown' : role}({peers.length})
             </span>
             <div>
-              {peers.map((peer) => (
+              {peers.map(peer => (
                 <ParticipantInList
                   key={peer.id}
                   styler={styler}
@@ -245,7 +245,7 @@ export const ParticipantList = ({
   );
   const peerCount = useHMSStore(selectPeerCount);
   const [listOpen, setListOpen] = useState(false);
-  const handleClick = useCallback(() => setListOpen((open) => !open), []);
+  const handleClick = useCallback(() => setListOpen(open => !open), []);
   const handleClose = useCallback(() => setListOpen(false), []);
 
   useEffect(() => {

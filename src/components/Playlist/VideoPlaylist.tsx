@@ -81,12 +81,10 @@ export const VideoPlaylist = ({
           shape="rectangle"
           active={active || open}
         >
-          {trigger || (
-            <PlaylistIcon onClick={() => setOpen((value) => !value)} />
-          )}
+          {trigger || <PlaylistIcon onClick={() => setOpen(value => !value)} />}
         </Button>
       }
-      onTrigger={(value) => {
+      onTrigger={value => {
         setOpen(value);
       }}
       menuProps={{
@@ -130,7 +128,7 @@ export const VideoPlaylist = ({
             </Button>
           </div>
           <div className={styler('body')}>
-            {playlist.map((item) => {
+            {playlist.map(item => {
               return (
                 <PlaylistItem
                   key={item.url}
