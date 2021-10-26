@@ -1,5 +1,5 @@
 {
-  "version": "0.3.98",
+  "version": "0.3.99",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -32,7 +32,8 @@
     "printWidth": 80,
     "semi": true,
     "singleQuote": true,
-    "trailingComma": "all"
+    "trailingComma": "all",
+    "arrowParens": "avoid"
   },
   "name": "@100mslive/hms-video-react",
   "author": "100ms",
