@@ -57,7 +57,7 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
   return (
     <ContextMenu
       classes={{
-        trigger: 'bg-transparent-0 mx-2',
+        trigger: 'bg-transparent-0',
         root: 'static',
         menu: 'mt-0 py-0 w-60',
         menuItem: 'hover:bg-transparent-0 dark:hover:bg-transparent-0',

@@ -2,23 +2,23 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@0.2.71":
-  version "0.2.71"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.71.tgz#90de126e735a099da084bfa757418651ad61cec3"
-  integrity sha512-RX/CQmWo9Qm2J+OOL+9KhdPDhu48nD5IXsx1SWS58Hco0LvPap1BklHIKOaqGEDXqOivxU5NbF4JDoYwz6HZEw==
+"@100mslive/hms-video-store@0.2.73":
+  version "0.2.73"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.73.tgz#3c513d832902e4b26f5ecb9f922dd8bbbe6e828a"
+  integrity sha512-2JeZdBbGji469yn/JcnrzzM3jTmsO+wBKUp30b0branrGz4GxsPVMsaEEsGiIgjDXelLwIyHvhWtHD/rixFnEw==
   dependencies:
     immer "^9.0.6"
     reselect "^4.0.0"
     zustand "3.5.7"
 
-"@100mslive/hms-video@^0.1.14":
-  version "0.1.14"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.1.14.tgz#2b1526a1984d61ceb1a0eca440e4fe3dabf419d3"
-  integrity sha512-VyxixLibsV6u5Lklb1u1PJgZWW3tgFKxn4YyH4663VVWGEf+NKyFWz/q3speKO4lt3ayqgsxF4XIjL6lH6qJrQ==
+"@100mslive/hms-video@^0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.1.19.tgz#710fdaded1e1249a275d05152e8ded53e856c4df"
+  integrity sha512-IOb14133sSAxHkjmXfB0diIBzbFEOoHcl7XgjX2WmBqfnXKmQqmL50sBjJdGsvdpZe7f+ub6oeNC8RI3GPc+cg==
   dependencies:
     events "^3.3.0"
     sdp-transform "^2.14.1"
-    ua-parser-js "^0.7.28"
+    ua-parser-js "^1.0.1"
     uuid "^8.3.2"
     webrtc-adapter "^8.0.0"
 
@@ -13763,10 +13763,15 @@ typescript@^3.7.3:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
   integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
 
-ua-parser-js@^0.7.18, ua-parser-js@^0.7.28:
+ua-parser-js@^0.7.18:
   version "0.7.28"
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.28.tgz#8ba04e653f35ce210239c64661685bf9121dec31"
   integrity sha512-6Gurc1n//gjp9eQNXjD9O3M/sMwVtN5S8Lv9bvOYBfKfDNiIIhqiyi01vMBO45u4zkDE420w/e0se7Vs+sIg+g==
+
+ua-parser-js@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-1.0.1.tgz#268408f4d60375e67aa919fa7d117bdc66d5cd77"
+  integrity sha512-ZMu7XRN3M3R+g/YaFQKiVW0J42bzciF0+xAxP5uuO6VibE30MQvRRBctHuh22uS3yAe5jkru/i8QVOwRDJazIw==
 
 unbox-primitive@^1.0.1:
   version "1.0.1"
