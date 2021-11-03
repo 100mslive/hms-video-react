@@ -13,7 +13,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "preinstall": "node -v && tsc -v",
+    "preinstall": "node -v",
     "test": "tsdx test --passWithNoTests",
     "test:watch": "tsdx test --watch",
     "lint": "tsdx lint",
