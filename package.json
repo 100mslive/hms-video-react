@@ -13,9 +13,7 @@
   "scripts": {
     "start": "tsdx watch",
     "build": "tsdx build",
-    "preci": "rm -rf node_modules",
-    "ci": "yarn install --frozen-lockfile",
-    "preinstall": "yarn ci",
+    "preinstall": "echo node -v",
     "test": "tsdx test --passWithNoTests",
     "test:watch": "tsdx test --watch",
     "lint": "tsdx lint",
