@@ -144,9 +144,9 @@ export const ChatBox = ({
     : selectBroadcastMessagesUnreadCount;
 
   const storeMessages = useHMSStore(storeMessageSelector) || [];
-  const unreadCount = useHMSStore(storeUnreadMessageCountSelector) as number;
+  const unreadCount = useHMSStore(storeUnreadMessageCountSelector);
 
-  messages = (messages || storeMessages) as Message[];
+  messages = messages || storeMessages;
 
   const sendMessage = async (message: string) => {
     if (onSend) {
