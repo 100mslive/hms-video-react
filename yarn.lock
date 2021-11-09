@@ -3,9 +3,9 @@
 
 
 "@100mslive/hms-video-store@0.2.76":
-  version "0.2.75-1"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.75-1.tgz#ce31d90cc49509615ee16ad40f647aadec374d1d"
-  integrity sha512-3I/gS+rm2nVn4tPMoWkJUiw8/hNzm610RYkmEWvnvW7LFtyqXN8dXDaoESe9wpNiRC35cKBKsfT5OBfgUKHXKA==
+  version "0.2.76"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.76.tgz#8cce47612e84c1b24daa622403c303325196570b"
+  integrity sha512-Ry6VjeeFQLSYt8U4GQGRsTIhHpm7mC12nLQTGl2SqWArqWM4/i6pslvxC6F9pys+gUrHiwLiDfodh3/hLubkPw==
   dependencies:
     eventemitter2 "^6.4.5"
     immer "^9.0.6"
