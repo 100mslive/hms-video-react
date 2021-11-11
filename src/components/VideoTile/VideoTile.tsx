@@ -13,6 +13,7 @@ import {
   HMSTrack,
   selectTrackByID,
   selectPermissions,
+  selectPeerByID,
 } from '@100mslive/hms-video-store';
 import { HMSException, HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
@@ -28,6 +29,7 @@ import {
   VolumeIcon,
   VideoExitFullScreenIcon,
   VideoFullScreenIcon,
+  HandFilledIcon,
 } from '../Icons';
 import { Slider } from '../Slider/Slider';
 import { Button } from '../Button';
@@ -129,6 +131,10 @@ export interface VideoTileClasses extends VideoClasses {
    * Classes added to fullscreen control
    */
   fullScreenControl?: string;
+  /**
+   * Classes added to raisehand control
+   */
+  raiseHand?: string;
 }
 
 const defaultClasses: VideoTileClasses = {
@@ -138,6 +144,7 @@ const defaultClasses: VideoTileClasses = {
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
   videoContainerCircle: 'rounded-full',
   fullScreenControl: 'flex items-end justify-end h-full px-2',
+  raiseHand: 'absolute top-3 left-3 z-10',
 };
 
 const customClasses: VideoTileClasses = {
@@ -191,6 +198,25 @@ const Tile = ({
   const selectVideoByPeerID = showScreen
     ? selectScreenShareByPeerID
     : selectCameraStreamByPeerID;
+
+  function isJSONString(str: string) {
+    try {
+      JSON.parse(str);
+    } catch (e) {
+      return false;
+    }
+    return true;
+  }
+
+  const customerDescription = useHMSStore(
+    selectPeerByID(peer.id),
+  )?.customerDescription;
+
+  const data =
+    customerDescription && isJSONString(customerDescription)
+      ? JSON.parse(customerDescription)
+      : undefined;
+  const isHandRaised = typeof data === 'object' ? data.raiseHand : false;
 
   const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
@@ -446,6 +472,13 @@ const Tile = ({
                 : { objectFit: 'contain', width: '100%', height: '100%' }
             }
           >
+            {isHandRaised && (
+              <HandFilledIcon
+                className={`${styler('raiseHand')}`}
+                width="40"
+                height="40"
+              />
+            )}
             {/* TODO this doesn't work in Safari and looks ugly with contain*/}
             <Video
               hmsVideoTrackId={
@@ -477,6 +510,13 @@ const Tile = ({
                     : ''
                 }`}
               >
+                {isHandRaised && (
+                  <HandFilledIcon
+                    className={`${styler('raiseHand')}`}
+                    width="40"
+                    height="40"
+                  />
+                )}
                 {tileAvatar}
               </div>
             )}
