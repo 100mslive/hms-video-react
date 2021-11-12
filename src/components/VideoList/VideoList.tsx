@@ -144,8 +144,7 @@ export interface VideoListProps {
 }
 
 const defaultClasses: VideoListClasses = {
-  root:
-    'relative h-full w-full flex flex-wrap justify-center content-evenly justify-items-center bg-white dark:bg-black',
+  root: 'relative h-full w-full flex flex-wrap justify-center content-evenly justify-items-center bg-white dark:bg-black',
   sliderRoot: 'w-full h-full',
   sliderInner: 'w-full h-full',
   listContainer:
@@ -187,9 +186,8 @@ export const VideoList = ({
     [],
   );
   const store = useHMSVanillaStore();
-  const tracksMap: Record<HMSTrackID, HMSTrack> = store.getState(
-    selectTracksMap,
-  );
+  const tracksMap: Record<HMSTrackID, HMSTrack> =
+    store.getState(selectTracksMap);
   const { width = 0, height = 0, ref } = useResizeDetector();
 
   if (aspectRatio === undefined) {

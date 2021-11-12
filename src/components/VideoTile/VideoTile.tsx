@@ -104,6 +104,11 @@ export interface VideoTileProps
    * Boolean variable to specify if videoTile is small or not
    */
   compact?: boolean;
+
+  /**
+   * Boolean variable to specify if hand is raised
+   */
+  isHandRaised?: boolean;
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -172,6 +177,7 @@ const Tile = ({
   avatarType,
   customAvatar,
   contextMenuItems,
+  isHandRaised,
   children,
 }: VideoTileProps) => {
   const { appBuilder, tw, tailwindConfig, toast } = useHMSTheme();
@@ -207,16 +213,6 @@ const Tile = ({
     }
     return true;
   }
-
-  const customerDescription = useHMSStore(
-    selectPeerByID(peer.id),
-  )?.customerDescription;
-
-  const data =
-    customerDescription && isJSONString(customerDescription)
-      ? JSON.parse(customerDescription)
-      : undefined;
-  const isHandRaised = typeof data === 'object' ? data.raiseHand : false;
 
   const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
@@ -472,7 +468,7 @@ const Tile = ({
                 : { objectFit: 'contain', width: '100%', height: '100%' }
             }
           >
-            {isHandRaised && (
+            {isHandRaised && !showScreen && (
               <HandFilledIcon
                 className={`${styler('raiseHand')}`}
                 width="40"
@@ -510,7 +506,7 @@ const Tile = ({
                     : ''
                 }`}
               >
-                {isHandRaised && (
+                {isHandRaised && !showScreen && (
                   <HandFilledIcon
                     className={`${styler('raiseHand')}`}
                     width="40"
