@@ -13,7 +13,6 @@ import {
   HMSTrack,
   selectTrackByID,
   selectPermissions,
-  selectPeerByID,
 } from '@100mslive/hms-video-store';
 import { HMSException, HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
@@ -204,15 +203,6 @@ const Tile = ({
   const selectVideoByPeerID = showScreen
     ? selectScreenShareByPeerID
     : selectCameraStreamByPeerID;
-
-  function isJSONString(str: string) {
-    try {
-      JSON.parse(str);
-    } catch (e) {
-      return false;
-    }
-    return true;
-  }
 
   const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
