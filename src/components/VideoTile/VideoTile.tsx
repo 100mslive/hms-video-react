@@ -28,6 +28,7 @@ import {
   VolumeIcon,
   VideoExitFullScreenIcon,
   VideoFullScreenIcon,
+  HandFilledIcon,
 } from '../Icons';
 import { Slider } from '../Slider/Slider';
 import { Button } from '../Button';
@@ -102,6 +103,11 @@ export interface VideoTileProps
    * Boolean variable to specify if videoTile is small or not
    */
   compact?: boolean;
+
+  /**
+   * Boolean variable to specify if hand is raised
+   */
+  isHandRaised?: boolean;
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -129,6 +135,10 @@ export interface VideoTileClasses extends VideoClasses {
    * Classes added to fullscreen control
    */
   fullScreenControl?: string;
+  /**
+   * Classes added to raisehand control
+   */
+  raiseHand?: string;
 }
 
 const defaultClasses: VideoTileClasses = {
@@ -138,6 +148,7 @@ const defaultClasses: VideoTileClasses = {
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
   videoContainerCircle: 'rounded-full',
   fullScreenControl: 'flex items-end justify-end h-full px-2',
+  raiseHand: 'absolute top-3 left-3 z-10',
 };
 
 const customClasses: VideoTileClasses = {
@@ -165,6 +176,7 @@ const Tile = ({
   avatarType,
   customAvatar,
   contextMenuItems,
+  isHandRaised,
   children,
 }: VideoTileProps) => {
   const { appBuilder, tw, tailwindConfig, toast } = useHMSTheme();
@@ -446,6 +458,13 @@ const Tile = ({
                 : { objectFit: 'contain', width: '100%', height: '100%' }
             }
           >
+            {isHandRaised && !showScreen && (
+              <HandFilledIcon
+                className={`${styler('raiseHand')}`}
+                width="40"
+                height="40"
+              />
+            )}
             {/* TODO this doesn't work in Safari and looks ugly with contain*/}
             <Video
               hmsVideoTrackId={
@@ -477,6 +496,13 @@ const Tile = ({
                     : ''
                 }`}
               >
+                {isHandRaised && !showScreen && (
+                  <HandFilledIcon
+                    className={`${styler('raiseHand')}`}
+                    width="40"
+                    height="40"
+                  />
+                )}
                 {tileAvatar}
               </div>
             )}
