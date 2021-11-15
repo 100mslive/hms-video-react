@@ -168,6 +168,18 @@ export const UiSettings = ({
                   />
                   <span>Errors</span>
                 </label>
+                <label className={styler('checkBoxLabel')}>
+                  <input
+                    type="checkbox"
+                    onChange={e =>
+                      handleNotificationChange(e, 'METADATA_UPDATED')
+                    }
+                    checked={
+                      notificationProps.subscribedNotifications.METADATA_UPDATED
+                    }
+                  />
+                  <span>Hand Raise</span>
+                </label>
               </div>
             }
           />
