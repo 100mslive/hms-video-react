@@ -178,7 +178,7 @@ export const UiSettings = ({
                       notificationProps.subscribedNotifications.METADATA_UPDATED
                     }
                   />
-                  <span>Peer Metadata update(Hand Raise)</span>
+                  <span>Hand Raise</span>
                 </label>
               </div>
             }
