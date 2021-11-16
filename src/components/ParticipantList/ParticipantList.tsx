@@ -13,6 +13,7 @@ import './index.css';
 import ClickAwayListener from 'react-click-away-listener';
 import {
   HMSPeer,
+  HMSTrack,
   selectLocalPeerRole,
   selectPeerCount,
   selectPeers,
@@ -47,7 +48,7 @@ const defaultClasses: ParticipantListClasses = {
   menuItem:
     'text-gray-100 dark:text-white group flex items-center flex-nowrap px-3 py-2 text-base hover:bg-gray-600 dark:hover:bg-gray-200',
   menuText: 'flex-1 flex items-center min-w-0',
-  menuIconContainer: 'w-16 flex flex-shrink-0 justify-self-end justify-end',
+  menuIconContainer: 'w-20 flex flex-shrink-0 justify-self-end justify-end',
   onIcon: '',
   offIcon: '',
   dialogContainer:
@@ -72,8 +73,13 @@ const customClasses: ParticipantListClasses = {
 
 const List = ({
   styler,
+  participantInListProps,
 }: {
   styler: (s: keyof ParticipantListClasses) => string | undefined;
+  participantInListProps?: (
+    peer: HMSPeer,
+    track?: HMSTrack,
+  ) => Record<string, any>;
 }) => {
   const { toast } = useHMSTheme();
   const participantList = useHMSStore(selectPeers);
@@ -207,18 +213,24 @@ const List = ({
               {role === 'undefined' ? 'Unknown' : role}({peers.length})
             </span>
             <div>
-              {peers.map(peer => (
-                <ParticipantInList
-                  key={peer.id}
-                  styler={styler}
-                  name={peer.name}
-                  peerId={peer.id}
-                  onUserSettingsClick={() => {
-                    setSelectedPeer(peer);
-                    setSelectedRole(peer.roleName || '');
-                  }}
-                />
-              ))}
+              {peers.map(peer => {
+                const additionalProps = participantInListProps
+                  ? participantInListProps(peer)
+                  : {};
+                return (
+                  <ParticipantInList
+                    key={peer.id}
+                    styler={styler}
+                    name={peer.name}
+                    peerId={peer.id}
+                    onUserSettingsClick={() => {
+                      setSelectedPeer(peer);
+                      setSelectedRole(peer.roleName || '');
+                    }}
+                    {...additionalProps}
+                  />
+                );
+              })}
             </div>
           </div>
         ))}
@@ -230,6 +242,7 @@ const List = ({
 export const ParticipantList = ({
   classes,
   onToggle,
+  participantInListProps,
 }: ParticipantListProps) => {
   const { tw } = useHMSTheme();
   const styler = useMemo(
@@ -275,7 +288,12 @@ export const ParticipantList = ({
           </div>
         </button>
 
-        {listOpen && <List styler={styler} />}
+        {listOpen && (
+          <List
+            styler={styler}
+            participantInListProps={participantInListProps}
+          />
+        )}
       </div>
     </ClickAwayListener>
   );

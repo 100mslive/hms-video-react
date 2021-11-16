@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Avatar } from '../TwAvatar';
 import { Button } from '../Button';
-import { MicOffIcon, MicOnIcon, SettingsIcon } from '../Icons';
+import { HandIcon, MicOffIcon, MicOnIcon, SettingsIcon } from '../Icons';
 import { Text } from '../Text';
 import { ParticipantListClasses } from './ParticipantProps';
 import { StylerType } from '../../types';
@@ -16,12 +16,14 @@ interface PropsType {
   name: string;
   peerId: string;
   onUserSettingsClick?: () => void;
+  isHandRaised?: boolean;
 }
 
 const Icons = ({
   styler = () => '',
   peerId,
   onUserSettingsClick,
+  isHandRaised,
 }: Omit<PropsType, 'name'>) => {
   const permissions = useHMSStore(selectPermissions);
   const isAudioEnabled = useHMSStore(selectIsPeerAudioEnabled(peerId));
@@ -46,6 +48,13 @@ const Icons = ({
           {isAudioEnabled ? <MicOnIcon /> : <MicOffIcon />}
         </Button>
       </div>
+      {isHandRaised && (
+        <div className={styler('offIcon')}>
+          <Button iconOnly shape="circle" size="sm" variant="no-fill">
+            <HandIcon />
+          </Button>
+        </div>
+      )}
     </Fragment>
   );
 };
@@ -55,6 +64,7 @@ const ListItem = ({
   name,
   peerId,
   onUserSettingsClick,
+  isHandRaised,
 }: PropsType) => {
   return (
     <span className={styler('menuItem')} role="menuitem">
@@ -75,6 +85,7 @@ const ListItem = ({
           styler={styler}
           peerId={peerId}
           onUserSettingsClick={onUserSettingsClick}
+          isHandRaised={isHandRaised}
         />
       </div>
     </span>
