@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { Avatar } from '../TwAvatar';
 import { Button } from '../Button';
-import { HandIcon, MicOffIcon, MicOnIcon, SettingsIcon } from '../Icons';
+import { HandFilledIcon, MicOffIcon, MicOnIcon, SettingsIcon } from '../Icons';
 import { Text } from '../Text';
 import { ParticipantListClasses } from './ParticipantProps';
 import { StylerType } from '../../types';
@@ -50,8 +50,8 @@ const Icons = ({
       </div>
       {isHandRaised && (
         <div className={styler('offIcon')}>
-          <Button iconOnly shape="circle" size="sm" variant="no-fill">
-            <HandIcon />
+          <Button iconOnly shape="circle" size="md" variant="no-fill">
+            <HandFilledIcon />
           </Button>
         </div>
       )}
