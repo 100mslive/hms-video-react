@@ -49,9 +49,9 @@ const Icons = ({
         </Button>
       </div>
       {isHandRaised && (
-        <div className={styler('offIcon')}>
+        <div>
           <Button iconOnly shape="circle" size="md" variant="no-fill">
-            <HandFilledIcon />
+            <HandFilledIcon width="24" height="24" />
           </Button>
         </div>
       )}
