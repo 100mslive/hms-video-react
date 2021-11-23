@@ -50,7 +50,7 @@
     }
   ],
   "peerDependencies": {
-    "@100mslive/hms-video": "^0.1.32",
+    "@100mslive/hms-video": "^0.1.33-alpha.3",
     "react": ">=16"
   },
   "devDependencies": {
