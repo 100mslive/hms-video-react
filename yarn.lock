@@ -24,17 +24,6 @@
     uuid "^8.3.2"
     webrtc-adapter "^8.0.0"
 
-"@100mslive/hms-video@^0.1.35-alpha.6":
-  version "0.1.36"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.1.36.tgz#1d58a83829c7a0d3104564358078667a03ace25e"
-  integrity sha512-EbI/NKIqhejkmTVShiDRMa39+/I+vrdUakDH7YvfkOpSMxnBZbrNd++s/4U4TJyoNsbnerpGDxuNC6w1La6kkA==
-  dependencies:
-    eventemitter2 "^6.4.5"
-    sdp-transform "^2.14.1"
-    ua-parser-js "^1.0.1"
-    uuid "^8.3.2"
-    webrtc-adapter "^8.0.0"
-
 "@babel/code-frame@7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.10.4.tgz#168da1a36e90da68ae8d49c0f1b48c7c6249213a"
