@@ -1,5 +1,5 @@
 {
-  "version": "0.3.112",
+  "version": "0.3.111",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -50,11 +50,9 @@
     }
   ],
   "peerDependencies": {
-    "@100mslive/hms-video": "^0.1.35-alpha.6",
     "react": ">=16"
   },
   "devDependencies": {
-    "@100mslive/hms-video": "^0.1.35-alpha.6",
     "@babel/core": "^7.13.14",
     "@rollup/plugin-image": "^2.0.6",
     "@size-limit/preset-small-lib": "^4.10.2",
