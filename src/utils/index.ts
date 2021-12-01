@@ -602,9 +602,7 @@ export function combineClasses(
     : defaultClasses;
 }
 export const generateRandomString = () =>
-  Math.random()
-    .toString(36)
-    .substring(7);
+  Math.random().toString(36).substring(7);
 
 export const mergeRefs = (
   ...refs: (React.MutableRefObject<any> | ((node?: Element | null) => void))[]
@@ -639,6 +637,8 @@ export function isMobileDevice() {
   const device = parsedUserAgent.getDevice();
   return device && device.type === 'mobile';
 }
+
+export const isSafari = () => parsedUserAgent.getBrowser().name === 'Safari';
 
 export const toggleFullScreen = async (
   element: HTMLDivElement,
