@@ -15,12 +15,12 @@ import { VideoTile, VideoTileProps } from '../VideoTile';
 import { VideoTileClasses } from '../VideoTile/VideoTile';
 import { PreviewControls } from './Controls';
 import { Input } from '../Input';
+import { Text } from '../Text';
+import { ButtonClasses } from '../Button/Button';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { isBrowser } from '../../utils/is-browser';
-import { ButtonClasses } from '../Button/Button';
-import { isMobileDevice, getBrowser } from '../../utils';
-import { Text } from '../Text';
+import { isMobileDevice, isSafari } from '../../utils';
 
 interface JoinInfo {
   audioMuted?: boolean;
@@ -166,7 +166,7 @@ export const Preview = ({
             />
           </div>
           {/*Warning for safari audio output change*/}
-          {isMobileDevice() && getBrowser().name === 'Safari' && (
+          {isMobileDevice() && isSafari() && (
             <div className="mb-3">
               <DotIcon
                 className="fill-current text-yellow-400 inline mr-2"
@@ -174,7 +174,7 @@ export const Preview = ({
                 height="8"
               />
               <Text size="sm" classes={{ root: 'text-gray-400 inline' }}>
-                Warning: The audio output is redirected to earpiece
+                Warning: The audio output can be redirected to earpiece
               </Text>
             </div>
           )}
