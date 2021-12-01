@@ -37,4 +37,4 @@ export {
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';
 export * from '@100mslive/hms-video-store';
 export { parsedUserAgent } from '@100mslive/hms-video';
-export { isMobileDevice } from './utils';
+export { isMobileDevice, getBrowser } from './utils';
