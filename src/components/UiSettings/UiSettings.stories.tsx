@@ -20,10 +20,10 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
+  const [uiViewMode, setuiViewMode] = useState("grid");
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
-    console.log(count);
   };
 
   const onNotificationChange = (notification: {
@@ -36,6 +36,13 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
+  const onViewModeChange = (layout: string) => {
+    setuiViewMode((...prevState:any)=>({
+      ...prevState,uiViewMode:layout,
+    }));
+    
+  };
+
   const uiSettingsProps = {
     sliderProps: {
       onTileCountChange: onChange,
@@ -44,6 +51,11 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     notificationProps: {
       onNotificationChange,
       subscribedNotifications,
+    },
+
+    layoutProps: {
+      onViewModeChange,
+      uiViewMode,
     },
   };
   return (
@@ -85,10 +97,10 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
+  const [uiViewMode, setuiViewMode] = useState("grid");
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
-    console.log(count);
   };
 
   const onNotificationChange = (notification: {
@@ -101,6 +113,10 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
+  const onViewModeChange = (layout: string) => {
+    setuiViewMode(layout)
+  };
+
   const uiSettingsProps = {
     sliderProps: {
       onTileCountChange: onChange,
@@ -109,6 +125,10 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     notificationProps: {
       onNotificationChange,
       subscribedNotifications,
+    },
+    layoutProps: {
+      onViewModeChange,
+      uiViewMode,
     },
   };
   return (
