@@ -173,7 +173,7 @@ export const Preview = ({
                 width="8"
                 height="8"
               />
-              <Text size="sm" classes={{ root: 'text-gray-400 inline' }}>
+              <Text size="sm" classes={{ root: 'inline' }}>
                 Warning: The audio output can be redirected to earpiece
               </Text>
             </div>
