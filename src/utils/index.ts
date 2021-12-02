@@ -638,7 +638,8 @@ export function isMobileDevice() {
   return device && device.type === 'mobile';
 }
 
-export const isSafari = () => parsedUserAgent.getBrowser().name === 'Safari';
+export const isSafari = () =>
+  !!parsedUserAgent.getBrowser().name?.toLowerCase().includes('safari');
 
 export const toggleFullScreen = async (
   element: HTMLDivElement,
