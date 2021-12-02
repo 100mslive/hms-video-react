@@ -37,8 +37,8 @@ export interface UiSettingsProps {
     subscribedNotifications: { [key: string]: boolean };
   };
   layoutProps: {
-    onViewModeChange: (value:string) => void;
-    uiViewMode: string;
+    onViewModeChange: (value: string) => void;
+    uiViewMode: 'activeSpeaker' | 'grid';
   };
 
   showModal?: boolean;
@@ -93,9 +93,7 @@ export const UiSettings = ({
     });
   };
 
-  const handleViewModeChange = (
-    value:string,
-    ) => {
+  const handleViewModeChange = (value: string) => {
     layoutProps.onViewModeChange(value);
   };
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -202,8 +200,12 @@ export const UiSettings = ({
                 <label className={styler('checkBoxLabel')}>
                   <input
                     type="checkbox"
-                    onChange={e => handleViewModeChange(e.target.checked?"activeSpeaker":"grid")}
-                    checked={layoutProps.uiViewMode==="activeSpeaker"}
+                    onChange={e =>
+                      handleViewModeChange(
+                        e.target.checked ? 'activeSpeaker' : 'grid',
+                      )
+                    }
+                    checked={layoutProps.uiViewMode === 'activeSpeaker'}
                   />
                   <span>Active Speaker View</span>
                 </label>
