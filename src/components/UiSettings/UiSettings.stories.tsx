@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { UiSettings, UiSettingsProps } from './UiSettings';
+import { UiSettings, UiSettingsProps, uiViewModeTypes } from './UiSettings';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 import { Button } from '../Button';
 
@@ -20,7 +20,7 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
-  const [uiViewMode, setuiViewMode] = useState("grid");
+  const [uiViewMode, setuiViewMode] = useState<uiViewModeTypes>('grid');
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
@@ -36,11 +36,8 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
-  const onViewModeChange = (layout: string) => {
-    setuiViewMode((...prevState:any)=>({
-      ...prevState,uiViewMode:layout,
-    }));
-    
+  const onViewModeChange = (layout: uiViewModeTypes) => {
+    setuiViewMode(layout);
   };
 
   const uiSettingsProps = {
@@ -52,7 +49,6 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
       onNotificationChange,
       subscribedNotifications,
     },
-
     layoutProps: {
       onViewModeChange,
       uiViewMode,
@@ -97,7 +93,7 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
-  const [uiViewMode, setuiViewMode] = useState("grid");
+  const [uiViewMode, setuiViewMode] = useState<uiViewModeTypes>('grid');
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
@@ -113,8 +109,8 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
-  const onViewModeChange = (layout: string) => {
-    setuiViewMode(layout)
+  const onViewModeChange = (layout: 'activeSpeaker' | 'grid') => {
+    setuiViewMode(layout);
   };
 
   const uiSettingsProps = {
