@@ -11,7 +11,7 @@ export interface UiSettingsSectionClasses {
 const defaultClasses = {
   sectionContainer: 'w-full',
   title:
-    'flex flex-1 lg:text-2xl sm:text-xl self-center items-center text-gray-100 dark:text-white font-medium',
+    'flex flex-1 lg:text-2xl sm:text-xl self-center items-center text-gray-100 dark:text-white font-medium py-2',
   body: 'w-full',
 };
 
