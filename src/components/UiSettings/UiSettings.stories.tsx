@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Meta, Story } from '@storybook/react';
-import { UiSettings, UiSettingsProps } from './UiSettings';
+import { UiSettings, UiSettingsProps, uiViewModeTypes } from './UiSettings';
 import { HMSThemeProvider } from '../../hooks/HMSThemeProvider';
 import { Button } from '../Button';
 
@@ -20,10 +20,10 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
+  const [uiViewMode, setuiViewMode] = useState<uiViewModeTypes>('grid');
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
-    console.log(count);
   };
 
   const onNotificationChange = (notification: {
@@ -36,6 +36,10 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
+  const onViewModeChange = (layout: uiViewModeTypes) => {
+    setuiViewMode(layout);
+  };
+
   const uiSettingsProps = {
     sliderProps: {
       onTileCountChange: onChange,
@@ -44,6 +48,10 @@ const Template: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     notificationProps: {
       onNotificationChange,
       subscribedNotifications,
+    },
+    layoutProps: {
+      onViewModeChange,
+      uiViewMode,
     },
   };
   return (
@@ -85,10 +93,10 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     NEW_MESSAGE: true,
     ERROR: true,
   });
+  const [uiViewMode, setuiViewMode] = useState<uiViewModeTypes>('grid');
 
   const onChange = (count: number) => {
     setMaxTileCount(count);
-    console.log(count);
   };
 
   const onNotificationChange = (notification: {
@@ -101,6 +109,10 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     }));
   };
 
+  const onViewModeChange = (layout: 'activeSpeaker' | 'grid') => {
+    setuiViewMode(layout);
+  };
+
   const uiSettingsProps = {
     sliderProps: {
       onTileCountChange: onChange,
@@ -109,6 +121,10 @@ const LightThemeTemplate: Story<UiSettingsProps> = (args: UiSettingsProps) => {
     notificationProps: {
       onNotificationChange,
       subscribedNotifications,
+    },
+    layoutProps: {
+      onViewModeChange,
+      uiViewMode,
     },
   };
   return (

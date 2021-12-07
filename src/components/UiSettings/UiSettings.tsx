@@ -1,4 +1,5 @@
 import { Checkbox, FormControlLabel, FormGroup } from '@material-ui/core';
+import { stringify } from 'postcss';
 import React, { useMemo, useState, useEffect, Fragment } from 'react';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
@@ -22,6 +23,8 @@ const defaultClasses = {
   checkBoxLabel: 'text-lg space-x-1.5 flex items-center',
 };
 
+export type uiViewModeTypes = 'activeSpeaker' | 'grid';
+
 export interface UiSettingsProps {
   classes?: UiSettingsClasses;
   sliderProps: {
@@ -35,6 +38,10 @@ export interface UiSettingsProps {
     }) => void;
     subscribedNotifications: { [key: string]: boolean };
   };
+  layoutProps: {
+    onViewModeChange: (value: uiViewModeTypes) => void;
+    uiViewMode: uiViewModeTypes;
+  };
 
   showModal?: boolean;
   onModalClose?: () => void;
@@ -43,6 +50,7 @@ export const UiSettings = ({
   classes,
   sliderProps,
   notificationProps,
+  layoutProps,
   showModal,
   onModalClose = () => {},
 }: UiSettingsProps) => {
@@ -85,6 +93,10 @@ export const UiSettings = ({
       type,
       isSubscribed: event.target.checked,
     });
+  };
+
+  const handleViewModeChange = (value: uiViewModeTypes) => {
+    layoutProps.onViewModeChange(value);
   };
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -179,6 +191,25 @@ export const UiSettings = ({
                     }
                   />
                   <span>Hand Raise</span>
+                </label>
+              </div>
+            }
+          />
+          <UiSettingsSection
+            title="View Layout"
+            body={
+              <div className={styler('notificationContainer')}>
+                <label className={styler('checkBoxLabel')}>
+                  <input
+                    type="checkbox"
+                    onChange={e =>
+                      handleViewModeChange(
+                        e.target.checked ? 'activeSpeaker' : 'grid',
+                      )
+                    }
+                    checked={layoutProps.uiViewMode === 'activeSpeaker'}
+                  />
+                  <span>Active Speaker View</span>
                 </label>
               </div>
             }
