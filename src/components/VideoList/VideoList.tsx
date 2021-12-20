@@ -134,6 +134,11 @@ export interface VideoListProps {
    */
   avatarType?: 'initial';
   compact?: boolean;
+  /**
+   * Pass this as true to show a tile for all peers in peer list.
+   * By default only those peers with either audio/video/screen will be shown
+   * Note: Setting this to true will show non-publishing roles as tiles.
+   */
   showTileForAllPeers?: boolean;
   /**
    * Props to pass on to each peer's Video Tile
