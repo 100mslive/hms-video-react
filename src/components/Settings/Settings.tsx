@@ -141,7 +141,9 @@ export const Settings = ({
   const videoInput = devices['videoInput'] || [];
   const audioInput = devices['audioInput'] || [];
   const audioOutput = devices['audioOutput'] || [];
-  const showSettings = [showVideo, showAudio, isSubscribing].some(val => !!val);
+  const showSettings = [showVideo, showAudio, audioOutput.length > 0].some(
+    val => !!val,
+  );
   if (!showSettings) {
     return null;
   }
@@ -250,7 +252,7 @@ export const Settings = ({
                   </div>
                 )}
                 {/** Enabled this when the output is handled properly */}
-                {isSubscribing && audioOutput.length > 0 && (
+                {audioOutput.length > 0 && (
                   <>
                     <div className={`${styler('formInner')}`}>
                       <div className={`${styler('selectLabel')}`}>
