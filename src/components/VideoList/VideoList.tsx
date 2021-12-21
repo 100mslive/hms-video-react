@@ -135,6 +135,12 @@ export interface VideoListProps {
   avatarType?: 'initial';
   compact?: boolean;
   /**
+   * Pass this as true to show a tile for all peers in peer list.
+   * By default only those peers with either audio/video/screen will be shown
+   * Note: Setting this to true will show non-publishing roles as tiles.
+   */
+  showTileForAllPeers?: boolean;
+  /**
    * Props to pass on to each peer's Video Tile
    */
   videoTileProps?: (
@@ -144,7 +150,8 @@ export interface VideoListProps {
 }
 
 const defaultClasses: VideoListClasses = {
-  root: 'relative h-full w-full flex flex-wrap justify-center content-evenly justify-items-center bg-white dark:bg-black',
+  root:
+    'relative h-full w-full flex flex-wrap justify-center content-evenly justify-items-center bg-white dark:bg-black',
   sliderRoot: 'w-full h-full',
   sliderInner: 'w-full h-full',
   listContainer:
@@ -172,6 +179,7 @@ export const VideoList = ({
   allowRemoteMute,
   avatarType,
   compact = false,
+  showTileForAllPeers = false,
   videoTileProps,
 }: VideoListProps) => {
   const { tw, appBuilder, tailwindConfig } = useHMSTheme();
@@ -186,8 +194,9 @@ export const VideoList = ({
     [],
   );
   const store = useHMSVanillaStore();
-  const tracksMap: Record<HMSTrackID, HMSTrack> =
-    store.getState(selectTracksMap);
+  const tracksMap: Record<HMSTrackID, HMSTrack> = store.getState(
+    selectTracksMap,
+  );
   const { width = 0, height = 0, ref } = useResizeDetector();
 
   if (aspectRatio === undefined) {
@@ -200,6 +209,7 @@ export const VideoList = ({
     peers,
     tracksMap,
     showScreenFn,
+    showTileForAllPeers,
   );
 
   const finalAspectRatio = useMemo(() => {
