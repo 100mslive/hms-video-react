@@ -36,10 +36,6 @@ export interface HMSRoomProviderProps {
  */
 const HMSContext = createContext<HMSContextProviderProps | null>(null);
 
-const errFn = () => {
-  throw new Error('modifying store is not allowed');
-};
-
 let providerProps: HMSContextProviderProps;
 export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
   children,
@@ -50,6 +46,11 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
   isHMSStatsOn = false,
 }) => {
   if (!providerProps) {
+    // adding a dummy function for setstate and destroy because zustan'd create expects them
+    // to be present but we don't expose them from the store.
+    const errFn = () => {
+      throw new Error('modifying store is not allowed');
+    };
     if (actions && store) {
       providerProps = {
         actions: actions,
@@ -58,23 +59,30 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       if (notifications) {
         providerProps.notifications = notifications;
       }
+      if (webrtcInternals) {
+        const hmsInternals = webrtcInternals;
+        providerProps.statsStore = create<HMSInternalsStore>({
+          getState: hmsInternals.getState,
+          subscribe: hmsInternals.subscribe,
+          setState: errFn,
+          destroy: errFn,
+        });
+        providerProps.hmsInternals = hmsInternals;
+      }
     } else {
       const hmsReactiveStore = new HMSReactiveStore();
       providerProps = {
         actions: hmsReactiveStore.getHMSActions(),
         store: create<HMSStore>({
           ...hmsReactiveStore.getStore(),
-          // adding a dummy function for setstate and destroy because zustan'd create expects them
-          // to be present but we don't expose them from the store.
           setState: errFn,
           destroy: errFn,
         }), // convert vanilla store in react hook
         notifications: hmsReactiveStore.getNotifications(),
       };
 
-      if (isHMSStatsOn || webrtcInternals) {
-        const hmsInternals: HMSWebrtcInternals =
-          webrtcInternals || hmsReactiveStore.getWebrtcInternals();
+      if (isHMSStatsOn) {
+        const hmsInternals = hmsReactiveStore.getWebrtcInternals();
         providerProps.statsStore = create<HMSInternalsStore>({
           getState: hmsInternals.getState,
           subscribe: hmsInternals.subscribe,
