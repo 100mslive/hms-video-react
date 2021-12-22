@@ -5,23 +5,28 @@ import {
   HMSActions,
   HMSNotification,
   HMSNotifications,
-  HMSStoreWrapper,
+  HMSInternalsStore,
+  IStoreReadOnly,
+  selectRoomState,
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import {
   HMSContextProviderProps,
   makeHMSStoreHook,
   hooksErrorMessage,
+  makeHMSStatsStoreHook,
 } from './storeHook';
 import { isBrowser } from '../utils/is-browser';
 
-export interface IHMSReactStore extends HMSStoreWrapper {
-  <U>(selector: StateSelector<HMSStore, U>, equalityFn?: EqualityChecker<U>): U;
+export interface IHMSReactStore<S extends HMSStore | HMSInternalsStore>
+  extends IStoreReadOnly<S> {
+  <U>(selector: StateSelector<S, U>, equalityFn?: EqualityChecker<U>): U;
 }
 export interface HMSRoomProviderProps {
   actions?: HMSActions;
-  store?: IHMSReactStore;
+  store?: IHMSReactStore<HMSStore>;
   notifications?: HMSNotifications;
+  isHMSStatsOn?: boolean;
 }
 
 /**
@@ -30,12 +35,17 @@ export interface HMSRoomProviderProps {
  */
 const HMSContext = createContext<HMSContextProviderProps | null>(null);
 
+const errFn = () => {
+  throw new Error('modifying store is not allowed');
+};
+
 let providerProps: HMSContextProviderProps;
 export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
   children,
   actions,
   store,
   notifications,
+  isHMSStatsOn = false,
 }) => {
   if (!providerProps) {
     if (actions && store) {
@@ -48,22 +58,31 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       }
     } else {
       const hmsReactiveStore = new HMSReactiveStore();
-      // adding a dummy function for setstate and destroy because zustan'd create expects them
-      // to be present but we don't expose them from the store.
-      const errFn = () => {
-        throw new Error('modifying store is not allowed');
-      };
       providerProps = {
         actions: hmsReactiveStore.getHMSActions(),
         store: create<HMSStore>({
           ...hmsReactiveStore.getStore(),
+          // adding a dummy function for setstate and destroy because zustan'd create expects them
+          // to be present but we don't expose them from the store.
           setState: errFn,
           destroy: errFn,
         }), // convert vanilla store in react hook
         notifications: hmsReactiveStore.getNotifications(),
       };
+
+      if (isHMSStatsOn) {
+        const hmsInternals = hmsReactiveStore.getWebrtcInternals();
+        providerProps.statsStore = create<HMSInternalsStore>({
+          getState: hmsInternals.getState,
+          subscribe: hmsInternals.subscribe,
+          setState: errFn,
+          destroy: errFn,
+        });
+        providerProps.hmsInternals = hmsInternals;
+      }
     }
   }
+
   useEffect(() => {
     if (isBrowser) {
       window.onunload = () => {
@@ -84,6 +103,8 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
  * The hook can only be used in a component if HMSRoomProvider is present in its ancestors.
  */
 export const useHMSStore = makeHMSStoreHook(HMSContext);
+
+export const useHMSStatsStore = makeHMSStatsStoreHook(HMSContext);
 
 /**
  * `useHMSVanillaStore` is a read only hook which returns the vanilla HMSStore.
@@ -141,4 +162,31 @@ export const useHMSNotifications = () => {
   }, [HMSContextConsumer.notifications]);
 
   return notification;
+};
+
+export const useHMSRTCPeerConnections = () => {
+  const HMSContextConsumer = useContext(HMSContext);
+  if (!HMSContextConsumer) {
+    throw new Error(hooksErrorMessage);
+  }
+
+  const useStore = HMSContextConsumer.store;
+  const roomState = useStore(selectRoomState);
+  const [peerConnections, setPeerConnections] = useState<{
+    publish?: RTCPeerConnection;
+    subscribe?: RTCPeerConnection;
+  }>({});
+
+  useEffect(() => {
+    if (roomState === 'Connected') {
+      (async () => {
+        const publish = await HMSContextConsumer.hmsInternals?.getPublishPeerConnection();
+        const subscribe = await HMSContextConsumer.hmsInternals?.getSubscribePeerConnection();
+
+        setPeerConnections({ publish, subscribe });
+      })();
+    }
+  }, [roomState]);
+
+  return peerConnections;
 };
