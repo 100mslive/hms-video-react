@@ -19,7 +19,6 @@ export interface HMSContextProviderProps {
   store: IHMSReactStore<HMSStore>; // readonly store, don't mutate this
   notifications?: HMSNotifications;
   statsStore?: IHMSReactStore<HMSInternalsStore>;
-  hmsInternals?: HMSWebrtcInternals;
 }
 
 export function makeHMSStoreHook(
