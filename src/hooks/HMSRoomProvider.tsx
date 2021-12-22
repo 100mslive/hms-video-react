@@ -8,6 +8,7 @@ import {
   HMSInternalsStore,
   IStoreReadOnly,
   selectRoomState,
+  HMSWebrtcInternals,
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import {
@@ -26,6 +27,7 @@ export interface HMSRoomProviderProps {
   actions?: HMSActions;
   store?: IHMSReactStore<HMSStore>;
   notifications?: HMSNotifications;
+  webrtcInternals?: HMSWebrtcInternals;
   isHMSStatsOn?: boolean;
 }
 
@@ -45,6 +47,7 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
   actions,
   store,
   notifications,
+  webrtcInternals,
   isHMSStatsOn = false,
 }) => {
   if (!providerProps) {
@@ -70,8 +73,9 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
         notifications: hmsReactiveStore.getNotifications(),
       };
 
-      if (isHMSStatsOn) {
-        const hmsInternals = hmsReactiveStore.getWebrtcInternals();
+      if (isHMSStatsOn || webrtcInternals) {
+        const hmsInternals: HMSWebrtcInternals =
+          webrtcInternals || hmsReactiveStore.getWebrtcInternals();
         providerProps.statsStore = create<HMSInternalsStore>({
           getState: hmsInternals.getState,
           subscribe: hmsInternals.subscribe,
