@@ -7,7 +7,6 @@ import {
   HMSNotifications,
   HMSInternalsStore,
   IStoreReadOnly,
-  selectRoomState,
   HMSWebrtcInternals,
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
@@ -166,31 +165,4 @@ export const useHMSNotifications = () => {
   }, [HMSContextConsumer.notifications]);
 
   return notification;
-};
-
-export const useHMSRTCPeerConnections = () => {
-  const HMSContextConsumer = useContext(HMSContext);
-  if (!HMSContextConsumer) {
-    throw new Error(hooksErrorMessage);
-  }
-
-  const useStore = HMSContextConsumer.store;
-  const roomState = useStore(selectRoomState);
-  const [peerConnections, setPeerConnections] = useState<{
-    publish?: RTCPeerConnection;
-    subscribe?: RTCPeerConnection;
-  }>({});
-
-  useEffect(() => {
-    if (roomState === 'Connected') {
-      (async () => {
-        const publish = await HMSContextConsumer.hmsInternals?.getPublishPeerConnection();
-        const subscribe = await HMSContextConsumer.hmsInternals?.getSubscribePeerConnection();
-
-        setPeerConnections({ publish, subscribe });
-      })();
-    }
-  }, [roomState]);
-
-  return peerConnections;
 };

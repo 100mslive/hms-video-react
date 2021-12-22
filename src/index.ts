@@ -34,7 +34,6 @@ export {
   useHMSNotifications,
   useHMSVanillaStore,
   useHMSStatsStore,
-  useHMSRTCPeerConnections,
 } from './hooks/HMSRoomProvider';
 export { HMSThemeProvider, useHMSTheme } from './hooks/HMSThemeProvider';
 export * from '@100mslive/hms-video-store';
