@@ -6,6 +6,8 @@ import { hmsUiClassParserGenerator } from '../../utils/classes';
 import { MessageModal } from '../MessageModal';
 import { Slider } from '../Slider/Slider';
 import { UiSettingsSection } from './UiSettingsSection';
+import { useHMSStore } from '../../hooks/HMSRoomProvider';
+import { selectIsAllowedToSubscribe } from '@100mslive/hms-video-store';
 
 export interface UiSettingsClasses {
   sliderContainer?: string;
@@ -66,6 +68,7 @@ export const UiSettings = ({
     [],
   );
   const [open, setOpen] = useState(false);
+  const isSubscribing = useHMSStore(selectIsAllowedToSubscribe);
 
   useEffect(() => {
     if (showModal === undefined) {
@@ -109,35 +112,37 @@ export const UiSettings = ({
       body={
         <Fragment>
           <div className={styler('divider')}></div>
-          <UiSettingsSection
-            title="Participants In View"
-            body={
-              <div className={styler('sliderContainer')}>
-                <div className={styler('slider')}>
-                  <Slider
-                    name="maxTileCount"
-                    value={sliderProps.maxTileCount}
-                    //@ts-ignore
-                    onChange={handleSliderChange}
-                    aria-labelledby="continuous-slider"
-                    valueLabelDisplay="auto"
-                    min={1}
-                    max={49}
-                    step={null}
-                    marks={[
-                      { value: 1 },
-                      { value: 4 },
-                      { value: 9 },
-                      { value: 16 },
-                      { value: 25 },
-                      { value: 36 },
-                      { value: 49 },
-                    ]}
-                  />
+          {isSubscribing && (
+            <UiSettingsSection
+              title="Participants In View"
+              body={
+                <div className={styler('sliderContainer')}>
+                  <div className={styler('slider')}>
+                    <Slider
+                      name="maxTileCount"
+                      value={sliderProps.maxTileCount}
+                      //@ts-ignore
+                      onChange={handleSliderChange}
+                      aria-labelledby="continuous-slider"
+                      valueLabelDisplay="auto"
+                      min={1}
+                      max={49}
+                      step={null}
+                      marks={[
+                        { value: 1 },
+                        { value: 4 },
+                        { value: 9 },
+                        { value: 16 },
+                        { value: 25 },
+                        { value: 36 },
+                        { value: 49 },
+                      ]}
+                    />
+                  </div>
                 </div>
-              </div>
-            }
-          />
+              }
+            />
+          )}
           <UiSettingsSection
             title="Recieve notifications for"
             body={
@@ -195,25 +200,27 @@ export const UiSettings = ({
               </div>
             }
           />
-          <UiSettingsSection
-            title="View Layout"
-            body={
-              <div className={styler('notificationContainer')}>
-                <label className={styler('checkBoxLabel')}>
-                  <input
-                    type="checkbox"
-                    onChange={e =>
-                      handleViewModeChange(
-                        e.target.checked ? 'activeSpeaker' : 'grid',
-                      )
-                    }
-                    checked={layoutProps.uiViewMode === 'activeSpeaker'}
-                  />
-                  <span>Active Speaker View</span>
-                </label>
-              </div>
-            }
-          />
+          {isSubscribing && (
+            <UiSettingsSection
+              title="View Layout"
+              body={
+                <div className={styler('notificationContainer')}>
+                  <label className={styler('checkBoxLabel')}>
+                    <input
+                      type="checkbox"
+                      onChange={e =>
+                        handleViewModeChange(
+                          e.target.checked ? 'activeSpeaker' : 'grid',
+                        )
+                      }
+                      checked={layoutProps.uiViewMode === 'activeSpeaker'}
+                    />
+                    <span>Active Speaker View</span>
+                  </label>
+                </div>
+              }
+            />
+          )}
         </Fragment>
       }
     />
