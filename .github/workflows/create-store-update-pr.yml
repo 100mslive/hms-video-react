@@ -1,4 +1,4 @@
-name: Create release PR
+name: Create Store Update PR
 on:
   workflow_dispatch:
     inputs:
