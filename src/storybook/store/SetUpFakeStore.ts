@@ -1,10 +1,83 @@
 import { fakeMessages } from '../fixtures/chatFixtures';
 import { fakeParticipants } from '../fixtures/peersFixtures';
 import { StoryBookSDK } from './StoryBookSDK';
-import { HMSReactiveStore, HMSStore } from '@100mslive/hms-video-store';
+import {
+  HMSReactiveStore,
+  HMSRoomState,
+  HMSStore,
+} from '@100mslive/hms-video-store';
 import create from 'zustand';
 
-const store = HMSReactiveStore.createNewHMSStore();
+const createDefaultStoreState = (): HMSStore => {
+  return {
+    room: {
+      id: '',
+      isConnected: false,
+      name: '',
+      peers: [],
+      shareableLink: '',
+      localPeer: '',
+      hasWaitingRoom: false,
+      roomState: HMSRoomState.Disconnected,
+      recording: {
+        browser: {
+          running: false,
+        },
+        server: {
+          running: false,
+        },
+      },
+      rtmp: {
+        running: false,
+      },
+      hls: {
+        running: false,
+        variants: [],
+      },
+      sessionId: '',
+    },
+    peers: {},
+    tracks: {},
+    playlist: {
+      audio: {
+        list: {},
+        selection: { id: '', hasPrevious: false, hasNext: false },
+        progress: 0,
+        volume: 0,
+        currentTime: 0,
+        playbackRate: 1.0,
+      },
+      video: {
+        list: {},
+        selection: { id: '', hasPrevious: false, hasNext: false },
+        progress: 0,
+        volume: 0,
+        currentTime: 0,
+        playbackRate: 1.0,
+      },
+    },
+    messages: { byID: {}, allIDs: [] },
+    speakers: {},
+    settings: {
+      audioInputDeviceId: '',
+      audioOutputDeviceId: '',
+      videoInputDeviceId: '',
+    },
+    devices: {
+      audioInput: [],
+      audioOutput: [],
+      videoInput: [],
+    },
+    roles: {},
+    roleChangeRequests: [],
+    errors: [],
+  };
+};
+
+const store = HMSReactiveStore.createNewHMSStore(
+  'HMSStore',
+  createDefaultStoreState,
+);
 export const storyBookStore = create<HMSStore>(store);
 export const storyBookSDK = new StoryBookSDK(store);
 
