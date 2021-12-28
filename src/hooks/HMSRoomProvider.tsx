@@ -5,9 +5,9 @@ import {
   HMSActions,
   HMSNotification,
   HMSNotifications,
-  HMSInternalsStore,
+  HMSStatsStore,
   IStoreReadOnly,
-  HMSWebrtcInternals,
+  HMSStats,
   HMSStoreWrapper,
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
@@ -19,7 +19,7 @@ import {
 } from './storeHook';
 import { isBrowser } from '../utils/is-browser';
 
-export interface IHMSReactStore<S extends HMSStore | HMSInternalsStore>
+export interface IHMSReactStore<S extends HMSStore | HMSStatsStore>
   extends IStoreReadOnly<S> {
   <U>(selector: StateSelector<S, U>, equalityFn?: EqualityChecker<U>): U;
 }
@@ -27,7 +27,7 @@ export interface HMSRoomProviderProps {
   actions?: HMSActions;
   store?: HMSStoreWrapper;
   notifications?: HMSNotifications;
-  webrtcInternals?: HMSWebrtcInternals;
+  webrtcInternals?: HMSStats;
   isHMSStatsOn?: boolean;
 }
 
@@ -66,7 +66,7 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       }
       if (webrtcInternals) {
         const hmsInternals = webrtcInternals;
-        providerProps.statsStore = create<HMSInternalsStore>({
+        providerProps.statsStore = create<HMSStatsStore>({
           getState: hmsInternals.getState,
           subscribe: hmsInternals.subscribe,
           setState: errFn,
@@ -86,8 +86,8 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       };
 
       if (isHMSStatsOn) {
-        const hmsInternals = hmsReactiveStore.getWebrtcInternals();
-        providerProps.statsStore = create<HMSInternalsStore>({
+        const hmsInternals = hmsReactiveStore.getWebrtcStats();
+        providerProps.statsStore = create<HMSStatsStore>({
           getState: hmsInternals.getState,
           subscribe: hmsInternals.subscribe,
           setState: errFn,
@@ -176,4 +176,9 @@ export const useHMSNotifications = () => {
   }, [HMSContextConsumer.notifications]);
 
   return notification;
+};
+
+export const useIsHMSStatsOn = () => {
+  const HMSContextConsumer = useContext(HMSContext);
+  return Boolean(HMSContextConsumer?.statsStore);
 };
