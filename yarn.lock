@@ -2,21 +2,21 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@0.2.86-alpha.3":
-  version "0.2.86-alpha.3"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.86-alpha.3.tgz#7901e85467496a48cb290d0440eb6945da37e85b"
-  integrity sha512-/RFdlojNHgVqq6ue2hhEkpkNSs1+LTwxnaiQfzYY5tg19YE2wrk10gpohoTp9Ve93/rpjlstT/HjQKTvd8YfiA==
+"@100mslive/hms-video-store@0.2.86-alpha.6":
+  version "0.2.86-alpha.6"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.86-alpha.6.tgz#8102a284b48866ad59a0c79e05d375d100d58b1a"
+  integrity sha512-frJVmsacylO9h4fyKLXK9SbRECyWb1EeOetflHbXX0+S3gVuLb7PDmsO4qefrM+AEdlBKeeo4YVdmpoLqtGfyg==
   dependencies:
-    "@100mslive/hms-video" "0.1.40-alpha.1"
+    "@100mslive/hms-video" "0.1.40-alpha.2"
     eventemitter2 "^6.4.5"
     immer "^9.0.6"
     reselect "4.0.0"
     zustand "3.5.7"
 
-"@100mslive/hms-video@0.1.40-alpha.1":
-  version "0.1.40-alpha.1"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.1.40-alpha.1.tgz#d5c03574f9533b2f5e98f9524babf805ed5a0b4b"
-  integrity sha512-Jwp1iOCGk3atCO9UmOkptiTS48thL0jQrq76Mthj8LSz0tFBSPlfOzDjtR2PzRcHbAHBZq09u8Xy9YaTOhSKmQ==
+"@100mslive/hms-video@0.1.40-alpha.2":
+  version "0.1.40-alpha.2"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.1.40-alpha.2.tgz#bc861961f2893f5914a6b5904f375811a04ea585"
+  integrity sha512-Wq2BYXNXqSFwknVJETlzlfHUtjA1yLQZ9TOGEbgy6kLjDGYvJBywu9hfQDwDvw9gVZRz2KfifvpLZGQ0MeqL2g==
   dependencies:
     eventemitter2 "^6.4.5"
     sdp-transform "^2.14.1"

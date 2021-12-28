@@ -27,7 +27,7 @@ export interface HMSRoomProviderProps {
   actions?: HMSActions;
   store?: HMSStoreWrapper;
   notifications?: HMSNotifications;
-  webrtcInternals?: HMSStats;
+  stats?: HMSStats;
   isHMSStatsOn?: boolean;
 }
 
@@ -43,7 +43,7 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
   actions,
   store,
   notifications,
-  webrtcInternals,
+  stats,
   isHMSStatsOn = false,
 }) => {
   if (!providerProps) {
@@ -64,11 +64,10 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       if (notifications) {
         providerProps.notifications = notifications;
       }
-      if (webrtcInternals) {
-        const hmsInternals = webrtcInternals;
+      if (stats) {
         providerProps.statsStore = create<HMSStatsStore>({
-          getState: hmsInternals.getState,
-          subscribe: hmsInternals.subscribe,
+          getState: stats.getState,
+          subscribe: stats.subscribe,
           setState: errFn,
           destroy: errFn,
         });
@@ -76,7 +75,7 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
     } else {
       const hmsReactiveStore = new HMSReactiveStore();
       providerProps = {
-        actions: hmsReactiveStore.getHMSActions(),
+        actions: hmsReactiveStore.getActions(),
         store: create<HMSStore>({
           ...hmsReactiveStore.getStore(),
           setState: errFn,
@@ -86,10 +85,10 @@ export const HMSRoomProvider: React.FC<HMSRoomProviderProps> = ({
       };
 
       if (isHMSStatsOn) {
-        const hmsInternals = hmsReactiveStore.getWebrtcStats();
+        const stats = hmsReactiveStore.getStats();
         providerProps.statsStore = create<HMSStatsStore>({
-          getState: hmsInternals.getState,
-          subscribe: hmsInternals.subscribe,
+          getState: stats.getState,
+          subscribe: stats.subscribe,
           setState: errFn,
           destroy: errFn,
         });
