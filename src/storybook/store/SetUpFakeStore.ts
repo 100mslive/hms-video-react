@@ -1,10 +1,17 @@
 import { fakeMessages } from '../fixtures/chatFixtures';
 import { fakeParticipants } from '../fixtures/peersFixtures';
 import { StoryBookSDK } from './StoryBookSDK';
-import { HMSReactiveStore, HMSStore } from '@100mslive/hms-video-store';
+import {
+  HMSReactiveStore,
+  HMSStore,
+  createDefaultStoreState,
+} from '@100mslive/hms-video-store';
 import create from 'zustand';
 
-const store = HMSReactiveStore.createNewHMSStore();
+const store = HMSReactiveStore.createNewHMSStore(
+  'HMSStore',
+  createDefaultStoreState,
+);
 export const storyBookStore = create<HMSStore>(store);
 export const storyBookSDK = new StoryBookSDK(store);
 
