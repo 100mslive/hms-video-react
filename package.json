@@ -93,7 +93,7 @@
     "clsx": "^1.1.1",
     "lodash.merge": "^4.6.2",
     "lodash.reduce": "^4.6.0",
-    "postcss": "8.2.10",
+    "postcss": "8.2.13",
     "react-click-away-listener": "^2.0.3",
     "react-intersection-observer": "^8.31.1",
     "react-markdown": "^6.0.0",
