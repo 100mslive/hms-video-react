@@ -39,14 +39,10 @@ export function VideoTileStats({
   }
 
   const resolutionWithFPS =
-    // @ts-ignore
     videoTrackStats?.frameHeight &&
-    // @ts-ignore
     `${videoTrackStats?.frameHeight}x${videoTrackStats?.frameWidth}@${videoTrackStats?.framesPerSecond}` +
-      // @ts-ignore
       (isPresent(videoTrackStats?.framesDropped)
-        ? // @ts-ignore
-          `(${videoTrackStats?.framesDropped} dropped)`
+        ? `(${videoTrackStats?.framesDropped} dropped)`
         : '');
 
   return (
