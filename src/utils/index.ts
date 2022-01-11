@@ -27,7 +27,10 @@ export const formatBytes = (bytes?: number, unit = 'B', decimals = 2) => {
     size => size + unit,
   );
 
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  let i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  // B to KB
+  i == 0 && i++;
 
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 };
