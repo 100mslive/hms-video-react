@@ -1,5 +1,9 @@
 import React from 'react';
-import { HMSTrackID, selectHMSStats } from '@100mslive/hms-video-store';
+import {
+  HMSTrackID,
+  HMSTrackStats,
+  selectHMSStats,
+} from '@100mslive/hms-video-store';
 import { useHMSStatsStore } from '../../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
 import { formatBytes, isPresent } from '../../../utils';
@@ -17,6 +21,23 @@ const StatsRow = ({ label = '', value = '' }) => {
       <span className={tw('text-white flex-initial')}>{value}</span>
     </>
   );
+};
+
+const TrackPacketsLostRow = ({ stats }: { stats?: HMSTrackStats }) => {
+  const packetsLostRate =
+    (stats?.packetsLostRate
+      ? stats.packetsLostRate.toFixed(2)
+      : stats?.packetsLostRate) + '/s';
+
+  const trackType =
+    stats && stats?.kind.charAt(0).toUpperCase() + stats?.kind.slice(1);
+
+  return isPresent(stats?.packetsLost) && isPresent(stats?.packetsLostRate) ? (
+    <StatsRow
+      label={`Packet Loss (${trackType})`}
+      value={`${stats?.packetsLost}(${packetsLostRate})`}
+    />
+  ) : null;
 };
 
 export function VideoTileStats({
@@ -74,18 +95,8 @@ export function VideoTileStats({
             value={formatBytes(audioTrackStats?.bitrate, 'b/s')}
           />
         )}
-        {isPresent(videoTrackStats?.packetsLostRate) && (
-          <StatsRow
-            label="Packet Loss (Video)"
-            value={videoTrackStats?.packetsLostRate?.toFixed(2) + '/s'}
-          />
-        )}
-        {isPresent(audioTrackStats?.packetsLostRate) && (
-          <StatsRow
-            label="Packet Loss (Audio)"
-            value={audioTrackStats?.packetsLostRate?.toFixed(2) + '/s'}
-          />
-        )}
+        <TrackPacketsLostRow stats={videoTrackStats} />
+        <TrackPacketsLostRow stats={audioTrackStats} />
         {isPresent(videoTrackStats?.jitter) && (
           <StatsRow
             label="Jitter (Video)"
