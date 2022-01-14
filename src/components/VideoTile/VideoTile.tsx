@@ -185,6 +185,7 @@ const Tile = ({
   contextMenuItems,
   isHandRaised,
   showStats = false,
+  compact,
   children,
 }: VideoTileProps) => {
   const { appBuilder, tw, tailwindConfig, toast } = useHMSTheme();
@@ -477,6 +478,7 @@ const Tile = ({
               <VideoTileStats
                 audioTrackID={storeHmsAudioTrack?.id}
                 videoTrackID={hmsVideoTrack?.id || storeHmsVideoTrack?.id}
+                compact={compact}
               />
             )}
             {/* TODO this doesn't work in Safari and looks ugly with contain*/}
@@ -521,6 +523,7 @@ const Tile = ({
                   <VideoTileStats
                     audioTrackID={storeHmsAudioTrack?.id}
                     videoTrackID={hmsVideoTrack?.id || storeHmsVideoTrack?.id}
+                    compact={compact}
                   />
                 )}
                 {tileAvatar}
