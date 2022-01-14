@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   HMSTrackID,
   HMSTrackStats,
@@ -6,24 +6,39 @@ import {
 } from '@100mslive/hms-video-store';
 import { useHMSStatsStore } from '../../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../../hooks/HMSThemeProvider';
-import { formatBytes, isPresent } from '../../../utils';
+import { formatBytes, isPresent, isMobileDevice } from '../../../utils';
 
 export interface VideoTileStatsProps {
+  compact?: boolean;
   videoTrackID?: HMSTrackID;
   audioTrackID?: HMSTrackID;
 }
 
-const StatsRow = ({ label = '', value = '' }) => {
+const StatsRow = ({
+  label = '',
+  trackType = '',
+  value = '',
+  compact = false,
+}) => {
   const { tw } = useHMSTheme();
+  if (trackType) {
+    label = `${label} (${compact ? trackType[0] : trackType})`;
+  }
   return (
-    <>
-      <span className={tw('text-gray-500 mr-4')}>{label}</span>{' '}
-      <span className={tw('text-white flex-initial')}>{value}</span>
-    </>
+    <tr>
+      <td className={tw(`text-gray-500 ${compact && 'w-2/5'}`)}>{label}</td>
+      <td className={tw(`text-white pl-2`)}>{value}</td>
+    </tr>
   );
 };
 
-const TrackPacketsLostRow = ({ stats }: { stats?: HMSTrackStats }) => {
+const PacketsLostRow = ({
+  stats,
+  compact,
+}: {
+  stats?: HMSTrackStats;
+  compact?: boolean;
+}) => {
   const packetsLostRate =
     (stats?.packetsLostRate
       ? stats.packetsLostRate.toFixed(2)
@@ -34,17 +49,77 @@ const TrackPacketsLostRow = ({ stats }: { stats?: HMSTrackStats }) => {
 
   return isPresent(stats?.packetsLost) && isPresent(stats?.packetsLostRate) ? (
     <StatsRow
-      label={`Packet Loss (${trackType})`}
+      label={compact ? 'PL' : 'Packet Loss'}
+      trackType={trackType}
       value={`${stats?.packetsLost}(${packetsLostRate})`}
+      compact={compact}
     />
   ) : null;
+};
+
+const ResolutionRow = ({
+  stats,
+  compact = false,
+}: {
+  stats: HMSTrackStats;
+  compact?: boolean;
+}) => {
+  const resolutionWithFPS =
+    stats?.frameHeight &&
+    `${stats?.frameHeight}x${stats?.frameWidth}@${stats?.framesPerSecond}`;
+
+  if (compact) {
+    return (
+      <>
+        <StatsRow
+          label="Width"
+          value={stats?.frameWidth?.toString()}
+          compact={compact}
+        />
+        <StatsRow
+          label="Height"
+          value={stats?.frameHeight?.toString()}
+          compact={compact}
+        />
+        <StatsRow
+          label="FPS"
+          value={stats?.framesPerSecond?.toString()}
+          compact={compact}
+        />
+      </>
+    );
+  } else {
+    return resolutionWithFPS ? (
+      <StatsRow
+        label="Resolution @FPS"
+        value={resolutionWithFPS}
+        compact={compact}
+      />
+    ) : null;
+  }
 };
 
 export function VideoTileStats({
   videoTrackID,
   audioTrackID,
+  compact = false,
 }: VideoTileStatsProps) {
   const { tw } = useHMSTheme();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const containerStyle: React.CSSProperties = {
+    backgroundColor: 'rgba(0,0,0,0.75)',
+    zIndex: 15,
+  };
+  compact = compact || isMobileDevice();
+
+  if (compact) {
+    console.log('RootRef parent', rootRef.current?.parentElement?.clientHeight);
+    const parentHeight = rootRef.current?.parentElement?.clientHeight || 0;
+    const parentWidth = rootRef.current?.parentElement?.clientWidth || 0;
+    containerStyle.width = `calc(${parentWidth}px - 1rem)`;
+    containerStyle.maxHeight = parentHeight * 0.75;
+    containerStyle.overflowY = 'auto';
+  }
 
   const audioTrackStats = useHMSStatsStore(
     selectHMSStats.trackStatsByID(audioTrackID),
@@ -59,57 +134,57 @@ export function VideoTileStats({
     return null;
   }
 
-  const resolutionWithFPS =
-    videoTrackStats?.frameHeight &&
-    `${videoTrackStats?.frameHeight}x${videoTrackStats?.frameWidth}@${videoTrackStats?.framesPerSecond}` +
-      (isPresent(videoTrackStats?.framesDropped)
-        ? `(${videoTrackStats?.framesDropped} dropped)`
-        : '');
-
   return (
     <div
-      className={tw('absolute top-2 left-2 z-10 rounded-lg p-3 text-sm')}
-      style={{ backgroundColor: 'rgba(0,0,0,0.75)' }}
+      className={tw(
+        `absolute top-2 left-2 rounded-lg text-sm no-scrollbar ${
+          compact ? 'p-1' : 'p-3'
+        }`,
+      )}
+      style={containerStyle}
+      ref={rootRef}
     >
-      <div className={tw('grid grid-cols-2 gap-1')}>
-        {resolutionWithFPS && (
-          <StatsRow label="Resolution@FPS" value={resolutionWithFPS} />
-        )}
-        {isPresent(videoTrackStats?.bitrate) && (
-          <StatsRow
-            label={
-              (videoTrackStats?.type.includes('inbound')
-                ? 'Subscribe'
-                : 'Publish') + ' Bitrate (Video)'
-            }
-            value={formatBytes(videoTrackStats?.bitrate, 'b/s')}
-          />
-        )}
-        {isPresent(audioTrackStats?.bitrate) && (
-          <StatsRow
-            label={
-              (audioTrackStats?.type.includes('inbound')
-                ? 'Subscribe'
-                : 'Publish') + ' Bitrate (Audio)'
-            }
-            value={formatBytes(audioTrackStats?.bitrate, 'b/s')}
-          />
-        )}
-        <TrackPacketsLostRow stats={videoTrackStats} />
-        <TrackPacketsLostRow stats={audioTrackStats} />
-        {isPresent(videoTrackStats?.jitter) && (
-          <StatsRow
-            label="Jitter (Video)"
-            value={videoTrackStats?.jitter?.toString()}
-          />
-        )}
-        {isPresent(audioTrackStats?.jitter) && (
-          <StatsRow
-            label="Jitter (Audio)"
-            value={audioTrackStats?.jitter?.toString()}
-          />
-        )}
-      </div>
+      <table>
+        <tbody>
+          {videoTrackStats && (
+            <ResolutionRow stats={videoTrackStats} compact={compact} />
+          )}
+          {isPresent(videoTrackStats?.bitrate) && (
+            <StatsRow
+              label="Bitrate"
+              trackType="Video"
+              value={formatBytes(videoTrackStats?.bitrate, 'b/s')}
+              compact={compact}
+            />
+          )}
+          {isPresent(audioTrackStats?.bitrate) && (
+            <StatsRow
+              label="Bitrate"
+              trackType="Audio"
+              value={formatBytes(audioTrackStats?.bitrate, 'b/s')}
+              compact={compact}
+            />
+          )}
+          <PacketsLostRow stats={videoTrackStats} compact={compact} />
+          <PacketsLostRow stats={audioTrackStats} compact={compact} />
+          {isPresent(videoTrackStats?.jitter) && (
+            <StatsRow
+              label="Jitter"
+              trackType="Video"
+              value={videoTrackStats?.jitter?.toString()}
+              compact={compact}
+            />
+          )}
+          {isPresent(audioTrackStats?.jitter) && (
+            <StatsRow
+              label="Jitter"
+              trackType="Audio"
+              value={audioTrackStats?.jitter?.toString()}
+              compact={compact}
+            />
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }
