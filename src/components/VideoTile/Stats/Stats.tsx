@@ -64,39 +64,36 @@ const ResolutionRow = ({
   stats: HMSTrackStats;
   compact?: boolean;
 }) => {
-  const resolutionWithFPS =
-    stats?.frameHeight &&
-    `${stats?.frameHeight}x${stats?.frameWidth}@${stats?.framesPerSecond}`;
+  if (!stats?.frameWidth) {
+    return null;
+  }
+  const resolutionWithFPS = `${stats?.frameWidth}x${stats?.frameHeight}@${stats?.framesPerSecond}`;
 
-  if (compact) {
-    return (
-      <>
-        <StatsRow
-          label="Width"
-          value={stats?.frameWidth?.toString()}
-          compact={compact}
-        />
-        <StatsRow
-          label="Height"
-          value={stats?.frameHeight?.toString()}
-          compact={compact}
-        />
-        <StatsRow
-          label="FPS"
-          value={stats?.framesPerSecond?.toString()}
-          compact={compact}
-        />
-      </>
-    );
-  } else {
-    return resolutionWithFPS ? (
+  return compact ? (
+    <>
       <StatsRow
-        label="Resolution @FPS"
-        value={resolutionWithFPS}
+        label="Width"
+        value={stats?.frameWidth?.toString()}
         compact={compact}
       />
-    ) : null;
-  }
+      <StatsRow
+        label="Height"
+        value={stats?.frameHeight?.toString()}
+        compact={compact}
+      />
+      <StatsRow
+        label="FPS"
+        value={stats?.framesPerSecond?.toString()}
+        compact={compact}
+      />
+    </>
+  ) : (
+    <StatsRow
+      label="Resolution @FPS"
+      value={resolutionWithFPS}
+      compact={compact}
+    />
+  );
 };
 
 export function VideoTileStats({
@@ -113,7 +110,6 @@ export function VideoTileStats({
   compact = compact || isMobileDevice();
 
   if (compact) {
-    console.log('RootRef parent', rootRef.current?.parentElement?.clientHeight);
     const parentHeight = rootRef.current?.parentElement?.clientHeight || 0;
     const parentWidth = rootRef.current?.parentElement?.clientWidth || 0;
     containerStyle.width = `calc(${parentWidth}px - 1rem)`;
