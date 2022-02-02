@@ -35,17 +35,16 @@ const StatsRow = ({
 const PacketsLostRow = ({
   stats,
   compact,
+  trackType,
 }: {
   stats?: HMSTrackStats;
   compact?: boolean;
+  trackType: 'Video' | 'Audio';
 }) => {
   const packetsLostRate =
     (stats?.packetsLostRate
       ? stats.packetsLostRate.toFixed(2)
       : stats?.packetsLostRate) + '/s';
-
-  const trackType =
-    stats && stats?.kind.charAt(0).toUpperCase() + stats?.kind.slice(1);
 
   return isPresent(stats?.packetsLost) && isPresent(stats?.packetsLostRate) ? (
     <StatsRow
@@ -161,8 +160,16 @@ export function VideoTileStats({
               compact={compact}
             />
           )}
-          <PacketsLostRow stats={videoTrackStats} compact={compact} />
-          <PacketsLostRow stats={audioTrackStats} compact={compact} />
+          <PacketsLostRow
+            stats={videoTrackStats}
+            trackType="Video"
+            compact={compact}
+          />
+          <PacketsLostRow
+            stats={audioTrackStats}
+            trackType="Audio"
+            compact={compact}
+          />
           {isPresent(videoTrackStats?.jitter) && (
             <StatsRow
               label="Jitter"
