@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@^0.2.89-alpha.0":
+"@100mslive/hms-video-store@0.2.89-alpha.0":
   version "0.2.89-alpha.0"
   resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.2.89-alpha.0.tgz#44e0ae47080032fbf940d5b6093028af2a87e551"
   integrity sha512-PIcVQEnc88SxmWZb5ZtxbBXOhIxJdOTYO3oldqwljg7qw9B9mgLX5ssHcqX0XT5rTqZstUWPbuZt8DBO48oUaQ==
