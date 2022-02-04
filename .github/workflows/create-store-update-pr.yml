@@ -29,7 +29,11 @@ jobs:
           TYPE: ${{ github.event.inputs.versionType }}
         run: |
           echo $(yarn add @100mslive/hms-video-store@$TYPE --exact) 
-          npm version prerelease --preid=alpha --git-tag-version=false
+          if [[ $TYPE='latest']]
+            npm version patch --git-tag-version=false
+          else
+            npm version prerelease --preid=alpha --git-tag-version=false
+          fi
 
       - uses: peter-evans/create-pull-request@v3
         with:
