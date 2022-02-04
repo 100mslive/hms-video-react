@@ -9,6 +9,32 @@ import { useHMSTheme } from '../hooks/HMSThemeProvider';
 import { theme as defaultTailwindConfig } from '../defaultTheme';
 import { TrackWithPeer } from './videoListUtils';
 
+/**
+ * Check only for presence(not truthy) of a value.
+ * Use in places where 0, false need to be considered valid.
+ */
+export function isPresent(value: any) {
+  return value !== undefined && value !== null;
+}
+
+export const formatBytes = (bytes?: number, unit = 'B', decimals = 2) => {
+  if (bytes === 0) return '0 ' + unit;
+  if (!bytes) return '-';
+
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['', 'K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y'].map(
+    size => size + unit,
+  );
+
+  let i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  // B to KB
+  i == 0 && i++;
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+};
+
 export const getVideoTileLabel = (
   peerName: string,
   isLocal: boolean,
@@ -602,7 +628,9 @@ export function combineClasses(
     : defaultClasses;
 }
 export const generateRandomString = () =>
-  Math.random().toString(36).substring(7);
+  Math.random()
+    .toString(36)
+    .substring(7);
 
 export const mergeRefs = (
   ...refs: (React.MutableRefObject<any> | ((node?: Element | null) => void))[]
@@ -639,7 +667,10 @@ export function isMobileDevice() {
 }
 
 export const isSafari = () =>
-  !!parsedUserAgent.getBrowser().name?.toLowerCase().includes('safari');
+  !!parsedUserAgent
+    .getBrowser()
+    .name?.toLowerCase()
+    .includes('safari');
 
 export const toggleFullScreen = async (
   element: HTMLDivElement,

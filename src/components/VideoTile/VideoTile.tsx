@@ -38,6 +38,8 @@ import { getVideoTileLabel, toggleFullScreen } from '../../utils';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
 import './index.css';
 import { AudioLevelIndicator } from '../AudioLevelIndicators';
+import { VideoTileStats } from './Stats';
+
 export interface AdditionalVideoTileProps {
   children?: React.ReactNode;
   customAvatar?: React.ReactNode;
@@ -108,6 +110,11 @@ export interface VideoTileProps
    * Boolean variable to specify if hand is raised
    */
   isHandRaised?: boolean;
+
+  /**
+   * Boolean variable to specify if stats overlay should be shown
+   */
+  showStats?: boolean;
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -148,7 +155,7 @@ const defaultClasses: VideoTileClasses = {
     'absolute w-full h-full top-0 left-0 z-10 bg-gray-100 flex items-center justify-center rounded-lg',
   videoContainerCircle: 'rounded-full',
   fullScreenControl: 'flex items-end justify-end h-full px-2',
-  raiseHand: 'absolute top-3 left-3 z-10',
+  raiseHand: 'absolute bottom-3 left-3 z-10',
 };
 
 const customClasses: VideoTileClasses = {
@@ -177,6 +184,8 @@ const Tile = ({
   customAvatar,
   contextMenuItems,
   isHandRaised,
+  showStats = false,
+  compact,
   children,
 }: VideoTileProps) => {
   const { appBuilder, tw, tailwindConfig, toast } = useHMSTheme();
@@ -465,6 +474,13 @@ const Tile = ({
                 height="40"
               />
             )}
+            {showStats && (
+              <VideoTileStats
+                audioTrackID={storeHmsAudioTrack?.id}
+                videoTrackID={hmsVideoTrack?.id || storeHmsVideoTrack?.id}
+                compact={compact}
+              />
+            )}
             {/* TODO this doesn't work in Safari and looks ugly with contain*/}
             <Video
               hmsVideoTrackId={
@@ -501,6 +517,13 @@ const Tile = ({
                     className={`${styler('raiseHand')}`}
                     width="40"
                     height="40"
+                  />
+                )}
+                {showStats && (
+                  <VideoTileStats
+                    audioTrackID={storeHmsAudioTrack?.id}
+                    videoTrackID={hmsVideoTrack?.id || storeHmsVideoTrack?.id}
+                    compact={compact}
                   />
                 )}
                 {tileAvatar}
