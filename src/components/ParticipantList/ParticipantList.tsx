@@ -14,9 +14,11 @@ import ClickAwayListener from 'react-click-away-listener';
 import {
   HMSPeer,
   HMSTrack,
+  selectIsConnectedToRoom,
   selectLocalPeerRole,
   selectPeerCount,
   selectPeers,
+  selectRemotePeers,
 } from '@100mslive/hms-video-store';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
@@ -82,7 +84,8 @@ const List = ({
   ) => Record<string, any>;
 }) => {
   const { toast } = useHMSTheme();
-  const participantList = useHMSStore(selectPeers);
+  const isConnected = useHMSStore(selectIsConnectedToRoom);
+  const participantList = useHMSStore(isConnected ? selectPeers : selectRemotePeers);
   const roleNames = useHMSStore(selectAvailableRoleNames);
   const roles = groupBy(participantList);
   const hmsActions = useHMSActions();
