@@ -1,5 +1,5 @@
 {
-  "version": "0.3.116",
+  "version": "0.3.117-alpha.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -86,7 +86,7 @@
     "typescript": "^4.4.4"
   },
   "dependencies": {
-    "@100mslive/hms-video-store": "0.2.89",
+    "@100mslive/hms-video-store": "0.2.90-alpha.0",
     "@material-ui/core": "^4.11.3",
     "@twind/aspect-ratio": "^0.1.4",
     "autoprefixer": "^9.8.6",
