@@ -2,6 +2,12 @@
   <a href="https://100ms.live/">
   <img src="https://github.com/100mslive/100ms-ios-sdk/blob/main/100ms-logo.png" title="100ms logo" float=left>
 </p>
+  
+  
+# IMPORTANT: Deprecation Notice
+  
+Note that this library is on path of eventual deprecation, if you're starting a new project please use [@100mslive/react-sdk](https://www.npmjs.com/package/@100mslive/react-sdk), our [quickstart guide](https://www.100ms.live/docs/javascript/v2/guides/react-quickstart) should help you in getting up quickly. For already existing projects, if you're not using any UI components and only using the hooks, you can simply replace all occurence of "@100mslive/hms-video-react" with "@100mslive/react-sdk" after installing the latter.
+We're also actively working on a UI package ["@100mslive/react-ui"](https://www.npmjs.com/package/@100mslive/react-ui), currently in alpha for helping with headless and styled components.
 
 # 100ms React SDK
 [![Documentation](https://img.shields.io/badge/Read-Documentation-blue)](https://docs.100ms.live/javascript/v2/features/integration)
