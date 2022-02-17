@@ -40,4 +40,5 @@ export interface ParticipantListProps {
     peer: HMSPeer,
     track?: HMSTrack,
   ) => Record<any, any>;
+  isPreview: boolean;
 }
