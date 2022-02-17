@@ -74,9 +74,11 @@ const customClasses: ParticipantListClasses = {
 };
 
 const List = ({
+  isPreview = false,
   styler,
   participantInListProps,
 }: {
+  isPreview: boolean;
   styler: (s: keyof ParticipantListClasses) => string | undefined;
   participantInListProps?: (
     peer: HMSPeer,
@@ -85,7 +87,9 @@ const List = ({
 }) => {
   const { toast } = useHMSTheme();
   const isConnected = useHMSStore(selectIsConnectedToRoom);
-  const participantList = useHMSStore(isConnected ? selectPeers : selectRemotePeers);
+  const participantList = useHMSStore(
+    isConnected ? selectPeers : selectRemotePeers,
+  );
   const roleNames = useHMSStore(selectAvailableRoleNames);
   const roles = groupBy(participantList);
   const hmsActions = useHMSActions();
@@ -222,6 +226,7 @@ const List = ({
                   : {};
                 return (
                   <ParticipantInList
+                    isPreview={isPreview}
                     key={peer.id}
                     styler={styler}
                     name={peer.name}
@@ -243,6 +248,7 @@ const List = ({
 };
 
 export const ParticipantList = ({
+  isPreview = false,
   classes,
   onToggle,
   participantInListProps,
@@ -293,6 +299,7 @@ export const ParticipantList = ({
 
         {listOpen && (
           <List
+            isPreview={isPreview}
             styler={styler}
             participantInListProps={participantInListProps}
           />

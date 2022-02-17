@@ -17,6 +17,7 @@ interface PropsType {
   peerId: string;
   onUserSettingsClick?: () => void;
   isHandRaised?: boolean;
+  isPreview: boolean;
 }
 
 const Icons = ({
@@ -24,7 +25,7 @@ const Icons = ({
   peerId,
   onUserSettingsClick,
   isHandRaised,
-}: Omit<PropsType, 'name'>) => {
+}: Omit<PropsType, 'name' | 'isPreview'>) => {
   const permissions = useHMSStore(selectPermissions);
   const isAudioEnabled = useHMSStore(selectIsPeerAudioEnabled(peerId));
   return (
@@ -65,7 +66,8 @@ const ListItem = ({
   peerId,
   onUserSettingsClick,
   isHandRaised,
-}: PropsType) => {
+  isPreview,
+}: PropsType & { isPreview: boolean }) => {
   return (
     <span className={styler('menuItem')} role="menuitem">
       <div className={styler('menuText')}>
@@ -80,13 +82,16 @@ const ListItem = ({
           {name}
         </Text>
       </div>
+
       <div className={styler('menuIconContainer')}>
-        <Icons
-          styler={styler}
-          peerId={peerId}
-          onUserSettingsClick={onUserSettingsClick}
-          isHandRaised={isHandRaised}
-        />
+        {!isPreview ? (
+          <Icons
+            styler={styler}
+            peerId={peerId}
+            onUserSettingsClick={onUserSettingsClick}
+            isHandRaised={isHandRaised}
+          />
+        ) : null}
       </div>
     </span>
   );
