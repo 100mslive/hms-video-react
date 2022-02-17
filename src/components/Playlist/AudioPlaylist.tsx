@@ -67,9 +67,9 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
       trigger={
         <Tooltip
           key="audioPlaylist"
-          title={`${open || !!active ? 'Open' : 'Close'} Audio playlist`}
+          title={`${open || !!active ? 'Close' : 'Open'} Audio playlist`}
         >
-          <IconButton active={!(open || !!active)}>
+          <IconButton css={{ padding: '0.25rem' }} active={!(open || !!active)}>
             <AudioPlayerIcon onClick={() => setOpen(value => !value)} />
           </IconButton>
         </Tooltip>
