@@ -23,17 +23,22 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config user.name "github-actions[bot]"
 
-      - name: Update Store and version
+      - name: Update Store
         id: version
         env:
           TYPE: ${{ github.event.inputs.versionType }}
         run: |
-          echo $(yarn add @100mslive/hms-video-store@$TYPE --exact) 
-          if [[$TYPE == 'latest']]; then
-            npm version patch --git-tag-version=false
-          else
-            npm version prerelease --preid=alpha --git-tag-version=false
-          fi
+          echo $(yarn add @100mslive/hms-video-store@$TYPE --exact)
+
+      - name: Update Version
+        if: github.event.inputs.versionType == 'latest'
+        run: |
+          npm version patch --git-tag-version=false
+
+      - name: Update Version
+        if: github.event.inputs.versionType != 'latest'
+        run: |
+          npm version prerelease --preid=alpha --git-tag-version=false
 
       - uses: peter-evans/create-pull-request@v3
         with:
