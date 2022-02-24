@@ -11,9 +11,9 @@ jobs:
   create_pr:
     runs-on: ubuntu-latest
     steps:
-      # - name: Validate branch
-      #   if: github.ref != 'refs/heads/main'
-      #   run: exit 1
+      - name: Validate branch
+        if: github.ref != 'refs/heads/main'
+        run: exit 1
 
       - uses: actions/checkout@v2
         with:
@@ -30,12 +30,12 @@ jobs:
         run: |
           echo $(yarn add @100mslive/hms-video-store@$TYPE --exact)
 
-      - name: Update Version
+      - name: Bump latest version
         if: github.event.inputs.versionType == 'latest'
         run: |
           npm version patch --git-tag-version=false
 
-      - name: Update Version
+      - name: Bump alpha version
         if: github.event.inputs.versionType != 'latest'
         run: |
           npm version prerelease --preid=alpha --git-tag-version=false
