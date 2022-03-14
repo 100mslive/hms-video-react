@@ -8,8 +8,6 @@ import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { Button } from '../Button';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { PlaylistItem } from './PlaylistItem';
-import { IconButton, Tooltip } from '@100mslive/react-ui';
-import { VideoPlayerIcon } from '@100mslive/react-icons';
 
 export interface VideoPlaylistClasses {
   root?: string;
@@ -75,16 +73,16 @@ export const VideoPlaylist = ({
         menuItem: 'hover:bg-transparent-0 dark:hover:bg-transparent-0',
       }}
       trigger={
-        <Tooltip
+        <Button
           key="audioPlaylist"
-          title={`${open || !!active ? 'Close' : 'Open'} Video playlist`}
+          iconOnly
+          variant="no-fill"
+          iconSize="md"
+          shape="rectangle"
+          active={active || open}
         >
-          <IconButton css={{ padding: '0.25rem' }} active={!(active || open)}>
-            {trigger || (
-              <PlaylistIcon onClick={() => setOpen(value => !value)} />
-            )}
-          </IconButton>
-        </Tooltip>
+          {trigger || <PlaylistIcon onClick={() => setOpen(value => !value)} />}
+        </Button>
       }
       onTrigger={value => {
         setOpen(value);
