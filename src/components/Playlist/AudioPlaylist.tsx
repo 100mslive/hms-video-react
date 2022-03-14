@@ -12,8 +12,6 @@ import { PlaylistItem } from './PlaylistItem';
 import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
 import { useHMSTheme } from '../../hooks/HMSThemeProvider';
 import { hmsUiClassParserGenerator } from '../../utils/classes';
-import { IconButton, Tooltip } from '@100mslive/react-ui';
-import { AudioPlayerIcon } from '@100mslive/react-icons';
 
 export interface AudioPlaylistClasses {
   root?: string;
@@ -65,14 +63,19 @@ export const AudioPlaylist = ({ classes }: AudioPlaylistProps) => {
         menuItem: 'hover:bg-transparent-0 dark:hover:bg-transparent-0',
       }}
       trigger={
-        <Tooltip
+        <Button
           key="audioPlaylist"
-          title={`${open || !!active ? 'Close' : 'Open'} Audio playlist`}
+          iconOnly
+          variant="no-fill"
+          iconSize="md"
+          shape="rectangle"
+          active={open || !!active}
         >
-          <IconButton css={{ padding: '0.25rem' }} active={!(open || !!active)}>
-            <AudioPlayerIcon onClick={() => setOpen(value => !value)} />
-          </IconButton>
-        </Tooltip>
+          <AudioPlaylistIcon
+            key="audioPlaylistTriggerIcon"
+            onClick={() => setOpen(value => !value)}
+          />
+        </Button>
       }
       onTrigger={value => {
         setOpen(value);
