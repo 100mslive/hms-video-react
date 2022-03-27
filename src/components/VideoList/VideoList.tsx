@@ -147,6 +147,11 @@ export interface VideoListProps {
     peer: HMSPeer,
     track?: HMSTrack,
   ) => AdditionalVideoTileProps;
+
+  /**
+   * Boolean variable to specify if default overlay and controls should be shown
+   */
+  showDefaultOverlayOptions?: boolean;
 }
 
 const defaultClasses: VideoListClasses = {
@@ -181,6 +186,7 @@ export const VideoList = ({
   compact = false,
   showTileForAllPeers = false,
   videoTileProps,
+  showDefaultOverlayOptions = true,
 }: VideoListProps) => {
   const { tw, appBuilder, tailwindConfig } = useHMSTheme();
   const styler = useMemo(
@@ -326,6 +332,7 @@ export const VideoList = ({
                           }
                           avatarType={avatarType}
                           compact={compact}
+                          showDefaultOverlayOptions={showDefaultOverlayOptions}
                           {...additionalProps}
                         />
                       </div>
