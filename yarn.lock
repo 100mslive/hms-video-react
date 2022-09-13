@@ -2,23 +2,23 @@
 # yarn lockfile v1
 
 
-"@100mslive/hms-video-store@0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.5.0.tgz#5fb3c8bc328c6e77d4ef5ee9fda4e37e75c0f1f1"
-  integrity sha512-oF1GaEkTiJbHHgm+9oLe0CmqZxKf/wJAKCzf0NRO/TlfNACTUmv7b5/nnBC21exwYOw0gpnWL+P+eY5WtSFRMQ==
+"@100mslive/hms-video-store@0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video-store/-/hms-video-store-0.6.0.tgz#6f6f127e468ce4e19550aa5782d6c85479c21d9f"
+  integrity sha512-eAYvu1nTYtKfgcxBqsDUTbawiMFvFXQKoH9qtOpuvz1ub/mIeHyivMPjdJNgTOFUvrUVotMlLYdcDQzrWVCcLQ==
   dependencies:
-    "@100mslive/hms-video" "0.4.0"
-    eventemitter2 "^6.4.5"
+    "@100mslive/hms-video" "0.5.0"
+    eventemitter2 "^6.4.7"
     immer "^9.0.6"
     reselect "4.0.0"
     zustand "3.5.7"
 
-"@100mslive/hms-video@0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.4.0.tgz#a644f74b3e71a1d3f61542d818976263def38b0a"
-  integrity sha512-V/x8uBVCpBCcy3PbYARCgAn8dwSSjNBvk77/brs4gBKz0mkvJcRBI/nCBJiDVrCZ+XD+cxrBfhyfrIvvEisP/A==
+"@100mslive/hms-video@0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@100mslive/hms-video/-/hms-video-0.5.0.tgz#f6912ea4e0a4aa8ca52039236d8b86fb6c754ba0"
+  integrity sha512-UXwpD3/c/qsuXzIQwGKMsOvCEGLKneDBOXHIlN/IWPztzNkVK1VS6ty0nRDL6tsMeXoZtRgj0kpwB87523ZtdA==
   dependencies:
-    eventemitter2 "^6.4.5"
+    eventemitter2 "^6.4.7"
     sdp-transform "^2.14.1"
     ua-parser-js "^1.0.1"
     uuid "^8.3.2"
@@ -6314,10 +6314,10 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha1-Qa4u62XvpiJorr/qg6x9eSmbCIc=
 
-eventemitter2@^6.4.5:
-  version "6.4.5"
-  resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-6.4.5.tgz#97380f758ae24ac15df8353e0cc27f8b95644655"
-  integrity sha512-bXE7Dyc1i6oQElDG0jMRZJrRAn9QR2xyyFGmBdZleNmyQX0FqGYmhZIrIrpPfm/w//LTo4tVQGOGQcGCb5q9uw==
+eventemitter2@^6.4.7:
+  version "6.4.9"
+  resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-6.4.9.tgz#41f2750781b4230ed58827bc119d293471ecb125"
+  integrity sha512-JEPTiaOt9f04oa6NOkc4aH+nVp5I3wEjpHbIPqfgCdD5v5bUzy7xQqwcVO2aDQgOWhI28da57HksMrzK9HlRxg==
 
 eventemitter3@^4.0.4:
   version "4.0.7"
