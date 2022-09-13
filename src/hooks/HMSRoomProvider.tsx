@@ -3,12 +3,13 @@ import {
   HMSReactiveStore,
   HMSStore,
   HMSActions,
-  HMSNotification,
+  HMSNotificationInCallback,
   HMSNotifications,
   HMSStatsStore,
   IStoreReadOnly,
   HMSStats,
   HMSStoreWrapper,
+  HMSNotificationTypeParam,
 } from '@100mslive/hms-video-store';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import {
@@ -154,9 +155,9 @@ export const useHMSActions = () => {
 /**
  * `useHMSNotifications` is a read only hook which gives the latest notification(HMSNotification) received.
  */
-export const useHMSNotifications = () => {
+export const useHMSNotifications =  <T extends HMSNotificationTypeParam>() => {
   const HMSContextConsumer = useContext(HMSContext);
-  const [notification, setNotification] = useState<HMSNotification | null>(
+  const [notification, setNotification] = useState<HMSNotificationInCallback<T> | null>(
     null,
   );
 
@@ -168,8 +169,8 @@ export const useHMSNotifications = () => {
     if (!HMSContextConsumer.notifications) {
       return;
     }
-    const unsubscribe = HMSContextConsumer.notifications.onNotification(
-      (notification: HMSNotification) => setNotification(notification),
+    const unsubscribe = HMSContextConsumer.notifications.onNotification<T>(
+      (notification) => setNotification(notification),
     );
     return unsubscribe;
   }, [HMSContextConsumer.notifications]);
