@@ -20,7 +20,7 @@ import {
   selectPeers,
   selectRemotePeers,
 } from '@100mslive/hms-video-store';
-import { useHMSActions, useHMSStore } from '../../hooks/HMSRoomProvider';
+import { useHMSActions, useHMSNotifications, useHMSStore } from '../../hooks/HMSRoomProvider';
 import {
   ParticipantListClasses,
   ParticipantListProps,
