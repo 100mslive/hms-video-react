@@ -13,6 +13,8 @@ import {
   HMSTrack,
   selectTrackByID,
   selectPermissions,
+  HMSVideoTrack,
+  HMSScreenVideoTrack,
 } from '@100mslive/hms-video-store';
 import { HMSException, HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
@@ -120,7 +122,6 @@ export interface VideoTileProps
    * Boolean variable to specify if default overlay and controls should be shown
    */
   showDefaultOverlayOptions?: boolean;
-
 }
 
 export interface VideoTileClasses extends VideoClasses {
@@ -220,7 +221,10 @@ const Tile = ({
     ? selectScreenShareByPeerID
     : selectCameraStreamByPeerID;
 
-  const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id));
+  const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id)) as
+    | HMSVideoTrack
+    | HMSScreenVideoTrack
+    | undefined;
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
   const screenshareAudioTrack = useHMSStore(
@@ -448,14 +452,16 @@ const Tile = ({
         }}
         ref={rootRef}
       >
-        {!peer.isLocal && (showMenu || showTrigger) && showDefaultOverlayOptions && (
-          <ContextMenu
-            menuOpen={showMenu}
-            onTrigger={value => setShowMenu(value)}
-          >
-            {contextMenuItems || getMenuItems()}
-          </ContextMenu>
-        )}
+        {!peer.isLocal &&
+          (showMenu || showTrigger) &&
+          showDefaultOverlayOptions && (
+            <ContextMenu
+              menuOpen={showMenu}
+              onTrigger={value => setShowMenu(value)}
+            >
+              {contextMenuItems || getMenuItems()}
+            </ContextMenu>
+          )}
         {((impliedAspectRatio.width && impliedAspectRatio.height) ||
           objectFit === 'contain') && (
           <div
@@ -536,18 +542,18 @@ const Tile = ({
                 {tileAvatar}
               </div>
             )}
-            {controlsComponent ? (
-              controlsComponent
-            ) : showDefaultOverlayOptions && (
-              // TODO circle controls are broken now
-              <VideoTileControls
-                isLocal={peer.isLocal}
-                label={label}
-                isAudioMuted={isAudioMuted}
-                showAudioMuteStatus={showAudioMuteStatus}
-                showGradient={displayShape === 'circle'}
-              />
-            )}
+            {controlsComponent
+              ? controlsComponent
+              : showDefaultOverlayOptions && (
+                  // TODO circle controls are broken now
+                  <VideoTileControls
+                    isLocal={peer.isLocal}
+                    label={label}
+                    isAudioMuted={isAudioMuted}
+                    showAudioMuteStatus={showAudioMuteStatus}
+                    showGradient={displayShape === 'circle'}
+                  />
+                )}
             {showScreen && showTrigger && showDefaultOverlayOptions && (
               <div className={styler('fullScreenControl')}>
                 <Button
