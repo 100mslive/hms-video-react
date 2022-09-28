@@ -1,6 +1,15 @@
-import { HMSPeer, HMSTrack, HMSTrackID } from '@100mslive/hms-video-store';
+import {
+  HMSPeer,
+  HMSScreenVideoTrack,
+  HMSTrack,
+  HMSTrackID,
+  HMSVideoTrack,
+} from '@100mslive/hms-video-store';
 
-export type TrackWithPeer = { track?: HMSTrack; peer: HMSPeer };
+export type TrackWithPeer = {
+  track?: HMSVideoTrack | HMSScreenVideoTrack;
+  peer: HMSPeer;
+};
 
 export const getVideoTracksFromPeers = (
   peers: HMSPeer[],
@@ -20,7 +29,10 @@ export const getVideoTracksFromPeers = (
     ) {
       videoTracks.push({ peer: peer });
     } else if (peer.videoTrack && tracks[peer.videoTrack]) {
-      videoTracks.push({ track: tracks[peer.videoTrack], peer: peer });
+      videoTracks.push({
+        track: tracks[peer.videoTrack] as HMSVideoTrack,
+        peer: peer,
+      });
     } else if (showScreenFn(peer) && peer.auxiliaryTracks.length > 0) {
       const screenShareTrackID = peer.auxiliaryTracks.find(trackID => {
         const track = tracks[trackID];
@@ -29,7 +41,10 @@ export const getVideoTracksFromPeers = (
 
       // Don't show tile if screenshare only has audio
       if (screenShareTrackID) {
-        videoTracks.push({ track: tracks[screenShareTrackID], peer: peer });
+        videoTracks.push({
+          track: tracks[screenShareTrackID] as HMSScreenVideoTrack,
+          peer: peer,
+        });
       }
     } else if (showTileForAllPeers) {
       videoTracks.push({ peer: peer });

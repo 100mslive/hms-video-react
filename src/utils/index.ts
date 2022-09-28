@@ -593,7 +593,7 @@ export function addGlobalCss<Type>({
   let calculatedSeedStyleMap: Type | {} = {};
   for (const seed in seedStyleMap as Type) {
     //TODO define a generic Map TS type to define classes to remove all type related ignores
-    //@ts-expect-error
+    // @ts-expect-error
     const styles = seedStyleMap[seed] as string;
     const className = generateClassName({ seed, componentName });
     //TODO add this to a private stylesheet and add a check to not write this if it already exists
