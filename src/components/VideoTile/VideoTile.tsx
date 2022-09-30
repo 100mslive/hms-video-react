@@ -223,7 +223,6 @@ const Tile = ({
 
   const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id)) as
     | HMSVideoTrack
-    | HMSScreenVideoTrack
     | undefined;
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
