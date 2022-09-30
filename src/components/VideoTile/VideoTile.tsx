@@ -13,8 +13,6 @@ import {
   HMSTrack,
   selectTrackByID,
   selectPermissions,
-  HMSVideoTrack,
-  HMSScreenVideoTrack,
 } from '@100mslive/hms-video-store';
 import { HMSException, HMSSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
@@ -217,13 +215,9 @@ const Tile = ({
     tailwindConfig.theme.extend.colors.brand.main ||
     '#0F6CFF';
 
-  const selectVideoByPeerID = showScreen
-    ? selectScreenShareByPeerID
-    : selectCameraStreamByPeerID;
-
-  const storeHmsVideoTrack = useHMSStore(selectVideoByPeerID(peer.id)) as
-    | HMSVideoTrack
-    | undefined;
+  const storeVideoTrack =  useHMSStore(selectCameraStreamByPeerID(peer.id));
+  const storeScreenVideoTrack =  useHMSStore(selectScreenShareByPeerID(peer.id));
+  const storeHmsVideoTrack = showScreen ? storeScreenVideoTrack : storeVideoTrack;
   const storeIsAudioMuted = !useHMSStore(selectIsPeerAudioEnabled(peer.id));
   const storeIsVideoMuted = !useHMSStore(selectIsPeerVideoEnabled(peer.id));
   const screenshareAudioTrack = useHMSStore(
