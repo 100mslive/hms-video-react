@@ -12,7 +12,7 @@ import {
   HMSAudioTrackSettings,
   HMSVideoTrackSettings,
   HMSConfig,
-  HMSSimulcastLayer,
+  HMSPreferredSimulcastLayer
 } from '@100mslive/hms-video';
 
 /*
@@ -29,11 +29,11 @@ export class StoryBookSDK implements Partial<HMSActions> {
   constructor(store: IHMSStore) {
     this.store = store;
   }
-  setPreferredLayer(trackId: string, layer: HMSSimulcastLayer): void {
+  setPreferredLayer(trackId: string, layer: HMSPreferredSimulcastLayer): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  setVolume(value: number, trackId?: string): void {
+  setVolume(value: number, trackId?: string): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
@@ -90,7 +90,7 @@ export class StoryBookSDK implements Partial<HMSActions> {
     });
   }
 
-  join(...args: any[]): void {
+  async join(...args: any[]) {
     const joinParams = args[0];
     if (!(joinParams.username && joinParams.role && joinParams.roomId)) {
       this.log('invalid params');
@@ -193,6 +193,7 @@ export class StoryBookSDK implements Partial<HMSActions> {
           enabled: this.randomFromArray([true, false]),
           id: audioTrackID,
           type: 'audio',
+          source: 'regular'
         };
       }
       if (peer.videoTrack) {
@@ -200,6 +201,7 @@ export class StoryBookSDK implements Partial<HMSActions> {
           enabled: true,
           id: videoTrackID,
           type: 'video',
+          source: 'regular'
         };
       }
     });

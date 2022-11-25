@@ -14,7 +14,7 @@ import {
   selectTrackByID,
   selectPermissions,
 } from '@100mslive/hms-video-store';
-import { HMSException, HMSSimulcastLayer } from '@100mslive/hms-video';
+import { HMSException, HMSPreferredSimulcastLayer } from '@100mslive/hms-video';
 import { ContextMenu, ContextMenuItem } from '../ContextMenu';
 import { Video, VideoProps, VideoClasses } from '../Video/Video';
 import { VideoTileControls } from './Controls';
@@ -231,7 +231,7 @@ const Tile = ({
     selectSimulcastLayerByTrack(storeHmsVideoTrack?.id),
   );
 
-  const updateSimulcastLayer = (layer: HMSSimulcastLayer) => {
+  const updateSimulcastLayer = (layer: HMSPreferredSimulcastLayer) => {
     hmsActions.setPreferredLayer(storeHmsVideoTrack?.id!, layer);
     setShowMenu(false);
   };
